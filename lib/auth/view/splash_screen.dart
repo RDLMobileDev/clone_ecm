@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
               decoration: new BoxDecoration(
                   image: new DecorationImage(
                       alignment: Alignment.center,
-                      image: new AssetImage("assets/images/logosugity.png"),
+                      image: new AssetImage("assets/images/logo_sugity.png"),
                       fit: BoxFit.contain)),
             ),
           )
