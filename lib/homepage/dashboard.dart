@@ -29,41 +29,83 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: _listWidget.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.blue,
-        // ignore: prefer_const_literals_to_create_immutables
-        items: [
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/icons/ic_home.png"),
-            ),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/icons/ic_bell.png"),
-            ),
-            label: "Notification",
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/icons/ic_user_inactive.png"),
-            ),
-            label: "Account",
-          ),
-        ],
-        selectedFontSize: 12.0,
-        unselectedFontSize: 12.0,
-        selectedLabelStyle: TextStyle(
-          fontFamily: 'Rubik',
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(10),
+        width: MediaQuery.of(context).size.width,
+        height: 70,
+        decoration: BoxDecoration(
+          // ignore: prefer_const_literals_to_create_immutables
+          color: Colors.white,
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.black54,
+                blurRadius: 8.0,
+                offset: Offset(0.0, 0.75)
+            )
+          ],
         ),
-        unselectedLabelStyle: TextStyle(
-          fontFamily: 'Rubik',
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+              onTap: () => _onMenuItemTapped(0),
+              child: Container(
+                width: 150,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color(0xFF00AEDB),
+                  borderRadius: BorderRadius.all(Radius.circular(50))
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/icons/ic_home_active.png", width: 20,),
+                    SizedBox(width: 10,),
+                    Text("Home", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),)
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () => _onMenuItemTapped(1),
+              child: Container(
+                width: 73,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color(0xFFF2F4F5),
+                  borderRadius: BorderRadius.all(Radius.circular(50))
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/icons/ic_bell_inactive.png", width: 20,),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () => _onMenuItemTapped(2),
+              child: Container(
+                width: 73,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color(0xFFF2F4F5),
+                  borderRadius: BorderRadius.all(Radius.circular(50))
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/icons/ic_user_inactive.png", width: 20,),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        currentIndex: _selectedIndex,
-        onTap: _onMenuItemTapped,
-        type: BottomNavigationBarType.fixed,
       ),
     );
   }
