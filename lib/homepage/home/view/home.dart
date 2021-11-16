@@ -131,6 +131,43 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Fill New E-CM Card", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                ],
+              ),
+            ),
+            SizedBox(height: 16,),
+            Container(
+              margin: const EdgeInsets.only(left: 16, right: 16,),
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Color(0xFF00AEDB),
+                borderRadius: BorderRadius.all(Radius.circular(5))
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Approved E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                ],
+              ),
+            ),
+            SizedBox(height: 16,),
+            Container(
+              margin: const EdgeInsets.only(left: 16, right: 16,),
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Color(0xFF00AEDB),
+                borderRadius: BorderRadius.all(Radius.circular(5))
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("List TM Name", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
                 ],
               ),
             ),
