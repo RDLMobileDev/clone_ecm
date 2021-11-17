@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Account extends StatefulWidget {
+  const Account({Key? key}) : super(key: key);
+
   @override
   _AccountState createState() => _AccountState();
 }
@@ -8,7 +10,7 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
     );
