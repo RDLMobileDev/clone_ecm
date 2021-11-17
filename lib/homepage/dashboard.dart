@@ -5,6 +5,8 @@ import 'package:e_cm/homepage/home/view/notification.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
+  const Dashboard({Key? key}) : super(key: key);
+
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -36,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
         decoration: BoxDecoration(
           // ignore: prefer_const_literals_to_create_immutables
           color: Colors.white,
-          boxShadow: <BoxShadow>[
+          boxShadow: const <BoxShadow>[
             BoxShadow(
                 color: Colors.black54,
                 blurRadius: 8.0,
