@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class LogIn extends StatefulWidget {
@@ -53,7 +52,6 @@ class _LogInState extends State<LogIn> {
                     height: 22,
                   ),
                   TextFormField(
-                    keyboardType: TextInputType.visiblePassword,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',
@@ -70,13 +68,61 @@ class _LogInState extends State<LogIn> {
                         color: Color(0xFF00AEDB),
                         fontWeight: FontWeight.w400),
                   ),
-                  ElevatedButton(
-                    onPressed: null,
-                    child: Text(
-                      'Login',
-                      style: TextStyle(color: Colors.black54),
+                  SizedBox(
+                    height: 48,
+                  ),
+                  Container(
+                    color: Color(0xff979C9E),
+                    width: 343,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: null,
+                      child: Text(
+                        'Login',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    height: 200,
+                  ),
+                  Container(
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12.0,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "By continuing, you agree to our ",
+                            style: TextStyle(
+                                fontFamily: 'Rubik', color: Color(0xff404446)),
+                          ),
+                          TextSpan(
+                            text: "Terms of Service ",
+                            style: TextStyle(
+                                fontFamily: 'Rubik', color: Color(0xff00AEDB)),
+                          ),
+                          TextSpan(
+                            text: "\nand ",
+                            style: TextStyle(
+                                fontFamily: 'Rubik', color: Color(0xff404446)),
+                          ),
+                          TextSpan(
+                            text: "Privacy Policy",
+                            style: TextStyle(
+                                fontFamily: 'Rubik', color: Color(0xff00AEDB)),
+                          ),
+                          TextSpan(
+                            text: ".",
+                            style: TextStyle(
+                                fontFamily: 'Rubik', color: Color(0xff404446)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )
