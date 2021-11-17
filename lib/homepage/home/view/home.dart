@@ -5,6 +5,8 @@ import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -39,15 +41,16 @@ class _HomeState extends State<Home> {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            Text(
+                            const Text(
                               "Good Morning,",
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400),
                             ),
-                            Text(
+                            const Text(
                               "Budi",
                               style: TextStyle(
                                   fontFamily: 'Rubik',
@@ -101,6 +104,7 @@ class _HomeState extends State<Home> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     SliderHistory(),
                     SliderHistory()
@@ -134,7 +138,7 @@ class _HomeState extends State<Home> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Text("Fill New E-CM Card", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
                     Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
                   ],
@@ -153,7 +157,7 @@ class _HomeState extends State<Home> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   Text("Approved E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
                   Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
                 ],
@@ -171,7 +175,7 @@ class _HomeState extends State<Home> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   Text("List TM Name", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
                   Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
                 ],

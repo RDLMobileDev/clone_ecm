@@ -18,8 +18,10 @@ class FillNew extends StatefulWidget {
 }
 
 class _FillNewState extends State<FillNew> {
+  final GlobalKey<StepFillSatuState> _keyFillSatu = GlobalKey();
+
   int _currentStep = 0;
-  int _stepTotal = 8;
+  final int _stepTotal = 8;
   int _stepClicked = 1;
 
   tapped(int step) {
@@ -31,7 +33,7 @@ class _FillNewState extends State<FillNew> {
     if(_stepClicked != 8) {
       setState(() => _stepClicked += 1);
     }
-      
+    _keyFillSatu.currentState!.saveFillNewSatu();
   }
 
   cancel() {
@@ -115,7 +117,7 @@ class _FillNewState extends State<FillNew> {
                               color: Color(0xFF00AEDB),
                               borderRadius: BorderRadius.all(Radius.circular(5))
                             ),
-                            child: Center(child: Text("Next $_stepClicked/${this._stepTotal}", style: TextStyle(
+                            child: Center(child: Text("Next $_stepClicked/$_stepTotal", style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -129,15 +131,15 @@ class _FillNewState extends State<FillNew> {
                 },
                 steps: [
                   Step(
-                    title: Text('sdf'),
-                    content: StepFillSatu(),
+                    title: Text(''),
+                    content: StepFillSatu(key: _keyFillSatu,),
                     isActive: _currentStep >= 0,
                     // state: _currentStep >= 0
                     //     ? StepState.complete
                     //     : StepState.disabled,
                   ),
                   Step(
-                    title: Text('df'),
+                    title: Text(''),
                     content: StepFillDua(),
                     // isActive: _currentStep >= 0,
                     // state: _currentStep >= 0
