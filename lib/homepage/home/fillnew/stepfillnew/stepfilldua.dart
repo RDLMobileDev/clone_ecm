@@ -12,10 +12,12 @@ class StepFillDua extends StatefulWidget {
 class _StepFillDuaState extends State<StepFillDua> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 200,
-      child: Center(child: Text("data 2"),),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+      ),
+      
+      
     );
   }
 }
