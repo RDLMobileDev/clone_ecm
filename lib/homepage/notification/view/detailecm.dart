@@ -10,6 +10,7 @@ class _DetailEcmState extends State<DetailEcm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: const Color(0xff00AEDB),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
@@ -28,14 +29,46 @@ class _DetailEcmState extends State<DetailEcm> {
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
+                margin: EdgeInsets.only(bottom: 12),
                 width: 100,
                 height: 100,
-                color: Colors.redAccent,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/img_ava.png')),
+                ),
               ),
-              const Text("Lokasi & tanggal"),
-              const Text("Lokasi & tanggal"),
+              const Text(
+                "Budi",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xff00AEDB)),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                // color: Colors.amberAccent,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment
+                        .center, //Center Column contents vertically,
+                    crossAxisAlignment: CrossAxisAlignment
+                        .center, //Center Column contents horizontally,
+                    children: [
+                      Icon(Icons.location_on_outlined, color: Colors.grey),
+                      const Text(
+                        "Factory 3 · 05/10/2021",
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const Text("Machine : MC 5 2500T (32ZAC004)"),
               _buildDivider(),
               const Text("keterangan"),
               const Text("Lokasi & tanggal"),
@@ -48,26 +81,24 @@ class _DetailEcmState extends State<DetailEcm> {
                     Container(
                       width: 200,
                       height: 200,
-                      color: Colors.amberAccent,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image:
+                                  AssetImage('assets/images/img_selang1.png')),
+                          color: Colors.amberAccent,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     const SizedBox(width: 10),
                     Container(
                       width: 200,
                       height: 200,
-                      color: Colors.greenAccent,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image:
+                                  AssetImage('assets/images/img_selang2.png')),
+                          color: Colors.greenAccent,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
-                    const SizedBox(width: 10),
-                    Container(
-                      width: 200,
-                      height: 200,
-                      color: Colors.greenAccent,
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      width: 200,
-                      height: 200,
-                      color: Colors.greenAccent,
-                    )
                   ],
                 ),
               ),
@@ -104,6 +135,7 @@ class _DetailEcmState extends State<DetailEcm> {
 
   Widget _buildDivider() {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
       color: Colors.grey,
       height: 2,
       width: MediaQuery.of(context).size.width,
