@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -38,15 +41,16 @@ class _HomeState extends State<Home> {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            Text(
+                            const Text(
                               "Good Morning,",
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400),
                             ),
-                            Text(
+                            const Text(
                               "Budi",
                               style: TextStyle(
                                   fontFamily: 'Rubik',
@@ -100,6 +104,7 @@ class _HomeState extends State<Home> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     SliderHistory(),
                     SliderHistory()
@@ -118,6 +123,29 @@ class _HomeState extends State<Home> {
                     color: Color(0xFF404446)),),
             ),
             SizedBox(height: 16,),
+            InkWell(
+              onTap: (){
+                Navigator.of(context).push(routeToFillNew());
+              },
+              child: Container(
+                margin: const EdgeInsets.only(left: 16, right: 16,),
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Color(0xFF00AEDB),
+                  borderRadius: BorderRadius.all(Radius.circular(5))
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text("Fill New E-CM Card", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                    Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16,),
             Container(
               margin: const EdgeInsets.only(left: 16, right: 16,),
               padding: const EdgeInsets.only(left: 16, right: 16),
@@ -129,8 +157,27 @@ class _HomeState extends State<Home> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Fill New E-CM Card", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                children: const [
+                  Text("Approved E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                ],
+              ),
+            ),
+            SizedBox(height: 16,),
+            Container(
+              margin: const EdgeInsets.only(left: 16, right: 16,),
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Color(0xFF00AEDB),
+                borderRadius: BorderRadius.all(Radius.circular(5))
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("List TM Name", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
+                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
                 ],
               ),
             ),
@@ -139,4 +186,22 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+Route routeToFillNew() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => FillNew(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
