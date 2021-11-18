@@ -72,9 +72,38 @@ class _DetailEcmState extends State<DetailEcm> {
               ),
               const Text("Machine : MC 5 2500T (32ZAC004)"),
               _buildDivider(),
-              const Text("keterangan"),
-              const Text("Lokasi & tanggal"),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: const Text("Incident",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87)),
+              ),
               SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: const Text(
+                    "Shift A - 15:00 · Effect : Safety · Mistake : Molding",
+                    style: TextStyle(fontSize: 14, color: Colors.grey)),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: const Text("SELANG HTM GETAS ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87)),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
                 width: MediaQuery.of(context).size.width,
                 height: 200,
                 child: ListView(
@@ -114,6 +143,10 @@ class _DetailEcmState extends State<DetailEcm> {
               ),
               _buildDivider(),
               Container(
+                child: _buildItemRepairing(),
+              ),
+              _buildDivider(),
+              Container(
                 child: _buildImprovement(),
               ),
               _buildDivider(),
@@ -128,6 +161,26 @@ class _DetailEcmState extends State<DetailEcm> {
               Container(
                 child: _buildSparePart(),
               ),
+              _buildDivider(),
+              Container(
+                child: _buildSign(),
+              ),
+              _buildDivider(),
+              Container(
+                child: _buildTotalCost(),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: _buildButtonDecline(),
+                  ),
+                  Container(
+                    child: _buildButtonAdd(),
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -148,7 +201,17 @@ class _DetailEcmState extends State<DetailEcm> {
     return Container(
         child: Column(
       children: [
-        const Text("Why Analisis"),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Why Analisis",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           // ignore: prefer_const_literals_to_create_immutables
@@ -218,8 +281,114 @@ class _DetailEcmState extends State<DetailEcm> {
     return Container(
         child: Column(
       children: [
-        const Text("Item Checking"),
-        const Text("SELANG BRIGESTON PASCA ART "),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Item Checking",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("1. SELANG BRIGESTON PASCA ART ",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text("Standart"),
+            ),
+            Text(" : "),
+            Expanded(
+              flex: 4,
+              child: Text("Solid colour and strong"),
+            )
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text("Actual"),
+            ),
+            Text(" : "),
+            Expanded(
+              flex: 4,
+              child: Text("Color is faded and there are rips"),
+            )
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text("Time"),
+            ),
+            Text(" : "),
+            Expanded(
+              flex: 4,
+              child: Text("15.00 - 17.00"),
+            )
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text("Note"),
+            ),
+            Text(" : "),
+            Expanded(
+              flex: 4,
+              child: Text("there are debris from gram compressor dirt"),
+            )
+          ],
+        ),
+      ],
+    ));
+  }
+
+  Widget _buildItemRepairing() {
+    return Container(
+        child: Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Item Repairing",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("1. SELANG BRIGESTON PASCA ART ",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -270,7 +439,17 @@ class _DetailEcmState extends State<DetailEcm> {
     return Container(
         child: Column(
       children: [
-        const Text("Improvement/Kaizen"),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Improvement/Kaizen",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -293,7 +472,17 @@ class _DetailEcmState extends State<DetailEcm> {
     return Container(
         child: Column(
       children: [
-        const Text("Item Checking"),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Working Time",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -344,7 +533,17 @@ class _DetailEcmState extends State<DetailEcm> {
     return Container(
         child: Column(
       children: [
-        const Text("Cost"),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Cost",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -373,7 +572,17 @@ class _DetailEcmState extends State<DetailEcm> {
     return Container(
         child: Column(
       children: [
-        const Text("Sparepart"),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("Sparepart",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -387,5 +596,120 @@ class _DetailEcmState extends State<DetailEcm> {
         ),
       ],
     ));
+  }
+
+  Widget _buildSign() {
+    return Container(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: const Text("E-Sign",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text("1. Sudin - T/L"),
+        Text("2. Ario - Staff"),
+      ],
+    ));
+  }
+
+  Widget _buildTotalCost() {
+    return Container(
+        child: Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Text("Total Cost (Rp) :",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87)),
+            ),
+            Text("Rp.88.333"),
+          ],
+        ),
+      ],
+    ));
+  }
+
+  Widget _buildButtonAdd() {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.44,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ElevatedButton(
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xff00AEDB)),
+                padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(horizontal: 0, vertical: 14)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                )),
+                textStyle:
+                    MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
+            onPressed: () {
+              // saveData();
+            },
+            child: Text(
+              'Add Signature',
+              style: TextStyle(
+                fontFamily: 'NunitoSans',
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtonDecline() {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.44,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ElevatedButton(
+            style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.redAccent),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(horizontal: 0, vertical: 14)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        side: BorderSide(color: Colors.redAccent))),
+                textStyle:
+                    MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
+            onPressed: () {},
+            child: Text(
+              'Decline',
+              style: TextStyle(
+                fontFamily: 'Rubick',
+                color: Colors.redAccent,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
