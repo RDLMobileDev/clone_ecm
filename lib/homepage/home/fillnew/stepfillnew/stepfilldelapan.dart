@@ -69,7 +69,10 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(width: 30, height: 30, child: Checkbox(value: false, onChanged: (value){})),
+                        SizedBox(width: 30, height: 30,
+                         child: Checkbox(value: false, onChanged: (value){}
+                         )
+                         ),
                         const Text("Engineer")
                       ],
                     ),
