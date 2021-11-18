@@ -47,6 +47,7 @@ class _FillNewState extends State<FillNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFF00AEDB),
         elevation: 1,
