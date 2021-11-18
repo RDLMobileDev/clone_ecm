@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print
 
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
@@ -29,10 +29,11 @@ class _FillNewState extends State<FillNew> {
   }
 
   continued() {
-    _currentStep < 2 ? setState(() => _currentStep += 1) : null;
-    if(_stepClicked != 8) {
-      setState(() => _stepClicked += 1);
-    }
+    _currentStep < 8 ? setState(() => _currentStep += 1) : null;
+    print(_currentStep);
+    // if(_stepClicked != 8) {
+    //   setState(() => _stepClicked += 1);
+    // }
     // _keyFillSatu.currentState!.saveFillNewSatu();
   }
 
@@ -101,7 +102,7 @@ class _FillNewState extends State<FillNew> {
                               border: Border.all(color: Color(0xFF00AEDB)),
                               borderRadius: BorderRadius.all(Radius.circular(5))
                             ),
-                            child: Center(child: Text("Cancel", style: TextStyle(
+                            child: Center(child: Text("Back", style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -133,11 +134,67 @@ class _FillNewState extends State<FillNew> {
                 steps: [
                   Step(
                     title: Text(''),
-                    content: StepFillDelapan(),
+                    content: StepFillSatu(),
                     isActive: _currentStep >= 0,
-                    state: _currentStep >= 0
-                        ? StepState.complete
-                        : StepState.disabled,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillDua(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillTiga(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillEmpat(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillLima(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillEnam(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillTujuh(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
+                  ),
+                  Step(
+                    title: Text(''),
+                    content: StepFillDelapan(),
+                    // isActive: _currentStep >= 0,
+                    // state: _currentStep >= 0
+                    //     ? StepState.complete
+                    //     : StepState.disabled,
                   ),
                 ],
               ),
