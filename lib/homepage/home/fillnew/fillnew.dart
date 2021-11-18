@@ -45,6 +45,12 @@ class _FillNewState extends State<FillNew> {
   }
 
   @override
+  void initState() {
+    print(_currentStep);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -137,65 +143,65 @@ class _FillNewState extends State<FillNew> {
                     title: Text(''),
                     content: StepFillSatu(),
                     isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillDua(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillTiga(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillEmpat(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillLima(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillEnam(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillTujuh(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                   Step(
                     title: Text(''),
                     content: StepFillDelapan(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                 ],
               ),
