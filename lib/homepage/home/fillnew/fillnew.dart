@@ -29,7 +29,7 @@ class _FillNewState extends State<FillNew> {
   }
 
   continued() {
-    _currentStep < 8 ? setState(() => _currentStep += 1) : null;
+    _currentStep < 7 ? setState(() => _currentStep += 1) : null;
     print(_currentStep);
     // if(_stepClicked != 8) {
     //   setState(() => _stepClicked += 1);
