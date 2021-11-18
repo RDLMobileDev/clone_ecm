@@ -115,7 +115,7 @@ class _FillNewState extends State<FillNew> {
                               fontWeight: FontWeight.w400,
                               color: Color(0xFF00AEDB)
                             ),),),
-                          ),
+                         ),
                         ),
                         InkWell(
                           onTap: () => continued(),
