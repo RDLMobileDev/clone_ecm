@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:ui';
+import 'package:e_cm/homepage/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class LogIn extends StatefulWidget {
@@ -14,7 +17,7 @@ class _LogInState extends State<LogIn> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        padding: EdgeInsets.fromLTRB(24, 76, 24, 70),
+        padding: const EdgeInsets.fromLTRB(24, 76, 24, 70),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +80,11 @@ class _LogInState extends State<LogIn> {
                       width: 343,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed: null,
+                        onPressed: (){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => const Dashboard())
+                          );
+                        },
                         child: Text(
                           'Login',
                           style: TextStyle(color: Colors.white),
