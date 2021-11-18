@@ -10,7 +10,11 @@ class StepFillDua extends StatefulWidget {
 class _StepFillDuaState extends State<StepFillDua> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+      ),
+      
       
     );
   }
