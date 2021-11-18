@@ -33,7 +33,7 @@ class _FillNewState extends State<FillNew> {
     if(_stepClicked != 8) {
       setState(() => _stepClicked += 1);
     }
-    _keyFillSatu.currentState!.saveFillNewSatu();
+    // _keyFillSatu.currentState!.saveFillNewSatu();
   }
 
   cancel() {
@@ -47,6 +47,7 @@ class _FillNewState extends State<FillNew> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
         elevation: 1,
         title: Text(
           "E-CM Card",
@@ -132,67 +133,11 @@ class _FillNewState extends State<FillNew> {
                 steps: [
                   Step(
                     title: Text(''),
-                    content: StepFillSatu(key: _keyFillSatu,),
-                    isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillDua(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillTiga(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillEmpat(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillLima(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillEnam(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillTujuh(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
                     content: StepFillDelapan(),
-                    // isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
+                    isActive: _currentStep >= 0,
+                    state: _currentStep >= 0
+                        ? StepState.complete
+                        : StepState.disabled,
                   ),
                 ],
               ),

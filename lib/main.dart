@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     // ignore: prefer_const_constructors
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LogIn(),
+      home: const LogIn(),
     );
   }
 }
