@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage(
-                                      "assets/images/Logo Sugity.png"))),
+                                      "assets/images/logo_sugity.png"))),
                         )
                       ],
                     ),
@@ -97,87 +97,142 @@ class _HomeState extends State<Home> {
                     color: Color(0xFF404446)),
               ),
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Container(
-              padding: const EdgeInsets.only(left: 16, right: 16,),
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+              ),
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    SliderHistory(),
-                    SliderHistory()
-                  ],
+                  children: [SliderHistory(), SliderHistory()],
                 ),
               ),
             ),
-            SizedBox(height: 25,),
+            SizedBox(
+              height: 25,
+            ),
             Container(
-              padding: const EdgeInsets.only(left: 16, right: 16,),
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+              ),
               width: MediaQuery.of(context).size.width,
-              child: Text("Activity", style: TextStyle(
+              child: Text(
+                "Activity",
+                style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF404446)),),
+                    color: Color(0xFF404446)),
+              ),
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).push(routeToFillNew());
               },
               child: Container(
-                margin: const EdgeInsets.only(left: 16, right: 16,),
+                margin: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                ),
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 width: MediaQuery.of(context).size.width,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Color(0xFF00AEDB),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-                ),
+                    color: Color(0xFF00AEDB),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
-                    Text("Fill New E-CM Card", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
-                    Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                    Text(
+                      "Fill New E-CM Card",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14,
+                      color: Colors.white,
+                    )
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Container(
-              margin: const EdgeInsets.only(left: 16, right: 16,),
+              margin: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+              ),
               padding: const EdgeInsets.only(left: 16, right: 16),
               width: MediaQuery.of(context).size.width,
               height: 40,
               decoration: BoxDecoration(
-                color: Color(0xFF00AEDB),
-                borderRadius: BorderRadius.all(Radius.circular(5))
-              ),
+                  color: Color(0xFF00AEDB),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  Text("Approved E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                  Text(
+                    "Approved E-Sign",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Colors.white,
+                  )
                 ],
               ),
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Container(
-              margin: const EdgeInsets.only(left: 16, right: 16,),
+              margin: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+              ),
               padding: const EdgeInsets.only(left: 16, right: 16),
               width: MediaQuery.of(context).size.width,
               height: 40,
               decoration: BoxDecoration(
-                color: Color(0xFF00AEDB),
-                borderRadius: BorderRadius.all(Radius.circular(5))
-              ),
+                  color: Color(0xFF00AEDB),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  Text("List TM Name", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400 ), ),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white,)
+                  Text(
+                    "List TM Name",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Colors.white,
+                  )
                 ],
               ),
             ),

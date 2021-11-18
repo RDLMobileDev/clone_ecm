@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, duplicate_ignore
+
 import 'package:flutter/material.dart';
 
 class DetailEcm extends StatefulWidget {
@@ -72,7 +74,7 @@ class _DetailEcmState extends State<DetailEcm> {
               _buildDivider(),
               const Text("keterangan"),
               const Text("Lokasi & tanggal"),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 200,
                 child: ListView(
@@ -149,8 +151,9 @@ class _DetailEcmState extends State<DetailEcm> {
         const Text("Why Analisis"),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Why 1"),
             ),
@@ -163,8 +166,9 @@ class _DetailEcmState extends State<DetailEcm> {
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Why 2"),
             ),
@@ -178,8 +182,9 @@ class _DetailEcmState extends State<DetailEcm> {
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Why 3"),
             ),
@@ -192,8 +197,9 @@ class _DetailEcmState extends State<DetailEcm> {
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("How"),
             ),
@@ -217,7 +223,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Time"),
             ),
@@ -231,7 +237,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Repairing"),
             ),
@@ -245,7 +251,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Note"),
             ),
@@ -268,7 +274,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Idea"),
             ),
@@ -291,7 +297,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Check & Repair"),
             ),
@@ -305,7 +311,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Break time"),
             ),
@@ -319,7 +325,7 @@ class _DetailEcmState extends State<DetailEcm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: 100,
               child: Text("Line stop"),
             ),
