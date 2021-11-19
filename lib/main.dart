@@ -2,6 +2,7 @@
 // import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/auth/view/login.dart';
 import 'package:e_cm/homepage/account/view/account.dart';
+import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';

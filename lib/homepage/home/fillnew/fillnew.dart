@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print
 
+import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
@@ -39,7 +40,7 @@ class _FillNewState extends State<FillNew> {
 
   cancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
-    if(_stepClicked != 1) {
+    if (_stepClicked != 1) {
       setState(() => _stepClicked -= 1);
     }
   }
@@ -98,17 +99,21 @@ class _FillNewState extends State<FillNew> {
                             width: MediaQuery.of(context).size.width * 0.4,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Color(0xFF00AEDB)),
-                              borderRadius: BorderRadius.all(Radius.circular(5))
+                                color: Colors.white,
+                                border: Border.all(color: Color(0xFF00AEDB)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: Center(
+                              child: Text(
+                                "Back",
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF00AEDB)),
+                              ),
                             ),
-                            child: Center(child: Text("Back", style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF00AEDB)
-                            ),),),
-                         ),
+                          ),
                         ),
                         InkWell(
                           onTap: () => continued(),
@@ -116,15 +121,20 @@ class _FillNewState extends State<FillNew> {
                             width: MediaQuery.of(context).size.width * 0.4,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius: BorderRadius.all(Radius.circular(5))
+                                color: Color(0xFF00AEDB),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: Center(
+                              child: Text(
+                                "Next $_stepClicked/$_stepTotal",
+                                style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                            child: Center(child: Text("Next $_stepClicked/$_stepTotal", style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),),),
                           ),
                         )
                       ],
@@ -134,13 +144,12 @@ class _FillNewState extends State<FillNew> {
                 steps: [
                   Step(
                     title: Text(''),
-                    content: StepFillDua(),
+                    content: AddItemFillTujuh(),
                     // isActive: _currentStep >= 0,
                     // state: _currentStep >= 0
                     //     ? StepState.complete
                     //     : StepState.disabled,
                   ),
-                  
                 ],
               ),
             ),
