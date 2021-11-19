@@ -2,8 +2,7 @@
 // import 'package:e_cm/homepage/dashboard.dart';
 // ignore_for_file: prefer_const_constructors
 
-import 'package:e_cm/auth/view/login.dart';
-import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/auth/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LogIn(),
+      home: SplashScreen(),
     );
   }
 }

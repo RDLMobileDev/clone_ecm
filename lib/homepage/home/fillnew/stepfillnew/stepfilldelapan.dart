@@ -59,7 +59,7 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.28,
                     height: 40,
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
@@ -78,7 +78,7 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.28,
                     height: 40,
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.28,
                     height: 40,
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(

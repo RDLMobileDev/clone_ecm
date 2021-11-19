@@ -40,9 +40,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                   Card(
                     elevation: 2,
                     child: Container(
-                      padding: const EdgeInsets.all(10),
-                      width: 100,
-                      height: 56,
+                      padding: const EdgeInsets.all(8),
+                      width: 96,
                       child: const Center(child: Text("Breakdown Maintance", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF404446), fontWeight: FontWeight.w400 ), ),),
                     ),
                   ),
@@ -50,9 +49,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                   Card(
                     elevation: 2,
                     child: Container(
-                      padding: const EdgeInsets.all(10),
-                      width: 100,
-                      height: 56,
+                      padding: const EdgeInsets.all(8),
+                      width: 96,
                       child: const Center(child: Text("Preventive Maintance", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF404446), fontWeight: FontWeight.w400 ), ),),
                     ),
                   ),
@@ -60,9 +58,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                   Card(
                     elevation: 2,
                     child: Container(
-                      padding: const EdgeInsets.all(10),
-                      width: 100,
-                      height: 56,
+                      padding: const EdgeInsets.all(8),
+                      width: 96,
                       child: const Center(child: Text("Information Maintance", style: TextStyle(fontFamily: 'Rubik', color: Color(0xFF404446), fontSize: 14, fontWeight: FontWeight.w400 ), ),),
                     ),
                   )

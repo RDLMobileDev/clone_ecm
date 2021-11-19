@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
+import 'package:e_cm/auth/view/login.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,6 +13,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  void moveToLogin() {
+    Timer(Duration(seconds: 3), () => Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => LogIn())
+    ));
+  }
+
+  @override
+  void initState() {
+    moveToLogin();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
