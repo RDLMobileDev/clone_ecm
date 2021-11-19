@@ -68,7 +68,51 @@ class _FillNewState extends State<FillNew> {
             )),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => SimpleDialog(
+                          title: Container(
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'Information',
+                            ),
+                          ),
+                          children: [
+                            ListTile(
+                              title: const Text('1. Layout satu'),
+                              onTap: () =>
+                                  Navigator.pop(context, 'asd@mail.com'),
+                            ),
+                            ListTile(
+                              title: const Text('2. Layout Dua'),
+                              onTap: () =>
+                                  Navigator.pop(context, 'asd@mail.com'),
+                            ),
+                            ListTile(
+                              title: const Text('3. Layout Tiga'),
+                              onTap: () =>
+                                  Navigator.pop(context, 'asd@mail.com'),
+                            ),
+                            ListTile(
+                              title: const Text('4. Layout Empat'),
+                              onTap: () =>
+                                  Navigator.pop(context, 'asd@mail.com'),
+                            ),
+                          ],
+                        )).then((value) => {
+                      if (value != null)
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('asdasdasd: $value'),
+                            action: SnackBarAction(
+                              label: 'OK',
+                              onPressed: () {},
+                            ),
+                          ))
+                        }
+                    });
+              },
               icon: Icon(
                 Icons.info_outline,
                 color: Colors.white,
@@ -144,7 +188,7 @@ class _FillNewState extends State<FillNew> {
                 steps: [
                   Step(
                     title: Text(''),
-                    content: AddItemFillTujuh(),
+                    content: StepFillSatu(),
                     // isActive: _currentStep >= 0,
                     // state: _currentStep >= 0
                     //     ? StepState.complete
