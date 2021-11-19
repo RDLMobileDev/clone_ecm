@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:e_cm/homepage/home/view/account.dart';
+import 'package:e_cm/homepage/account/view/account.dart';
 import 'package:e_cm/homepage/home/view/home.dart';
-import 'package:e_cm/homepage/home/view/notification.dart';
+import 'package:e_cm/homepage/notification/view/notification.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -16,8 +16,8 @@ class _DashboardState extends State<Dashboard> {
   // ignore: prefer_final_fields
   List<Widget> _listWidget = [
     Home(),
-    NotificationPage(),
-    Account()
+    NotificationMember(),
+    AccountMember()
   ];
 
   void _onMenuItemTapped(int index) {

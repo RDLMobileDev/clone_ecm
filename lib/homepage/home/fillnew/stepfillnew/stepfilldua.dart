@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,16 +18,33 @@ class _StepFillDuaState extends State<StepFillDua> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Incident",
-              style: TextStyle(
-                  fontFamily: 'Rubik',
-                  color: Color(0xFF404446),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.normal),
+            Container(
+              child: Row(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  const Text(
+                    "Incident",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal),
+                  ),
+                   const Text(
+                    "*",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.red,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal),
+                  ),
+                ],
+              ),
             ),
             Container(
+              margin: const EdgeInsets.only(top: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -108,9 +125,10 @@ class _StepFillDuaState extends State<StepFillDua> {
                     fontWeight: FontWeight.w400),
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
-                    suffixIcon: Icon(Icons.access_time),
+                    prefixIcon: Icon(Icons.access_time),
+                    suffixIcon: Icon(Icons.arrow_drop_down),
                     hintText: 'HH:MM',
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
+                    contentPadding: EdgeInsets.all(5),
                     hintStyle: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 14,
@@ -118,7 +136,7 @@ class _StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 4),
+              margin: const EdgeInsets.only(top: 16),
               padding: const EdgeInsets.all(5),
               height: 80,
               width: 343,
@@ -144,7 +162,7 @@ class _StepFillDuaState extends State<StepFillDua> {
               // ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(top: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -264,7 +282,7 @@ class _StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 4),
+              margin: EdgeInsets.only(top: 16),
               child: const Text(
                 "Percentage Mistake",
                 style: TextStyle(
@@ -429,7 +447,7 @@ class _StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 4),
+              margin: EdgeInsets.only(top: 16),
               child: const Text(
                 "Picture and Analysis",
                 style: TextStyle(

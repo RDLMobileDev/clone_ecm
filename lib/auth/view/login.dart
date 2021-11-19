@@ -17,7 +17,7 @@ class _LogInState extends State<LogIn> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        padding: const EdgeInsets.fromLTRB(24, 76, 24, 70),
+        padding: const EdgeInsets.fromLTRB(24, 76, 24, 16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

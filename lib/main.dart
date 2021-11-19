@@ -1,9 +1,8 @@
 //import 'package:e_cm/auth/view/splash_screen.dart';
 // import 'package:e_cm/homepage/dashboard.dart';
-import 'package:e_cm/auth/view/login.dart';
-import 'package:e_cm/homepage/account/view/account.dart';
-import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
-import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+// ignore_for_file: prefer_const_constructors
+
+import 'package:e_cm/auth/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
@@ -17,10 +16,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FillNew(),
+      home: SplashScreen(),
     );
   }
 }
