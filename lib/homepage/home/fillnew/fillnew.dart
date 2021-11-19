@@ -1,6 +1,4 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print
-
-import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
@@ -73,45 +71,112 @@ class _FillNewState extends State<FillNew> {
                     context: context,
                     builder: (BuildContext context) => SimpleDialog(
                           title: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Information',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(bottom: 16),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    'Information',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontStyle: FontStyle.normal,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: RichText(
+                                    text: TextSpan(
+                                        text: 'Symbol',
+                                        style: TextStyle(
+                                            color: Color(0xFF404446),
+                                            fontSize: 16,
+                                            fontFamily: 'Rubik',
+                                            fontStyle: FontStyle.normal,
+                                            fontWeight: FontWeight.w400),
+                                        children: [
+                                          TextSpan(
+                                            text: ' * ',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                                fontFamily: 'Rubik',
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          TextSpan(
+                                            text: '(required to filled)',
+                                            style: TextStyle(
+                                                color: Color(0xFF404446),
+                                                fontSize: 16,
+                                                fontFamily: 'Rubik',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w400),
+                                          )
+                                        ]),
+                                  ),
+                                ),
+                                Divider(
+                                  height: 8,
+                                  color: Color(0xFFCDCFD0),
+                                ),
+                                Text(
+                                  "Rule line stop",
+                                  style: TextStyle(
+                                      color: Color(0xFF404446),
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik',
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400),
+                                  textAlign: TextAlign.left,
+                                )
+                              ],
                             ),
                           ),
                           children: [
-                            ListTile(
-                              title: const Text('1. Layout satu'),
-                              onTap: () =>
-                                  Navigator.pop(context, 'asd@mail.com'),
+                            Container(
+                              height: 30,
+                              width: 30,
+                              child: ListTile(
+                                title: const Text(
+                                    '1. > 10 minutes = G/L require e-sign > 15'),
+                                onTap: () =>
+                                    Navigator.pop(context, 'asd@mail.com'),
+                              ),
                             ),
-                            ListTile(
-                              title: const Text('2. Layout Dua'),
-                              onTap: () =>
-                                  Navigator.pop(context, 'asd@mail.com'),
+                            Container(
+                              height: 30,
+                              width: 30,
+                              child: ListTile(
+                                title: const Text(
+                                    '2. minutes = C/L require e-sign > 20'),
+                                onTap: () =>
+                                    Navigator.pop(context, 'asd@mail.com'),
+                              ),
                             ),
-                            ListTile(
-                              title: const Text('3. Layout Tiga'),
-                              onTap: () =>
-                                  Navigator.pop(context, 'asd@mail.com'),
+                            Container(
+                              height: 30,
+                              width: 30,
+                              child: ListTile(
+                                title: const Text(
+                                    '3. minutes = MGR require e-sign + cost >'),
+                                onTap: () =>
+                                    Navigator.pop(context, 'asd@mail.com'),
+                              ),
                             ),
-                            ListTile(
-                              title: const Text('4. Layout Empat'),
-                              onTap: () =>
-                                  Navigator.pop(context, 'asd@mail.com'),
+                            Container(
+                              height: 30,
+                              width: 30,
+                              child: ListTile(
+                                title: const Text(
+                                    '4. 1 million > 40 minutes = GM require e-sign'),
+                                onTap: () =>
+                                    Navigator.pop(context, 'asd@mail.com'),
+                              ),
                             ),
                           ],
-                        )).then((value) => {
-                      if (value != null)
-                        {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('asdasdasd: $value'),
-                            action: SnackBarAction(
-                              label: 'OK',
-                              onPressed: () {},
-                            ),
-                          ))
-                        }
-                    });
+                        ));
               },
               icon: Icon(
                 Icons.info_outline,
