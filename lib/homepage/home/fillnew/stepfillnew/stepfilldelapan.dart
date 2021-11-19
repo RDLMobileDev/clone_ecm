@@ -121,8 +121,10 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
               padding: const EdgeInsets.all(5),
               height: 40,
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF979C9E)),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
+                border: Border.all(color: const Color(0xFF979C9E)
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(5)
+                )
               ),
               child: TextFormField(
                 style: const TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400),
