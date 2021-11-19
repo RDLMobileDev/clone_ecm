@@ -18,7 +18,7 @@ class _NotificationMemberState extends State<NotificationMember> {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(16, 28, 24, 16),
+            padding: EdgeInsets.fromLTRB(16, 45, 24, 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
