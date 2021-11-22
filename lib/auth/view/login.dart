@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,17 @@ class _LogInState extends State<LogIn> {
     // print(rspRegister['user']['password']);
 
     if (rspLogin['response']['status'] == 200) {
-      // final SharedPreferences prefs = await _prefs;
+      final SharedPreferences prefs = await _prefs;
+
+      prefs.setString("emailKey", rspLogin['data']['user']['email']);
+      prefs.setString("deviceKey", rspLogin['data']['user']['device_key']);
+      prefs.setString("tokenKey", rspLogin['data']['token']);
+
+      print("EMAIL user = ");
+      print(rspLogin['data']['user']['email']);
+      print("TOKEN user = ");
+      print(prefs.getString("tokenKey"));
+
       setState(() {
         Fluttertoast.showToast(
             msg: 'Login Sukses',
