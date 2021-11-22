@@ -19,8 +19,7 @@ class FillNew extends StatefulWidget {
 }
 
 class _FillNewState extends State<FillNew> {
-  final GlobalKey<StepFillSatuState> _keyFillSatu = GlobalKey();
-
+  final StepFillSatu _stepFillSatu = StepFillSatu();
   int _currentStep = 0;
   final int _stepTotal = 8;
   int _stepClicked = 1;
@@ -32,23 +31,31 @@ class _FillNewState extends State<FillNew> {
 
   continued() {
     _currentStep < 7 ? setState(() => _currentStep += 1) : null;
+
+    print(_currentStep);
+    if (_currentStep == 1) {
+      _stepFillSatu.getSaveFillSatu();
+    }
+
     if (_stepClicked != 8) {
       setState(() => _stepClicked += 1);
     }
-    print(_currentStep);
   }
 
   cancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
-    if (_stepClicked != 1) {
+    if (_stepClicked != 2) {
       setState(() => _stepClicked -= 1);
+    } else if (_stepClicked == 2) {
+      Navigator.of(context).pop();
     }
-    print(_currentStep);
+    print(_stepClicked);
   }
 
   @override
   void initState() {
     _stepClicked += 1;
+
     super.initState();
   }
 
