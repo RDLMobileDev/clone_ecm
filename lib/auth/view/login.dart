@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -109,6 +110,9 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLogInEnabled =
+        !_isEmailError && !_isPasswordError && _initialEnabledButton;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -144,23 +148,74 @@ class _LogInState extends State<LogIn> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          labelText: 'Email',
-                          suffixStyle: TextStyle(color: Colors.green)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        labelText: 'Email',
+                        suffixStyle: TextStyle(color: Colors.green),
+                        errorText:
+                            _isEmailError ? "Format email tidak benar" : null,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      inputFormatters: [LengthLimitingTextInputFormatter(40)],
+                      onFieldSubmitted: (value) {
+                        setState(() {
+                          _isEmailError =
+                              !(value.isNotEmpty && value.contains("@"));
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _isEmailError =
+                              !(value.isNotEmpty && value.contains("@"));
+                        });
+                      },
                     ),
                     SizedBox(
                       height: 22,
                     ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
+                    Focus(
+                      onFocusChange: (isFocused) {
+                        setState(() {
+                          if (isFocused &&
+                              _passwordController.text.isNotEmpty) {
+                            _initialEnabledButton =
+                                !_isEmailError && !_isPasswordError;
+                          }
+                        });
+                      },
+                      child: TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           labelText: 'Password',
-                          suffixStyle: TextStyle(color: Colors.green)),
+                          suffixStyle: TextStyle(color: Colors.green),
+                          errorText: _isPasswordError
+                              ? "Kata sandi tidak boleh kosong"
+                              : null,
+                        ),
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(40),
+                        ],
+                        onFieldSubmitted: (value) {
+                          setState(() {
+                            _isPasswordError = value.isEmpty;
+                            _initialEnabledButton =
+                                !_isEmailError && !_isPasswordError;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _isPasswordError = value.isEmpty;
+                            _initialEnabledButton =
+                                !_isEmailError && !_isPasswordError;
+                          });
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -189,9 +244,11 @@ class _LogInState extends State<LogIn> {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ))),
-                        onPressed: () {
-                          postLogin();
-                        },
+                        onPressed: isLogInEnabled
+                            ? () {
+                                postLogin();
+                              }
+                            : null,
                         child: Text(
                           'Login',
                           style: TextStyle(
