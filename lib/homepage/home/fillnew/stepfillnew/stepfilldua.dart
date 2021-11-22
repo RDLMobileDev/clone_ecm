@@ -1,7 +1,11 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, avoid_print
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StepFillDua extends StatefulWidget {
   const StepFillDua({Key? key}) : super(key: key);
@@ -11,7 +15,10 @@ class StepFillDua extends StatefulWidget {
 }
 
 class _StepFillDuaState extends State<StepFillDua> {
+  final ImagePicker imagePicker = ImagePicker();
   TextEditingController? timePickController;
+
+  List<XFile>? imageFileList = [];
 
   String shiftA = '', shiftB = '', shiftC = '';
   String safetyOpt = '', qualityOpt = '', deliveryOpt = '', costOpt = '';
@@ -41,6 +48,30 @@ class _StepFillDuaState extends State<StepFillDua> {
             TextEditingController(text: value!.format(context));
       });
     });
+  }
+
+  void selectImages() async {
+    try {
+      final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+      if (selectedImages!.isNotEmpty) {
+        imageFileList!.addAll(selectedImages);
+      } else {
+        imageFileList!.clear();
+        Fluttertoast.showToast(
+            msg: "Tidak boleh melebihi 4 foto",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(0xFF00AEDB),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+
+      print("Image List Length:" + imageFileList!.length.toString());
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -658,30 +689,58 @@ class _StepFillDuaState extends State<StepFillDua> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              height: 120,
-              width: 343,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add_a_photo,
-                    color: Color(0xFF979C9E),
-                    size: 50,
-                  ),
-                  Text(
-                    "Tap to add, max 4 photo",
-                    style: const TextStyle(
-                        color: Color(0xFF979C9E),
-                        fontSize: 14,
-                        fontFamily: 'Rubik',
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
+            InkWell(
+              onTap: () => selectImages(),
+              child: Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.all(10),
+                height: 120,
+                width: 343,
+                decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF979C9E)),
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                child: imageFileList!.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Icon(
+                            Icons.add_a_photo,
+                            color: Color(0xFF979C9E),
+                            size: 50,
+                          ),
+                          Text(
+                            "Tap to add, max 4 photo",
+                            style: const TextStyle(
+                                color: Color(0xFF979C9E),
+                                fontSize: 14,
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      )
+                    : GridView.builder(
+                        itemCount: imageFileList!.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Image.file(
+                                  File(imageFileList![index].path),
+                                  fit: BoxFit.cover,
+                                  width: 80,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
               ),
             ),
           ],
