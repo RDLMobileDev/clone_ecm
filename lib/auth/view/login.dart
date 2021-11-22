@@ -77,13 +77,12 @@ class _LogInState extends State<LogIn> {
                     ),
                     Container(
                       color: Color(0xff979C9E),
-                      width: 343,
+                      width: MediaQuery.of(context).size.width,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed: (){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const Dashboard())
-                          );
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Dashboard()));
                         },
                         child: Text(
                           'Login',
