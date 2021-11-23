@@ -8,13 +8,17 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class StepFillDua extends StatefulWidget {
-  const StepFillDua({Key? key}) : super(key: key);
+  final StepFillDuaState stepFillDuaState = StepFillDuaState();
+
+  void getSaveFillDua() {
+    stepFillDuaState.saveStepFillDua();
+  }
 
   @override
-  _StepFillDuaState createState() => _StepFillDuaState();
+  StepFillDuaState createState() => StepFillDuaState();
 }
 
-class _StepFillDuaState extends State<StepFillDua> {
+class StepFillDuaState extends State<StepFillDua> {
   final ImagePicker imagePicker = ImagePicker();
   TextEditingController? timePickController;
 
@@ -72,6 +76,17 @@ class _StepFillDuaState extends State<StepFillDua> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void saveStepFillDua() {
+    Fluttertoast.showToast(
+        msg: 'Data Disimpan',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16);
   }
 
   @override
@@ -695,7 +710,7 @@ class _StepFillDuaState extends State<StepFillDua> {
                 margin: const EdgeInsets.only(top: 4),
                 padding: const EdgeInsets.all(10),
                 height: 120,
-                width: 343,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                     border: Border.all(color: const Color(0xFF979C9E)),
                     borderRadius: const BorderRadius.all(Radius.circular(5))),

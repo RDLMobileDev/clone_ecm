@@ -1,5 +1,7 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, avoid_print
 
+import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
@@ -35,6 +37,7 @@ class _LogInState extends State<LogIn> {
     String passwordUser = _passwordController.text;
     String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
+
     try {
       var rspLogin = await loginUser(
           emailUser, passwordUser, deviceUser.toString(), versionUser);
@@ -115,17 +118,36 @@ class _LogInState extends State<LogIn> {
               fontSize: 16);
         });
       }
+    } on SocketException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+          msg: 'Terjadi masalah pada koneksi Anda',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    } on TimeoutException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+          msg: 'Terjadi masalah pada koneksi Anda',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
     } catch (e) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Periksa koneksi internet',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
+      print(e);
+      Fluttertoast.showToast(
+          msg: 'Terjadi masalah pada koneksi Anda',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
     }
   }
 
@@ -272,6 +294,8 @@ class _LogInState extends State<LogIn> {
                           borderRadius: BorderRadius.circular(12),
                         ))),
                         onPressed: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => const Dashboard()));
                           postLogin();
                         },
                         child: Text(
