@@ -228,51 +228,52 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       ],
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10, right: 10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.transparent),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  child: Row(
+                  Container(
+                    margin: EdgeInsets.only(top: 10, right: 10),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.transparent),
                     // ignore: prefer_const_literals_to_create_immutables
-                    children: <Widget>[
-                      Icon(
-                        Icons.change_history_outlined,
-                        color: Colors.grey,
-                        size: 30,
-                      ),
-                      Text(
-                        'Limit',
-                        style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
-                      )
-                    ],
+                    child: Row(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: <Widget>[
+                        Icon(
+                          Icons.change_history_outlined,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                        Text(
+                          'Limit',
+                          style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.transparent),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  child: Row(
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.transparent),
                     // ignore: prefer_const_literals_to_create_immutables
-                    children: <Widget>[
-                      Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                        size: 30,
-                      ),
-                      Text(
-                        'N / G',
-                        style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
-                      )
-                    ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        Icon(
+                          Icons.close,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                        Text(
+                          'N/G',
+                          style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
