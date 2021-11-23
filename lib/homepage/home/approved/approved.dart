@@ -68,7 +68,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                 text: 'E-CM Card from',
                                 style: TextStyle(color: Color(0xFF6C7072))),
                             TextSpan(
-                                text: ' I. Budi',
+                                text: ' Pedrosa',
                                 style: TextStyle(
                                     color: Color(0xFF00AEDB),
                                     fontWeight: FontWeight.w700)),
@@ -186,7 +186,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                 text: 'E-CM Card from',
                                 style: TextStyle(color: Color(0xFF6C7072))),
                             TextSpan(
-                                text: ' I. Budi',
+                                text: ' Pedrosa',
                                 style: TextStyle(
                                     color: Color(0xFF00AEDB),
                                     fontWeight: FontWeight.w700)),

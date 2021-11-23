@@ -43,7 +43,7 @@ class _AccountMemberState extends State<AccountMember> {
               fontSize: 16);
         });
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => LogIn()));
+            .pushReplacement(MaterialPageRoute(builder: (context) => LogIn()));
       } else {
         setState(() {
           Fluttertoast.showToast(

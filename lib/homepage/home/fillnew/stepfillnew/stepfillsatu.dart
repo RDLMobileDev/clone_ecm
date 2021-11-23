@@ -2,8 +2,10 @@
 
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
+import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
 import 'package:e_cm/homepage/home/services/classificationservice.dart';
 import 'package:e_cm/homepage/home/services/locationservice.dart';
+import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +24,9 @@ class StepFillSatu extends StatefulWidget {
 
 class StepFillSatuState extends State<StepFillSatu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  TextEditingController? machineNameController;
+
+  bool isTapedMachineName = false;
 
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
@@ -30,6 +35,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
+  List<MachineNameModel> _listMachineName = [];
 
   // static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
   static const machineItems = <String>['3ZAC0004', '3ZAC0005', '3ZAC0006'];
@@ -84,6 +90,13 @@ class StepFillSatuState extends State<StepFillSatu> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     _listLocation = await locationService.getLocationData(tokenUser);
     return await locationService.getLocationData(tokenUser);
+  }
+
+  Future<void> getMachineName(String idLocation) async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    _listMachineName =
+        await machineNameService.getMachineName(idLocation, tokenUser);
   }
 
   @override
@@ -298,6 +311,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   setState(() {
                                     locationIdSelected = value.id;
                                   });
+                                  getMachineName(value.id);
                                 },
                               ))
                           .toList(),
@@ -349,6 +363,12 @@ class StepFillSatuState extends State<StepFillSatu> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
+                controller: machineNameController,
+                onTap: () {
+                  setState(() {
+                    isTapedMachineName = !isTapedMachineName;
+                  });
+                },
                 style: const TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 14,
@@ -364,6 +384,42 @@ class StepFillSatuState extends State<StepFillSatu> {
                         fontWeight: FontWeight.w400)),
               ),
             ),
+            isTapedMachineName == true
+                ? Container(
+                    margin: EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: _listMachineName.isEmpty
+                          ? 0
+                          : _listMachineName.length,
+                      itemBuilder: (context, i) {
+                        return InkWell(
+                            onTap: () {
+                              setState(() {
+                                machineNameController = TextEditingController(
+                                    text: _listMachineName[i].nama);
+                                isTapedMachineName = !isTapedMachineName;
+                              });
+                            },
+                            child: Container(
+                                margin: EdgeInsets.only(bottom: 8, top: 8),
+                                child: Text(
+                                  _listMachineName[i].nama!,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                )));
+                      },
+                    ),
+                  )
+                : Container(),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
