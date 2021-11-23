@@ -35,75 +35,87 @@ class _LogInState extends State<LogIn> {
     String passwordUser = _passwordController.text;
     String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
+    try {
+      var rspLogin = await loginUser(
+          emailUser, passwordUser, deviceUser.toString(), versionUser);
+      print(rspLogin);
+      // print(emailUser + '+' + passwordUser);
+      // print(rspRegister['user']['password']);
 
-    var rspLogin = await loginUser(
-        emailUser, passwordUser, deviceUser.toString(), versionUser);
-    print(rspLogin);
-    // print(emailUser + '+' + passwordUser);
-    // print(rspRegister['user']['password']);
+      if (rspLogin['response']['status'] == 200) {
+        final SharedPreferences prefs = await _prefs;
 
-    if (rspLogin['response']['status'] == 200) {
-      final SharedPreferences prefs = await _prefs;
+        prefs.setString("emailKey", rspLogin['data']['user']['email']);
+        prefs.setString("deviceKey", rspLogin['data']['user']['device_key']);
+        prefs.setString("tokenKey", rspLogin['data']['token']);
+        prefs.setString("usernameKey", rspLogin['data']['user']['username']);
 
-      prefs.setString("emailKey", rspLogin['data']['user']['email']);
-      prefs.setString("deviceKey", rspLogin['data']['user']['device_key']);
-      prefs.setString("tokenKey", rspLogin['data']['token']);
-      prefs.setString("usernameKey", rspLogin['data']['user']['username']);
+        print("EMAIL user = ");
+        print(rspLogin['data']['user']['email']);
+        print("USERNAME user = ");
+        print(rspLogin['data']['user']['username']);
+        print("TOKEN user = ");
+        print(prefs.getString("tokenKey"));
 
-      print("EMAIL user = ");
-      print(rspLogin['data']['user']['email']);
-      print("USERNAME user = ");
-      print(rspLogin['data']['user']['username']);
-      print("TOKEN user = ");
-      print(prefs.getString("tokenKey"));
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Login Sukses',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
 
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Login Sukses',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const Dashboard()));
-    } else if (rspLogin['response']['status'] == 201) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Login Gagal',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-    } else if (rspLogin['response']['status'] == 202) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Anda login menggunakan device lain',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-    } else if (rspLogin['response']['status'] == 203) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Silahkan Update versi terbaru',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-    } else {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+      } else if (rspLogin['response']['status'] == 201) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Login Gagal',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else if (rspLogin['response']['status'] == 202) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Anda login menggunakan device lain',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else if (rspLogin['response']['status'] == 203) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Silahkan Update versi terbaru',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Periksa koneksi internet',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+    } catch (e) {
       setState(() {
         Fluttertoast.showToast(
             msg: 'Periksa koneksi internet',
