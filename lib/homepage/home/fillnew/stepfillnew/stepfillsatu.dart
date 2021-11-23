@@ -3,9 +3,11 @@
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
+import 'package:e_cm/homepage/home/model/machinenumbermodel.dart';
 import 'package:e_cm/homepage/home/services/classificationservice.dart';
 import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
+import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -32,10 +34,12 @@ class StepFillSatuState extends State<StepFillSatu> {
   String? locationSelected;
   String? locationIdSelected;
   String? machineSelected;
+  String? machineNumberSelected;
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
   List<MachineNameModel> _listMachineName = [];
+  List<MachineNumberModel> _listMachineNumber = [];
 
   // static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
   static const machineItems = <String>['3ZAC0004', '3ZAC0005', '3ZAC0006'];
@@ -97,6 +101,14 @@ class StepFillSatuState extends State<StepFillSatu> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     _listMachineName =
         await machineNameService.getMachineName(idLocation, tokenUser);
+  }
+
+  Future<void> getMachineNumber(String idMachine) async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    _listMachineNumber =
+        await machineNumberService.getMachineNumber(idMachine, tokenUser);
+    print(_listMachineNumber);
   }
 
   @override
@@ -312,6 +324,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                     locationIdSelected = value.id;
                                   });
                                   getMachineName(value.id);
+                                  getMachineNumber(value.id);
                                 },
                               ))
                           .toList(),
@@ -451,9 +464,17 @@ class StepFillSatuState extends State<StepFillSatu> {
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: DropdownButton(
                 isExpanded: true,
-                items: _dropDownMachineItems,
-                value: machineSelected,
-                hint: const Text('-Machine selected-'),
+                items: _listMachineNumber
+                    .map((data) => DropdownMenuItem(
+                        value: data.numberOfMachine,
+                        child: Text(data.numberOfMachine,
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400))))
+                    .toList(),
+                value: machineNumberSelected,
+                hint: const Text('- Machine selected -'),
                 onChanged: (value) {
                   if (value != null) {
                     setState(() {

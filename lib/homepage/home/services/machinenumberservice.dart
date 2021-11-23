@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
@@ -14,11 +15,22 @@ class MachineNumberService {
     var url = MyUrl().getUrlDevice();
 
     try {
-      final response = await http
-          .get(Uri.parse("$url/get_machine?location_id=$idMachine"), headers: {
-        "Accept": "Application/json",
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+          Uri.parse("$url/get_machinenumber?machine_id=$idMachine"),
+          headers: {
+            "Accept": "Application/json",
+            'Authorization': 'Bearer $token',
+          });
+
+      var dataNumberMachine = json.decode(response.body)['data'];
+
+      for (int i = 0; i < dataNumberMachine.length; i++) {
+        var data = MachineNumberModel(
+            dataNumberMachine[i]['m_machine_id'].toString(),
+            dataNumberMachine[i]['m_machinedetail_nomesin']);
+
+        _listMachineNumberData.add(data);
+      }
 
       return _listMachineNumberData;
     } on SocketException catch (e) {
@@ -33,3 +45,5 @@ class MachineNumberService {
     }
   }
 }
+
+final machineNumberService = MachineNumberService();
