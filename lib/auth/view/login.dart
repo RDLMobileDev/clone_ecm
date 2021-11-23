@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
+
 import 'dart:ui';
 import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
@@ -280,6 +282,7 @@ class _LogInState extends State<LogIn> {
                             color: Colors.black,
                             fontSize: 12.0,
                           ),
+                          // ignore: prefer_const_literals_to_create_immutables
                           children: [
                             TextSpan(
                               text: "By continuing, you agree to our ",
