@@ -45,7 +45,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
             },
             child: Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               margin: EdgeInsets.only(top: 10),
               alignment: Alignment.center,
               decoration: BoxDecoration(
