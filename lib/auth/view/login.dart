@@ -37,12 +37,6 @@ class _LogInState extends State<LogIn> {
     String passwordUser = _passwordController.text;
     String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
-    try {
-      var rspLogin = await loginUser(
-          emailUser, passwordUser, deviceUser.toString(), versionUser);
-      print(rspLogin);
-      // print(emailUser + '+' + passwordUser);
-      // print(rspRegister['user']['password']);
 
     try {
       var rspLogin = await loginUser(
