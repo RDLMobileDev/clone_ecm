@@ -1,9 +1,14 @@
-// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const
+// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class StepFillSatu extends StatefulWidget {
-  const StepFillSatu({ Key? key }) : super(key: key);
+  final StepFillSatuState stepFillSatuState = StepFillSatuState();
+
+  void getSaveFillSatu() {
+    stepFillSatuState.saveFillNewSatu();
+  }
 
   @override
   StepFillSatuState createState() => StepFillSatuState();
@@ -11,12 +16,47 @@ class StepFillSatu extends StatefulWidget {
 
 class StepFillSatuState extends State<StepFillSatu> {
   String dateSelected = 'DD/MM/YYYY';
-  String locationSelected = 'Select Factory';
-  String machineSelected = '-Machine selected-';
+  String? locationSelected;
+  String? machineSelected;
+
+  static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
+  static const machineItems = <String>['3ZAC0004', '3ZAC0005', '3ZAC0006'];
+
+  final List<DropdownMenuItem<String>> _dropDownMenuItems = menuItems
+      .map((value) => DropdownMenuItem(
+            value: value,
+            child: Text(value),
+          ))
+      .toList();
+
+  final List<DropdownMenuItem<String>> _dropDownMachineItems = machineItems
+      .map((value) => DropdownMenuItem(
+            value: value,
+            child: Text(value),
+          ))
+      .toList();
 
   // test call method from outside class (fillnew)
   void saveFillNewSatu() {
     print("fill new satu");
+  }
+
+  void getDateFromDialog() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1990),
+            lastDate: DateTime(2022))
+        .then((value) {
+      if (value != null) {
+        DateTime _fromDate = DateTime.now();
+        _fromDate = value;
+        final String date = DateFormat.yMd().format(_fromDate);
+        setState(() {
+          dateSelected = date;
+        });
+      }
+    });
   }
 
   @override
@@ -29,7 +69,14 @@ class StepFillSatuState extends State<StepFillSatu> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: const Text("Classification", style: TextStyle(fontFamily: 'Rubik', color: Color(0xFF404446), fontSize: 16, fontWeight: FontWeight.w400 ),),
+              child: const Text(
+                "Classification",
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    color: Color(0xFF404446),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 8),
@@ -42,25 +89,50 @@ class StepFillSatuState extends State<StepFillSatu> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       width: 96,
-                      child: const Center(child: Text("Breakdown Maintance", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF404446), fontWeight: FontWeight.w400 ), ),),
+                      child: const Center(
+                        child: Text(
+                          "Breakdown Maintance",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Color(0xFF404446),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
                     ),
                   ),
-
                   Card(
                     elevation: 2,
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       width: 96,
-                      child: const Center(child: Text("Preventive Maintance", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF404446), fontWeight: FontWeight.w400 ), ),),
+                      child: const Center(
+                        child: Text(
+                          "Preventive Maintance",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Color(0xFF404446),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
                     ),
                   ),
-
                   Card(
                     elevation: 2,
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       width: 96,
-                      child: const Center(child: Text("Information Maintance", style: TextStyle(fontFamily: 'Rubik', color: Color(0xFF404446), fontSize: 14, fontWeight: FontWeight.w400 ), ),),
+                      child: const Center(
+                        child: Text(
+                          "Information Maintance",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF404446),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -68,118 +140,233 @@ class StepFillSatuState extends State<StepFillSatu> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
-              child: const Text("Date", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF979C9E)),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
+              child: RichText(
+                text: TextSpan(
+                  text: 'Date ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const SizedBox(width: 40, height: 40, child: Icon(Icons.calendar_today)),
-                  Text(dateSelected, style: const TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400),),
-                  const SizedBox(width: 40, height: 40, child: Icon(Icons.arrow_drop_down))
-                ],
-              ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: const Text("Team Member", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF979C9E)),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
-              ),
-              child: TextFormField(
-                style: const TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide.none),
-                  suffixIcon: Icon(Icons.search),
-                  hintText: 'Type name',
-                  contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                  hintStyle: TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400)
+            InkWell(
+              onTap: () => getDateFromDialog(),
+              child: Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.all(5),
+                height: 40,
+                decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF979C9E)),
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(Icons.calendar_today)),
+                    Text(
+                      dateSelected,
+                      style: const TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(Icons.arrow_drop_down))
+                  ],
                 ),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
-              child: const Text("Location", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF979C9E)),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(locationSelected, style: const TextStyle(fontFamily: 'Rubik', color: Color(0xFF979C9E), fontSize: 14, fontWeight: FontWeight.w400),),
-                  ),
-                  const SizedBox(width: 40, height: 40, child: Icon(Icons.arrow_drop_down))
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: const Text("Machine Name", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF979C9E)),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
-              ),
-              child: TextFormField(
-                style: const TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide.none),
-                  suffixIcon: Icon(Icons.search),
-                  hintText: 'Type machine',
-                  contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                  hintStyle: TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400)
+              child: RichText(
+                text: TextSpan(
+                  text: 'Team Member ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
                 ),
               ),
             ),
             Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.all(5),
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF979C9E)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              child: TextFormField(
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    suffixIcon: Icon(Icons.search),
+                    hintText: 'Type name',
+                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
+            ),
+            Container(
               margin: const EdgeInsets.only(top: 16),
-              child: const Text("Machine number", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Location ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF979C9E)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              child: DropdownButton(
+                isExpanded: true,
+                items: _dropDownMenuItems,
+                value: locationSelected,
+                hint: const Text('Select factory'),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      locationSelected = value as String?;
+                    });
+                  }
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Machine Name ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 4),
               padding: const EdgeInsets.all(5),
               height: 40,
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF979C9E)),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
+                  border: Border.all(color: const Color(0xFF979C9E)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              child: TextFormField(
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    suffixIcon: Icon(Icons.search),
+                    hintText: 'Type machine',
+                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(machineSelected, style: const TextStyle(fontFamily: 'Rubik', fontSize: 14, fontWeight: FontWeight.w400),),
-                  ),
-                  const SizedBox(width: 40, height: 40, child: Icon(Icons.arrow_drop_down))
-                ],
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Machine Number ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.all(5),
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF979C9E)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              child: DropdownButton(
+                isExpanded: true,
+                items: _dropDownMachineItems,
+                value: machineSelected,
+                hint: const Text('-Machine selected-'),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      machineSelected = value as String?;
+                    });
+                  }
+                },
               ),
             ),
           ],

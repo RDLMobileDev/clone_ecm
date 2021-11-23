@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace
 
+import 'package:e_cm/homepage/account/services/apiuser.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountMember extends StatefulWidget {
   const AccountMember({Key? key}) : super(key: key);
@@ -10,6 +12,23 @@ class AccountMember extends StatefulWidget {
 }
 
 class _AccountMemberState extends State<AccountMember> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  getDataUser() async {
+    final SharedPreferences prefs = await _prefs;
+    String emailUser = prefs.getString("emailKey").toString();
+    String? tokenUser = prefs.getString("tokenKey").toString();
+
+    var rspGetUser = await getUser(emailUser, tokenUser);
+    print(rspGetUser);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDataUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 import 'package:e_cm/homepage/account/view/account.dart';
 import 'package:e_cm/homepage/home/view/home.dart';
 import 'package:e_cm/homepage/notification/view/notification.dart';
@@ -12,13 +12,11 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  bool isHome = true, isNotif = false, isAccount = false;
+
   int _selectedIndex = 0;
   // ignore: prefer_final_fields
-  List<Widget> _listWidget = [
-    Home(),
-    NotificationMember(),
-    AccountMember()
-  ];
+  List<Widget> _listWidget = [Home(), NotificationMember(), AccountMember()];
 
   void _onMenuItemTapped(int index) {
     setState(() {
@@ -42,8 +40,7 @@ class _DashboardState extends State<Dashboard> {
             BoxShadow(
                 color: Colors.black54,
                 blurRadius: 8.0,
-                offset: Offset(0.0, 0.75)
-            )
+                offset: Offset(0.0, 0.75))
           ],
         ),
         child: Row(
@@ -51,59 +48,147 @@ class _DashboardState extends State<Dashboard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onTap: () => _onMenuItemTapped(0),
+              onTap: () {
+                setState(() {
+                  isHome = true;
+                  isNotif = false;
+                  isAccount = false;
+                });
+
+                _onMenuItemTapped(0);
+              },
               child: Container(
-                width: 150,
+                width: isHome == true ? 150 : 73,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Color(0xFF00AEDB),
-                  borderRadius: BorderRadius.all(Radius.circular(50))
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/icons/ic_home_active.png", width: 20,),
-                    SizedBox(width: 10,),
-                    Text("Home", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),)
-                  ],
-                ),
+                    color:
+                        isHome == true ? Color(0xFF00AEDB) : Color(0xFFF2F4F5),
+                    borderRadius: BorderRadius.all(Radius.circular(50))),
+                child: isHome == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/icons/ic_home_active.png",
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Home",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      )
+                    : Center(
+                        child: Image.asset(
+                          "assets/icons/ic_home_inactive.png",
+                          width: 20,
+                        ),
+                      ),
               ),
             ),
             InkWell(
-              onTap: () => _onMenuItemTapped(1),
+              onTap: () {
+                setState(() {
+                  isHome = false;
+                  isNotif = true;
+                  isAccount = false;
+                });
+
+                print(isHome);
+
+                _onMenuItemTapped(1);
+              },
               child: Container(
-                width: 73,
+                width: isNotif == true ? 150 : 73,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Color(0xFFF2F4F5),
-                  borderRadius: BorderRadius.all(Radius.circular(50))
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/icons/ic_bell_inactive.png", width: 20,),
-                  ],
-                ),
+                    color:
+                        isNotif == true ? Color(0xFF00AEDB) : Color(0xFFF2F4F5),
+                    borderRadius: BorderRadius.all(Radius.circular(50))),
+                child: isNotif == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/icons/ic_bell_active.png",
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Notifications",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      )
+                    : Center(
+                        child: Image.asset(
+                          "assets/icons/ic_bell_inactive.png",
+                          width: 20,
+                        ),
+                      ),
               ),
             ),
             InkWell(
-              onTap: () => _onMenuItemTapped(2),
+              onTap: () {
+                setState(() {
+                  isHome = false;
+                  isNotif = false;
+                  isAccount = true;
+                });
+
+                _onMenuItemTapped(2);
+              },
               child: Container(
-                width: 73,
+                width: isAccount == true ? 150 : 73,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Color(0xFFF2F4F5),
-                  borderRadius: BorderRadius.all(Radius.circular(50))
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/icons/ic_user_inactive.png", width: 20,),
-                  ],
-                ),
+                    color: isAccount == true
+                        ? Color(0xFF00AEDB)
+                        : Color(0xFFF2F4F5),
+                    borderRadius: BorderRadius.all(Radius.circular(50))),
+                child: isAccount == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/icons/ic_user_active.png",
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Account",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      )
+                    : Center(
+                        child: Image.asset(
+                          "assets/icons/ic_user_inactive.png",
+                          width: 20,
+                        ),
+                      ),
               ),
             ),
           ],
