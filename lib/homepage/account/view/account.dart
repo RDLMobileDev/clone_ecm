@@ -27,24 +27,36 @@ class _AccountMemberState extends State<AccountMember> {
     String emailUser = prefs.getString("emailKey").toString();
     String deviceUser = prefs.getString("deviceKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
-
-    var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
-    // print(rspLogut);
-    if (rspLogut['response']['status'] == 200) {
-      prefs.clear;
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Logout Sukses',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => LogIn()));
-    } else {
+    try {
+      var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
+      // print(rspLogut);
+      if (rspLogut['response']['status'] == 200) {
+        prefs.clear;
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Logout Sukses',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LogIn()));
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Periksa jaringan internet anda',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+    } catch (e) {
       setState(() {
         Fluttertoast.showToast(
             msg: 'Periksa jaringan internet anda',

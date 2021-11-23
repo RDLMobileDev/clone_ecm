@@ -37,6 +37,12 @@ class _LogInState extends State<LogIn> {
     String passwordUser = _passwordController.text;
     String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
+    try {
+      var rspLogin = await loginUser(
+          emailUser, passwordUser, deviceUser.toString(), versionUser);
+      print(rspLogin);
+      // print(emailUser + '+' + passwordUser);
+      // print(rspRegister['user']['password']);
 
     try {
       var rspLogin = await loginUser(
@@ -285,10 +291,14 @@ class _LogInState extends State<LogIn> {
                       height: 48,
                     ),
                     Container(
-                      color: Color(0xff979C9E),
                       width: MediaQuery.of(context).size.width,
-                      height: 40,
+                      height: 50,
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ))),
                         onPressed: () {
                           // Navigator.of(context).push(MaterialPageRoute(
                           //     builder: (context) => const Dashboard()));

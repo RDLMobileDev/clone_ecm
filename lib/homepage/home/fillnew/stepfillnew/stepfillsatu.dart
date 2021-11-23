@@ -1,9 +1,12 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
+import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/services/classificationservice.dart';
+import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillSatu extends StatefulWidget {
   final StepFillSatuState stepFillSatuState = StepFillSatuState();
@@ -17,21 +20,19 @@ class StepFillSatu extends StatefulWidget {
 }
 
 class StepFillSatuState extends State<StepFillSatu> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
   String? machineSelected;
 
   List<ClassificationModel> _listClassification = [];
+  List<LocationModel> _listLocation = [];
 
-  static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
+  // static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
   static const machineItems = <String>['3ZAC0004', '3ZAC0005', '3ZAC0006'];
 
-  final List<DropdownMenuItem<String>> _dropDownMenuItems = menuItems
-      .map((value) => DropdownMenuItem(
-            value: value,
-            child: Text(value),
-          ))
-      .toList();
+  List<DropdownMenuItem<LocationModel>>? _dropDownMenuLocations;
 
   final List<DropdownMenuItem<String>> _dropDownMachineItems = machineItems
       .map((value) => DropdownMenuItem(
@@ -68,9 +69,25 @@ class StepFillSatuState extends State<StepFillSatu> {
     return await classificationService.getClassificationData();
   }
 
+  Future<List<LocationModel>> getListLocation() async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    _listLocation = await locationService.getLocationData(tokenUser);
+
+    _dropDownMenuLocations = _listLocation
+        .map((value) => DropdownMenuItem(
+              value: value,
+              child: Text(value.nama),
+            ))
+        .toList();
+
+    return await locationService.getLocationData(tokenUser);
+  }
+
   @override
   void initState() {
     getClassificationData();
+    getListLocation();
     super.initState();
   }
 
@@ -265,17 +282,28 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: DropdownButton(
-                isExpanded: true,
-                items: _dropDownMenuItems,
-                value: locationSelected,
-                hint: const Text('Select factory'),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      locationSelected = value as String?;
-                    });
+              child: FutureBuilder(
+                future: getListLocation(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return DropdownButton(
+                      isExpanded: true,
+                      items: _dropDownMenuLocations,
+                      value: locationSelected,
+                      hint: const Text('Select factory'),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            locationSelected = value as String?;
+                          });
+                        }
+                      },
+                    );
                   }
+
+                  return Center(
+                    child: Text('Loading location...'),
+                  );
                 },
               ),
             ),
