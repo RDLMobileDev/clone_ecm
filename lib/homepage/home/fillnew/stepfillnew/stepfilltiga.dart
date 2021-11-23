@@ -1,9 +1,14 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class StepFillTiga extends StatefulWidget {
-  const StepFillTiga({Key? key}) : super(key: key);
+  final _StepFillTigaState stepFillTigaState = _StepFillTigaState();
+
+  void getSaveStepFillTiga() {
+    stepFillTigaState.saveStepFillTiga();
+  }
 
   @override
   _StepFillTigaState createState() => _StepFillTigaState();
@@ -11,6 +16,17 @@ class StepFillTiga extends StatefulWidget {
 
 class _StepFillTigaState extends State<StepFillTiga> {
   bool _customTileExpanded = false;
+
+  void saveStepFillTiga() {
+    Fluttertoast.showToast(
+        msg: 'Data Disimpan',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+  }
 
   @override
   Widget build(BuildContext context) {

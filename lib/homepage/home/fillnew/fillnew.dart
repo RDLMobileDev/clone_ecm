@@ -20,6 +20,9 @@ class FillNew extends StatefulWidget {
 
 class _FillNewState extends State<FillNew> {
   final StepFillSatu _stepFillSatu = StepFillSatu();
+  final StepFillDua _stepFillDua = StepFillDua();
+  final StepFillTiga _stepFillTiga = StepFillTiga();
+
   int _currentStep = 0;
   final int _stepTotal = 8;
   int _stepClicked = 1;
@@ -35,6 +38,10 @@ class _FillNewState extends State<FillNew> {
     print(_currentStep);
     if (_currentStep == 1) {
       _stepFillSatu.getSaveFillSatu();
+    } else if (_currentStep == 2) {
+      _stepFillDua.getSaveFillDua();
+    } else if (_currentStep == 3) {
+      _stepFillTiga.getSaveStepFillTiga();
     }
 
     if (_stepClicked != 8) {
