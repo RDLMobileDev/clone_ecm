@@ -1,5 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors
 
+import 'package:e_cm/homepage/home/model/classificationmodel.dart';
+import 'package:e_cm/homepage/home/services/classificationservice.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -18,6 +20,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
   String? machineSelected;
+
+  List<ClassificationModel> _listClassification = [];
 
   static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
   static const machineItems = <String>['3ZAC0004', '3ZAC0005', '3ZAC0006'];
@@ -59,6 +63,17 @@ class StepFillSatuState extends State<StepFillSatu> {
     });
   }
 
+  Future<List<ClassificationModel>> getClassificationData() async {
+    _listClassification = await classificationService.getClassificationData();
+    return await classificationService.getClassificationData();
+  }
+
+  @override
+  void initState() {
+    getClassificationData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -81,61 +96,44 @@ class StepFillSatuState extends State<StepFillSatu> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Card(
-                    elevation: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: 96,
-                      child: const Center(
-                        child: Text(
-                          "Breakdown Maintance",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 14,
-                              color: Color(0xFF404446),
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
+              child: FutureBuilder(
+                future: getClassificationData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: _listClassification.map((data) {
+                        return Card(
+                          elevation: 2,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width * 0.26,
+                            child: Center(
+                              child: Text(
+                                data.nama,
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFF404446),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }
+                  return Center(
+                    child: Text(
+                      'Loading Classification...',
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
                     ),
-                  ),
-                  Card(
-                    elevation: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: 96,
-                      child: const Center(
-                        child: Text(
-                          "Preventive Maintance",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 14,
-                              color: Color(0xFF404446),
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    elevation: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: 96,
-                      child: const Center(
-                        child: Text(
-                          "Information Maintance",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Color(0xFF404446),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                  );
+                },
               ),
             ),
             Container(
