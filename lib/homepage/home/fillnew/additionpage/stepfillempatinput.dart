@@ -143,6 +143,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       color: Colors.transparent),
                   // ignore: prefer_const_literals_to_create_immutables
                   child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       Icon(
                         Icons.change_history_outlined,
@@ -165,6 +166,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       color: Colors.transparent),
                   // ignore: prefer_const_literals_to_create_immutables
                   child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       Icon(
                         Icons.close,
