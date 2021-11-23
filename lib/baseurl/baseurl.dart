@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 
 class MyUrl {
   String versionNumber = '1.0.0';
-  // String _url = "https://app.ragdalion.com/ecm/public/api";
-  String _url = "http://192.168.88.99/ecm/public/api";
+  final String _url = "https://app.ragdalion.com/ecm/public/api";
+  // String _url = "http://192.168.88.99/ecm/public/api";
   String getUrlDevice() {
     return this._url;
   }

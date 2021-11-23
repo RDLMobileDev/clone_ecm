@@ -5,6 +5,7 @@ import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,6 +15,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  String userName = "";
+
+  Future<String> getNameUser() async {
+    final SharedPreferences prefs = await _prefs;
+    String nameUser = prefs.getString("usernameKey").toString();
+    setState(() {
+      userName = nameUser;
+    });
+    return nameUser;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getNameUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     // ignore: sized_box_for_whitespace
@@ -52,8 +72,8 @@ class _HomeState extends State<Home> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400),
                             ),
-                            const Text(
-                              "Budi",
+                            Text(
+                              userName,
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
@@ -176,10 +196,9 @@ class _HomeState extends State<Home> {
               height: 16,
             ),
             InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ApprovedEcm())
-                );
+                    MaterialPageRoute(builder: (context) => ApprovedEcm()));
               },
               child: Container(
                 margin: const EdgeInsets.only(
@@ -216,10 +235,9 @@ class _HomeState extends State<Home> {
               height: 16,
             ),
             InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ListTmName())
-                );
+                    MaterialPageRoute(builder: (context) => ListTmName()));
               },
               child: Container(
                 margin: const EdgeInsets.only(

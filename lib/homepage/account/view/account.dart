@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
+import 'package:e_cm/auth/view/login.dart';
+import 'package:e_cm/homepage/account/services/apilogout.dart';
 import 'package:e_cm/homepage/account/services/apiuser.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountMember extends StatefulWidget {
@@ -13,10 +18,56 @@ class AccountMember extends StatefulWidget {
 
 class _AccountMemberState extends State<AccountMember> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String userName = "";
+  String emailName = "";
+
+  postLogout() async {
+    final SharedPreferences prefs = await _prefs;
+    String emailUser = prefs.getString("emailKey").toString();
+    String deviceUser = prefs.getString("deviceKey").toString();
+    String? tokenUser = prefs.getString("tokenKey").toString();
+
+    var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
+    // print(rspLogut);
+    if (rspLogut['response']['status'] == 200) {
+      prefs.clear;
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Logout Sukses',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => LogIn()));
+    } else {
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Periksa jaringan internet anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
+    }
+  }
+
   getDataUser() async {
     final SharedPreferences prefs = await _prefs;
     String emailUser = prefs.getString("emailKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
+    String nameUser = prefs.getString("usernameKey").toString();
+    print(emailUser);
+    setState(() {
+      userName = nameUser;
+      emailName = emailUser;
+    });
 
     var rspGetUser = await getUser(emailUser, tokenUser);
     print(rspGetUser);
@@ -55,7 +106,7 @@ class _AccountMemberState extends State<AccountMember> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Budi",
+                          userName,
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 24,
@@ -63,7 +114,7 @@ class _AccountMemberState extends State<AccountMember> {
                               color: Color(0xFF404446)),
                         ),
                         Text(
-                          "budi@sugity.com - (member)",
+                          emailName,
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
@@ -85,56 +136,61 @@ class _AccountMemberState extends State<AccountMember> {
               SizedBox(
                 height: 24,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: Color(0xFFFF0000),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          child: Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Logout",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFFFF0000),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
+              InkWell(
+                onTap: () {
+                  postLogout();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Color(0xFFFF0000),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Icon(
+                              Icons.logout,
+                              color: Colors.white,
                             ),
-                            Text(
-                              "Leave the app",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF979C9E),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xFF979C9E),
-                    )
-                  ],
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Logout",
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFFFF0000),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "Leave the app",
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFF979C9E),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Color(0xFF979C9E),
+                      )
+                    ],
+                  ),
                 ),
               )
             ],

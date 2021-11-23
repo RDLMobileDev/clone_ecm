@@ -45,9 +45,12 @@ class _LogInState extends State<LogIn> {
       prefs.setString("emailKey", rspLogin['data']['user']['email']);
       prefs.setString("deviceKey", rspLogin['data']['user']['device_key']);
       prefs.setString("tokenKey", rspLogin['data']['token']);
+      prefs.setString("usernameKey", rspLogin['data']['user']['username']);
 
       print("EMAIL user = ");
       print(rspLogin['data']['user']['email']);
+      print("USERNAME user = ");
+      print(rspLogin['data']['user']['username']);
       print("TOKEN user = ");
       print(prefs.getString("tokenKey"));
 
@@ -165,6 +168,7 @@ class _LogInState extends State<LogIn> {
                       height: 22,
                     ),
                     TextFormField(
+                      obscureText: true,
                       controller: _passwordController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
