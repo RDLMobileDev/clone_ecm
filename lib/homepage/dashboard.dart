@@ -36,12 +36,6 @@ class _DashboardState extends State<Dashboard> {
         decoration: BoxDecoration(
           // ignore: prefer_const_literals_to_create_immutables
           color: Colors.white,
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-                color: Colors.black54,
-                blurRadius: 8.0,
-                offset: Offset(0.0, 0.75))
-          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
