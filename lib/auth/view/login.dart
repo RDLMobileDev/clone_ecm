@@ -48,11 +48,14 @@ class _LogInState extends State<LogIn> {
       if (rspLogin['response']['status'] == 200) {
         final SharedPreferences prefs = await _prefs;
 
+        prefs.setString("idKeyUser", rspLogin['data']['user']['id'].toString());
         prefs.setString("emailKey", rspLogin['data']['user']['email']);
         prefs.setString("deviceKey", deviceUser.toString());
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
 
+        print("ID user = ");
+        print(rspLogin['data']['user']['id']);
         print("EMAIL user = ");
         print(rspLogin['data']['user']['email']);
         print("USERNAME user = ");

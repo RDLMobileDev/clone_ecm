@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, avoid_print
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, avoid_print, prefer_const_literals_to_create_immutables, invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
 
@@ -23,6 +23,7 @@ class StepFillDuaState extends State<StepFillDua> {
   TextEditingController? timePickController;
 
   List<XFile>? imageFileList = [];
+  List<File>? imageFileListCamera = [];
 
   String shiftA = '', shiftB = '', shiftC = '';
   String safetyOpt = '', qualityOpt = '', deliveryOpt = '', costOpt = '';
@@ -54,27 +55,106 @@ class StepFillDuaState extends State<StepFillDua> {
     });
   }
 
-  void selectImages() async {
-    try {
-      final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-      if (selectedImages!.isNotEmpty) {
-        imageFileList!.addAll(selectedImages);
-      } else {
-        imageFileList!.clear();
+  void selectImagesGallery() async {
+    if (imageFileList!.length < 4) {
+      try {
+        final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+        if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
+          imageFileList!.addAll(selectedImages);
+        } else if (selectedImages.length > 4) {
+          Fluttertoast.showToast(
+              msg: "Tidak boleh melebihi 4 foto",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Color(0xFF00AEDB),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          imageFileList!.clear();
+          Fluttertoast.showToast(
+              msg: "Tidak boleh melebihi 4 foto",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Color(0xFF00AEDB),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+
+        print("Image List Length:" + imageFileList!.length.toString());
+        setState(() {});
+        Navigator.of(context).pop();
+      } catch (e) {
         Fluttertoast.showToast(
-            msg: "Tidak boleh melebihi 4 foto",
+            msg: "Foto tidak dipilih",
             toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
+            gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Color(0xFF00AEDB),
             textColor: Colors.white,
             fontSize: 16.0);
+        print(e);
       }
+    } else {
+      setState(() {
+        Fluttertoast.showToast(
+            msg: "Maksimal 4 foto",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(0xFF00AEDB),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
+    }
+  }
 
-      print("Image List Length:" + imageFileList!.length.toString());
-      setState(() {});
-    } catch (e) {
-      print(e);
+  void selectImageCamera() async {
+    if (imageFileList!.length < 4) {
+      try {
+        final XFile? selectedImages =
+            await imagePicker.pickImage(source: ImageSource.camera);
+        if (selectedImages != null) {
+          imageFileList!.add(selectedImages);
+        } else {
+          imageFileList!.clear();
+          Fluttertoast.showToast(
+              msg: "Tidak boleh melebihi 4 foto",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Color(0xFF00AEDB),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+
+        print("Image List Length:" + imageFileList!.length.toString());
+        setState(() {});
+
+        Navigator.of(context).pop();
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: "Foto tidak dipilih",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(0xFF00AEDB),
+            textColor: Colors.white,
+            fontSize: 16.0);
+        print(e);
+      }
+    } else {
+      setState(() {
+        Fluttertoast.showToast(
+            msg: "Maksimal 4 foto",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(0xFF00AEDB),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
     }
   }
 
@@ -705,7 +785,11 @@ class StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             InkWell(
-              onTap: () => selectImages(),
+              onTap: () => showBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return optionPickImage(context);
+                  }),
               child: Container(
                 margin: const EdgeInsets.only(top: 4),
                 padding: const EdgeInsets.all(10),
@@ -760,6 +844,83 @@ class StepFillDuaState extends State<StepFillDua> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget optionPickImage(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 2),
+      width: MediaQuery.of(context).size.width,
+      height: 280,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ]),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(bottom: 35),
+            width: MediaQuery.of(context).size.width,
+            child: Center(child: Text("Select image use")),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  onTap: () => selectImageCamera(),
+                  child: Container(
+                    width: 105,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/images/camera.png",
+                          width: 60,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text("Camera")
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () => selectImagesGallery(),
+                  child: Container(
+                    width: 105,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/images/gallery 1.png",
+                          width: 60,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text("Gallery")
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

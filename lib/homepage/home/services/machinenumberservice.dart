@@ -14,6 +14,8 @@ class MachineNumberService {
     List<MachineNumberModel> _listMachineNumberData = [];
     var url = MyUrl().getUrlDevice();
 
+    print("id mesin from step 1: $idMachine");
+
     try {
       final response = await http.get(
           Uri.parse("$url/get_machinenumber?machine_id=$idMachine"),
@@ -23,10 +25,11 @@ class MachineNumberService {
           });
 
       var dataNumberMachine = json.decode(response.body)['data'];
+      // print(dataNumberMachine);
 
       for (int i = 0; i < dataNumberMachine.length; i++) {
         var data = MachineNumberModel(
-            dataNumberMachine[i]['m_machine_id'].toString(),
+            dataNumberMachine[i]['m_machinedetail_id'].toString(),
             dataNumberMachine[i]['m_machinedetail_nomesin']);
 
         _listMachineNumberData.add(data);
@@ -34,12 +37,15 @@ class MachineNumberService {
 
       return _listMachineNumberData;
     } on SocketException catch (e) {
+      print("from mesin number");
       print(e);
       return _listMachineNumberData;
     } on TimeoutException catch (e) {
+      print("from mesin number");
       print(e);
       return _listMachineNumberData;
     } catch (e) {
+      print("from mesin number");
       print(e);
       return _listMachineNumberData;
     }

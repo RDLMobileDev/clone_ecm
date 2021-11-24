@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, avoid_print
 
 import 'dart:io';
 import 'package:e_cm/baseurl/baseurl.dart';
@@ -61,6 +61,7 @@ fillNewDua(
 
   if (response.statusCode == 200) {
     var convertDatatoJson = jsonDecode(response.body);
+    print(convertDatatoJson);
     return convertDatatoJson;
   } else {
     return "error";

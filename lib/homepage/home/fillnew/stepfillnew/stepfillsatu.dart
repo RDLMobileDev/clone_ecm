@@ -4,6 +4,7 @@ import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
 import 'package:e_cm/homepage/home/model/machinenumbermodel.dart';
+import 'package:e_cm/homepage/home/services/apifillnewsatu.dart';
 import 'package:e_cm/homepage/home/services/classificationservice.dart';
 import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:date_time_format/date_time_format.dart';
 
 class StepFillSatu extends StatefulWidget {
   final StepFillSatuState stepFillSatuState = StepFillSatuState();
@@ -27,46 +29,71 @@ class StepFillSatu extends StatefulWidget {
 class StepFillSatuState extends State<StepFillSatu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController? machineNameController;
+  TextEditingController teamMemberController = TextEditingController();
 
   bool isTapedMachineName = false;
+  bool isBreakDown = false, isPreventive = false, isInformation = false;
 
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
-  String? locationIdSelected;
-  String? machineSelected;
+  String locationIdSelected = '';
+  String machineSelected = '';
+  String machineIdSelected = '';
   String? machineNumberSelected;
+  String machineDetailIdSelected = '';
+  String classificationIdSelected = '';
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
   List<MachineNameModel> _listMachineName = [];
   List<MachineNumberModel> _listMachineNumber = [];
-
-  // static const menuItems = <String>['Factory 1', 'Factory 2', 'Factory 3'];
-  static const machineItems = <String>['3ZAC0004', '3ZAC0005', '3ZAC0006'];
-
-  // List<DropdownMenuItem<LocationModel>>? _dropDownMenuLocations;
-
-  final List<DropdownMenuItem<String>> _dropDownMachineItems = machineItems
-      .map((value) => DropdownMenuItem(
-            value: value,
-            child: Text(value),
-          ))
-      .toList();
+  List<String> listTeamMember = [];
 
   // test call method from outside class (fillnew)
-  void saveFillNewSatu() {
-    print("fill new satu");
-    Fluttertoast.showToast(
-        msg: 'Data disimpan',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16);
+  void saveFillNewSatu() async {
+    final prefs = await _prefs;
+    print("from prefs: ${prefs.getString("idClassification")}");
+    var idClass = prefs.getString("idClassification");
+    var tglStepSatu = prefs.getString("tglStepSatu");
+    // var teamMember = prefs.getString("teamMember");
+    List<String>? teamId = prefs.getStringList("teamMember");
+    var locationId = prefs.getString("locationId");
+    var machineId = prefs.getString("machineId");
+    var machineDetailId = prefs.getString("machineDetailId");
+
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    String? idUser = prefs.getString("idKeyUser").toString();
+
+    var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
+        teamId!, locationId!, machineId!, machineDetailId!);
+
+    print(result);
+
+    // if (result['response']['status'] == 200) {
+    //   Fluttertoast.showToast(
+    //       msg: 'Data disimpan',
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       timeInSecForIosWeb: 2,
+    //       backgroundColor: Colors.greenAccent,
+    //       textColor: Colors.white,
+    //       fontSize: 16);
+    //   print(result);
+    // } else {
+    //   Fluttertoast.showToast(
+    //       msg: 'Kesalahan jaringan. Data gagal disimpan.',
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       timeInSecForIosWeb: 2,
+    //       backgroundColor: Colors.greenAccent,
+    //       textColor: Colors.white,
+    //       fontSize: 16);
+    //   print(result);
+    // }
   }
 
-  void getDateFromDialog() {
+  void getDateFromDialog() async {
+    final prefs = await _prefs;
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
@@ -76,10 +103,14 @@ class StepFillSatuState extends State<StepFillSatu> {
       if (value != null) {
         DateTime _fromDate = DateTime.now();
         _fromDate = value;
-        final String date = DateFormat.yMd().format(_fromDate);
+        final String date = _fromDate.format("Y-m-d");
+
+        // String date = _fromDate.format("Y-m-d");
         setState(() {
           dateSelected = date;
+          prefs.setString("tglStepSatu", dateSelected);
         });
+        print(dateSelected);
       }
     });
   }
@@ -90,10 +121,15 @@ class StepFillSatuState extends State<StepFillSatu> {
   }
 
   Future<List<LocationModel>> getListLocation() async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    _listLocation = await locationService.getLocationData(tokenUser);
-    return await locationService.getLocationData(tokenUser);
+    try {
+      final SharedPreferences prefs = await _prefs;
+      String? tokenUser = prefs.getString("tokenKey").toString();
+      _listLocation = await locationService.getLocationData(tokenUser);
+      return await locationService.getLocationData(tokenUser);
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<void> getMachineName(String idLocation) async {
@@ -103,12 +139,14 @@ class StepFillSatuState extends State<StepFillSatu> {
         await machineNameService.getMachineName(idLocation, tokenUser);
   }
 
-  Future<void> getMachineNumber(String idMachine) async {
+  Future<List<MachineNumberModel>> getMachineNumberbyId(
+      String idMachine) async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     _listMachineNumber =
         await machineNumberService.getMachineNumber(idMachine, tokenUser);
-    print(_listMachineNumber);
+    return await machineNumberService.getMachineNumber(idMachine, tokenUser);
+    // print(_listMachineNumber);
   }
 
   @override
@@ -140,44 +178,127 @@ class StepFillSatuState extends State<StepFillSatu> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
-              child: FutureBuilder(
-                future: getClassificationData(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: _listClassification.map((data) {
-                        return Card(
-                          elevation: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            width: MediaQuery.of(context).size.width * 0.26,
-                            child: Center(
-                              child: Text(
-                                data.nama,
-                                style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    color: Color(0xFF404446),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        isBreakDown = true;
+                        isPreventive = false;
+                        isInformation = false;
+                        classificationIdSelected = '1';
+                        prefs.setString(
+                            "idClassification", classificationIdSelected);
+                      });
+                      print(classificationIdSelected);
+                    },
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          side: isBreakDown == false
+                              ? BorderSide.none
+                              : BorderSide(color: Color(0xFF00AEDB))),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width * 0.26,
+                        child: Center(
+                          child: Text(
+                            "Breakdown Maintenance",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: isBreakDown == false
+                                    ? Color(0xFF404446)
+                                    : Color(0xFF00AEDB),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
                           ),
-                        );
-                      }).toList(),
-                    );
-                  }
-                  return Center(
-                    child: Text(
-                      'Loading Classification...',
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Color(0xFF404446),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
+                        ),
+                      ),
                     ),
-                  );
-                },
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        isBreakDown = false;
+                        isPreventive = true;
+                        isInformation = false;
+                        classificationIdSelected = '2';
+                        prefs.setString(
+                            "idClassification", classificationIdSelected);
+                      });
+                      print(classificationIdSelected);
+                    },
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          side: isPreventive == false
+                              ? BorderSide.none
+                              : BorderSide(color: Color(0xFF00AEDB))),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width * 0.26,
+                        child: Center(
+                          child: Text(
+                            "Preventive Maintenance",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: isPreventive == false
+                                    ? Color(0xFF404446)
+                                    : Color(0xFF00AEDB),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        isBreakDown = false;
+                        isPreventive = false;
+                        isInformation = true;
+                        classificationIdSelected = '3';
+                        prefs.setString(
+                            "idClassification", classificationIdSelected);
+                      });
+                      print(classificationIdSelected);
+                    },
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          side: isInformation == false
+                              ? BorderSide.none
+                              : BorderSide(color: Color(0xFF00AEDB))),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width * 0.26,
+                        child: Center(
+                          child: Text(
+                            "Information Maintenance",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: isInformation == false
+                                    ? Color(0xFF404446)
+                                    : Color(0xFF00AEDB),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
             Container(
@@ -264,6 +385,15 @@ class StepFillSatuState extends State<StepFillSatu> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
+                controller: teamMemberController,
+                onEditingComplete: () async {
+                  final prefs = await _prefs;
+                  if (teamMemberController.text.isNotEmpty) {
+                    listTeamMember.add(teamMemberController.text);
+                    print(listTeamMember);
+                  }
+                  prefs.setStringList("teamMember", listTeamMember);
+                },
                 style: const TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 14,
@@ -319,12 +449,16 @@ class StepFillSatuState extends State<StepFillSatu> {
                           .map((value) => DropdownMenuItem(
                                 value: value.nama,
                                 child: Text(value.nama),
-                                onTap: () {
+                                onTap: () async {
+                                  final prefs = await _prefs;
                                   setState(() {
                                     locationIdSelected = value.id;
                                   });
                                   getMachineName(value.id);
-                                  getMachineNumber(value.id);
+                                  // getMachineNumberbyId(machineIdSelected);
+                                  prefs.setString(
+                                      "locationId", locationIdSelected);
+                                  print("id lokasi: $locationIdSelected");
                                 },
                               ))
                           .toList(),
@@ -333,7 +467,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       onChanged: (value) {
                         if (value != null) {
                           setState(() {
-                            locationSelected = value as String?;
+                            locationSelected = value as String;
                           });
                         }
                       },
@@ -413,17 +547,22 @@ class StepFillSatuState extends State<StepFillSatu> {
                           : _listMachineName.length,
                       itemBuilder: (context, i) {
                         return InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              final prefs = await _prefs;
                               setState(() {
                                 machineNameController = TextEditingController(
                                     text: _listMachineName[i].nama);
+                                machineIdSelected = _listMachineName[i].idMesin;
                                 isTapedMachineName = !isTapedMachineName;
                               });
+                              prefs.setString("machineId", machineIdSelected);
+                              // getMachineNumberbyId(_listMachineName[i].idMesin);
+                              print("id mesin: $machineIdSelected");
                             },
                             child: Container(
                                 margin: EdgeInsets.only(bottom: 8, top: 8),
                                 child: Text(
-                                  _listMachineName[i].nama!,
+                                  _listMachineName[i].nama,
                                   style: TextStyle(
                                       fontFamily: 'Rubik',
                                       fontSize: 14,
@@ -462,25 +601,46 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: DropdownButton(
-                isExpanded: true,
-                items: _listMachineNumber
-                    .map((data) => DropdownMenuItem(
-                        value: data.numberOfMachine,
-                        child: Text(data.numberOfMachine,
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400))))
-                    .toList(),
-                value: machineNumberSelected,
-                hint: const Text('- Machine selected -'),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      machineSelected = value as String?;
-                    });
+              child: FutureBuilder(
+                future: getMachineNumberbyId(machineIdSelected),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Text("Loading Machine Number..."),
+                    );
                   }
+
+                  return DropdownButton(
+                    isExpanded: true,
+                    items: _listMachineNumber
+                        .map((data) => DropdownMenuItem(
+                            onTap: () async {
+                              final prefs = await _prefs;
+                              setState(() {
+                                machineDetailIdSelected = data.id;
+                              });
+                              prefs.setString(
+                                  "machineDetailId", machineDetailIdSelected);
+                              print(
+                                  "mesin detail id: $machineDetailIdSelected");
+                            },
+                            value: data.numberOfMachine,
+                            child: Text(data.numberOfMachine,
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400))))
+                        .toList(),
+                    value: machineNumberSelected,
+                    hint: const Text('- Machine selected -'),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          machineNumberSelected = value.toString();
+                        });
+                      }
+                    },
+                  );
                 },
               ),
             ),

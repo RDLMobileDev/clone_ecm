@@ -35,7 +35,7 @@ class _FillNewState extends State<FillNew> {
   continued() {
     _currentStep < 7 ? setState(() => _currentStep += 1) : null;
 
-    print(_currentStep);
+    // print(_currentStep);
     if (_currentStep == 1) {
       _stepFillSatu.getSaveFillSatu();
     } else if (_currentStep == 2) {
@@ -106,7 +106,7 @@ class _FillNewState extends State<FillNew> {
                 type: StepperType.horizontal,
                 physics: ScrollPhysics(),
                 currentStep: _currentStep,
-                onStepTapped: (step) => tapped(step),
+                // onStepTapped: (step) => tapped(step),
                 onStepContinue: continued,
                 onStepCancel: cancel,
                 controlsBuilder: (context, {onStepCancel, onStepContinue}) {
