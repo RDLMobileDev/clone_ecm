@@ -1,7 +1,13 @@
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, avoid_print
+
+import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
+import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -32,71 +38,116 @@ class _LogInState extends State<LogIn> {
     String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
 
-    var rspLogin = await loginUser(
-        emailUser, passwordUser, deviceUser.toString(), versionUser);
-    print(rspLogin);
-    // print(emailUser + '+' + passwordUser);
-    // print(rspRegister['user']['password']);
+    try {
+      var rspLogin = await loginUser(
+          emailUser, passwordUser, deviceUser.toString(), versionUser);
+      print(rspLogin);
+      // print(emailUser + '+' + passwordUser);
+      // print(rspRegister['user']['password']);
 
-    if (rspLogin['response']['status'] == 200) {
-      // final SharedPreferences prefs = await _prefs;
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Login Sukses',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
+      if (rspLogin['response']['status'] == 200) {
+        final SharedPreferences prefs = await _prefs;
 
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const Dashboard()));
-    } else if (rspLogin['response']['status'] == 201) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Login Gagal',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-    } else if (rspLogin['response']['status'] == 202) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Anda login menggunakan device lain',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-    } else if (rspLogin['response']['status'] == 203) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Silahkan Update versi terbaru',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
-    } else {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Periksa koneksi internet',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
+        prefs.setString("emailKey", rspLogin['data']['user']['email']);
+        prefs.setString("deviceKey", deviceUser.toString());
+        prefs.setString("tokenKey", rspLogin['data']['token']);
+        prefs.setString("usernameKey", rspLogin['data']['user']['username']);
+
+        print("EMAIL user = ");
+        print(rspLogin['data']['user']['email']);
+        print("USERNAME user = ");
+        print(rspLogin['data']['user']['username']);
+        print("TOKEN user = ");
+        print(prefs.getString("tokenKey"));
+
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Login Sukses',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+      } else if (rspLogin['response']['status'] == 201) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Login Gagal',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else if (rspLogin['response']['status'] == 202) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Anda login menggunakan device lain',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else if (rspLogin['response']['status'] == 203) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Silahkan Update versi terbaru',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Periksa koneksi internet',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+    } on SocketException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+          msg: 'Terjadi masalah pada koneksi Anda',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    } on TimeoutException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+          msg: 'Terjadi masalah pada koneksi Anda',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+          msg: 'Terjadi masalah pada koneksi Anda',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
     }
   }
 
@@ -109,6 +160,9 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLogInEnabled =
+        !_isEmailError && !_isPasswordError && _initialEnabledButton;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -144,23 +198,74 @@ class _LogInState extends State<LogIn> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          labelText: 'Email',
-                          suffixStyle: TextStyle(color: Colors.green)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        labelText: 'Email',
+                        suffixStyle: TextStyle(color: Colors.green),
+                        errorText:
+                            _isEmailError ? "Format email tidak benar" : null,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      inputFormatters: [LengthLimitingTextInputFormatter(40)],
+                      onFieldSubmitted: (value) {
+                        setState(() {
+                          _isEmailError =
+                              !(value.isNotEmpty && value.contains("@"));
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _isEmailError =
+                              !(value.isNotEmpty && value.contains("@"));
+                        });
+                      },
                     ),
                     SizedBox(
                       height: 22,
                     ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
+                    Focus(
+                      onFocusChange: (isFocused) {
+                        setState(() {
+                          if (isFocused &&
+                              _passwordController.text.isNotEmpty) {
+                            _initialEnabledButton =
+                                !_isEmailError && !_isPasswordError;
+                          }
+                        });
+                      },
+                      child: TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           labelText: 'Password',
-                          suffixStyle: TextStyle(color: Colors.green)),
+                          suffixStyle: TextStyle(color: Colors.green),
+                          errorText: _isPasswordError
+                              ? "Kata sandi tidak boleh kosong"
+                              : null,
+                        ),
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(40),
+                        ],
+                        onFieldSubmitted: (value) {
+                          setState(() {
+                            _isPasswordError = value.isEmpty;
+                            _initialEnabledButton =
+                                !_isEmailError && !_isPasswordError;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _isPasswordError = value.isEmpty;
+                            _initialEnabledButton =
+                                !_isEmailError && !_isPasswordError;
+                          });
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -181,7 +286,6 @@ class _LogInState extends State<LogIn> {
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      // color: Color(0xff979C9E),
                       height: 50,
                       child: ElevatedButton(
                         style: ButtonStyle(
@@ -190,6 +294,8 @@ class _LogInState extends State<LogIn> {
                           borderRadius: BorderRadius.circular(12),
                         ))),
                         onPressed: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => const Dashboard()));
                           postLogin();
                         },
                         child: Text(
@@ -212,6 +318,7 @@ class _LogInState extends State<LogIn> {
                             color: Colors.black,
                             fontSize: 12.0,
                           ),
+                          // ignore: prefer_const_literals_to_create_immutables
                           children: [
                             TextSpan(
                               text: "By continuing, you agree to our ",

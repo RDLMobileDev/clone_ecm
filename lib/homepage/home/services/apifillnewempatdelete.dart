@@ -2,15 +2,14 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future logoutUser(String emailKey, String deviceKey, String token) async {
+Future fillNewEmpatDelete(String ecmitemId, String token) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url = "$myUrl/logout";
+  String url = "$myUrl/ecmstep4_delete";
   final response = await http.post(Uri.parse(url), headers: {
     "Accept": "Application/json",
     'Authorization': 'Bearer $token',
   }, body: {
-    'email': emailKey,
-    'device_key': deviceKey
+    'ecmitem_id': ecmitemId
   });
 
   // print(response.body);

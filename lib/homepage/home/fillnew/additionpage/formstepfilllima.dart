@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 
 class FormStepFilllima extends StatefulWidget {
-  const FormStepFilllima({ Key? key }) : super(key: key);
+  const FormStepFilllima({Key? key}) : super(key: key);
 
   @override
   _FormStepFilllimaState createState() => _FormStepFilllimaState();
@@ -32,7 +32,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              // ignore: prefer_const_constructors
               child: Text(
                 'Item Name',
                 textAlign: TextAlign.left,
@@ -47,7 +46,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 decoration: InputDecoration(
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF979C9E)),
+                        borderSide: BorderSide(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     filled: true,
                     hintText: 'Type Item Name'),
@@ -240,7 +239,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 decoration: const InputDecoration(
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF979C9E)),
+                        borderSide: BorderSide(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     filled: true,
                     suffixIcon: Icon(
@@ -252,7 +251,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 maxLines: 1,
               ),
             ),
-            
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
@@ -267,12 +265,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               child: TextFormField(
                 maxLines: 5,
                 decoration: InputDecoration(
-                  hintText: 'Type message...',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF979C9E)),
-                    borderRadius: BorderRadius.all(Radius.circular(10))
-                  )
-                ),
+                    hintText: 'Type message...',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
               ),
             ),
             Container(
