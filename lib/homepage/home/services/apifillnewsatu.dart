@@ -18,8 +18,7 @@ Future fillNewSatu(
   String machineDetailId,
 ) async {
   try {
-    // var teamMemberJson = json.encode(teamMember);
-    // print(token);
+    print(token);
     print(classificationId);
     print(date);
     print(userId);
@@ -27,28 +26,27 @@ Future fillNewSatu(
     print(locationId);
     print(machineId);
     print(machineDetailId);
-    String url = MyUrl().getUrlDevice();
 
-    final removedBrackets =
-        teamMember.toString().substring(1, teamMember.toString().length - 1);
-    final parts = removedBrackets.split(', ');
-
-    var joinedTeamMembar = parts.map((part) => "'$part'").join(', ');
-
-    print(joinedTeamMembar);
-
-    final response = await http.post(Uri.parse("$url/ecm_step1"), headers: {
-      "Accept": "Application/json",
-      'Authorization': 'Bearer $token',
-    }, body: {
+    Map<String, String> data;
+    
+    data = {
       'classification_id': classificationId,
       'date': date,
       'user_id': userId,
-      'user_nama[]': joinedTeamMembar,
       'location_id': locationId,
       'machine_id': machineId,
       'machinedetail_id': machineDetailId
-    });
+    };
+
+    for(int i = 0; i < teamMember.length; i++){
+      data.addAll({"user_nama[$i]": teamMember[i]});
+    }
+
+    String url = MyUrl().getUrlDevice();
+    final response = await http.post(Uri.parse("$url/ecm_step1"), headers: {
+      "Accept": "Application/json",
+      'Authorization': 'Bearer $token',
+    }, body: data);
 
     if (response.body.isNotEmpty) {
       var convertDatatoJson = jsonDecode(response.body);

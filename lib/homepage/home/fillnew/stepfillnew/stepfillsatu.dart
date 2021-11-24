@@ -1,5 +1,8 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
@@ -52,10 +55,13 @@ class StepFillSatuState extends State<StepFillSatu> {
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
     final prefs = await _prefs;
-    print("from prefs: ${prefs.getString("idClassification")}");
+    // print("from prefs: ${prefs.getString("idClassification")}");
+
     var idClass = prefs.getString("idClassification");
     var tglStepSatu = prefs.getString("tglStepSatu");
+
     // var teamMember = prefs.getString("teamMember");
+
     List<String>? teamId = prefs.getStringList("teamMember");
     var locationId = prefs.getString("locationId");
     var machineId = prefs.getString("machineId");
@@ -64,32 +70,41 @@ class StepFillSatuState extends State<StepFillSatu> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? idUser = prefs.getString("idKeyUser").toString();
 
-    var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
-        teamId!, locationId!, machineId!, machineDetailId!);
+    try {
+      // var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
+      //     teamId!, locationId!, machineId!, machineDetailId!);
 
-    print(result);
+      // print(result['response']['status']);
+      // prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
-    // if (result['response']['status'] == 200) {
-    //   Fluttertoast.showToast(
-    //       msg: 'Data disimpan',
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       timeInSecForIosWeb: 2,
-    //       backgroundColor: Colors.greenAccent,
-    //       textColor: Colors.white,
-    //       fontSize: 16);
-    //   print(result);
-    // } else {
-    //   Fluttertoast.showToast(
-    //       msg: 'Kesalahan jaringan. Data gagal disimpan.',
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       timeInSecForIosWeb: 2,
-    //       backgroundColor: Colors.greenAccent,
-    //       textColor: Colors.white,
-    //       fontSize: 16);
-    //   print(result);
-    // }
+      // if (result['response']['status'] == 200) {
+      //   Fluttertoast.showToast(
+      //       msg: 'Data disimpan',
+      //       toastLength: Toast.LENGTH_SHORT,
+      //       gravity: ToastGravity.BOTTOM,
+      //       timeInSecForIosWeb: 2,
+      //       backgroundColor: Colors.greenAccent,
+      //       textColor: Colors.white,
+      //       fontSize: 16);
+      //   print(result);
+      // } else {
+      //   Fluttertoast.showToast(
+      //       msg: 'Kesalahan jaringan. Data gagal disimpan.',
+      //       toastLength: Toast.LENGTH_SHORT,
+      //       gravity: ToastGravity.BOTTOM,
+      //       timeInSecForIosWeb: 2,
+      //       backgroundColor: Colors.greenAccent,
+      //       textColor: Colors.white,
+      //       fontSize: 16);
+      //   print(result);
+      // }
+    } on SocketException catch (e) {
+      print(e);
+    } on TimeoutException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void getDateFromDialog() async {
@@ -444,6 +459,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return DropdownButton(
+                      underline:
+                          DropdownButtonHideUnderline(child: Container()),
                       isExpanded: true,
                       items: _listLocation
                           .map((value) => DropdownMenuItem(
@@ -611,6 +628,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                   }
 
                   return DropdownButton(
+                    underline: DropdownButtonHideUnderline(child: Container()),
                     isExpanded: true,
                     items: _listMachineNumber
                         .map((data) => DropdownMenuItem(

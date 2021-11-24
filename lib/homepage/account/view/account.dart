@@ -28,10 +28,11 @@ class _AccountMemberState extends State<AccountMember> {
     String deviceUser = prefs.getString("deviceKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
     try {
+      // prefs.clear();
       var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
-      // print(rspLogut);
+      print(rspLogut);
       if (rspLogut['response']['status'] == 200) {
-        prefs.clear;
+
         setState(() {
           Fluttertoast.showToast(
               msg: 'Logout Sukses',
@@ -42,6 +43,7 @@ class _AccountMemberState extends State<AccountMember> {
               textColor: Colors.white,
               fontSize: 16);
         });
+        prefs.clear();
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) => LogIn()));
       } else {

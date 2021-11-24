@@ -2,10 +2,12 @@
 
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/services/apifillnewdua.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillDua extends StatefulWidget {
   final StepFillDuaState stepFillDuaState = StepFillDuaState();
@@ -19,6 +21,7 @@ class StepFillDua extends StatefulWidget {
 }
 
 class StepFillDuaState extends State<StepFillDua> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final ImagePicker imagePicker = ImagePicker();
   TextEditingController? timePickController;
 
@@ -32,6 +35,7 @@ class StepFillDuaState extends State<StepFillDua> {
       productionOpt = '',
       engineerOpt = '',
       otherOpt = '';
+  String? incidentGroup;
 
   bool isShiftA = false, isShiftB = false, isShiftC = false;
   bool isSafety = false, isQuality = false, isDelivery = false, isCost = false;
@@ -61,6 +65,7 @@ class StepFillDuaState extends State<StepFillDua> {
         final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
           imageFileList!.addAll(selectedImages);
+
         } else if (selectedImages.length > 4) {
           Fluttertoast.showToast(
               msg: "Tidak boleh melebihi 4 foto",
@@ -158,15 +163,42 @@ class StepFillDuaState extends State<StepFillDua> {
     }
   }
 
-  void saveStepFillDua() {
-    Fluttertoast.showToast(
-        msg: 'Data Disimpan',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16);
+  void saveStepFillDua() async {
+    // final prefs = await _prefs;
+    // String tokenUser = prefs.getString("tokenKey").toString();
+    // var idEcm = prefs.getString("idEcm");
+
+    // var result = await fillNewDua(
+    //   tokenUser, 
+    //   shiftA, 
+    //   shiftB, 
+    //   shiftNs, 
+    //   time, 
+    //   problem, 
+    //   safety, 
+    //   delivery, 
+    //   quality, 
+    //   cost, 
+    //   molding, 
+    //   production, 
+    //   other, 
+    //   utility, 
+    //   engineering, 
+    //   foto1, 
+    //   foto2, 
+    //   foto3, 
+    //   foto4, 
+    //   idEcm!, 
+    //   request: request
+    // );
+    // Fluttertoast.showToast(
+    //     msg: 'Data Disimpan',
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 2,
+    //     backgroundColor: Colors.greenAccent,
+    //     textColor: Colors.white,
+    //     fontSize: 16);
   }
 
   @override
@@ -223,14 +255,16 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isShiftA,
+                              child: Radio(
+                                  groupValue: incidentGroup,
+                                  value: '1',
                                   onChanged: (value) {
                                     if (value != null) {
                                       setState(() {
-                                        isShiftA = value;
-                                        shiftA = 'Shift A';
+                                        isShiftA = !isShiftA;
+                                        incidentGroup = value as String?;
                                       });
+                                      print(incidentGroup);
                                     }
                                   })),
                           const Text("Shift A")

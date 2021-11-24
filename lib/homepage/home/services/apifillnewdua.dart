@@ -5,7 +5,7 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-fillNewDua(
+Future fillNewDua(
     String token,
     String shiftA,
     String shiftB,
