@@ -20,6 +20,8 @@ class _FillNewState extends State<FillNew> {
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
+  final StepFillEmpat _stepFillEmpat = StepFillEmpat();
+  final StepFillLima _stepFillLima = StepFillLima();
 
   int _currentStep = 0;
   final int _stepTotal = 8;
@@ -40,6 +42,10 @@ class _FillNewState extends State<FillNew> {
       _stepFillDua.getSaveFillDua();
     } else if (_currentStep == 3) {
       _stepFillTiga.getSaveStepFillTiga();
+    } else if (_stepFillEmpat == 4) {
+      _stepFillEmpat.getSaveStepFillEmpat();
+    } else if (_stepFillLima == 5) {
+      _stepFillLima.getSavedStepFillLima();
     }
 
     if (_stepClicked != 8) {
@@ -220,7 +226,7 @@ class _FillNewState extends State<FillNew> {
                 onStepCancel: cancel,
                 controlsBuilder: (context, {onStepCancel, onStepContinue}) {
                   return Container(
-                    margin: const EdgeInsets.only(top: 50),
+                    margin: const EdgeInsets.only(top: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[

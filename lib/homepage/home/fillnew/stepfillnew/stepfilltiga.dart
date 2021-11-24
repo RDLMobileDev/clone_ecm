@@ -158,15 +158,19 @@ class _StepFillTigaState extends State<StepFillTiga> {
           ),
         ),
         Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(top: 10),
-            child: TextFormField(
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  hintText: 'Type message..'),
-              maxLines: 3,
-            ))
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 10),
+          child: TextFormField(
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                filled: true,
+                hintText: 'Type message..'),
+            maxLines: 3,
+          ),
+        ),
+        SizedBox(
+          height: 58,
+        )
       ],
     );
   }

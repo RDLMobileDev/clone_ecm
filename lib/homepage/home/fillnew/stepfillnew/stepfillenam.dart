@@ -272,23 +272,45 @@ class _StepFillEnamState extends State<StepFillEnam> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Break Time (H)  : ", style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),),
+                  Text(
+                    "Break Time (H)  : ",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                  ),
                   Container(
                     width: 150,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(40))
-                    ),
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(width: 40, height: 40, child: IconButton(onPressed: (){}, icon: Icon(Icons.remove, color: Color(0xFF979C9E),),),),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.remove,
+                              color: Color(0xFF979C9E),
+                            ),
+                          ),
+                        ),
                         Text("1"),
-                        SizedBox(width: 40, height: 40, child: IconButton(onPressed: (){}, icon: Icon(Icons.add, color: Color(0xFF20519F),),),),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.add,
+                              color: Color(0xFF20519F),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -458,11 +480,23 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 24),
               width: MediaQuery.of(context).size.width,
-              child: Text("Cost", style: TextStyle(fontFamily: 'Rubik', fontSize: 18, fontWeight: FontWeight.w700),),
+              child: Text(
+                "Cost",
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
-              child: Text("In-House M/P Cost (Rp)", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
+              child: Text(
+                "In-House M/P Cost (Rp)",
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 4),
@@ -474,10 +508,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 44,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "2 H",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("2 H", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                   Container(
                     child: Center(
@@ -495,10 +537,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 50,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "1 M/P",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("1 M/P", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                   Container(
                     child: Center(
@@ -516,10 +566,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 67,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "60.000",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("60.000", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                   Container(
                     child: Center(
@@ -537,27 +595,49 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 67,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "30.000",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("30.000", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                 ],
               ),
             ),
             Container(
-                     margin: const EdgeInsets.only(top: 4),
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
-                    ),
-                    child: Center(child: Text("Total = Rp. 0.0", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, color: Color(0xFF404446), fontWeight: FontWeight.w700),),),
-                  ),
+              margin: const EdgeInsets.only(top: 4),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF979C9E)),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              child: Center(
+                child: Text(
+                  "Total = Rp. 0.0",
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      color: Color(0xFF404446),
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
             Container(
               margin: const EdgeInsets.only(top: 16),
-              child: Text("Out-House (Rp)", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
+              child: Text(
+                "Out-House (Rp)",
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 4),
@@ -569,10 +649,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 44,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "0 H",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("0 H", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                   Container(
                     child: Center(
@@ -590,10 +678,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 50,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "0 M/P",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("0 M/P", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                   Container(
                     child: Center(
@@ -611,24 +707,40 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     width: 67,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "0/H",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Color(0xFF979C9E),
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                    child: Center(child: Text("0/H", style: TextStyle(fontFamily: 'Rubik', fontSize: 14, color: Color(0xFF979C9E), fontWeight: FontWeight.w400),),),
                   ),
                 ],
               ),
             ),
             Container(
-                     margin: const EdgeInsets.only(top: 4),
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF979C9E)),
-                      borderRadius: BorderRadius.all(Radius.circular(8))
-                    ),
-                    child: Center(child: Text("Total = Rp. 0.0", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, color: Color(0xFF404446), fontWeight: FontWeight.w700),),),
-                  ),
+              margin: const EdgeInsets.only(top: 4),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF979C9E)),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              child: Center(
+                child: Text(
+                  "Total = Rp. 0.0",
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      color: Color(0xFF404446),
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
           ],
         ),
       ),
