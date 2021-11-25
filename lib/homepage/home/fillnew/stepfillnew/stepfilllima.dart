@@ -4,7 +4,7 @@ import 'package:e_cm/homepage/home/fillnew/additionpage/formstepfilllima.dart';
 import 'package:flutter/material.dart';
 
 class StepFillLima extends StatefulWidget {
-  const StepFillLima({ Key? key }) : super(key: key);
+  const StepFillLima({Key? key}) : super(key: key);
 
   @override
   _StepFillLimaState createState() => _StepFillLimaState();
@@ -21,29 +21,46 @@ class _StepFillLimaState extends State<StepFillLima> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Text("Item Repairing", style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),),
+              child: Text(
+                "Item Repairing",
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
             InkWell(
-              onTap: (){
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => FormStepFilllima())
-                );
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FormStepFilllima()));
               },
               child: Container(
-                margin: const EdgeInsets.only(top: 5),
                 width: MediaQuery.of(context).size.width,
-                height: 40,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.only(top: 10),
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Color(0xFF00AEDB),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-                ),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Color(0xFF00AEDB)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    Icon(Icons.add_circle_outline, color: Colors.white,),
-                    SizedBox(width: 5,),
-                    Text("Add item", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),)
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(right: 5),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                    Text(
+                      'Add item',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.white,
+                          fontSize: 12),
+                    ),
                   ],
                 ),
               ),
