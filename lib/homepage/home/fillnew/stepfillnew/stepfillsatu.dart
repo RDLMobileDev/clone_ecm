@@ -71,33 +71,33 @@ class StepFillSatuState extends State<StepFillSatu> {
     String? idUser = prefs.getString("idKeyUser").toString();
 
     try {
-      // var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
-      //     teamId!, locationId!, machineId!, machineDetailId!);
+      var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
+          teamId!, locationId!, machineId!, machineDetailId!);
 
-      // print(result['response']['status']);
-      // prefs.setString("idEcm", result['data']['id_ecm'].toString());
+      print(result['response']['status']);
+      prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
-      // if (result['response']['status'] == 200) {
-      //   Fluttertoast.showToast(
-      //       msg: 'Data disimpan',
-      //       toastLength: Toast.LENGTH_SHORT,
-      //       gravity: ToastGravity.BOTTOM,
-      //       timeInSecForIosWeb: 2,
-      //       backgroundColor: Colors.greenAccent,
-      //       textColor: Colors.white,
-      //       fontSize: 16);
-      //   print(result);
-      // } else {
-      //   Fluttertoast.showToast(
-      //       msg: 'Kesalahan jaringan. Data gagal disimpan.',
-      //       toastLength: Toast.LENGTH_SHORT,
-      //       gravity: ToastGravity.BOTTOM,
-      //       timeInSecForIosWeb: 2,
-      //       backgroundColor: Colors.greenAccent,
-      //       textColor: Colors.white,
-      //       fontSize: 16);
-      //   print(result);
-      // }
+      if (result['response']['status'] == 200) {
+        Fluttertoast.showToast(
+            msg: 'Data disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        print(result);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Kesalahan jaringan. Data gagal disimpan.',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        print(result);
+      }
     } on SocketException catch (e) {
       print(e);
     } on TimeoutException catch (e) {
