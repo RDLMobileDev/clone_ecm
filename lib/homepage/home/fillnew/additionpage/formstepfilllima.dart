@@ -10,6 +10,21 @@ class FormStepFilllima extends StatefulWidget {
 }
 
 class _FormStepFilllimaState extends State<FormStepFilllima> {
+  Map<String, bool> noteOptions = {
+    "ok": false,
+    "limit": false,
+    "ng": false,
+  };
+
+  Map<String, bool> formValidations = {
+    "item": false,
+    "note": false,
+    "start": false,
+    "end": false,
+    "nama": false,
+    "repair": false,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,68 +84,135 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     margin: EdgeInsets.only(top: 10, right: 10),
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(
+                            color: (noteOptions["ok"] ?? false)
+                                ? Color(0xFF00AEDB)
+                                : Colors.grey),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         color: Colors.transparent),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(right: 10),
-                          child: Icon(
-                            Icons.circle_outlined,
-                            color: Colors.grey,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          noteOptions["ok"] = !(noteOptions["ok"] ?? false);
+                          noteOptions['limit'] = false;
+                          noteOptions["ng"] = false;
+
+                          formValidations["note"] =
+                              noteOptions.containsValue(true);
+                        });
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: Icon(
+                              Icons.circle_outlined,
+                              color: (noteOptions["ok"] ?? false)
+                                  ? Color(0xFF00AEDB)
+                                  : Colors.grey,
+                              size: 30,
+                            ),
+                          ),
+                          Text(
+                            'OK',
+                            style: TextStyle(
+                                color: (noteOptions["ok"] ?? false)
+                                    ? Color(0xFF00AEDB)
+                                    : Colors.grey,
+                                fontSize: 16,
+                                fontFamily: 'Rubik'),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        noteOptions["limit"] = !(noteOptions["limit"] ?? false);
+                        noteOptions["ok"] = false;
+                        noteOptions["ng"] = false;
+
+                        formValidations["note"] =
+                            noteOptions.containsValue(true);
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10, right: 10),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: (noteOptions["limit"] ?? false)
+                                  ? Color(0xFF00AEDB)
+                                  : Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.transparent),
+                      // ignore: prefer_const_literals_to_create_immutables
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.change_history_outlined,
+                            color: (noteOptions["limit"] ?? false)
+                                ? Color(0xFF00AEDB)
+                                : Colors.grey,
                             size: 30,
                           ),
-                        ),
-                        Text(
-                          'OK',
-                          style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
-                        )
-                      ],
+                          Text(
+                            'Limit',
+                            style: TextStyle(
+                                color: (noteOptions["limit"] ?? false)
+                                    ? Color(0xFF00AEDB)
+                                    : Colors.grey,
+                                fontSize: 16,
+                                fontFamily: 'Rubik'),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10, right: 10),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.transparent),
-                    // ignore: prefer_const_literals_to_create_immutables
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.change_history_outlined,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
-                        Text(
-                          'Limit',
-                          style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.transparent),
-                    // ignore: prefer_const_literals_to_create_immutables
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.close,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
-                        Text(
-                          'N / G',
-                          style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
-                        )
-                      ],
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        noteOptions["ng"] = !(noteOptions["ng"] ?? false);
+                        noteOptions["limit"] = false;
+                        noteOptions["ok"] = false;
+
+                        formValidations["note"] =
+                            noteOptions.containsValue(true);
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: (noteOptions["ng"] ?? false)
+                                ? Color(0xFF00AEDB)
+                                : Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.transparent),
+                      // ignore: prefer_const_literals_to_create_immutables
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.close,
+                            color: (noteOptions["ng"] ?? false)
+                                ? Color(0xFF00AEDB)
+                                : Colors.grey,
+                            size: 30,
+                          ),
+                          Text(
+                            'N / G',
+                            style: TextStyle(
+                                color: (noteOptions["ng"] ?? false)
+                                    ? Color(0xFF00AEDB)
+                                    : Colors.grey,
+                                fontSize: 16,
+                                fontFamily: 'Rubik'),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
