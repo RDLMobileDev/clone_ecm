@@ -50,7 +50,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.blue),
+                  color: Color(0xFF00AEDB)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
