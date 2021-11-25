@@ -451,9 +451,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Rubik',
-                      color: formValidations.containsValue(false)
-                          ? Colors.grey
-                          : Color(0xFF00AEDB),
+                      color: Colors.white,
                       fontSize: 16,
                     ),
                   )),

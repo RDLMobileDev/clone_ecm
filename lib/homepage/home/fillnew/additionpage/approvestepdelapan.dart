@@ -123,10 +123,18 @@ class _ApproveStepDelapanState extends State<ApproveStepDelapan> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               decoration: BoxDecoration(
-                color: Color(0xFF979C9E),
-                borderRadius: BorderRadius.all(Radius.circular(5))
+                  color: Color(0xFF979C9E),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              child: Center(
+                child: Text(
+                  "Approve",
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
-              child: Center(child: Text("Approve", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),),),
             )
           ],
         ),

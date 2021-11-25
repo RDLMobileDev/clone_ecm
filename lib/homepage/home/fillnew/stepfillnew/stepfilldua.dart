@@ -260,22 +260,18 @@ class StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 16),
-              padding: const EdgeInsets.all(5),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              margin: EdgeInsets.only(top: 10),
               child: TextFormField(
                 maxLines: 5,
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.all(0),
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Type the problem'),
+                decoration: InputDecoration(
+                  hintText: 'Type your problem',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF979C9E)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
+                  ),
+                ),
               ),
             ),
             Container(

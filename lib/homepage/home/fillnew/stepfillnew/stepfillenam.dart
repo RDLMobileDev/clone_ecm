@@ -10,6 +10,14 @@ class StepFillEnam extends StatefulWidget {
 }
 
 class _StepFillEnamState extends State<StepFillEnam> {
+  final TextEditingController tecItem = TextEditingController();
+  final TextEditingController tecName = TextEditingController();
+
+  Map<String, bool> formValidations = {
+    "name": false,
+    "idea": false,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,6 +28,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(bottom: 8),
               child: Text(
                 "Improvement/Kaizen",
                 style: TextStyle(
@@ -29,75 +38,104 @@ class _StepFillEnamState extends State<StepFillEnam> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                "Name",
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              padding: EdgeInsets.only(top: 8),
+              // ignore: prefer_const_constructors
+              child: RichText(
+                text: TextSpan(
+                  text: 'Name ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(top: 10),
               height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
+                keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    suffixIcon: Icon(Icons.search),
-                    hintText: 'Type name',
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                    hintStyle: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
+                    contentPadding: EdgeInsets.only(left: 18),
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    filled: true,
+                    suffixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 30,
+                    ),
+                    hintText: 'Type Name'),
+                maxLines: 1,
+                controller: tecName,
+                onChanged: (value) {
+                  setState(() {
+                    formValidations["name"] = value.isNotEmpty;
+                  });
+                },
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                "Idea",
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              padding: EdgeInsets.only(top: 16),
+              // ignore: prefer_const_constructors
+              child: RichText(
+                text: TextSpan(
+                  text: 'Idea ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              margin: EdgeInsets.only(top: 10),
               child: TextFormField(
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
                 maxLines: 5,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Type your idea',
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                    hintStyle: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
+                decoration: InputDecoration(
+                  hintText: 'Type your idea',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF979C9E)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    formValidations["idea"] = value.isNotEmpty;
+                  });
+                },
               ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 24),
               width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(top: 24),
               child: Text(
                 "Working Time",
                 style: TextStyle(

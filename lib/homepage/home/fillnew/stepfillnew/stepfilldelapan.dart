@@ -11,6 +11,9 @@ class StepFillDelapan extends StatefulWidget {
 }
 
 class _StepFillDelapanState extends State<StepFillDelapan> {
+  String engineer = '', product = '', others = '';
+  bool isEngineer = false, isProduct = false, isOthers = false;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -82,64 +85,112 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.28,
-                    height: 40,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF979C9E)),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            width: 30,
-                            height: 30,
-                            child:
-                                Checkbox(value: false, onChanged: (value) {})),
-                        const Text("Engineer")
-                      ],
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isEngineer = !isEngineer;
+                        engineer = 'Engineer';
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      height: 40,
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF979C9E)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Checkbox(
+                                  value: isEngineer,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        isEngineer = value;
+                                        engineer = 'Engineer';
+                                      });
+                                    }
+                                  })),
+                          const Text("Engineer")
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.28,
-                    height: 40,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF979C9E)),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            width: 30,
-                            height: 30,
-                            child:
-                                Checkbox(value: false, onChanged: (value) {})),
-                        const Text("Product")
-                      ],
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isProduct = !isProduct;
+                        product = 'Product';
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      height: 40,
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF979C9E)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Checkbox(
+                                  value: isProduct,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        isProduct = value;
+                                        product = 'Product';
+                                      });
+                                    }
+                                  })),
+                          const Text("Product")
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.28,
-                    height: 40,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF979C9E)),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            width: 30,
-                            height: 30,
-                            child:
-                                Checkbox(value: false, onChanged: (value) {})),
-                        const Text("Others")
-                      ],
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isOthers = !isOthers;
+                        others = 'Other';
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      height: 40,
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF979C9E)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Checkbox(
+                                  value: isOthers,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        isOthers = value;
+                                        others = "Other";
+                                      });
+                                    }
+                                  })),
+                          const Text("Others")
+                        ],
+                      ),
                     ),
                   ),
                 ],
