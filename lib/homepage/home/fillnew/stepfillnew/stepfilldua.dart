@@ -1,5 +1,6 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, avoid_print, prefer_const_literals_to_create_immutables, invalid_use_of_visible_for_testing_member
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/services/apifillnewdua.dart';
@@ -27,6 +28,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
   List<XFile>? imageFileList = [];
   List<File>? imageFileListCamera = [];
+  List<String> imageToString64List = [];
 
   String shiftA = '', shiftB = '', shiftC = '';
   String safetyOpt = '', qualityOpt = '', deliveryOpt = '', costOpt = '';
@@ -60,12 +62,20 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void selectImagesGallery() async {
+    final prefs = await _prefs;
     if (imageFileList!.length < 4) {
       try {
         final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
           imageFileList!.addAll(selectedImages);
 
+          for (int i = 0; i < selectedImages.length; i++) {
+            List<int> imageBytes = await selectedImages[i].readAsBytes();
+            String base64Image = base64Encode(imageBytes);
+            imageToString64List.add(base64Image);
+          }
+
+          prefs.setStringList("imagesFillDuaKey", imageToString64List);
         } else if (selectedImages.length > 4) {
           Fluttertoast.showToast(
               msg: "Tidak boleh melebihi 4 foto",
@@ -169,26 +179,26 @@ class StepFillDuaState extends State<StepFillDua> {
     // var idEcm = prefs.getString("idEcm");
 
     // var result = await fillNewDua(
-    //   tokenUser, 
-    //   shiftA, 
-    //   shiftB, 
-    //   shiftNs, 
-    //   time, 
-    //   problem, 
-    //   safety, 
-    //   delivery, 
-    //   quality, 
-    //   cost, 
-    //   molding, 
-    //   production, 
-    //   other, 
-    //   utility, 
-    //   engineering, 
-    //   foto1, 
-    //   foto2, 
-    //   foto3, 
-    //   foto4, 
-    //   idEcm!, 
+    //   tokenUser,
+    //   shiftA,
+    //   shiftB,
+    //   shiftNs,
+    //   time,
+    //   problem,
+    //   safety,
+    //   delivery,
+    //   quality,
+    //   cost,
+    //   molding,
+    //   production,
+    //   other,
+    //   utility,
+    //   engineering,
+    //   foto1,
+    //   foto2,
+    //   foto3,
+    //   foto4,
+    //   idEcm!,
     //   request: request
     // );
     // Fluttertoast.showToast(
@@ -237,8 +247,9 @@ class StepFillDuaState extends State<StepFillDua> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        isShiftA = !isShiftA;
-                        shiftA = 'Shift A';
+                        // isShiftA = !isShiftA;
+                        // shiftA = 'Shift A';
+                        incidentGroup = '1';
                       });
                     },
                     child: Container(
@@ -275,8 +286,9 @@ class StepFillDuaState extends State<StepFillDua> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        isShiftB = !isShiftB;
-                        shiftB = 'Shift B';
+                        // isShiftB = !isShiftB;
+                        // shiftB = 'Shift B';
+                        incidentGroup = '2';
                       });
                     },
                     child: Container(
@@ -293,13 +305,13 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isShiftB,
+                              child: Radio(
+                                  groupValue: incidentGroup,
+                                  value: '2',
                                   onChanged: (value) {
                                     if (value != null) {
                                       setState(() {
-                                        isShiftB = value;
-                                        shiftB = 'Shift B';
+                                        incidentGroup = value as String?;
                                       });
                                     }
                                   })),
@@ -311,8 +323,9 @@ class StepFillDuaState extends State<StepFillDua> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        isShiftC = !isShiftC;
-                        shiftC = 'Shift C';
+                        // isShiftC = !isShiftC;
+                        // shiftC = 'Shift C';
+                        incidentGroup = '3';
                       });
                     },
                     child: Container(
@@ -329,13 +342,13 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isShiftC,
+                              child: Radio(
+                                  groupValue: incidentGroup,
+                                  value: '3',
                                   onChanged: (value) {
                                     if (value != null) {
                                       setState(() {
-                                        isShiftC = value;
-                                        shiftC = 'Shift C';
+                                        incidentGroup = value as String?;
                                       });
                                     }
                                   })),
