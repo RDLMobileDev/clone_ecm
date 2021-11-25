@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +16,10 @@ import 'package:platform_device_id/platform_device_id.dart';
 class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
 }
 
 class _LogInState extends State<LogIn> {
@@ -154,11 +159,38 @@ class _LogInState extends State<LogIn> {
     }
   }
 
+  void checkPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    var token = await messaging.getToken();
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getDeviceKey();
+
+    checkPermission();
+    FirebaseMessaging.onMessage.listen((event) {
+      print("Receiving notification firebase");
+      print("Receive notification data -> ${event.data}");
+
+      print("notification data -> ${event.notification}");
+    });
   }
 
   @override
