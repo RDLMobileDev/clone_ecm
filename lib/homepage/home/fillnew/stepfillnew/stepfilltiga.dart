@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
+import 'package:e_cm/homepage/home/services/apifillnewtiga.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillTiga extends StatefulWidget {
   final _StepFillTigaState stepFillTigaState = _StepFillTigaState();
@@ -16,8 +18,57 @@ class StepFillTiga extends StatefulWidget {
 
 class _StepFillTigaState extends State<StepFillTiga> {
   bool _customTileExpanded = false;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final TextEditingController tecWhy1 = TextEditingController();
+  final TextEditingController tecWhy2 = TextEditingController();
+  final TextEditingController tecWhy3 = TextEditingController();
+  final TextEditingController tecWhy4 = TextEditingController();
+  final TextEditingController tecHow = TextEditingController();
 
-  void saveStepFillTiga() {
+  void saveStepFillTiga() async {
+    // final SharedPreferences prefs = await _prefs;
+    // String why1 = tecWhy1.text;
+    // String why2 = tecWhy2.text;
+    // String why3 = tecWhy3.text;
+    // String why4 = tecWhy4.text;
+    // String how = tecHow.text;
+    // String? ecmId = prefs.getString("ecm_id");
+    // String? token = prefs.getString("tokenKey");
+    //
+    // try {
+    //   var messageResult = "loading";
+    //   var rspStep = await fillNewTiga(
+    //       why1, why2, why3, why4, "", how, ecmId ?? "", token ?? "");
+    //
+    //   switch (rspStep['response']['status']) {
+    //     case 200:
+    //       messageResult = "Step 3 sukses";
+    //       break;
+    //     default:
+    //       messageResult = "Step 3 gagal";
+    //       break;
+    //   }
+    //
+    //   Fluttertoast.showToast(
+    //       msg: messageResult,
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       timeInSecForIosWeb: 2,
+    //       backgroundColor: Colors.greenAccent,
+    //       textColor: Colors.white,
+    //       fontSize: 16);
+    // } catch (e) {
+    //   print(e);
+    //   Fluttertoast.showToast(
+    //       msg: "Terjadi kesalahan, silahkan dicoba lagi nanti",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       timeInSecForIosWeb: 2,
+    //       backgroundColor: Colors.greenAccent,
+    //       textColor: Colors.white,
+    //       fontSize: 16);
+    // }
+
     Fluttertoast.showToast(
         msg: 'Data Disimpan',
         toastLength: Toast.LENGTH_SHORT,
@@ -64,6 +115,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     filled: true,
                     hintText: 'Type message..'),
                 maxLines: 5,
+                controller: tecWhy1,
               )
             ],
           ),
@@ -91,6 +143,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     filled: true,
                     hintText: 'Type message..'),
                 maxLines: 5,
+                controller: tecWhy2,
               )
             ],
           ),
@@ -118,6 +171,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     filled: true,
                     hintText: 'Type message..'),
                 maxLines: 5,
+                controller: tecWhy3,
               )
             ],
           ),
@@ -145,6 +199,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     filled: true,
                     hintText: 'Type message..'),
                 maxLines: 5,
+                controller: tecWhy4,
               )
             ],
           ),
@@ -166,6 +221,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                   filled: true,
                   hintText: 'Type message..'),
               maxLines: 3,
+              controller: tecHow,
             ))
       ],
     );
