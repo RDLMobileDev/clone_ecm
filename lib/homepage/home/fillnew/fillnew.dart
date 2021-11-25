@@ -19,7 +19,9 @@ class FillNew extends StatefulWidget {
 }
 
 class _FillNewState extends State<FillNew> {
-  final GlobalKey<StepFillSatuState> _keyFillSatu = GlobalKey();
+  final StepFillSatu _stepFillSatu = StepFillSatu();
+  final StepFillDua _stepFillDua = StepFillDua();
+  final StepFillTiga _stepFillTiga = StepFillTiga();
 
   int _currentStep = 0;
   final int _stepTotal = 8;
@@ -32,23 +34,35 @@ class _FillNewState extends State<FillNew> {
 
   continued() {
     _currentStep < 7 ? setState(() => _currentStep += 1) : null;
+
+    // print(_currentStep);
+    if (_currentStep == 1) {
+      _stepFillSatu.getSaveFillSatu();
+    } else if (_currentStep == 2) {
+      _stepFillDua.getSaveFillDua();
+    } else if (_currentStep == 3) {
+      _stepFillTiga.getSaveStepFillTiga();
+    }
+
     if (_stepClicked != 8) {
       setState(() => _stepClicked += 1);
     }
-    print(_currentStep);
   }
 
   cancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
-    if (_stepClicked != 1) {
+    if (_stepClicked != 2) {
       setState(() => _stepClicked -= 1);
+    } else if (_stepClicked == 2) {
+      Navigator.of(context).pop();
     }
-    print(_currentStep);
+    print(_stepClicked);
   }
 
   @override
   void initState() {
     _stepClicked += 1;
+
     super.initState();
   }
 
@@ -92,7 +106,7 @@ class _FillNewState extends State<FillNew> {
                 type: StepperType.horizontal,
                 physics: ScrollPhysics(),
                 currentStep: _currentStep,
-                onStepTapped: (step) => tapped(step),
+                // onStepTapped: (step) => tapped(step),
                 onStepContinue: continued,
                 onStepCancel: cancel,
                 controlsBuilder: (context, {onStepCancel, onStepContinue}) {

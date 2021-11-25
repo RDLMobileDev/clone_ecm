@@ -63,7 +63,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sudin",
+                                  text: "James",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Ario",
+                                  text: "Pedrosa",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sudin",
+                                  text: "James",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -217,7 +217,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               // ignore: prefer_const_literals_to_create_immutables
                               children: [
                                 TextSpan(
-                                  text: "Sudin",
+                                  text: "James",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
