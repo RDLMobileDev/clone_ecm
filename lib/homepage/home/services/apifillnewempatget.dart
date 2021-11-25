@@ -2,7 +2,7 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future getUser(String ecmId, String userId, String token) async {
+Future getFillNewEmpat(String ecmId, String userId, String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecmstep4_get?ecm_id=$ecmId&user_id=$userId";
   final response = await http.get(Uri.parse(url), headers: {
