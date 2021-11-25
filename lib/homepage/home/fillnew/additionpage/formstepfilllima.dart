@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FormStepFilllima extends StatefulWidget {
   const FormStepFilllima({Key? key}) : super(key: key);
@@ -10,6 +11,11 @@ class FormStepFilllima extends StatefulWidget {
 }
 
 class _FormStepFilllimaState extends State<FormStepFilllima> {
+  TextEditingController? startTimePickerController;
+  TextEditingController? endtTimePickerController;
+  final TextEditingController tecItem = TextEditingController();
+  final TextEditingController tecName = TextEditingController();
+
   Map<String, bool> noteOptions = {
     "ok": false,
     "limit": false,
@@ -21,9 +27,37 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     "note": false,
     "start": false,
     "end": false,
-    "nama": false,
+    "name": false,
     "repair": false,
   };
+
+  final DateTime now = DateTime.now();
+
+  void getStartTime() {
+    showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
+        .then((value) {
+      setState(() {
+        formValidations["start"] = true;
+        startTimePickerController =
+            TextEditingController(text: value!.format(context));
+      });
+    });
+  }
+
+  void getEndTime() {
+    showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
+        .then((value) {
+      setState(() {
+        formValidations["end"] = true;
+        startTimePickerController =
+            TextEditingController(text: value!.format(context));
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +75,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           },
         ),
       ),
+      backgroundColor: Colors.white,
       body: Container(
         padding: const EdgeInsets.all(16),
         child: ListView(
@@ -55,17 +90,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
+              height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: const TextField(
+              child: TextField(
+                controller: tecItem,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
                     filled: true,
                     hintText: 'Type Item Name'),
                 maxLines: 1,
+                onChanged: (value) {
+                  setState(() {
+                    formValidations["item"] = value.isNotEmpty;
+                  });
+                },
               ),
             ),
             Container(
@@ -78,51 +120,56 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               ),
             ),
             Container(
+              height: 40,
               child: Row(
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(top: 10, right: 10),
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: (noteOptions["ok"] ?? false)
                                 ? Color(0xFF00AEDB)
                                 : Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
                         color: Colors.transparent),
                     child: InkWell(
                       onTap: () {
                         setState(() {
                           noteOptions["ok"] = !(noteOptions["ok"] ?? false);
-                          noteOptions['limit'] = false;
+                          noteOptions["limit"] = false;
                           noteOptions["ng"] = false;
 
                           formValidations["note"] =
                               noteOptions.containsValue(true);
                         });
                       },
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: Icon(
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: Row(
+                          children: [
+                            Icon(
                               Icons.circle_outlined,
                               color: (noteOptions["ok"] ?? false)
                                   ? Color(0xFF00AEDB)
                                   : Colors.grey,
-                              size: 30,
+                              size: 20,
                             ),
-                          ),
-                          Text(
-                            'OK',
-                            style: TextStyle(
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              'OK',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Rubik',
                                 color: (noteOptions["ok"] ?? false)
                                     ? Color(0xFF00AEDB)
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontFamily: 'Rubik'),
-                          )
-                        ],
+                                    : Colors.black,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -139,13 +186,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 10, right: 10),
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: (noteOptions["limit"] ?? false)
                                   ? Color(0xFF00AEDB)
                                   : Colors.grey),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                           color: Colors.transparent),
                       // ignore: prefer_const_literals_to_create_immutables
                       child: Row(
@@ -155,7 +202,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                             color: (noteOptions["limit"] ?? false)
                                 ? Color(0xFF00AEDB)
                                 : Colors.grey,
-                            size: 30,
+                            size: 20,
                           ),
                           Text(
                             'Limit',
@@ -183,14 +230,14 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: (noteOptions["ng"] ?? false)
                                 ? Color(0xFF00AEDB)
                                 : Colors.grey,
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                           color: Colors.transparent),
                       // ignore: prefer_const_literals_to_create_immutables
                       child: Row(
@@ -200,7 +247,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                             color: (noteOptions["ng"] ?? false)
                                 ? Color(0xFF00AEDB)
                                 : Colors.grey,
-                            size: 30,
+                            size: 20,
                           ),
                           Text(
                             'N / G',
@@ -230,33 +277,40 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               padding: EdgeInsets.all(0),
               margin: EdgeInsets.only(top: 10),
+              height: 40,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              child: ExpansionTile(
-                tilePadding: EdgeInsets.only(left: 10, right: 5),
-                collapsedIconColor: Colors.black,
-                collapsedTextColor: Colors.black,
-                iconColor: Colors.black,
-                leading: Icon(
-                  Icons.access_time,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-                title: Text(
-                  'HH : MM',
-                  style: TextStyle(
-                      color: Colors.black, fontFamily: 'Rubik', fontSize: 14),
-                ),
-                children: <Widget>[
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(),
-                        filled: true,
-                        hintText: 'Type message..'),
-                    maxLines: 5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(Icons.access_time, color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      onTap: () => getStartTime(),
+                      readOnly: true,
+                      controller: startTimePickerController,
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(0),
+                          fillColor: Colors.white,
+                          border:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          filled: true,
+                          hintText: 'HH:MM'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey,
+                    ),
                   )
                 ],
               ),
@@ -273,33 +327,40 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               padding: EdgeInsets.all(0),
               margin: EdgeInsets.only(top: 10),
+              height: 40,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              child: ExpansionTile(
-                tilePadding: EdgeInsets.only(left: 10, right: 5),
-                collapsedIconColor: Colors.black,
-                collapsedTextColor: Colors.black,
-                iconColor: Colors.black,
-                leading: Icon(
-                  Icons.access_time,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-                title: Text(
-                  'HH : MM',
-                  style: TextStyle(
-                      color: Colors.black, fontFamily: 'Rubik', fontSize: 14),
-                ),
-                children: <Widget>[
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(),
-                        filled: true,
-                        hintText: 'Type message..'),
-                    maxLines: 5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(Icons.access_time, color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      onTap: () => getEndTime(),
+                      readOnly: true,
+                      controller: startTimePickerController,
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(0),
+                          fillColor: Colors.white,
+                          border:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          filled: true,
+                          hintText: 'HH:MM'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey,
+                    ),
                   )
                 ],
               ),
@@ -316,12 +377,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
+              height: 40,
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     filled: true,
                     suffixIcon: Icon(
@@ -331,6 +393,12 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     ),
                     hintText: 'Type Name'),
                 maxLines: 1,
+                controller: tecName,
+                onChanged: (value) {
+                  setState(() {
+                    formValidations["name"] = value.isNotEmpty;
+                  });
+                },
               ),
             ),
             Container(
@@ -347,26 +415,48 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               child: TextFormField(
                 maxLines: 5,
                 decoration: InputDecoration(
-                    hintText: 'Type message...',
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
+                  hintText: 'Type message...',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF979C9E)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    formValidations["repair"] = value.isNotEmpty;
+                  });
+                },
               ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(15),
-              margin: EdgeInsets.only(top: 10),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.grey),
-              child: Text(
-                'Save Checking',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'Rubik', color: Colors.white, fontSize: 16),
-              ),
+              margin: EdgeInsets.only(top: 50),
+              height: 40,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          formValidations.containsValue(false)
+                              ? Colors.grey
+                              : Color(0xFF00AEDB)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ))),
+                  onPressed:
+                      formValidations.containsValue(false) ? null : () {},
+                  child: Text(
+                    'Save Checking',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: formValidations.containsValue(false)
+                          ? Colors.grey
+                          : Color(0xFF00AEDB),
+                      fontSize: 16,
+                    ),
+                  )),
             ),
           ],
         ),

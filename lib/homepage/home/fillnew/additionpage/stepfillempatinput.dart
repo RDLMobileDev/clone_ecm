@@ -162,11 +162,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     hintText: 'Type Standard'),
                 maxLines: 1,
                 onChanged: (value) {
-                  setState(() {
-                    formValidations["standard"] = value.isNotEmpty;
-
-                    print(formValidations);
-                  });
+                  setState(
+                    () {
+                      formValidations["standard"] = value.isNotEmpty;
+                      print(formValidations);
+                    },
+                  );
                 },
               ),
             ),
