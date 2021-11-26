@@ -1,6 +1,9 @@
 // ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_constructors
 
+import 'package:e_cm/homepage/home/model/part_model.dart';
+import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
   const StepFillEmpatInput({Key? key}) : super(key: key);
@@ -16,6 +19,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   final TextEditingController tecStandard = TextEditingController();
   final TextEditingController tecActual = TextEditingController();
   final TextEditingController tecName = TextEditingController();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  List<PartModel> parts = <PartModel>[];
+  var selectedPart;
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -55,6 +61,31 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
             TextEditingController(text: value!.format(context));
       });
     });
+  }
+
+  Future<void> fetchLocationPartData() async {
+    var prefs = await _prefs;
+    String ecmId = prefs.getString("ecmId") ?? "";
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    var data = await ApiLocationPartService.getPartLocations("13", tokenUser);
+    print("fetch location part data -> $data");
+    parts = data;
+  }
+
+  void saveStepInputChecking() async {
+    final prefs = await _prefs;
+    var ecmId = prefs.getString("idEcm");
+    var idUser = prefs.getString("idKeyUser").toString();
+  }
+
+  static String _displayPartOption(PartModel option) => option.mPartNama ?? "-";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchLocationPartData();
   }
 
   @override
@@ -544,27 +575,81 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               height: 40,
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    filled: true,
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                    hintText: 'Type Name'),
-                maxLines: 1,
-                controller: tecName,
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["name"] = value.isNotEmpty;
-                  });
-                },
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 18),
+                  fillColor: Colors.white,
+                  focusedBorder: InputBorder.none,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  filled: true,
+                  suffixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                ),
+                child: Autocomplete<PartModel>(
+                  displayStringForOption: _displayPartOption,
+                  optionsBuilder: (TextEditingValue tev) {
+                    if (tev.text == '') {
+                      return const Iterable<PartModel>.empty();
+                    }
+                    return parts.where((element) => element
+                        .toString()
+                        .contains(tev.text.toString().toLowerCase()));
+                  },
+                  onSelected: (item) {},
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: "Type Name",
+                      ),
+                      onFieldSubmitted: (String value) {
+                        onFieldSubmitted();
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
+                        });
+                      },
+                    );
+                  },
+                  optionsViewBuilder: (context, onSelected, options) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Material(
+                        elevation: 4.0,
+                        child: SizedBox(
+                          height: 200.0,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: options.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final String option =
+                                  options.elementAt(index).mPartNama ?? "-";
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelected(options.elementAt(index));
+                                },
+                                child: ListTile(
+                                  title: Text(option),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Container(
