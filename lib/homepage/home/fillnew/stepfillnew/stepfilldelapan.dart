@@ -23,14 +23,25 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width,
-              child: const Text(
-                "E-Sign",
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Color(0xFF404446),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              margin: const EdgeInsets.only(top: 16),
+              child: RichText(
+                text: const TextSpan(
+                  text: 'E-Sign ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             InkWell(
@@ -70,14 +81,25 @@ class _StepFillDelapanState extends State<StepFillDelapan> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 24),
-              child: const Text(
-                "Copy to",
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Color(0xFF404446),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              margin: const EdgeInsets.only(top: 16),
+              child: RichText(
+                text: const TextSpan(
+                  text: 'Copy to ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
