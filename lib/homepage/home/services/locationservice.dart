@@ -19,6 +19,9 @@ class LocationService {
 
       var dataLocation = json.decode(response.body)['data'];
 
+      print("location data:");
+      print(json.decode(response.body));
+
       for (int i = 0; i < dataLocation.length; i++) {
         var data = LocationModel(dataLocation[i]['m_location_id'].toString(),
             dataLocation[i]['m_location_nama']);

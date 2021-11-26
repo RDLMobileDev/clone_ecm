@@ -28,7 +28,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
   List<XFile>? imageFileList = [];
   List<File>? imageFileListCamera = [];
-  List<String> imageProblemName = [];
+  // List<String> imageProblemName = [];
   List<String> imageProblemPath = [];
 
   String shiftA = '', shiftB = '', shiftC = '';
@@ -42,7 +42,11 @@ class StepFillDuaState extends State<StepFillDua> {
   String? problemTypeGroup;
   String? percentageMistakeGroup;
 
-  String incidentState = '', timePickState = '', problemTypeState = '', typeMistakeState = '', percentageState = '';
+  String incidentState = '',
+      timePickState = '',
+      problemTypeState = '',
+      typeMistakeState = '',
+      percentageState = '';
 
   bool isShiftA = false, isShiftB = false, isShiftC = false;
   bool isSafety = false, isQuality = false, isDelivery = false, isCost = false;
@@ -57,15 +61,15 @@ class StepFillDuaState extends State<StepFillDua> {
   void getTime() async {
     final prefs = await _prefs;
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    
+
     showTimePicker(
             context: context,
             initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
         .then((value) {
-          String formattedTime = localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
+      String formattedTime =
+          localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
       setState(() {
-        timePickController =
-            TextEditingController(text: formattedTime);
+        timePickController = TextEditingController(text: formattedTime);
       });
       prefs.setString("timePickState", formattedTime);
     });
@@ -77,19 +81,13 @@ class StepFillDuaState extends State<StepFillDua> {
       try {
         final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
-          imageFileList!.addAll(selectedImages);
-
-          Map<String, String> map = {};
+          setState(() {
+            imageFileList!.addAll(selectedImages);
+          });
 
           for (int i = 0; i < selectedImages.length; i++) {
-            imageProblemName.add(selectedImages[i].name);
             imageProblemPath.add(selectedImages[i].path);
           }
-
-          print(imageProblemName);
-          print(imageProblemPath);
-
-          prefs.setStringList("imagesKeyName", imageProblemName);
           prefs.setStringList("imagesKetPath", imageProblemPath);
         } else if (selectedImages.length > 4) {
           Fluttertoast.showToast(
@@ -191,68 +189,63 @@ class StepFillDuaState extends State<StepFillDua> {
   void saveStepFillDua() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idEcm = prefs.getString("idEcm");
-    var incidentState = prefs.getString("incidentState") ;
+    var idEcmKey = prefs.getString("idEcm");
+    var shiftAkey = prefs.getString("shiftA");
+    var shiftBkey = prefs.getString("shiftB");
+    var shiftCkey = prefs.getString("shiftC");
+
+    var safetyOptKey = prefs.getString("safetyOpt");
+    var qualityOptKey = prefs.getString("qualityOpt");
+    var deliveryOptKey = prefs.getString("deliveryOpt");
+    var costOptKey = prefs.getString("costOpt");
+
+    var moldingOptKey = prefs.getString("moldingOpt");
+    var utilityOptKey = prefs.getString("utilityOpt");
+    var productionOptKey = prefs.getString("productionOpt");
+    var engineerOptKey = prefs.getString("engineerOpt");
+    var otherOptKey = prefs.getString("otherOpt");
+
     var problemTypeState = prefs.getString("problemTypeState");
-    var typeMistakeState = prefs.getString("typeMistakeState");
-    var percentageState = prefs.getString("percentageState");
     var imagesKeyName = prefs.getStringList("imagesKeyName");
     var imagesKetPath = prefs.getStringList("imagesKetPath");
     var timePickState = prefs.getString("timePickState");
 
-    print(idEcm);
+    // print(files.length);
 
     var result = await fillNewDua(
       token: tokenUser,
-      shiftA: incidentState,
-      shiftB: "0",
-      shiftNs: "0",
-      time: timePickState,
-      problem: problemTypeState,
-      safety: typeMistakeState,
-      quality: "0",
-      delivery: "0",
-      cost: "0",
-      molding: percentageState,
-      utility: "0",
-      production: "0",
-      engineering: "0",
-      other: "0",
-      ecmId: idEcm,
-      imagesName: imagesKeyName,
+      shiftA: shiftAkey!,
+      shiftB: shiftBkey!,
+      shiftNs: shiftCkey!,
+      time: timePickState!,
+      problem: problemTypeState!,
+      safety: safetyOptKey!,
+      quality: qualityOptKey!,
+      delivery: deliveryOptKey!,
+      cost: costOptKey!,
+      molding: moldingOptKey!,
+      utility: utilityOptKey!,
+      production: productionOptKey!,
+      engineering: engineerOptKey!,
+      other: otherOptKey!,
+      ecmId: idEcmKey!,
+      // images: files
+      // imagesName: imagesKeyName,
       imagesPath: imagesKetPath,
     );
 
     print(result);
-      // tokenUser,
-      // incidentState!,
-      // "0",
-      // "0",
-      // timePickState,
-      // problemTypeState,
-      // typeMistakeState,
-      // "0",
-      // "0",
-      // "0",
-      // percentageState,
-      // "0",
-      // "0",
-      // "0",
-      // "0",
-      // imagesKeyName!,
-      // imagesKetPath!,
-      // idEcm,
-    
+  }
 
-    // print(result);
-    // Fluttertoast.showToast(
-    //     msg: 'Data Disimpan',
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.BOTTOM,
-    //     timeInSecForIosWeb: 2,
-    //     backgroundColor: Colors.greenAccent,
-    //     textColor: Colors.white,
-    //     fontSize: 16);
+  void goToStepFillTiga() {
+    Fluttertoast.showToast(
+        msg: 'Data Disimpan',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16);
   }
 
   @override
@@ -318,9 +311,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                     if (value != null) {
                                       setState(() {
                                         incidentGroup = value as String;
-                                        incidentState = '1';
+                                        shiftA = '1';
+                                        shiftB = '0';
+                                        shiftC = '0';
                                       });
-                                      prefs.setString("incidentState", incidentState);
+                                      prefs.setString("shiftA", shiftA);
+                                      prefs.setString("shiftB", shiftB);
+                                      prefs.setString("shiftC", shiftC);
                                     }
                                   })),
                           const Text("Shift A")
@@ -357,11 +354,14 @@ class StepFillDuaState extends State<StepFillDua> {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        incidentGroup = value as String?;
-                                        incidentState = '1';
+                                        incidentGroup = value as String;
+                                        shiftA = '0';
+                                        shiftB = '1';
+                                        shiftC = '0';
                                       });
-
-                                      prefs.setString("incidentState", incidentState);
+                                      prefs.setString("shiftA", shiftA);
+                                      prefs.setString("shiftB", shiftB);
+                                      prefs.setString("shiftC", shiftC);
                                     }
                                   })),
                           const Text("Shift B")
@@ -398,10 +398,14 @@ class StepFillDuaState extends State<StepFillDua> {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        incidentGroup = value as String?;
-                                        incidentState = '1';
+                                        incidentGroup = value as String;
+                                        shiftA = '0';
+                                        shiftB = '0';
+                                        shiftC = '1';
                                       });
-                                      prefs.setString("incidentState", incidentState);
+                                      prefs.setString("shiftA", shiftA);
+                                      prefs.setString("shiftB", shiftB);
+                                      prefs.setString("shiftC", shiftC);
                                     }
                                   })),
                           const Text("Shift C")
@@ -486,15 +490,24 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: problemTypeGroup,
+                                  groupValue: problemTypeGroup,
                                   value: '1',
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
-                                    setState(() {
-                                      problemTypeGroup = value as String;
-                                      typeMistakeState = '1';
-                                    });
-                                    prefs.setString("typeMistakeState", typeMistakeState);
+                                    if (value != null) {
+                                      setState(() {
+                                        problemTypeGroup = value as String;
+                                        safetyOpt = '1';
+                                        qualityOpt = '0';
+                                        deliveryOpt = '0';
+                                        costOpt = '0';
+                                      });
+                                      prefs.setString("safetyOpt", safetyOpt);
+                                      prefs.setString("qualityOpt", qualityOpt);
+                                      prefs.setString(
+                                          "deliveryOpt", deliveryOpt);
+                                      prefs.setString("costOpt", costOpt);
+                                    }
                                   })),
                           const Text(
                             "Safety",
@@ -527,11 +540,24 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: problemTypeGroup,
+                                  groupValue: problemTypeGroup,
                                   value: '2',
                                   onChanged: (value) async {
-                                    setState(() {
-                                    });
+                                    final prefs = await _prefs;
+                                    if (value != null) {
+                                      setState(() {
+                                        problemTypeGroup = value as String;
+                                        safetyOpt = '0';
+                                        qualityOpt = '1';
+                                        deliveryOpt = '0';
+                                        costOpt = '0';
+                                      });
+                                      prefs.setString("safetyOpt", safetyOpt);
+                                      prefs.setString("qualityOpt", qualityOpt);
+                                      prefs.setString(
+                                          "deliveryOpt", deliveryOpt);
+                                      prefs.setString("costOpt", costOpt);
+                                    }
                                   })),
                           const Text(
                             "Quality",
@@ -572,11 +598,24 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: problemTypeGroup,
+                                  groupValue: problemTypeGroup,
                                   value: '3',
                                   onChanged: (value) async {
-                                    setState(() {
-                                    });
+                                    final prefs = await _prefs;
+                                    if (value != null) {
+                                      setState(() {
+                                        problemTypeGroup = value as String;
+                                        safetyOpt = '0';
+                                        qualityOpt = '0';
+                                        deliveryOpt = '1';
+                                        costOpt = '0';
+                                      });
+                                      prefs.setString("safetyOpt", safetyOpt);
+                                      prefs.setString("qualityOpt", qualityOpt);
+                                      prefs.setString(
+                                          "deliveryOpt", deliveryOpt);
+                                      prefs.setString("costOpt", costOpt);
+                                    }
                                   })),
                           const Text(
                             "Delivery",
@@ -608,11 +647,25 @@ class StepFillDuaState extends State<StepFillDua> {
                                 width: 30,
                                 height: 30,
                                 child: Radio(
-                                  groupValue: problemTypeGroup,
+                                    groupValue: problemTypeGroup,
                                     value: '4',
                                     onChanged: (value) async {
-                                      setState(() {
-                                      });
+                                      final prefs = await _prefs;
+                                      if (value != null) {
+                                        setState(() {
+                                          problemTypeGroup = value as String;
+                                          safetyOpt = '0';
+                                          qualityOpt = '0';
+                                          deliveryOpt = '0';
+                                          costOpt = '1';
+                                        });
+                                        prefs.setString("safetyOpt", safetyOpt);
+                                        prefs.setString(
+                                            "qualityOpt", qualityOpt);
+                                        prefs.setString(
+                                            "deliveryOpt", deliveryOpt);
+                                        prefs.setString("costOpt", costOpt);
+                                      }
                                     })),
                             const Text(
                               "Cost",
@@ -676,16 +729,28 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: percentageMistakeGroup,
+                                  groupValue: percentageMistakeGroup,
                                   value: '1',
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
-                                    setState(() {
-                                      percentageMistakeGroup = value as String?;
-                                      percentageState = '1';
-                                    });
-
-                                    prefs.setString("percentageState", percentageState);
+                                    if (value != null) {
+                                      setState(() {
+                                        percentageMistakeGroup =
+                                            value as String;
+                                        moldingOpt = '1';
+                                        utilityOpt = '0';
+                                        productionOpt = '0';
+                                        engineerOpt = '0';
+                                        otherOpt = '0';
+                                      });
+                                      prefs.setString("moldingOpt", moldingOpt);
+                                      prefs.setString("utilityOpt", utilityOpt);
+                                      prefs.setString(
+                                          "productionOpt", productionOpt);
+                                      prefs.setString(
+                                          "engineerOpt", engineerOpt);
+                                      prefs.setString("otherOpt", otherOpt);
+                                    }
                                   })),
                           const Text(
                             "Molding",
@@ -718,11 +783,28 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: percentageMistakeGroup,
+                                  groupValue: percentageMistakeGroup,
                                   value: '2',
-                                  onChanged: (value) async{
-                                    setState(() {
-                                    });
+                                  onChanged: (value) async {
+                                    final prefs = await _prefs;
+                                    if (value != null) {
+                                      setState(() {
+                                        percentageMistakeGroup =
+                                            value as String;
+                                        moldingOpt = '0';
+                                        utilityOpt = '1';
+                                        productionOpt = '0';
+                                        engineerOpt = '0';
+                                        otherOpt = '0';
+                                      });
+                                      prefs.setString("moldingOpt", moldingOpt);
+                                      prefs.setString("utilityOpt", utilityOpt);
+                                      prefs.setString(
+                                          "productionOpt", productionOpt);
+                                      prefs.setString(
+                                          "engineerOpt", engineerOpt);
+                                      prefs.setString("otherOpt", otherOpt);
+                                    }
                                   })),
                           const Text(
                             "Utility",
@@ -763,11 +845,28 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: percentageMistakeGroup,
-                                  value: isProduction,
+                                  groupValue: percentageMistakeGroup,
+                                  value: '3',
                                   onChanged: (value) async {
-                                    setState(() {
-                                    });
+                                    final prefs = await _prefs;
+                                    if (value != null) {
+                                      setState(() {
+                                        percentageMistakeGroup =
+                                            value as String;
+                                        moldingOpt = '0';
+                                        utilityOpt = '0';
+                                        productionOpt = '1';
+                                        engineerOpt = '0';
+                                        otherOpt = '0';
+                                      });
+                                      prefs.setString("moldingOpt", moldingOpt);
+                                      prefs.setString("utilityOpt", utilityOpt);
+                                      prefs.setString(
+                                          "productionOpt", productionOpt);
+                                      prefs.setString(
+                                          "engineerOpt", engineerOpt);
+                                      prefs.setString("otherOpt", otherOpt);
+                                    }
                                   })),
                           const Text(
                             "Production",
@@ -799,11 +898,30 @@ class StepFillDuaState extends State<StepFillDua> {
                                 width: 30,
                                 height: 30,
                                 child: Radio(
-                                groupValue: percentageMistakeGroup,
-                                    value: isEngineering,
+                                    groupValue: percentageMistakeGroup,
+                                    value: '4',
                                     onChanged: (value) async {
-                                      setState(() {
-                                      });
+                                      final prefs = await _prefs;
+                                      if (value != null) {
+                                        setState(() {
+                                          percentageMistakeGroup =
+                                              value as String;
+                                          moldingOpt = '0';
+                                          utilityOpt = '0';
+                                          productionOpt = '0';
+                                          engineerOpt = '1';
+                                          otherOpt = '0';
+                                        });
+                                        prefs.setString(
+                                            "moldingOpt", moldingOpt);
+                                        prefs.setString(
+                                            "utilityOpt", utilityOpt);
+                                        prefs.setString(
+                                            "productionOpt", productionOpt);
+                                        prefs.setString(
+                                            "engineerOpt", engineerOpt);
+                                        prefs.setString("otherOpt", otherOpt);
+                                      }
                                     })),
                             const Text(
                               "Engineering",
@@ -845,13 +963,28 @@ class StepFillDuaState extends State<StepFillDua> {
                               width: 30,
                               height: 30,
                               child: Radio(
-                                groupValue: percentageMistakeGroup,
-                                  value: isOther,
+                                  groupValue: percentageMistakeGroup,
+                                  value: '5',
                                   onChanged: (value) async {
-                                    setState(() {
-                                      isOther = !isOther;
-                                      otherOpt = 'Other';
-                                    });
+                                    final prefs = await _prefs;
+                                    if (value != null) {
+                                      setState(() {
+                                        percentageMistakeGroup =
+                                            value as String;
+                                        moldingOpt = '0';
+                                        utilityOpt = '0';
+                                        productionOpt = '0';
+                                        engineerOpt = '0';
+                                        otherOpt = '1';
+                                      });
+                                      prefs.setString("moldingOpt", moldingOpt);
+                                      prefs.setString("utilityOpt", utilityOpt);
+                                      prefs.setString(
+                                          "productionOpt", productionOpt);
+                                      prefs.setString(
+                                          "engineerOpt", engineerOpt);
+                                      prefs.setString("otherOpt", otherOpt);
+                                    }
                                   })),
                           const Text(
                             "Other",
@@ -890,11 +1023,13 @@ class StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             InkWell(
-              onTap: () => showBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return optionPickImage(context);
-                  }),
+              onTap: () {
+                showBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return optionPickImage(context);
+                    });
+              },
               child: Container(
                 margin: const EdgeInsets.only(top: 4),
                 padding: const EdgeInsets.all(10),
