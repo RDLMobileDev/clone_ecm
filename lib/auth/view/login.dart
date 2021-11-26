@@ -6,6 +6,8 @@ import 'dart:ui';
 import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/util/local_notification.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,6 +19,16 @@ class LogIn extends StatefulWidget {
   _LogInState createState() => _LogInState();
 }
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  LocalNotification.show(
+      message.data["title"] ?? "", message.data["body"] ?? "");
+
+  if (message.notification != null) {
+    LocalNotification.show(
+        message.notification?.title ?? "", message.notification?.body ?? "");
+  }
+}
+
 class _LogInState extends State<LogIn> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool rememberMeState = false;
@@ -25,43 +37,38 @@ class _LogInState extends State<LogIn> {
   bool _isEmailError = false;
   bool _isPasswordError = false;
   bool _initialEnabledButton = false;
+  String? deviceUser = "";
+  late final FirebaseMessaging _firebaseMessaging;
 
   getDeviceKey() async {
     var deviceKey = await PlatformDeviceId.getDeviceId;
-    print(deviceKey);
+    print("device_key = " + deviceKey!);
     return deviceKey;
   }
 
   postLogin() async {
     String emailUser = _emailController.text;
     String passwordUser = _passwordController.text;
-    String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
 
     try {
       var rspLogin = await loginUser(
           emailUser, passwordUser, deviceUser.toString(), versionUser);
       print(rspLogin);
-      // print(emailUser + '+' + passwordUser);
-      // print(rspRegister['user']['password']);
 
       if (rspLogin['response']['status'] == 200) {
         final SharedPreferences prefs = await _prefs;
 
         prefs.setString("idKeyUser", rspLogin['data']['user']['id'].toString());
         prefs.setString("emailKey", rspLogin['data']['user']['email']);
-        prefs.setString("deviceKey", deviceUser.toString());
+        prefs.setString("deviceKey", deviceUser ?? "");
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
 
-        print("ID user = ");
-        print(rspLogin['data']['user']['id']);
-        print("EMAIL user = ");
-        print(rspLogin['data']['user']['email']);
-        print("USERNAME user = ");
-        print(rspLogin['data']['user']['username']);
-        print("TOKEN user = ");
-        print(prefs.getString("tokenKey"));
+        print("ID user = " + (rspLogin['data']['user']['id']).toString());
+        print("EMAIL user = " + rspLogin['data']['user']['email']);
+        print("USERNAME user = " + rspLogin['data']['user']['username']);
+        print("TOKEN user = " + rspLogin['data']['token']);
 
         setState(() {
           Fluttertoast.showToast(
@@ -154,11 +161,52 @@ class _LogInState extends State<LogIn> {
     }
   }
 
+  void initFcmSetup() async {
+    _firebaseMessaging = FirebaseMessaging.instance;
+    deviceUser = await _firebaseMessaging.getToken();
+
+    // ask permission on ios
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      Fluttertoast.showToast(
+          msg: 'Notification permission are needed to use this app',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotification.show(
+          event.data["title"] ?? "", event.data["body"] ?? "");
+
+      if (event.notification != null) {
+        LocalNotification.show(
+            event.notification?.title ?? "", event.notification?.body ?? "");
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getDeviceKey();
+
+    initFcmSetup();
   }
 
   @override
@@ -296,11 +344,11 @@ class _LogInState extends State<LogIn> {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ))),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => const Dashboard()));
-                          postLogin();
-                        },
+                        onPressed: isLogInEnabled
+                            ? () {
+                                postLogin();
+                              }
+                            : null,
                         child: Text(
                           'Login',
                           style: TextStyle(

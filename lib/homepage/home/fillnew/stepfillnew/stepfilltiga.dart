@@ -27,6 +27,12 @@ class _StepFillTigaState extends State<StepFillTiga> {
   TextEditingController howController = TextEditingController();
 
   bool _customTileExpanded = false;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final TextEditingController tecWhy1 = TextEditingController();
+  final TextEditingController tecWhy2 = TextEditingController();
+  final TextEditingController tecWhy3 = TextEditingController();
+  final TextEditingController tecWhy4 = TextEditingController();
+  final TextEditingController tecHow = TextEditingController();
 
   void saveStepFillTiga() async {
     final prefs = await _prefs;
@@ -69,6 +75,20 @@ class _StepFillTigaState extends State<StepFillTiga> {
               style: TextStyle(
                   color: Colors.black, fontSize: 16, fontFamily: 'Rubik'),
             ),
+<<<<<<< HEAD
+=======
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: 'Type message..'),
+                maxLines: 5,
+                controller: tecWhy1,
+              )
+            ],
+>>>>>>> origin
           ),
           Container(
             padding: EdgeInsets.all(0),
@@ -103,6 +123,20 @@ class _StepFillTigaState extends State<StepFillTiga> {
                 )
               ],
             ),
+<<<<<<< HEAD
+=======
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: 'Type message..'),
+                maxLines: 5,
+                controller: tecWhy2,
+              )
+            ],
+>>>>>>> origin
           ),
           Container(
             padding: EdgeInsets.all(0),
@@ -137,6 +171,20 @@ class _StepFillTigaState extends State<StepFillTiga> {
                 )
               ],
             ),
+<<<<<<< HEAD
+=======
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: 'Type message..'),
+                maxLines: 5,
+                controller: tecWhy3,
+              )
+            ],
+>>>>>>> origin
           ),
           Container(
             padding: EdgeInsets.all(0),
@@ -229,10 +277,39 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     border: OutlineInputBorder(),
                     filled: true,
                     hintText: 'Type message..'),
+<<<<<<< HEAD
                 maxLines: 3,
               ))
         ],
       ),
+=======
+                maxLines: 5,
+                controller: tecWhy4,
+              )
+            ],
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: Text(
+            'How',
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+          ),
+        ),
+        Container(
+            width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.only(top: 10),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  hintText: 'Type message..'),
+              maxLines: 3,
+              controller: tecHow,
+            ))
+      ],
+>>>>>>> origin
     );
   }
 }
