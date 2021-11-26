@@ -27,7 +27,6 @@ class _StepFillTigaState extends State<StepFillTiga> {
   TextEditingController howController = TextEditingController();
 
   bool _customTileExpanded = false;
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final TextEditingController tecWhy1 = TextEditingController();
   final TextEditingController tecWhy2 = TextEditingController();
   final TextEditingController tecWhy3 = TextEditingController();
