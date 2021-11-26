@@ -28,7 +28,8 @@ class StepFillDuaState extends State<StepFillDua> {
 
   List<XFile>? imageFileList = [];
   List<File>? imageFileListCamera = [];
-  List<String> imageToString64List = [];
+  List<String> imageProblemName = [];
+  List<String> imageProblemPath = [];
 
   String shiftA = '', shiftB = '', shiftC = '';
   String safetyOpt = '', qualityOpt = '', deliveryOpt = '', costOpt = '';
@@ -38,6 +39,10 @@ class StepFillDuaState extends State<StepFillDua> {
       engineerOpt = '',
       otherOpt = '';
   String? incidentGroup;
+  String? problemTypeGroup;
+  String? percentageMistakeGroup;
+
+  String incidentState = '', timePickState = '', problemTypeState = '', typeMistakeState = '', percentageState = '';
 
   bool isShiftA = false, isShiftB = false, isShiftC = false;
   bool isSafety = false, isQuality = false, isDelivery = false, isCost = false;
@@ -49,15 +54,20 @@ class StepFillDuaState extends State<StepFillDua> {
 
   final DateTime now = DateTime.now();
 
-  void getTime() {
+  void getTime() async {
+    final prefs = await _prefs;
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    
     showTimePicker(
             context: context,
             initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
         .then((value) {
+          String formattedTime = localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
       setState(() {
         timePickController =
-            TextEditingController(text: value!.format(context));
+            TextEditingController(text: formattedTime);
       });
+      prefs.setString("timePickState", formattedTime);
     });
   }
 
@@ -69,13 +79,18 @@ class StepFillDuaState extends State<StepFillDua> {
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
           imageFileList!.addAll(selectedImages);
 
+          Map<String, String> map = {};
+
           for (int i = 0; i < selectedImages.length; i++) {
-            List<int> imageBytes = await selectedImages[i].readAsBytes();
-            String base64Image = base64Encode(imageBytes);
-            imageToString64List.add(base64Image);
+            imageProblemName.add(selectedImages[i].name);
+            imageProblemPath.add(selectedImages[i].path);
           }
 
-          prefs.setStringList("imagesFillDuaKey", imageToString64List);
+          print(imageProblemName);
+          print(imageProblemPath);
+
+          prefs.setStringList("imagesKeyName", imageProblemName);
+          prefs.setStringList("imagesKetPath", imageProblemPath);
         } else if (selectedImages.length > 4) {
           Fluttertoast.showToast(
               msg: "Tidak boleh melebihi 4 foto",
@@ -174,33 +189,62 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void saveStepFillDua() async {
-    // final prefs = await _prefs;
-    // String tokenUser = prefs.getString("tokenKey").toString();
-    // var idEcm = prefs.getString("idEcm");
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    var idEcm = prefs.getString("idEcm");
+    var incidentState = prefs.getString("incidentState") ;
+    var problemTypeState = prefs.getString("problemTypeState");
+    var typeMistakeState = prefs.getString("typeMistakeState");
+    var percentageState = prefs.getString("percentageState");
+    var imagesKeyName = prefs.getStringList("imagesKeyName");
+    var imagesKetPath = prefs.getStringList("imagesKetPath");
+    var timePickState = prefs.getString("timePickState");
 
-    // var result = await fillNewDua(
-    //   tokenUser,
-    //   shiftA,
-    //   shiftB,
-    //   shiftNs,
-    //   time,
-    //   problem,
-    //   safety,
-    //   delivery,
-    //   quality,
-    //   cost,
-    //   molding,
-    //   production,
-    //   other,
-    //   utility,
-    //   engineering,
-    //   foto1,
-    //   foto2,
-    //   foto3,
-    //   foto4,
-    //   idEcm!,
-    //   request: request
-    // );
+    print(idEcm);
+
+    var result = await fillNewDua(
+      token: tokenUser,
+      shiftA: incidentState,
+      shiftB: "0",
+      shiftNs: "0",
+      time: timePickState,
+      problem: problemTypeState,
+      safety: typeMistakeState,
+      quality: "0",
+      delivery: "0",
+      cost: "0",
+      molding: percentageState,
+      utility: "0",
+      production: "0",
+      engineering: "0",
+      other: "0",
+      ecmId: idEcm,
+      imagesName: imagesKeyName,
+      imagesPath: imagesKetPath,
+    );
+
+    print(result);
+      // tokenUser,
+      // incidentState!,
+      // "0",
+      // "0",
+      // timePickState,
+      // problemTypeState,
+      // typeMistakeState,
+      // "0",
+      // "0",
+      // "0",
+      // percentageState,
+      // "0",
+      // "0",
+      // "0",
+      // "0",
+      // imagesKeyName!,
+      // imagesKetPath!,
+      // idEcm,
+    
+
+    // print(result);
     // Fluttertoast.showToast(
     //     msg: 'Data Disimpan',
     //     toastLength: Toast.LENGTH_SHORT,
@@ -269,13 +313,14 @@ class StepFillDuaState extends State<StepFillDua> {
                               child: Radio(
                                   groupValue: incidentGroup,
                                   value: '1',
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
+                                    final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        isShiftA = !isShiftA;
-                                        incidentGroup = value as String?;
+                                        incidentGroup = value as String;
+                                        incidentState = '1';
                                       });
-                                      print(incidentGroup);
+                                      prefs.setString("incidentState", incidentState);
                                     }
                                   })),
                           const Text("Shift A")
@@ -308,11 +353,15 @@ class StepFillDuaState extends State<StepFillDua> {
                               child: Radio(
                                   groupValue: incidentGroup,
                                   value: '2',
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
+                                    final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         incidentGroup = value as String?;
+                                        incidentState = '1';
                                       });
+
+                                      prefs.setString("incidentState", incidentState);
                                     }
                                   })),
                           const Text("Shift B")
@@ -345,11 +394,14 @@ class StepFillDuaState extends State<StepFillDua> {
                               child: Radio(
                                   groupValue: incidentGroup,
                                   value: '3',
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
+                                    final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         incidentGroup = value as String?;
+                                        incidentState = '1';
                                       });
+                                      prefs.setString("incidentState", incidentState);
                                     }
                                   })),
                           const Text("Shift C")
@@ -395,6 +447,10 @@ class StepFillDuaState extends State<StepFillDua> {
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
                 maxLines: 5,
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  prefs.setString("problemTypeState", value);
+                },
                 style: const TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 14,
@@ -429,13 +485,16 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isSafety,
-                                  onChanged: (value) {
+                              child: Radio(
+                                groupValue: problemTypeGroup,
+                                  value: '1',
+                                  onChanged: (value) async {
+                                    final prefs = await _prefs;
                                     setState(() {
-                                      isSafety = !isSafety;
-                                      safetyOpt = 'Safety';
+                                      problemTypeGroup = value as String;
+                                      typeMistakeState = '1';
                                     });
+                                    prefs.setString("typeMistakeState", typeMistakeState);
                                   })),
                           const Text(
                             "Safety",
@@ -467,12 +526,11 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isQuality,
-                                  onChanged: (value) {
+                              child: Radio(
+                                groupValue: problemTypeGroup,
+                                  value: '2',
+                                  onChanged: (value) async {
                                     setState(() {
-                                      isQuality = !isQuality;
-                                      qualityOpt = 'Quality';
                                     });
                                   })),
                           const Text(
@@ -513,12 +571,11 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isDelivery,
-                                  onChanged: (value) {
+                              child: Radio(
+                                groupValue: problemTypeGroup,
+                                  value: '3',
+                                  onChanged: (value) async {
                                     setState(() {
-                                      isDelivery = !isDelivery;
-                                      deliveryOpt = 'Delivery';
                                     });
                                   })),
                           const Text(
@@ -550,12 +607,11 @@ class StepFillDuaState extends State<StepFillDua> {
                             SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: Checkbox(
-                                    value: isCost,
-                                    onChanged: (value) {
+                                child: Radio(
+                                  groupValue: problemTypeGroup,
+                                    value: '4',
+                                    onChanged: (value) async {
                                       setState(() {
-                                        isCost = !isCost;
-                                        costOpt = 'Cost';
                                       });
                                     })),
                             const Text(
@@ -619,13 +675,17 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isMolding,
-                                  onChanged: (value) {
+                              child: Radio(
+                                groupValue: percentageMistakeGroup,
+                                  value: '1',
+                                  onChanged: (value) async {
+                                    final prefs = await _prefs;
                                     setState(() {
-                                      isMolding = !isMolding;
-                                      moldingOpt = 'Molding';
+                                      percentageMistakeGroup = value as String?;
+                                      percentageState = '1';
                                     });
+
+                                    prefs.setString("percentageState", percentageState);
                                   })),
                           const Text(
                             "Molding",
@@ -657,12 +717,11 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
-                                  value: isUtility,
-                                  onChanged: (value) {
+                              child: Radio(
+                                groupValue: percentageMistakeGroup,
+                                  value: '2',
+                                  onChanged: (value) async{
                                     setState(() {
-                                      isUtility = !isUtility;
-                                      utilityOpt = 'Utility';
                                     });
                                   })),
                           const Text(
@@ -703,12 +762,11 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
+                              child: Radio(
+                                groupValue: percentageMistakeGroup,
                                   value: isProduction,
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
                                     setState(() {
-                                      isProduction = !isProduction;
-                                      productionOpt = 'Production';
                                     });
                                   })),
                           const Text(
@@ -740,12 +798,11 @@ class StepFillDuaState extends State<StepFillDua> {
                             SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: Checkbox(
+                                child: Radio(
+                                groupValue: percentageMistakeGroup,
                                     value: isEngineering,
-                                    onChanged: (value) {
+                                    onChanged: (value) async {
                                       setState(() {
-                                        isEngineering = !isEngineering;
-                                        engineerOpt = 'Engineering';
                                       });
                                     })),
                             const Text(
@@ -787,9 +844,10 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Checkbox(
+                              child: Radio(
+                                groupValue: percentageMistakeGroup,
                                   value: isOther,
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
                                     setState(() {
                                       isOther = !isOther;
                                       otherOpt = 'Other';
