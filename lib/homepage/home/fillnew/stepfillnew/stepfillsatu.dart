@@ -74,7 +74,7 @@ class StepFillSatuState extends State<StepFillSatu> {
       var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
           teamId!, locationId!, machineId!, machineDetailId!);
 
-      print(result);
+      print(result['response']['status']);
       prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
       if (result['response']['status'] == 200) {
@@ -166,8 +166,8 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   @override
   void initState() {
-    // getClassificationData();
-    // getListLocation();
+    getClassificationData();
+    getListLocation();
     super.initState();
   }
 

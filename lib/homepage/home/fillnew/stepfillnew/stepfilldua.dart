@@ -249,6 +249,12 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   @override
+  void initState() {
+    print("step 2 init");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(

@@ -28,7 +28,7 @@ Future fillNewSatu(
     print(machineDetailId);
 
     Map<String, String> data;
-    
+
     data = {
       'classification_id': classificationId,
       'date': date,
@@ -38,15 +38,17 @@ Future fillNewSatu(
       'machinedetail_id': machineDetailId
     };
 
-    for(int i = 0; i < teamMember.length; i++){
+    for (int i = 0; i < teamMember.length; i++) {
       data.addAll({"user_nama[$i]": teamMember[i]});
     }
 
     String url = MyUrl().getUrlDevice();
-    final response = await http.post(Uri.parse("$url/ecm_step1"), headers: {
-      "Accept": "Application/json",
-      'Authorization': 'Bearer $token',
-    }, body: data);
+    final response = await http.post(Uri.parse("$url/ecm_step1"),
+        headers: {
+          "Accept": "Application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: data);
 
     if (response.body.isNotEmpty) {
       var convertDatatoJson = jsonDecode(response.body);
