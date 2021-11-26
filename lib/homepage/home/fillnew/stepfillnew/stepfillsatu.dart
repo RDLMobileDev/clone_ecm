@@ -7,11 +7,13 @@ import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
 import 'package:e_cm/homepage/home/model/machinenumbermodel.dart';
+import 'package:e_cm/homepage/home/model/membername.dart';
 import 'package:e_cm/homepage/home/services/apifillnewsatu.dart';
 import 'package:e_cm/homepage/home/services/classificationservice.dart';
 import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
+import 'package:e_cm/homepage/home/services/membernameservice.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +38,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   bool isTapedMachineName = false;
   bool isBreakDown = false, isPreventive = false, isInformation = false;
+  bool isTappedTeamMember = false;
 
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
@@ -45,12 +48,14 @@ class StepFillSatuState extends State<StepFillSatu> {
   String? machineNumberSelected;
   String machineDetailIdSelected = '';
   String classificationIdSelected = '';
+  String members = '';
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
   List<MachineNameModel> _listMachineName = [];
   List<MachineNumberModel> _listMachineNumber = [];
   List<String> listTeamMember = [];
+  List<MemberNameModel> listNamaMember = [];
 
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
@@ -164,9 +169,16 @@ class StepFillSatuState extends State<StepFillSatu> {
     // print(_listMachineNumber);
   }
 
+  Future<List<MemberNameModel>> getListMemberName() async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    listNamaMember = await getDataMemberName(tokenUser);
+    return await getDataMemberName(tokenUser);
+  }
+
   @override
   void initState() {
-    getClassificationData();
+    // getClassificationData();
     getListLocation();
     super.initState();
   }
@@ -401,6 +413,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
                 controller: teamMemberController,
+                onTap: () {
+                  setState(() {
+                    isTappedTeamMember = !isTappedTeamMember;
+                  });
+                },
                 onEditingComplete: () async {
                   final prefs = await _prefs;
                   if (teamMemberController.text.isNotEmpty) {
@@ -424,6 +441,57 @@ class StepFillSatuState extends State<StepFillSatu> {
                         fontWeight: FontWeight.w400)),
               ),
             ),
+            isTappedTeamMember == false
+                ? Container()
+                : Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    width: MediaQuery.of(context).size.width,
+                    child: FutureBuilder(
+                      future: getListMemberName(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Loading member..."),
+                          );
+                        }
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: listNamaMember.isEmpty
+                              ? 0
+                              : listNamaMember.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                              onTap: () async {
+                                final prefs = await _prefs;
+                                if (members.isEmpty) {
+                                  setState(() {
+                                    members = listNamaMember[i].name + ', ';
+                                  });
+                                  teamMemberController =
+                                      TextEditingController(text: members);
+                                  listTeamMember.add(listNamaMember[i].name);
+                                } else {
+                                  setState(() {
+                                    members += listNamaMember[i].name + ', ';
+                                  });
+                                  teamMemberController =
+                                      TextEditingController(text: members);
+                                  listTeamMember.add(listNamaMember[i].name);
+                                }
+
+                                prefs.setStringList(
+                                    "teamMember", listTeamMember);
+                              },
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(listNamaMember[i].name)),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
@@ -454,46 +522,33 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: FutureBuilder(
-                future: getListLocation(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return DropdownButton(
-                      underline:
-                          DropdownButtonHideUnderline(child: Container()),
-                      isExpanded: true,
-                      items: _listLocation
-                          .map((value) => DropdownMenuItem(
-                                value: value.nama,
-                                child: Text(value.nama),
-                                onTap: () async {
-                                  final prefs = await _prefs;
-                                  setState(() {
-                                    locationIdSelected = value.id;
-                                  });
-                                  getMachineName(value.id);
-                                  // getMachineNumberbyId(machineIdSelected);
-                                  prefs.setString(
-                                      "locationId", locationIdSelected);
-                                  print("id lokasi: $locationIdSelected");
-                                },
-                              ))
-                          .toList(),
-                      value: locationSelected,
-                      hint: const Text('Select factory'),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            locationSelected = value as String;
-                          });
-                        }
-                      },
-                    );
+              child: DropdownButton(
+                underline: DropdownButtonHideUnderline(child: Container()),
+                isExpanded: true,
+                items: _listLocation
+                    .map((value) => DropdownMenuItem(
+                          value: value.nama,
+                          child: Text(value.nama),
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              locationIdSelected = value.id;
+                            });
+                            getMachineName(value.id);
+                            // getMachineNumberbyId(machineIdSelected);
+                            prefs.setString("locationId", locationIdSelected);
+                            print("id lokasi: $locationIdSelected");
+                          },
+                        ))
+                    .toList(),
+                value: locationSelected,
+                hint: const Text('Select factory'),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      locationSelected = value as String;
+                    });
                   }
-
-                  return Center(
-                    child: Text('Loading location...'),
-                  );
                 },
               ),
             ),

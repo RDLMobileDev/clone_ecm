@@ -241,7 +241,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           contentPadding: EdgeInsets.only(top: 10, left: 10),
                           border:
                               OutlineInputBorder(borderSide: BorderSide.none),
-                          hintText: 'Type Item Name'),
+                          hintText: 'Type the cost'),
                     ),
                   ),
                 ],

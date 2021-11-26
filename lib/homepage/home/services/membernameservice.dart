@@ -6,14 +6,18 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/membername.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<MemberNameModel>> getDataMemberName() async {
+Future<List<MemberNameModel>> getDataMemberName(String token) async {
   List<MemberNameModel> _listDataMember = [];
 
   String myUrl = MyUrl().getUrlDevice();
   Uri url = Uri.parse("$myUrl/get_usersemua");
 
   try {
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
     var dataMember = json.decode(response.body)['data'];
 

@@ -139,12 +139,16 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void selectImageCamera() async {
+    final prefs = await _prefs;
     if (imageFileList!.length < 4) {
       try {
         final XFile? selectedImages =
             await imagePicker.pickImage(source: ImageSource.camera);
         if (selectedImages != null) {
           imageFileList!.add(selectedImages);
+
+          imageProblemPath.add(selectedImages.path);
+          prefs.setStringList("imagesKetPath", imageProblemPath);
         } else {
           imageFileList!.clear();
           Fluttertoast.showToast(
@@ -235,6 +239,8 @@ class StepFillDuaState extends State<StepFillDua> {
     );
 
     print(result);
+
+    goToStepFillTiga();
   }
 
   void goToStepFillTiga() {
