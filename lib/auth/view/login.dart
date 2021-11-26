@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/util/local_notification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,13 @@ class LogIn extends StatefulWidget {
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  LocalNotification.show(
+      message.data["title"] ?? "", message.data["body"] ?? "");
+
+  if (message.notification != null) {
+    LocalNotification.show(
+        message.notification?.title ?? "", message.notification?.body ?? "");
+  }
 }
 
 class _LogInState extends State<LogIn> {
@@ -30,6 +37,8 @@ class _LogInState extends State<LogIn> {
   bool _isEmailError = false;
   bool _isPasswordError = false;
   bool _initialEnabledButton = false;
+  String? deviceUser = "";
+  late final FirebaseMessaging _firebaseMessaging;
 
   getDeviceKey() async {
     var deviceKey = await PlatformDeviceId.getDeviceId;
@@ -40,7 +49,6 @@ class _LogInState extends State<LogIn> {
   postLogin() async {
     String emailUser = _emailController.text;
     String passwordUser = _passwordController.text;
-    String? deviceUser = await PlatformDeviceId.getDeviceId;
     String versionUser = "1.0.0";
 
     try {
@@ -55,7 +63,7 @@ class _LogInState extends State<LogIn> {
 
         prefs.setString("idKeyUser", rspLogin['data']['user']['id'].toString());
         prefs.setString("emailKey", rspLogin['data']['user']['email']);
-        prefs.setString("deviceKey", deviceUser.toString());
+        prefs.setString("deviceKey", deviceUser ?? "");
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
 
@@ -159,13 +167,12 @@ class _LogInState extends State<LogIn> {
     }
   }
 
-  void checkPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    var token = await messaging.getToken();
+  void initFcmSetup() async {
+    _firebaseMessaging = FirebaseMessaging.instance;
+    deviceUser = await _firebaseMessaging.getToken();
 
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    NotificationSettings settings = await messaging.requestPermission(
+    // ask permission on ios
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -175,7 +182,28 @@ class _LogInState extends State<LogIn> {
       sound: true,
     );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      Fluttertoast.showToast(
+          msg: 'Notification permission are needed to use this app',
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotification.show(
+          event.data["title"] ?? "", event.data["body"] ?? "");
+
+      if (event.notification != null) {
+        LocalNotification.show(
+            event.notification?.title ?? "", event.notification?.body ?? "");
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
   @override
@@ -184,13 +212,7 @@ class _LogInState extends State<LogIn> {
     super.initState();
     getDeviceKey();
 
-    checkPermission();
-    FirebaseMessaging.onMessage.listen((event) {
-      print("Receiving notification firebase");
-      print("Receive notification data -> ${event.data}");
-
-      print("notification data -> ${event.notification}");
-    });
+    initFcmSetup();
   }
 
   @override
@@ -328,11 +350,11 @@ class _LogInState extends State<LogIn> {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ))),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => const Dashboard()));
-                          postLogin();
-                        },
+                        onPressed: isLogInEnabled
+                            ? () {
+                                postLogin();
+                              }
+                            : null,
                         child: Text(
                           'Login',
                           style: TextStyle(
