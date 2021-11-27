@@ -30,10 +30,10 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   Future<List> getPartItembyMacchine() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    String? idEcmKey = prefs.getString("idEcm");
+    String idEcmKey = prefs.getString("idEcm") ?? "";
 
     listItemMachineData =
-        await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey!);
+        await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
 
     return await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
   }

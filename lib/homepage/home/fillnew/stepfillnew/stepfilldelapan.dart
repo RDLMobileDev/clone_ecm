@@ -6,13 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillDelapan extends StatefulWidget {
-  const StepFillDelapan({Key? key}) : super(key: key);
+  StepFillDelapan({Key? key}) : super(key: key);
+
+  final StepFillDelapanState stepFillDelapanState = StepFillDelapanState();
+
+  void getMethodPostStep() {
+    stepFillDelapanState.postStepDelapan();
+  }
 
   @override
-  _StepFillDelapanState createState() => _StepFillDelapanState();
+  StepFillDelapanState createState() => StepFillDelapanState();
 }
 
-class _StepFillDelapanState extends State<StepFillDelapan> {
+class StepFillDelapanState extends State<StepFillDelapan> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String? copyToGroup;
   String engineerTo = '', productTo = '', othersTo = '';

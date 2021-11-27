@@ -21,10 +21,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   Future getDataPartItemSaved() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    String? idEcmKey = prefs.getString("idEcm");
+    String? idEcmKey = prefs.getString("idEcm") ?? "";
 
     _listDataPartSaved = await partItemMachineSaveService
-        .getPartItemMachineSaveData(tokenUser, idEcmKey!);
+        .getPartItemMachineSaveData(tokenUser, idEcmKey);
 
     return await partItemMachineSaveService.getPartItemMachineSaveData(
         tokenUser, idEcmKey);
