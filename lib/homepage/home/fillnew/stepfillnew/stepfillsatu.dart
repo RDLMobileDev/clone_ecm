@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors, prefer_is_empty
 
 import 'dart:async';
 import 'dart:io';
@@ -7,11 +7,13 @@ import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
 import 'package:e_cm/homepage/home/model/machinenumbermodel.dart';
+import 'package:e_cm/homepage/home/model/membername.dart';
 import 'package:e_cm/homepage/home/services/apifillnewsatu.dart';
 import 'package:e_cm/homepage/home/services/classificationservice.dart';
 import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
+import 'package:e_cm/homepage/home/services/membernameservice.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +38,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   bool isTapedMachineName = false;
   bool isBreakDown = false, isPreventive = false, isInformation = false;
+  bool isTappedTeamMember = false;
 
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
@@ -45,58 +48,78 @@ class StepFillSatuState extends State<StepFillSatu> {
   String? machineNumberSelected;
   String machineDetailIdSelected = '';
   String classificationIdSelected = '';
+  String members = '';
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
   List<MachineNameModel> _listMachineName = [];
   List<MachineNumberModel> _listMachineNumber = [];
   List<String> listTeamMember = [];
+  List<MemberNameModel> listNamaMember = [];
 
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
     final prefs = await _prefs;
     // print("from prefs: ${prefs.getString("idClassification")}");
 
-    var idClass = prefs.getString("idClassification");
-    var tglStepSatu = prefs.getString("tglStepSatu");
+    var idClass = prefs.getString("idClassification") ?? "";
+    var tglStepSatu = prefs.getString("tglStepSatu") ?? "";
 
     // var teamMember = prefs.getString("teamMember");
 
-    List<String>? teamId = prefs.getStringList("teamMember");
-    var locationId = prefs.getString("locationId");
-    var machineId = prefs.getString("machineId");
-    var machineDetailId = prefs.getString("machineDetailId");
+    List<String>? teamId = prefs.getStringList("teamMember") ?? [];
+    var locationId = prefs.getString("locationId") ?? "";
+    var machineId = prefs.getString("machineId") ?? "";
+    var machineDetailId = prefs.getString("machineDetailId") ?? "";
 
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String? idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser").toString();
 
     try {
-      var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
-          teamId!, locationId!, machineId!, machineDetailId!);
+      if (tokenUser != "" &&
+          idClass != "" &&
+          tglStepSatu != "" &&
+          idUser != "" &&
+          teamId.length != 0 &&
+          locationId != "" &&
+          machineId != "" &&
+          machineDetailId != "") {
+        var result = await fillNewSatu(tokenUser, idClass, tglStepSatu, idUser,
+            teamId, locationId, machineId, machineDetailId);
 
-      print(result);
-      prefs.setString("idEcm", result['data']['id_ecm'].toString());
+        print(result['response']['status']);
+        prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
-      if (result['response']['status'] == 200) {
-        Fluttertoast.showToast(
-            msg: 'Data disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-        print(result);
+        if (result['response']['status'] == 200) {
+          Fluttertoast.showToast(
+              msg: 'Data disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Kesalahan jaringan. Data gagal disimpan.',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: 'Kesalahan jaringan. Data gagal disimpan.',
+            msg: 'Input field belum diisi',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
             backgroundColor: Colors.greenAccent,
             textColor: Colors.white,
             fontSize: 16);
-        print(result);
       }
     } on SocketException catch (e) {
       print(e);
@@ -164,10 +187,17 @@ class StepFillSatuState extends State<StepFillSatu> {
     // print(_listMachineNumber);
   }
 
+  Future<List<MemberNameModel>> getListMemberName() async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    listNamaMember = await getDataMemberName(tokenUser);
+    return await getDataMemberName(tokenUser);
+  }
+
   @override
   void initState() {
     // getClassificationData();
-    // getListLocation();
+    getListLocation();
     super.initState();
   }
 
@@ -401,6 +431,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
                 controller: teamMemberController,
+                onTap: () {
+                  setState(() {
+                    isTappedTeamMember = !isTappedTeamMember;
+                  });
+                },
                 onEditingComplete: () async {
                   final prefs = await _prefs;
                   if (teamMemberController.text.isNotEmpty) {
@@ -424,6 +459,57 @@ class StepFillSatuState extends State<StepFillSatu> {
                         fontWeight: FontWeight.w400)),
               ),
             ),
+            isTappedTeamMember == false
+                ? Container()
+                : Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    width: MediaQuery.of(context).size.width,
+                    child: FutureBuilder(
+                      future: getListMemberName(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Loading member..."),
+                          );
+                        }
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: listNamaMember.isEmpty
+                              ? 0
+                              : listNamaMember.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                              onTap: () async {
+                                final prefs = await _prefs;
+                                if (members.isEmpty) {
+                                  setState(() {
+                                    members = listNamaMember[i].name + ', ';
+                                  });
+                                  teamMemberController =
+                                      TextEditingController(text: members);
+                                  listTeamMember.add(listNamaMember[i].name);
+                                } else {
+                                  setState(() {
+                                    members += listNamaMember[i].name + ', ';
+                                  });
+                                  teamMemberController =
+                                      TextEditingController(text: members);
+                                  listTeamMember.add(listNamaMember[i].name);
+                                }
+
+                                prefs.setStringList(
+                                    "teamMember", listTeamMember);
+                              },
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(listNamaMember[i].name)),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
@@ -454,46 +540,33 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: FutureBuilder(
-                future: getListLocation(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return DropdownButton(
-                      underline:
-                          DropdownButtonHideUnderline(child: Container()),
-                      isExpanded: true,
-                      items: _listLocation
-                          .map((value) => DropdownMenuItem(
-                                value: value.nama,
-                                child: Text(value.nama),
-                                onTap: () async {
-                                  final prefs = await _prefs;
-                                  setState(() {
-                                    locationIdSelected = value.id;
-                                  });
-                                  getMachineName(value.id);
-                                  // getMachineNumberbyId(machineIdSelected);
-                                  prefs.setString(
-                                      "locationId", locationIdSelected);
-                                  print("id lokasi: $locationIdSelected");
-                                },
-                              ))
-                          .toList(),
-                      value: locationSelected,
-                      hint: const Text('Select factory'),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            locationSelected = value as String;
-                          });
-                        }
-                      },
-                    );
+              child: DropdownButton(
+                underline: DropdownButtonHideUnderline(child: Container()),
+                isExpanded: true,
+                items: _listLocation
+                    .map((value) => DropdownMenuItem(
+                          value: value.nama,
+                          child: Text(value.nama),
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              locationIdSelected = value.id;
+                            });
+                            getMachineName(value.id);
+                            // getMachineNumberbyId(machineIdSelected);
+                            prefs.setString("locationId", locationIdSelected);
+                            print("id lokasi: $locationIdSelected");
+                          },
+                        ))
+                    .toList(),
+                value: locationSelected,
+                hint: const Text('Select factory'),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      locationSelected = value as String;
+                    });
                   }
-
-                  return Center(
-                    child: Text('Loading location...'),
-                  );
                 },
               ),
             ),
