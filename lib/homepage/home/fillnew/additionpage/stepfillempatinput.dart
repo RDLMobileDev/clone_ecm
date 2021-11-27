@@ -1,6 +1,18 @@
 // ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_constructors
 
+import 'dart:async';
+import 'dart:io';
+
+import 'package:e_cm/homepage/home/model/allusermodel.dart';
+import 'package:e_cm/homepage/home/model/part_model.dart';
+import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
+import 'package:e_cm/homepage/home/services/apifillnewempatinsert.dart';
+import 'package:e_cm/homepage/home/services/getsemuauser.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
   const StepFillEmpatInput({Key? key}) : super(key: key);
@@ -16,6 +28,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   final TextEditingController tecStandard = TextEditingController();
   final TextEditingController tecActual = TextEditingController();
   final TextEditingController tecName = TextEditingController();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  List<PartModel> parts = <PartModel>[];
+  var selectedPart;
+  List<AllUserModel> _users = <AllUserModel>[];
+  var selectedUser;
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -29,6 +46,16 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     "name": false,
   };
 
+  Map<String, dynamic> formValue = {
+    "item": "",
+    "standard": "",
+    "actual": "",
+    "note": "",
+    "start": "",
+    "end": "",
+    "name": AllUserModel(),
+  };
+
   final DateTime now = DateTime.now();
 
   void getEndTime() {
@@ -40,6 +67,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         formValidations["end"] = true;
         endTimePickController =
             TextEditingController(text: value!.format(context));
+
+        DateTime convertedValue =
+            DateFormat("HH:mm").parse(value.format(context));
+        DateFormat timeFormat = DateFormat("HH:mm:ss");
+        formValue["end"] = timeFormat.format(convertedValue);
       });
     });
   }
@@ -53,8 +85,140 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         formValidations["start"] = true;
         startTimePickController =
             TextEditingController(text: value!.format(context));
+
+        DateTime convertedValue =
+            DateFormat("HH:mm").parse(value.format(context));
+        DateFormat timeFormat = DateFormat("HH:mm:ss");
+        formValue["start"] = timeFormat.format(convertedValue);
       });
     });
+  }
+
+  void fetchLocationPartData() async {
+    var prefs = await _prefs;
+    String ecmId = prefs.getString("ecmId") ?? "";
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
+  }
+
+  void fetchAllUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tokenUser = prefs.getString("tokenKey").toString();
+
+    try {
+      var result = await getUserAll(tokenUser);
+
+      switch (result['response']['status']) {
+        case 200:
+          var data = result['data'] as List;
+          _users = data.map((e) => AllUserModel.fromJson(e)).toList();
+          break;
+        default:
+          Fluttertoast.showToast(
+              msg: 'Gagal mendapat daftar member',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          break;
+      }
+    } catch (e) {
+      print("exception occured -> $e");
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+  }
+
+  void saveStepInputChecking() async {
+    final prefs = await SharedPreferences.getInstance();
+    var ecmId = prefs.getString("idEcm");
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    try {
+      String resultMessage = "Data disimpan";
+      var result = await fillNewEmpatInsert(
+        token: tokenUser,
+        ecmId: ecmId,
+        userId: (formValue["name"] as AllUserModel).userId,
+        fullName: (formValue["name"] as AllUserModel).userFullName,
+        partId: formValue["item"],
+        actual: formValue["actual"],
+        note: formValue["note"],
+        start: formValue["start"],
+        end: formValue["end"],
+      );
+
+      switch (result['response']['status']) {
+        case 200:
+          prefs.setString(
+              "idEcmItem", result['data']['t_ecmitem_id'].toString());
+          Get.back();
+          break;
+        default:
+          resultMessage = "Data gagal disimpan";
+          break;
+      }
+
+      Fluttertoast.showToast(
+        msg: resultMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16,
+      );
+    } catch (e) {
+      print("exception occured -> $e");
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+  }
+
+  static String _displayPartOption(PartModel option) => option.mPartNama ?? "-";
+
+  static String _displayUserOption(AllUserModel option) =>
+      option.userFullName ?? "-";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchLocationPartData();
+    fetchAllUser();
   }
 
   @override
@@ -105,22 +269,99 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: TextField(
-                controller: tecItem,
-                keyboardType: TextInputType.text,
+              child: InputDecorator(
                 decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    filled: true,
-                    hintText: 'Type Item Name'),
-                maxLines: 1,
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["item"] = value.isNotEmpty;
-                  });
-                },
+                  contentPadding: EdgeInsets.only(left: 18),
+                  fillColor: Colors.white,
+                  focusedBorder: InputBorder.none,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  filled: true,
+                ),
+                child: Autocomplete<PartModel>(
+                  displayStringForOption: _displayPartOption,
+                  optionsBuilder: (TextEditingValue tev) {
+                    if (tev.text == '') {
+                      return const Iterable<PartModel>.empty();
+                    }
+                    return parts.where((element) => element
+                        .toString()
+                        .contains(tev.text.toString().toLowerCase()));
+                  },
+                  onSelected: (item) {
+                    setState(() {
+                      formValue["item"] = item.mPartId.toString();
+                    });
+                  },
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: "Type Item Name",
+                      ),
+                      onFieldSubmitted: (String value) {
+                        onFieldSubmitted();
+                        setState(() {
+                          formValidations["item"] = value.isNotEmpty;
+                          formValue["item"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
+                          formValue["name"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                    );
+                  },
+                  optionsViewBuilder: (context, onSelected, options) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Material(
+                        elevation: 4.0,
+                        child: SizedBox(
+                          height: 200.0,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: options.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final String option =
+                                  options.elementAt(index).mPartNama ?? "-";
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelected(options.elementAt(index));
+                                  formValue["item"] = options
+                                      .elementAt(index)
+                                      .mPartId
+                                      .toString();
+                                },
+                                child: ListTile(
+                                  title: Text(option),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Container(
@@ -165,7 +406,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   setState(() {
                     formValidations["standard"] = value.isNotEmpty;
 
-                    print(formValidations);
+                    formValue["standard"] = value;
                   });
                 },
               ),
@@ -211,6 +452,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 onChanged: (value) {
                   setState(() {
                     formValidations["actual"] = value.isNotEmpty;
+                    formValue["actual"] = value;
                   });
                 },
               ),
@@ -261,6 +503,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
                           formValidations["note"] =
                               noteOptions.containsValue(true);
+                          formValue["note"] = "ok";
                         });
                       },
                       child: Container(
@@ -301,6 +544,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
                         formValidations["note"] =
                             noteOptions.containsValue(true);
+                        formValue["note"] = "limit";
                       });
                     },
                     child: Container(
@@ -350,6 +594,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
                         formValidations["note"] =
                             noteOptions.containsValue(true);
+                        formValue["note"] = "ng";
                       });
                     },
                     child: Container(
@@ -544,27 +789,98 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               height: 40,
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    filled: true,
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                    hintText: 'Type Name'),
-                maxLines: 1,
-                controller: tecName,
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["name"] = value.isNotEmpty;
-                  });
-                },
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 18),
+                  fillColor: Colors.white,
+                  focusedBorder: InputBorder.none,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  filled: true,
+                  suffixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                ),
+                child: Autocomplete<AllUserModel>(
+                  displayStringForOption: _displayUserOption,
+                  optionsBuilder: (TextEditingValue tev) {
+                    if (tev.text == '') {
+                      return const Iterable<AllUserModel>.empty();
+                    }
+                    return _users.where((element) => element
+                        .toString()
+                        .contains(tev.text.toString().toLowerCase()));
+                  },
+                  onSelected: (item) {
+                    setState(() {
+                      formValue["name"] = item.userFullName.toString();
+                    });
+                  },
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: "Type Name",
+                      ),
+                      onFieldSubmitted: (String value) {
+                        onFieldSubmitted();
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
+                          formValue["name"] = _users.firstWhere((element) =>
+                              value.contains(element.userFullName ?? "-"));
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
+                          formValue["name"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                    );
+                  },
+                  optionsViewBuilder: (context, onSelected, options) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Material(
+                        elevation: 4.0,
+                        child: SizedBox(
+                          height: 200.0,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: options.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final String option =
+                                  options.elementAt(index).userFullName ?? "-";
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelected(options.elementAt(index));
+                                  formValue["name"] = options.elementAt(index);
+                                },
+                                child: ListTile(
+                                  title: Text(option),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Container(
@@ -581,8 +897,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ))),
-                  onPressed:
-                      formValidations.containsValue(false) ? null : () {},
+                  onPressed: formValidations.containsValue(false)
+                      ? null
+                      : () {
+                          saveStepInputChecking();
+                        },
                   child: Text(
                     'Save Checking',
                     textAlign: TextAlign.center,
