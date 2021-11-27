@@ -3,9 +3,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatinsert.dart';
+import 'package:e_cm/homepage/home/services/getsemuauser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -29,6 +31,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<PartModel> parts = <PartModel>[];
   var selectedPart;
+  List<AllUserModel> _users = <AllUserModel>[];
+  var selectedUser;
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -42,14 +46,14 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     "name": false,
   };
 
-  Map<String, String> formValue = {
+  Map<String, dynamic> formValue = {
     "item": "",
     "standard": "",
     "actual": "",
     "note": "",
     "start": "",
     "end": "",
-    "name": "",
+    "name": AllUserModel(),
   };
 
   final DateTime now = DateTime.now();
@@ -98,10 +102,54 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
   }
 
+  void fetchAllUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tokenUser = prefs.getString("tokenKey").toString();
+
+    try {
+      var result = await getUserAll(tokenUser);
+
+      switch (result['response']['status']) {
+        case 200:
+          var data = result['data'] as List;
+          _users = data.map((e) => AllUserModel.fromJson(e)).toList();
+          break;
+        default:
+          Fluttertoast.showToast(
+              msg: 'Gagal mendapat daftar member',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          break;
+      }
+    } catch (e) {
+      print("exception occured -> $e");
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+  }
+
   void saveStepInputChecking() async {
     final prefs = await SharedPreferences.getInstance();
     var ecmId = prefs.getString("idEcm");
-    var idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     try {
@@ -109,9 +157,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
       var result = await fillNewEmpatInsert(
         token: tokenUser,
         ecmId: ecmId,
-        userId: idUser,
-        fullName: formValue["item"],
-        partId: formValue["name"],
+        userId: (formValue["name"] as AllUserModel).userId,
+        fullName: (formValue["name"] as AllUserModel).userFullName,
+        partId: formValue["item"],
         actual: formValue["actual"],
         note: formValue["note"],
         start: formValue["start"],
@@ -162,11 +210,15 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   static String _displayPartOption(PartModel option) => option.mPartNama ?? "-";
 
+  static String _displayUserOption(AllUserModel option) =>
+      option.userFullName ?? "-";
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchLocationPartData();
+    fetchAllUser();
   }
 
   @override
@@ -217,23 +269,99 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: TextField(
-                controller: tecItem,
-                keyboardType: TextInputType.text,
+              child: InputDecorator(
                 decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    filled: true,
-                    hintText: 'Type Item Name'),
-                maxLines: 1,
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["item"] = value.isNotEmpty;
-                    formValue["item"] = value;
-                  });
-                },
+                  contentPadding: EdgeInsets.only(left: 18),
+                  fillColor: Colors.white,
+                  focusedBorder: InputBorder.none,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  filled: true,
+                ),
+                child: Autocomplete<PartModel>(
+                  displayStringForOption: _displayPartOption,
+                  optionsBuilder: (TextEditingValue tev) {
+                    if (tev.text == '') {
+                      return const Iterable<PartModel>.empty();
+                    }
+                    return parts.where((element) => element
+                        .toString()
+                        .contains(tev.text.toString().toLowerCase()));
+                  },
+                  onSelected: (item) {
+                    setState(() {
+                      formValue["item"] = item.mPartId.toString();
+                    });
+                  },
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: "Type Item Name",
+                      ),
+                      onFieldSubmitted: (String value) {
+                        onFieldSubmitted();
+                        setState(() {
+                          formValidations["item"] = value.isNotEmpty;
+                          formValue["item"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
+                          formValue["name"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                    );
+                  },
+                  optionsViewBuilder: (context, onSelected, options) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Material(
+                        elevation: 4.0,
+                        child: SizedBox(
+                          height: 200.0,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: options.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final String option =
+                                  options.elementAt(index).mPartNama ?? "-";
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelected(options.elementAt(index));
+                                  formValue["item"] = options
+                                      .elementAt(index)
+                                      .mPartId
+                                      .toString();
+                                },
+                                child: ListTile(
+                                  title: Text(option),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Container(
@@ -675,19 +803,19 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     size: 30,
                   ),
                 ),
-                child: Autocomplete<PartModel>(
-                  displayStringForOption: _displayPartOption,
+                child: Autocomplete<AllUserModel>(
+                  displayStringForOption: _displayUserOption,
                   optionsBuilder: (TextEditingValue tev) {
                     if (tev.text == '') {
-                      return const Iterable<PartModel>.empty();
+                      return const Iterable<AllUserModel>.empty();
                     }
-                    return parts.where((element) => element
+                    return _users.where((element) => element
                         .toString()
                         .contains(tev.text.toString().toLowerCase()));
                   },
                   onSelected: (item) {
                     setState(() {
-                      formValue["name"] = item.mPartId.toString();
+                      formValue["name"] = item.userFullName.toString();
                     });
                   },
                   fieldViewBuilder: (context, textEditingController, focusNode,
@@ -708,11 +836,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         onFieldSubmitted();
                         setState(() {
                           formValidations["name"] = value.isNotEmpty;
-                          formValue["name"] = parts
-                              .firstWhere((element) =>
-                                  value.contains(element.mPartNama ?? "-"))
-                              .mPartId
-                              .toString();
+                          formValue["name"] = _users.firstWhere((element) =>
+                              value.contains(element.userFullName ?? "-"));
                         });
                       },
                       onChanged: (value) {
@@ -739,14 +864,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                             itemCount: options.length,
                             itemBuilder: (BuildContext context, int index) {
                               final String option =
-                                  options.elementAt(index).mPartNama ?? "-";
+                                  options.elementAt(index).userFullName ?? "-";
                               return GestureDetector(
                                 onTap: () {
                                   onSelected(options.elementAt(index));
-                                  formValue["name"] = options
-                                      .elementAt(index)
-                                      .mPartId
-                                      .toString();
+                                  formValue["name"] = options.elementAt(index);
                                 },
                                 child: ListTile(
                                   title: Text(option),
