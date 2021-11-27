@@ -23,7 +23,7 @@ Future fillNewEnam(
     String ttlOutHouse,
     String token) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url = "$myUrl/ecmstep4_insert";
+  String url = "$myUrl/ecm_step6";
   final response = await http.post(Uri.parse(url), headers: {
     "Accept": "Application/json",
     'Authorization': 'Bearer $token',
