@@ -1,6 +1,10 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
+import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
+import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddItemFillTujuh extends StatefulWidget {
   const AddItemFillTujuh({Key? key}) : super(key: key);
@@ -10,6 +14,50 @@ class AddItemFillTujuh extends StatefulWidget {
 }
 
 class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  TextEditingController partNameController = TextEditingController();
+  TextEditingController costRpController = TextEditingController();
+
+  List<PartItemMachineModel> listItemMachineData = [];
+
+  bool isTapPartItemMachineInput = false;
+  bool enableSave = false;
+  int qtyStock = 0;
+  int qtyUsed = 0;
+  int subTotal = 0;
+
+  Future<List> getPartItembyMacchine() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String? idEcmKey = prefs.getString("idEcm");
+
+    listItemMachineData =
+        await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey!);
+
+    return await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
+  }
+
+  saveSparePart(String qtyUsed, String costRp) async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String? idEcmKey = prefs.getString("idEcm");
+    var idPartMachine = prefs.getString("idPartItemMachine");
+
+    try {
+      var result = await saveDataPartMachine(
+          tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
+      print(result);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    getPartItembyMacchine();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,9 +115,16 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5))),
                     child: TextFormField(
+                      controller: partNameController,
+                      onTap: () {
+                        setState(() {
+                          isTapPartItemMachineInput =
+                              !isTapPartItemMachineInput;
+                        });
+                      },
                       style: const TextStyle(
                           fontFamily: 'Rubik',
-                          color: Color(0xFF979C9E),
+                          color: Color(0xFF404446),
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal),
@@ -80,6 +135,56 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           hintText: 'Type Item Name'),
                     ),
                   ),
+                  isTapPartItemMachineInput == false
+                      ? Container()
+                      : Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          width: MediaQuery.of(context).size.width,
+                          child: FutureBuilder(
+                            future: getPartItembyMacchine(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: Text("Loading part item machine..."),
+                                );
+                              }
+
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: listItemMachineData.isEmpty
+                                    ? 0
+                                    : listItemMachineData.length,
+                                itemBuilder: (context, i) {
+                                  return InkWell(
+                                    onTap: () async {
+                                      final prefs = await _prefs;
+                                      setState(() {
+                                        double stock = double.parse(
+                                            listItemMachineData[i].partStock);
+                                        qtyStock = stock.toInt();
+                                        partNameController =
+                                            TextEditingController(
+                                                text: listItemMachineData[i]
+                                                    .partNama);
+                                        costRpController =
+                                            TextEditingController(
+                                                text: listItemMachineData[i]
+                                                    .partHarga
+                                                    .toString());
+                                      });
+                                      prefs.setString("idPartItemMachine",
+                                          listItemMachineData[i].partitemId);
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                            listItemMachineData[i].partNama)),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
                   Container(
                     margin: const EdgeInsets.only(top: 16),
                     child: Row(
@@ -113,26 +218,50 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Icon(
-                                  Icons.remove,
-                                  color: Color(0xFF979C9E),
+                              InkWell(
+                                onTap: () {
+                                  int costRp = int.parse(costRpController.text);
+                                  setState(() {
+                                    qtyUsed != 0 ? qtyUsed-- : null;
+                                    subTotal = costRp * qtyUsed;
+                                    if (qtyUsed == 0) {
+                                      enableSave = false;
+                                    }
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: qtyUsed != 0
+                                        ? Color(0xFF20519F)
+                                        : Color(0xFF979C9E),
+                                  ),
                                 ),
                               ),
-                              Text("1",
+                              Text(qtyUsed.toString(),
                                   style: TextStyle(
                                       color: Color(0xFF404446),
                                       fontFamily: 'Rubik',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700)),
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Icon(
-                                  Icons.add,
-                                  color: Color(0xFF20519F),
+                              InkWell(
+                                onTap: () {
+                                  int costRp = int.parse(costRpController.text);
+                                  setState(() {
+                                    qtyUsed++;
+                                    subTotal = costRp * qtyUsed;
+                                    enableSave = true;
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Color(0xFF20519F),
+                                  ),
                                 ),
                               ),
                             ],
@@ -182,7 +311,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   color: Color(0xFF979C9E),
                                 ),
                               ),
-                              Text("1",
+                              Text(qtyStock.toString(),
                                   style: TextStyle(
                                       color: Color(0xFF404446),
                                       fontFamily: 'Rubik',
@@ -231,9 +360,10 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5))),
                     child: TextFormField(
+                      controller: costRpController,
                       style: const TextStyle(
                           fontFamily: 'Rubik',
-                          color: Color(0xFF979C9E),
+                          color: Color(0xFF404446),
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal),
@@ -268,7 +398,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               fontWeight: FontWeight.w700),
                         ),
                         Text(
-                          "0.00",
+                          subTotal.toString(),
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
@@ -277,21 +407,32 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                       ],
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF979C9E),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: Center(
-                      child: Text(
-                        "Save Spare part",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
+                  InkWell(
+                    onTap: enableSave == true
+                        ? () {
+                            saveSparePart(
+                                qtyUsed.toString(), costRpController.text);
+                            print("save");
+                          }
+                        : null,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: enableSave == false
+                              ? Color(0xFF979C9E)
+                              : Color(0xFF00AEDB),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Center(
+                        child: Text(
+                          "Save Spare part",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ),
                   ),
