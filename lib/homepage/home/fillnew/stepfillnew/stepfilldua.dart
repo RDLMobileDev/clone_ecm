@@ -193,59 +193,78 @@ class StepFillDuaState extends State<StepFillDua> {
   void saveStepFillDua() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idEcmKey = prefs.getString("idEcm");
-    var shiftAkey = prefs.getString("shiftA");
-    var shiftBkey = prefs.getString("shiftB");
-    var shiftCkey = prefs.getString("shiftC");
+    var idEcmKey = prefs.getString("idEcm") ?? "";
+    var shiftAkey = prefs.getString("shiftA") ?? "";
+    var shiftBkey = prefs.getString("shiftB") ?? "";
+    var shiftCkey = prefs.getString("shiftC") ?? "";
 
-    var safetyOptKey = prefs.getString("safetyOpt");
-    var qualityOptKey = prefs.getString("qualityOpt");
-    var deliveryOptKey = prefs.getString("deliveryOpt");
-    var costOptKey = prefs.getString("costOpt");
+    var safetyOptKey = prefs.getString("safetyOpt") ?? "";
+    var qualityOptKey = prefs.getString("qualityOpt") ?? "";
+    var deliveryOptKey = prefs.getString("deliveryOpt") ?? "";
+    var costOptKey = prefs.getString("costOpt") ?? "";
 
-    var moldingOptKey = prefs.getString("moldingOpt");
-    var utilityOptKey = prefs.getString("utilityOpt");
-    var productionOptKey = prefs.getString("productionOpt");
-    var engineerOptKey = prefs.getString("engineerOpt");
-    var otherOptKey = prefs.getString("otherOpt");
+    var moldingOptKey = prefs.getString("moldingOpt") ?? "";
+    var utilityOptKey = prefs.getString("utilityOpt") ?? "";
+    var productionOptKey = prefs.getString("productionOpt") ?? "";
+    var engineerOptKey = prefs.getString("engineerOpt") ?? "";
+    var otherOptKey = prefs.getString("otherOpt") ?? "";
 
-    var problemTypeState = prefs.getString("problemTypeState");
-    var imagesKeyName = prefs.getStringList("imagesKeyName");
-    var imagesKetPath = prefs.getStringList("imagesKetPath");
-    var timePickState = prefs.getString("timePickState");
+    var problemTypeState = prefs.getString("problemTypeState") ?? "";
+    // var imagesKeyName = prefs.getStringList("imagesKeyName");
+    var imagesKetPath = prefs.getStringList("imagesKetPath") ?? [];
+    var timePickState = prefs.getString("timePickState") ?? "";
 
     // print(files.length);
 
-    var result = await fillNewDua(
-      token: tokenUser,
-      shiftA: shiftAkey!,
-      shiftB: shiftBkey!,
-      shiftNs: shiftCkey!,
-      time: timePickState!,
-      problem: problemTypeState!,
-      safety: safetyOptKey!,
-      quality: qualityOptKey!,
-      delivery: deliveryOptKey!,
-      cost: costOptKey!,
-      molding: moldingOptKey!,
-      utility: utilityOptKey!,
-      production: productionOptKey!,
-      engineering: engineerOptKey!,
-      other: otherOptKey!,
-      ecmId: idEcmKey!,
-      // images: files
-      // imagesName: imagesKeyName,
-      imagesPath: imagesKetPath,
-    );
+    if (shiftAkey.isNotEmpty &&
+        shiftBkey.isNotEmpty &&
+        shiftCkey.isNotEmpty &&
+        timePickState.isNotEmpty &&
+        problemTypeState.isNotEmpty &&
+        safetyOptKey.isNotEmpty &&
+        qualityOptKey.isNotEmpty &&
+        deliveryOptKey.isNotEmpty &&
+        costOptKey.isNotEmpty &&
+        moldingOptKey.isNotEmpty &&
+        utilityOptKey.isNotEmpty &&
+        utilityOptKey.isNotEmpty &&
+        productionOptKey.isNotEmpty &&
+        engineerOptKey.isNotEmpty &&
+        otherOptKey.isNotEmpty &&
+        imagesKetPath.isNotEmpty) {
+      var result = await fillNewDua(
+        token: tokenUser,
+        shiftA: shiftAkey,
+        shiftB: shiftBkey,
+        shiftNs: shiftCkey,
+        time: timePickState,
+        problem: problemTypeState,
+        safety: safetyOptKey,
+        quality: qualityOptKey,
+        delivery: deliveryOptKey,
+        cost: costOptKey,
+        molding: moldingOptKey,
+        utility: utilityOptKey,
+        production: productionOptKey,
+        engineering: engineerOptKey,
+        other: otherOptKey,
+        ecmId: idEcmKey,
+        // images: files
+        // imagesName: imagesKeyName,
+        imagesPath: imagesKetPath,
+      );
 
-    print(result);
+      print(result);
 
-    goToStepFillTiga();
+      goToStepFillTiga('Data Disimpan');
+    } else {
+      goToStepFillTiga('Data tidak disimpan, cek semua input field');
+    }
   }
 
-  void goToStepFillTiga() {
+  void goToStepFillTiga(String msg) {
     Fluttertoast.showToast(
-        msg: 'Data Disimpan',
+        msg: msg,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2,
@@ -483,10 +502,20 @@ class StepFillDuaState extends State<StepFillDua> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () => setState(() {
-                      isSafety = !isSafety;
-                      safetyOpt = 'Safety';
-                    }),
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        problemTypeGroup = '1';
+                        safetyOpt = '1';
+                        qualityOpt = '0';
+                        deliveryOpt = '0';
+                        costOpt = '0';
+                      });
+                      prefs.setString("safetyOpt", safetyOpt);
+                      prefs.setString("qualityOpt", qualityOpt);
+                      prefs.setString("deliveryOpt", deliveryOpt);
+                      prefs.setString("costOpt", costOpt);
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
                       height: 40,
@@ -533,10 +562,20 @@ class StepFillDuaState extends State<StepFillDua> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => setState(() {
-                      isQuality = !isQuality;
-                      qualityOpt = 'Quality';
-                    }),
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        problemTypeGroup = '2';
+                        safetyOpt = '0';
+                        qualityOpt = '1';
+                        deliveryOpt = '0';
+                        costOpt = '0';
+                      });
+                      prefs.setString("safetyOpt", safetyOpt);
+                      prefs.setString("qualityOpt", qualityOpt);
+                      prefs.setString("deliveryOpt", deliveryOpt);
+                      prefs.setString("costOpt", costOpt);
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
                       height: 40,
@@ -586,10 +625,20 @@ class StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             InkWell(
-              onTap: () => setState(() {
-                isDelivery = !isDelivery;
-                deliveryOpt = 'Delivery';
-              }),
+              onTap: () async {
+                final prefs = await _prefs;
+                setState(() {
+                  problemTypeGroup = '3';
+                  safetyOpt = '0';
+                  qualityOpt = '0';
+                  deliveryOpt = '1';
+                  costOpt = '0';
+                });
+                prefs.setString("safetyOpt", safetyOpt);
+                prefs.setString("qualityOpt", qualityOpt);
+                prefs.setString("deliveryOpt", deliveryOpt);
+                prefs.setString("costOpt", costOpt);
+              },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
                 child: Row(
@@ -640,10 +689,20 @@ class StepFillDuaState extends State<StepFillDua> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => setState(() {
-                        isCost = !isCost;
-                        costOpt = 'Cost';
-                      }),
+                      onTap: () async {
+                        final prefs = await _prefs;
+                        setState(() {
+                          problemTypeGroup = '4';
+                          safetyOpt = '0';
+                          qualityOpt = '0';
+                          deliveryOpt = '0';
+                          costOpt = '1';
+                        });
+                        prefs.setString("safetyOpt", safetyOpt);
+                        prefs.setString("qualityOpt", qualityOpt);
+                        prefs.setString("deliveryOpt", deliveryOpt);
+                        prefs.setString("costOpt", costOpt);
+                      },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.40,
                         height: 40,
@@ -722,10 +781,22 @@ class StepFillDuaState extends State<StepFillDua> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () => setState(() {
-                      isMolding = !isMolding;
-                      moldingOpt = 'Molding';
-                    }),
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        percentageMistakeGroup = '1';
+                        moldingOpt = '1';
+                        utilityOpt = '0';
+                        productionOpt = '0';
+                        engineerOpt = '0';
+                        otherOpt = '0';
+                      });
+                      prefs.setString("moldingOpt", moldingOpt);
+                      prefs.setString("utilityOpt", utilityOpt);
+                      prefs.setString("productionOpt", productionOpt);
+                      prefs.setString("engineerOpt", engineerOpt);
+                      prefs.setString("otherOpt", otherOpt);
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
                       height: 40,
@@ -776,10 +847,22 @@ class StepFillDuaState extends State<StepFillDua> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => setState(() {
-                      isUtility = !isUtility;
-                      utilityOpt = 'Utility';
-                    }),
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        percentageMistakeGroup = '2';
+                        moldingOpt = '0';
+                        utilityOpt = '1';
+                        productionOpt = '0';
+                        engineerOpt = '0';
+                        otherOpt = '0';
+                      });
+                      prefs.setString("moldingOpt", moldingOpt);
+                      prefs.setString("utilityOpt", utilityOpt);
+                      prefs.setString("productionOpt", productionOpt);
+                      prefs.setString("engineerOpt", engineerOpt);
+                      prefs.setString("otherOpt", otherOpt);
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
                       height: 40,
@@ -833,10 +916,22 @@ class StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             InkWell(
-              onTap: () => setState(() {
-                isProduction = !isProduction;
-                productionOpt = 'Production';
-              }),
+              onTap: () async {
+                final prefs = await _prefs;
+                setState(() {
+                  percentageMistakeGroup = '3';
+                  moldingOpt = '0';
+                  utilityOpt = '0';
+                  productionOpt = '1';
+                  engineerOpt = '0';
+                  otherOpt = '0';
+                });
+                prefs.setString("moldingOpt", moldingOpt);
+                prefs.setString("utilityOpt", utilityOpt);
+                prefs.setString("productionOpt", productionOpt);
+                prefs.setString("engineerOpt", engineerOpt);
+                prefs.setString("otherOpt", otherOpt);
+              },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
                 child: Row(
@@ -891,10 +986,22 @@ class StepFillDuaState extends State<StepFillDua> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => setState(() {
-                        isEngineering = !isEngineering;
-                        engineerOpt = 'Engineering';
-                      }),
+                      onTap: () async {
+                        final prefs = await _prefs;
+                        setState(() {
+                          percentageMistakeGroup = '4';
+                          moldingOpt = '0';
+                          utilityOpt = '0';
+                          productionOpt = '0';
+                          engineerOpt = '1';
+                          otherOpt = '0';
+                        });
+                        prefs.setString("moldingOpt", moldingOpt);
+                        prefs.setString("utilityOpt", utilityOpt);
+                        prefs.setString("productionOpt", productionOpt);
+                        prefs.setString("engineerOpt", engineerOpt);
+                        prefs.setString("otherOpt", otherOpt);
+                      },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.40,
                         height: 40,
@@ -951,10 +1058,22 @@ class StepFillDuaState extends State<StepFillDua> {
               ),
             ),
             InkWell(
-              onTap: () => setState(() {
-                isOther = !isOther;
-                otherOpt = 'Other';
-              }),
+              onTap: () async {
+                final prefs = await _prefs;
+                setState(() {
+                  percentageMistakeGroup = '5';
+                  moldingOpt = '0';
+                  utilityOpt = '0';
+                  productionOpt = '0';
+                  engineerOpt = '0';
+                  otherOpt = '1';
+                });
+                prefs.setString("moldingOpt", moldingOpt);
+                prefs.setString("utilityOpt", utilityOpt);
+                prefs.setString("productionOpt", productionOpt);
+                prefs.setString("engineerOpt", engineerOpt);
+                prefs.setString("otherOpt", otherOpt);
+              },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
                 child: Row(

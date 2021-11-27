@@ -34,6 +34,7 @@ class _FillNewState extends State<FillNew> {
   }
 
   continued() {
+    // _stepFillSatu.getSaveFillSatu();
     _currentStep < 7 ? setState(() => _currentStep += 1) : null;
     if (_currentStep == 1) {
       _stepFillSatu.getSaveFillSatu();

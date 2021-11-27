@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors, prefer_is_empty
 
 import 'dart:async';
 import 'dart:io';
@@ -24,6 +24,7 @@ class StepFillSatu extends StatefulWidget {
   final StepFillSatuState stepFillSatuState = StepFillSatuState();
 
   void getSaveFillSatu() {
+    // print("tes step 1");
     stepFillSatuState.saveFillNewSatu();
   }
 
@@ -62,46 +63,64 @@ class StepFillSatuState extends State<StepFillSatu> {
     final prefs = await _prefs;
     // print("from prefs: ${prefs.getString("idClassification")}");
 
-    var idClass = prefs.getString("idClassification");
-    var tglStepSatu = prefs.getString("tglStepSatu");
+    var idClass = prefs.getString("idClassification") ?? "";
+    var tglStepSatu = prefs.getString("tglStepSatu") ?? "";
 
     // var teamMember = prefs.getString("teamMember");
 
-    List<String>? teamId = prefs.getStringList("teamMember");
-    var locationId = prefs.getString("locationId");
-    var machineId = prefs.getString("machineId");
-    var machineDetailId = prefs.getString("machineDetailId");
+    List<String>? teamId = prefs.getStringList("teamMember") ?? [];
+    var locationId = prefs.getString("locationId") ?? "";
+    var machineId = prefs.getString("machineId") ?? "";
+    var machineDetailId = prefs.getString("machineDetailId") ?? "";
 
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String? idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser").toString();
 
     try {
-      var result = await fillNewSatu(tokenUser, idClass!, tglStepSatu!, idUser,
-          teamId!, locationId!, machineId!, machineDetailId!);
+      if (tokenUser != "" &&
+          idClass != "" &&
+          tglStepSatu != "" &&
+          idUser != "" &&
+          teamId.length != 0 &&
+          locationId != "" &&
+          machineId != "" &&
+          machineDetailId != "") {
+        var result = await fillNewSatu(tokenUser, idClass, tglStepSatu, idUser,
+            teamId, locationId, machineId, machineDetailId);
 
-      print(result['response']['status']);
-      prefs.setString("idEcm", result['data']['id_ecm'].toString());
+        print(result['response']['status']);
+        prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
-      if (result['response']['status'] == 200) {
-        Fluttertoast.showToast(
-            msg: 'Data disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-        print(result);
+        if (result['response']['status'] == 200) {
+          Fluttertoast.showToast(
+              msg: 'Data disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Kesalahan jaringan. Data gagal disimpan.',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: 'Kesalahan jaringan. Data gagal disimpan.',
-            toastLength: Toast.LENGTH_SHORT,
+            msg: 'Data tidak disimpan, cek semua input field',
+            toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
             backgroundColor: Colors.greenAccent,
             textColor: Colors.white,
             fontSize: 16);
-        print(result);
       }
     } on SocketException catch (e) {
       print(e);
