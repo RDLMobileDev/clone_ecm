@@ -42,7 +42,7 @@ class _LogInState extends State<LogIn> {
 
   getDeviceKey() async {
     var deviceKey = await PlatformDeviceId.getDeviceId;
-    print(deviceKey);
+    print("device_key = " + deviceKey!);
     return deviceKey;
   }
 
@@ -55,8 +55,6 @@ class _LogInState extends State<LogIn> {
       var rspLogin = await loginUser(
           emailUser, passwordUser, deviceUser.toString(), versionUser);
       print(rspLogin);
-      // print(emailUser + '+' + passwordUser);
-      // print(rspRegister['user']['password']);
 
       if (rspLogin['response']['status'] == 200) {
         final SharedPreferences prefs = await _prefs;
@@ -67,14 +65,10 @@ class _LogInState extends State<LogIn> {
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
 
-        print("ID user = ");
-        print(rspLogin['data']['user']['id']);
-        print("EMAIL user = ");
-        print(rspLogin['data']['user']['email']);
-        print("USERNAME user = ");
-        print(rspLogin['data']['user']['username']);
-        print("TOKEN user = ");
-        print(prefs.getString("tokenKey"));
+        print("ID user = " + (rspLogin['data']['user']['id']).toString());
+        print("EMAIL user = " + rspLogin['data']['user']['email']);
+        print("USERNAME user = " + rspLogin['data']['user']['username']);
+        print("TOKEN user = " + rspLogin['data']['token']);
 
         setState(() {
           Fluttertoast.showToast(

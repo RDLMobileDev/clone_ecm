@@ -2,16 +2,18 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future getIdFillNewEmpat(String ecmitemId, String userId, String token) async {
+Future getFillNewEnam(
+    String ecmId, String userId, String ecmitemId, String token) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url = "$myUrl/ecmstep4_getid?ecmitem_id=$ecmitemId&user_id=$userId";
+  String url =
+      "$myUrl/ecm_step6_get?ecm_id=$ecmId&user_id=$userId&ecmitem_id=$ecmitemId";
   final response = await http.get(Uri.parse(url), headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer $token'
   });
   print('Token : ${token}');
-  print(response);
+  print(response.body);
 
   if (response.body.isNotEmpty) {
     var convertDatatoJson = jsonDecode(response.body);
