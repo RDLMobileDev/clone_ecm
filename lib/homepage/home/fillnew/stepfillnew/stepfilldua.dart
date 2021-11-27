@@ -258,7 +258,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
       goToStepFillTiga('Data Disimpan');
     } else {
-      goToStepFillTiga('Input field belum diisi');
+      goToStepFillTiga('Data tidak disimpan, cek semua input field');
     }
   }
 
