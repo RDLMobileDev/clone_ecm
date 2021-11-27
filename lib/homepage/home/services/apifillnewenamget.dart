@@ -13,7 +13,7 @@ Future getFillNewEnam(
     'Authorization': 'Bearer $token'
   });
   print('Token : ${token}');
-  print(response);
+  print(response.body);
 
   if (response.body.isNotEmpty) {
     var convertDatatoJson = jsonDecode(response.body);
