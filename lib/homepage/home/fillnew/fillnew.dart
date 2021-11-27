@@ -22,6 +22,7 @@ class _FillNewState extends State<FillNew> {
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
+  final StepFillEnam _stepFillEnam = StepFillEnam();
 
   int _currentStep = 0;
   final int _stepTotal = 8;
@@ -41,6 +42,8 @@ class _FillNewState extends State<FillNew> {
       _stepFillDua.getSaveFillDua();
     } else if (_currentStep == 3) {
       _stepFillTiga.getSaveStepFillTiga();
+    } else if (_currentStep == 6) {
+      _stepFillEnam.getSaveFillEnam();
     }
 
     if (_stepClicked != 8) {
