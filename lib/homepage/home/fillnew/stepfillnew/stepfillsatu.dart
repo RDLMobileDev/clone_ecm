@@ -476,6 +476,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
                         return ListView.builder(
                           shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: listNamaMember.isEmpty
                               ? 0
                               : listNamaMember.length,

@@ -216,21 +216,8 @@ class StepFillDuaState extends State<StepFillDua> {
 
     // print(files.length);
 
-    if (shiftAkey.isNotEmpty &&
-        shiftBkey.isNotEmpty &&
-        shiftCkey.isNotEmpty &&
-        timePickState.isNotEmpty &&
+    if (timePickState.isNotEmpty &&
         problemTypeState.isNotEmpty &&
-        safetyOptKey.isNotEmpty &&
-        qualityOptKey.isNotEmpty &&
-        deliveryOptKey.isNotEmpty &&
-        costOptKey.isNotEmpty &&
-        moldingOptKey.isNotEmpty &&
-        utilityOptKey.isNotEmpty &&
-        utilityOptKey.isNotEmpty &&
-        productionOptKey.isNotEmpty &&
-        engineerOptKey.isNotEmpty &&
-        otherOptKey.isNotEmpty &&
         imagesKetPath.isNotEmpty) {
       var result = await fillNewDua(
         token: tokenUser,

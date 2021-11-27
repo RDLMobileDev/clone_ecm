@@ -59,7 +59,7 @@ class _FillNewState extends State<FillNew> {
       setState(() {
         textNext = 'Finish';
       });
-      // _stepFillDelapan.getMethodPostStep();
+      _stepFillDelapan.getMethodPostStep();
     }
   }
 
@@ -71,111 +71,6 @@ class _FillNewState extends State<FillNew> {
       Navigator.of(context).pop();
     }
     print(_stepClicked);
-  }
-
-  void showDialogFinishStep() {
-    showGeneralDialog(
-      barrierLabel: "Barrier",
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 700),
-      context: context,
-      pageBuilder: (_, __, ___) {
-        return Align(
-          alignment: Alignment.center,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 390,
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    alignment: Alignment.topRight,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      "assets/icons/X.png",
-                      width: 20,
-                    ),
-                  ),
-                ),
-                Image.asset(
-                  "assets/icons/done.png",
-                  width: 200,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 34),
-                  child: Text(
-                    "Thank you",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        decoration: TextDecoration.none,
-                        fontFamily: 'Rubik',
-                        color: Color(0xFF404446),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    "Your form has been saved and waiting to approved by staff",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        height: 1.5,
-                        fontFamily: 'Rubik',
-                        decoration: TextDecoration.none,
-                        color: Color(0xFF404446),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                      ..pop()
-                      ..pop();
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 24),
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF00AEDB),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: Center(
-                      child: Text(
-                        "Done",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            decoration: TextDecoration.none,
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (_, anim, __, child) {
-        return SlideTransition(
-          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
-          child: child,
-        );
-      },
-    );
   }
 
   @override
