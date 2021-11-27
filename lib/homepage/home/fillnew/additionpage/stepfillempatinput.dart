@@ -1,8 +1,15 @@
 // ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_constructors
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
+import 'package:e_cm/homepage/home/services/apifillnewempatinsert.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
@@ -35,6 +42,16 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     "name": false,
   };
 
+  Map<String, String> formValue = {
+    "item": "",
+    "standard": "",
+    "actual": "",
+    "note": "",
+    "start": "",
+    "end": "",
+    "name": "",
+  };
+
   final DateTime now = DateTime.now();
 
   void getEndTime() {
@@ -46,6 +63,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         formValidations["end"] = true;
         endTimePickController =
             TextEditingController(text: value!.format(context));
+
+        DateTime convertedValue =
+            DateFormat("HH:mm").parse(value.format(context));
+        DateFormat timeFormat = DateFormat("HH:mm:ss");
+        formValue["end"] = timeFormat.format(convertedValue);
       });
     });
   }
@@ -59,24 +81,83 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         formValidations["start"] = true;
         startTimePickController =
             TextEditingController(text: value!.format(context));
+
+        DateTime convertedValue =
+            DateFormat("HH:mm").parse(value.format(context));
+        DateFormat timeFormat = DateFormat("HH:mm:ss");
+        formValue["start"] = timeFormat.format(convertedValue);
       });
     });
   }
 
-  Future<void> fetchLocationPartData() async {
+  void fetchLocationPartData() async {
     var prefs = await _prefs;
     String ecmId = prefs.getString("ecmId") ?? "";
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
-    var data = await ApiLocationPartService.getPartLocations("13", tokenUser);
-    print("fetch location part data -> $data");
-    parts = data;
+    parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
   }
 
   void saveStepInputChecking() async {
-    final prefs = await _prefs;
+    final prefs = await SharedPreferences.getInstance();
     var ecmId = prefs.getString("idEcm");
     var idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    try {
+      String resultMessage = "Data disimpan";
+      var result = await fillNewEmpatInsert(
+        token: tokenUser,
+        ecmId: ecmId,
+        userId: idUser,
+        fullName: formValue["item"],
+        partId: formValue["name"],
+        actual: formValue["actual"],
+        note: formValue["note"],
+        start: formValue["start"],
+        end: formValue["end"],
+      );
+
+      switch (result['response']['status']) {
+        case 200:
+          prefs.setString(
+              "idEcmItem", result['data']['t_ecmitem_id'].toString());
+          Get.back();
+          break;
+        default:
+          resultMessage = "Data gagal disimpan";
+          break;
+      }
+
+      Fluttertoast.showToast(
+        msg: resultMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16,
+      );
+    } catch (e) {
+      print("exception occured -> $e");
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
   }
 
   static String _displayPartOption(PartModel option) => option.mPartNama ?? "-";
@@ -150,6 +231,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 onChanged: (value) {
                   setState(() {
                     formValidations["item"] = value.isNotEmpty;
+                    formValue["item"] = value;
                   });
                 },
               ),
@@ -196,7 +278,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   setState(() {
                     formValidations["standard"] = value.isNotEmpty;
 
-                    print(formValidations);
+                    formValue["standard"] = value;
                   });
                 },
               ),
@@ -242,6 +324,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 onChanged: (value) {
                   setState(() {
                     formValidations["actual"] = value.isNotEmpty;
+                    formValue["actual"] = value;
                   });
                 },
               ),
@@ -292,6 +375,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
                           formValidations["note"] =
                               noteOptions.containsValue(true);
+                          formValue["note"] = "ok";
                         });
                       },
                       child: Container(
@@ -332,6 +416,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
                         formValidations["note"] =
                             noteOptions.containsValue(true);
+                        formValue["note"] = "limit";
                       });
                     },
                     child: Container(
@@ -381,6 +466,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
                         formValidations["note"] =
                             noteOptions.containsValue(true);
+                        formValue["note"] = "ng";
                       });
                     },
                     child: Container(
@@ -599,7 +685,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         .toString()
                         .contains(tev.text.toString().toLowerCase()));
                   },
-                  onSelected: (item) {},
+                  onSelected: (item) {
+                    setState(() {
+                      formValue["name"] = item.mPartId.toString();
+                    });
+                  },
                   fieldViewBuilder: (context, textEditingController, focusNode,
                       onFieldSubmitted) {
                     return TextFormField(
@@ -618,6 +708,21 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         onFieldSubmitted();
                         setState(() {
                           formValidations["name"] = value.isNotEmpty;
+                          formValue["name"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
+                          formValue["name"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
                         });
                       },
                     );
@@ -638,6 +743,10 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                               return GestureDetector(
                                 onTap: () {
                                   onSelected(options.elementAt(index));
+                                  formValue["name"] = options
+                                      .elementAt(index)
+                                      .mPartId
+                                      .toString();
                                 },
                                 child: ListTile(
                                   title: Text(option),
@@ -666,8 +775,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ))),
-                  onPressed:
-                      formValidations.containsValue(false) ? null : () {},
+                  onPressed: formValidations.containsValue(false)
+                      ? null
+                      : () {
+                          saveStepInputChecking();
+                        },
                   child: Text(
                     'Save Checking',
                     textAlign: TextAlign.center,
