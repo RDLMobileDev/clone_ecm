@@ -4,6 +4,7 @@ import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
 import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddItemFillTujuh extends StatefulWidget {
@@ -46,9 +47,23 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     try {
       var result = await saveDataPartMachine(
           tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
-      print(result);
+      if (result['response']['status'] == 200) {
+        Navigator.of(context).pop(true);
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Data gagal disimpan',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
+      }
     } catch (e) {
-      print(e);
+      Fluttertoast.showToast(
+        msg: 'Terjadi kesalahan, periksa koneksi Anda',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
     }
   }
 
@@ -70,7 +85,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
           },
         ),
       ),
@@ -412,7 +427,6 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         ? () {
                             saveSparePart(
                                 qtyUsed.toString(), costRpController.text);
-                            print("save");
                           }
                         : null,
                     child: Container(
