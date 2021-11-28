@@ -27,6 +27,7 @@ class PartItemMachineSaveService {
           dataPartSaved[i]['ecmpart_id'].toString(),
           dataPartSaved[i]['ecm_id'].toString(),
           dataPartSaved[i]['partitem_id'].toString(),
+          dataPartSaved[i]['partitem_nama'].toString(),
           dataPartSaved[i]['ecmpart_qty'].toString(),
           dataPartSaved[i]['ecmpart_harga'].toString(),
           dataPartSaved[i]['total_harga'].toString(),

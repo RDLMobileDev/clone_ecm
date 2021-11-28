@@ -136,7 +136,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                   children: [
                                     Container(
                                       child: Text(
-                                          "Cost: ${_listDataPartSaved[i].total_harga}",
+                                          "Cost: ${_listDataPartSaved[i].totalHarga}",
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             color: Colors.white,

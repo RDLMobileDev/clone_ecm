@@ -112,7 +112,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                               // ignore: prefer_const_literals_to_create_immutables
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Selang",
+                                Text(_listDataPartSaved[i].partItemNama,
                                     style: TextStyle(
                                       fontFamily: 'Rubik',
                                       color: Colors.white,
@@ -128,7 +128,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                   children: [
                                     Container(
                                       child: Text(
-                                          "Cost: ${_listDataPartSaved[i].total_harga}",
+                                          "Cost: ${_listDataPartSaved[i].totalHarga}",
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             color: Colors.white,
