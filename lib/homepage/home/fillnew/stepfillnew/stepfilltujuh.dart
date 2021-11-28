@@ -203,9 +203,9 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                               ),
                                               InkWell(
                                                 onTap: () {
-                                                  deletePartMachineSaved(
-                                                      _listDataPartSaved[i]
-                                                          .ecmPartId);
+                                                  // deletePartMachineSaved(
+                                                  //     _listDataPartSaved[i]
+                                                  //         .ecmPartId);
                                                 },
                                                 child: Image.asset(
                                                   "assets/icons/trash.png",

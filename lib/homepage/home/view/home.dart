@@ -6,7 +6,6 @@ import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
 import 'package:e_cm/homepage/home/services/historyecmservice.dart';
-import 'package:e_cm/homepage/notification/view/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -268,7 +267,7 @@ class _HomeState extends State<Home> {
                 // Navigator.of(context).push(
                 //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
                     Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => NotificationMember()));
+                    MaterialPageRoute(builder: (context) => ApprovedEcm()));
               },
               child: Container(
                 margin: const EdgeInsets.only(

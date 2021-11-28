@@ -189,6 +189,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         case 200:
           prefs.setString(
               "idEcmItem", result['data']['t_ecmitem_id'].toString());
+          print(result['data']['t_ecmitem_id'].toString());
           Navigator.of(context).pop(true);
           break;
         default:

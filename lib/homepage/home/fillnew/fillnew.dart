@@ -59,7 +59,8 @@ class _FillNewState extends State<FillNew> {
       setState(() {
         textNext = 'Finish';
       });
-      _stepFillDelapan.getMethodPostStep();
+      
+      // _stepFillDelapan.getMethodPostStep();
     }
   }
 
@@ -70,6 +71,13 @@ class _FillNewState extends State<FillNew> {
     } else if (_stepClicked == 2) {
       Navigator.of(context).pop();
     }
+
+    if (_currentStep != 7) {
+      setState(() {
+        textNext = 'Next';
+      });
+    }
+    print("di: $_currentStep");
     print(_stepClicked);
   }
 
@@ -124,6 +132,7 @@ class _FillNewState extends State<FillNew> {
                 onStepContinue: continued,
                 onStepCancel: cancel,
                 controlsBuilder: (context, {onStepCancel, onStepContinue}) {
+                  print(onStepContinue);
                   return Container(
                     margin: const EdgeInsets.only(top: 50),
                     child: Row(
