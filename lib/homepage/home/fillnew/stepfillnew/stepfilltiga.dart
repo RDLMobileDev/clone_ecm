@@ -1,4 +1,7 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print
+
+import 'dart:async';
+import 'dart:io';
 
 import 'package:e_cm/homepage/home/services/apifillnewtiga.dart';
 import 'package:flutter/material.dart';
@@ -46,18 +49,40 @@ class _StepFillTigaState extends State<StepFillTiga> {
 
     print(why1);
 
-    var result =
-        await fillNewTiga(why1, why2, why3, why4, why5, how, ecmId, tokenUser);
-    print(result);
+    try {
+      if (why1.isNotEmpty &&
+          why2.isNotEmpty &&
+          why3.isNotEmpty &&
+          how.isNotEmpty) {
+        var result = await fillNewTiga(
+            why1, why2, why3, why4, why5, how, ecmId, tokenUser);
+        print(result);
 
-    Fluttertoast.showToast(
-        msg: 'Data Disimpan',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16);
+        Fluttertoast.showToast(
+            msg: 'Data Disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Data tidak disimpan, cek semua input field',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+    } on SocketException catch (e) {
+      print(e);
+    } on TimeoutException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

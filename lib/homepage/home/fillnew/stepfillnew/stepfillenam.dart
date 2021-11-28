@@ -13,7 +13,11 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEnam extends StatefulWidget {
-  const StepFillEnam({Key? key}) : super(key: key);
+  final _StepFillEnamState stepFillEnamState = _StepFillEnamState();
+
+  void getSaveFillEnam() {
+    stepFillEnamState.postFillEnam();
+  }
 
   @override
   _StepFillEnamState createState() => _StepFillEnamState();
@@ -178,8 +182,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
   getStep6() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    String ecmId = "11";
-    String ecmitemId = "2";
+    String ecmId = prefs.getString("idEcm").toString();
+    String ecmitemId = prefs.getString("idEcmItem").toString();
     String userId = prefs.getString("idKeyUser").toString();
     try {
       var response = await getFillNewEnam(ecmId, userId, ecmitemId, tokenUser);
@@ -265,6 +269,22 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String outHouseCost = newOutHouseCost.toString();
     String ttlOutHouse = _costOutHouse.toString();
 
+    // prefs.setString("idea", idea);
+    // prefs.setString("check", check);
+    // prefs.setString("repair", repair);
+    // prefs.setString("totalcr", totalcr);
+    // prefs.setString("breaks", breaks);
+    // prefs.setString("lineStart", lineStart);
+    // prefs.setString("lineStop", lineStop);
+    // prefs.setString("ttlLineStop", ttlLineStop);
+    // prefs.setString("costH", costH);
+    // prefs.setString("costMp", costMp);
+    // prefs.setString("costTotal", costTotal);
+    // prefs.setString("outHouseH", outHouseH);
+    // prefs.setString("outHouseMp", outHouseMp);
+    // prefs.setString("outHouseCost", outHouseCost);
+    // prefs.setString("ttlOutHouse", ttlOutHouse);
+
     try {
       var response = await fillNewEnam(
           ecmId,
@@ -339,7 +359,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
-                enabled: true,
+                showCursor: true,
+                readOnly: true,
                 controller: userNameController,
                 onTap: () {
                   setState(() {
