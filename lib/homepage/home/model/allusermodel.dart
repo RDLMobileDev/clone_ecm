@@ -14,4 +14,9 @@ class AllUserModel {
 
   Map<String, dynamic> toJson() =>
       {'id'.toString(): userId, 'username': userName, 'fullname': userFullName};
+
+  @override
+  String toString() {
+    return 'AllUserModel{userId: $userId, userName: $userName, userFullName: $userFullName}';
+  }
 }

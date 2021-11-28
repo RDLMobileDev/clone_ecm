@@ -1,8 +1,13 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:e_cm/homepage/home/fillnew/additionpage/stepfillempatinput.dart';
+import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
+import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,18 +22,54 @@ class StepFillEmpat extends StatefulWidget {
 class _StepFillEmpatState extends State<StepFillEmpat> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  List<PartItemMachineSavedModel> _listDataPartSaved = [];
+  List<ItemChecking> _listItemChecking = [];
 
-  Future getDataPartItemSaved() async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String? idEcmKey = prefs.getString("idEcm");
+  void getDataItemChecking() async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("tokenKey").toString();
+    String? ecmId = prefs.getString("idEcm") ?? "-";
+    String? userId = prefs.getString("idKeyUser") ?? "-";
 
-    _listDataPartSaved = await partItemMachineSaveService
-        .getPartItemMachineSaveData(tokenUser, idEcmKey!);
+    try {
+      var data = await getFillNewEmpat(ecmId, userId, token);
 
-    return await partItemMachineSaveService.getPartItemMachineSaveData(
-        tokenUser, idEcmKey);
+      switch (data["response"]['status']) {
+        case 200:
+          _listItemChecking = (data['data'] as List)
+              .map((e) => ItemChecking.fromJson(e))
+              .toList();
+          print("data item checking -> $_listItemChecking");
+          break;
+        default:
+          Fluttertoast.showToast(
+              msg: 'Gagal mendapat daftar item checking',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          break;
+      }
+    } catch (e) {
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
   }
 
   void deletePartMachineSaved() async {
@@ -40,7 +81,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
     print(result);
 
-    await getDataPartItemSaved();
+    // await getDataPartItemSaved();
 
     Fluttertoast.showToast(
         msg: 'Data Disimpan',
@@ -50,6 +91,13 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
         backgroundColor: Colors.greenAccent,
         textColor: Colors.white,
         fontSize: 16);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDataItemChecking();
   }
 
   @override
@@ -80,9 +128,12 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 16.0,
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: _listDataPartSaved.isEmpty
+              child: _listItemChecking.isEmpty
                   ? Container(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -92,7 +143,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                             width: 250,
                           ),
                           Center(
-                            child: Text("No spare part yet",
+                            child: Text("Haven't checked item yet",
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
@@ -106,10 +157,11 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                   : Container(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: _listDataPartSaved.length,
+                        itemCount: _listItemChecking.length,
                         itemBuilder: (context, i) {
                           return Container(
                             padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                            margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               color: Color(0xFF00AEDB),
@@ -120,7 +172,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                               // ignore: prefer_const_literals_to_create_immutables
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Selang",
+                                Text(_listItemChecking[i].partNama ?? "-",
                                     style: TextStyle(
                                       fontFamily: 'Rubik',
                                       color: Colors.white,
@@ -136,7 +188,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                   children: [
                                     Container(
                                       child: Text(
-                                          "Cost: ${_listDataPartSaved[i].total_harga}",
+                                          "Checking Time: ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             color: Colors.white,
@@ -176,9 +228,14 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                     ),
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => StepFillEmpatInput()));
+              onTap: () async {
+                bool isInputted = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => StepFillEmpatInput()));
+
+                if (isInputted) {
+                  setState(() => getDataItemChecking());
+                }
               },
               child: Container(
                 width: MediaQuery.of(context).size.width,
