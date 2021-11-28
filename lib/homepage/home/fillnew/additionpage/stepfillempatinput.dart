@@ -123,6 +123,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     try {
       var result = await getUserAll(tokenUser);
 
+      print(result);
+
       switch (result['response']['status']) {
         case 200:
           var data = result['data'] as List;

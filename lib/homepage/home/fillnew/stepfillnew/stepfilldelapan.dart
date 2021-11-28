@@ -3,6 +3,7 @@
 import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
 import 'package:e_cm/homepage/home/services/apifillnewdelapan.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillDelapan extends StatefulWidget {
@@ -49,6 +50,12 @@ class StepFillDelapanState extends State<StepFillDelapan> {
         showDialogFinishStep();
       }
     } catch (e) {
+      Fluttertoast.showToast(
+          msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
       print(e);
     }
   }
