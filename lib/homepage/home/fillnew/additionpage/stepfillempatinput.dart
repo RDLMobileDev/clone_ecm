@@ -13,6 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:collection/collection.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
   const StepFillEmpatInput({Key? key, this.ecmItemId}) : super(key: key);
@@ -297,6 +298,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     if (tev.text == '') {
                       return const Iterable<PartModel>.empty();
                     }
+
                     return parts.where((element) => element
                         .toString()
                         .contains(tev.text.toString().toLowerCase()));
@@ -335,8 +337,10 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         setState(() {
                           formValidations["item"] = value.isNotEmpty;
                           formValue["item"] = parts
-                              .firstWhere((element) =>
-                                  value.contains(element.mPartNama ?? "-"))
+                              .firstWhere(
+                                  (element) =>
+                                      value.contains(element.mPartNama ?? "-"),
+                                  orElse: () => PartModel())
                               .mPartId
                               .toString();
                         });
@@ -856,8 +860,10 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       onChanged: (value) {
                         setState(() {
                           formValidations["name"] = value.isNotEmpty;
-                          formValue["name"] = _users.firstWhere((element) =>
-                              value.contains(element.userFullName ?? "-"));
+                          formValue["name"] = _users.firstWhere(
+                              (element) =>
+                                  value.contains(element.userFullName ?? "-"),
+                              orElse: () => AllUserModel());
                         });
                       },
                     );
