@@ -2,32 +2,26 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future fillNewEmpatUpdate(
-    {String? ecmId,
-    String? partId,
-    String? actual,
+Future fillNewLimaInsert(
+    {String? ecmItemId,
     String? note,
     String? start,
     String? end,
     String? userId,
-    String? fullName,
-    String? ecmitemId,
+    String? repairMessage,
     String? token}) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url = "$myUrl/ecmstep4_update";
+  String url = "$myUrl/ecmstep5_insert";
   final response = await http.post(Uri.parse(url), headers: {
     "Accept": "Application/json",
     'Authorization': 'Bearer $token',
   }, body: {
-    'ecm_id': ecmId,
-    'part_id': partId,
-    'actual': actual,
-    'note': note,
-    'start': start,
-    'end': end,
+    'ecmitem_id': ecmItemId,
+    'messagerepairing': repairMessage,
+    'noterepairing': note,
+    'startrepairing': start,
+    'endrepairing': end,
     'user_id': userId,
-    'user_name': fullName,
-    'ecmitem_id': ecmitemId
   });
 
   // print(response.body);
