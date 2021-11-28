@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
+import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddItemFillTujuh extends StatefulWidget {
-  const AddItemFillTujuh({Key? key}) : super(key: key);
+  final bool? isFromUpdate;
+  final String? partIdEcm;
+  const AddItemFillTujuh({Key? key, this.isFromUpdate, this.partIdEcm})
+      : super(key: key);
 
   @override
   _AddItemFillTujuhState createState() => _AddItemFillTujuhState();
@@ -27,6 +32,24 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   int qtyUsed = 0;
   int subTotal = 0;
 
+  void getItemUpdate(String idDataEcm) async {
+    Map<String, dynamic> dataUpdateEcmPart = {};
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    dataUpdateEcmPart =
+        await partItemMachineService.getDataForUpdateEcm(idDataEcm, tokenUser);
+    print(idDataEcm);
+
+    setState(() {
+      partNameController =
+          TextEditingController(text: dataUpdateEcmPart['partname']);
+      qtyStock = double.parse(dataUpdateEcmPart['stock']).toInt();
+      qtyUsed = double.parse(dataUpdateEcmPart['used']).toInt();
+      costRpController =
+          TextEditingController(text: dataUpdateEcmPart['harga'].toString());
+    });
+  }
+
   Future<List> getPartItembyMacchine() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
@@ -36,6 +59,37 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
         await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
 
     return await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
+  }
+
+  saveUpdatePart() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+
+    try {
+      var resultUpdate = await partItemMachineService.saveUpdateFroEcm(
+          tokenUser,
+          widget.partIdEcm!,
+          qtyUsed.toString(),
+          costRpController.text);
+      if (resultUpdate['response']['status'] == 200) {
+        Fluttertoast.showToast(
+          msg: 'Item berhasil diperbarui',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
+        Navigator.of(context).pop();
+      }else{
+        Fluttertoast.showToast(
+        msg: 'Item gagal diperbarui',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   saveSparePart(String qtyUsed, String costRp) async {
@@ -48,7 +102,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
       var result = await saveDataPartMachine(
           tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
       if (result['response']['status'] == 200) {
-        Navigator.of(context).pop(true);
+        Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
           msg: 'Data gagal disimpan',
@@ -70,6 +124,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   @override
   void initState() {
     getPartItembyMacchine();
+
+    widget.isFromUpdate == true ? getItemUpdate(widget.partIdEcm!) : null;
+
     super.initState();
   }
 
@@ -423,12 +480,16 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                     ),
                   ),
                   InkWell(
-                    onTap: enableSave == true
+                    onTap: enableSave == true && widget.isFromUpdate == false
                         ? () {
                             saveSparePart(
                                 qtyUsed.toString(), costRpController.text);
                           }
-                        : null,
+                        : enableSave == true && widget.isFromUpdate == true
+                            ? () {
+                                saveUpdatePart();
+                              }
+                            : null,
                     child: Container(
                       margin: const EdgeInsets.only(top: 8),
                       width: MediaQuery.of(context).size.width,
