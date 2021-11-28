@@ -15,13 +15,18 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
-  const StepFillEmpatInput({Key? key}) : super(key: key);
+  const StepFillEmpatInput({Key? key, this.ecmItemId}) : super(key: key);
+  final String? ecmItemId;
 
   @override
-  _StepFillEmpatInputState createState() => _StepFillEmpatInputState();
+  _StepFillEmpatInputState createState() =>
+      _StepFillEmpatInputState(ecmItemId: ecmItemId);
 }
 
 class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
+  final String? ecmItemId;
+  _StepFillEmpatInputState({this.ecmItemId});
+
   TextEditingController? endTimePickController;
   TextEditingController? startTimePickController;
   final TextEditingController tecItem = TextEditingController();
@@ -94,12 +99,20 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     });
   }
 
+  void getStepEmpatData() async {
+    final prefs = await SharedPreferences.getInstance();
+    var idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+  }
+
   void fetchLocationPartData() async {
     var prefs = await _prefs;
-    String ecmId = prefs.getString("ecmId") ?? "";
+    String ecmId = prefs.getString("idEcm") ?? "";
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
+    print("data ecm id -> $ecmId");
+    print("data parts -> $parts");
   }
 
   void fetchAllUser() async {
@@ -126,7 +139,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           break;
       }
     } catch (e) {
-      print("exception occured -> $e");
+      print("exception user occured -> $e");
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
         exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
@@ -150,6 +163,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   void saveStepInputChecking() async {
     final prefs = await SharedPreferences.getInstance();
     var ecmId = prefs.getString("idEcm");
+    var idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     try {
@@ -157,7 +171,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
       var result = await fillNewEmpatInsert(
         token: tokenUser,
         ecmId: ecmId,
-        userId: (formValue["name"] as AllUserModel).userId,
+        userId: idUser,
         fullName: (formValue["name"] as AllUserModel).userFullName,
         partId: formValue["item"],
         actual: formValue["actual"],
@@ -170,7 +184,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         case 200:
           prefs.setString(
               "idEcmItem", result['data']['t_ecmitem_id'].toString());
-          Get.back();
+          Navigator.of(context).pop(true);
           break;
         default:
           resultMessage = "Data gagal disimpan";
@@ -215,7 +229,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchLocationPartData();
     fetchAllUser();
@@ -320,8 +333,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       },
                       onChanged: (value) {
                         setState(() {
-                          formValidations["name"] = value.isNotEmpty;
-                          formValue["name"] = parts
+                          formValidations["item"] = value.isNotEmpty;
+                          formValue["item"] = parts
                               .firstWhere((element) =>
                                   value.contains(element.mPartNama ?? "-"))
                               .mPartId
@@ -815,7 +828,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   },
                   onSelected: (item) {
                     setState(() {
-                      formValue["name"] = item.userFullName.toString();
+                      formValue["name"] = item;
                     });
                   },
                   fieldViewBuilder: (context, textEditingController, focusNode,
@@ -843,11 +856,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       onChanged: (value) {
                         setState(() {
                           formValidations["name"] = value.isNotEmpty;
-                          formValue["name"] = parts
-                              .firstWhere((element) =>
-                                  value.contains(element.mPartNama ?? "-"))
-                              .mPartId
-                              .toString();
+                          formValue["name"] = _users.firstWhere((element) =>
+                              value.contains(element.userFullName ?? "-"));
                         });
                       },
                     );
