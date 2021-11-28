@@ -50,6 +50,71 @@ class PartItemMachineService {
       return [];
     }
   }
+
+  Future<Map<String, dynamic>> getDataForUpdateEcm(String idData, String token) async {
+    Map<String, dynamic> _listDataById = {};
+
+    var url = MyUrl().getUrlDevice();
+
+    try {
+      final response = await http
+          .get(Uri.parse("$url/ecm_step7_getid?ecmpart_id=$idData"), headers: {
+        "Accept": "Application/json",
+        'Authorization': 'Bearer $token',
+      });
+
+      var dataPartById = json.decode(response.body);
+
+      // print(dataPartById);
+
+      if(dataPartById['data'] != null){
+        _listDataById = dataPartById['data'];
+        return _listDataById;
+      }else{
+        return {};
+      }
+    } on SocketException catch (e) {
+      print(e);
+      return {};
+    } on TimeoutException catch (e) {
+      print(e);
+      return {};
+    } on Exception catch (e) {
+      print(e);
+      return {};
+    } catch (e) {
+      print(e);
+      return {};
+    }
+  }
+
+  Future saveUpdateFroEcm(String token, String ecmPartId, String ecmQty, String ecmHarga) async {
+    var url = MyUrl().getUrlDevice();
+
+    try {
+      final response = await http
+          .post(Uri.parse("$url/ecm_step7_update"), headers: {
+        "Accept": "Application/json",
+        'Authorization': 'Bearer $token',
+      }, body: {
+        'ecmpart_id': ecmPartId,
+        'ecmpart_qty': ecmQty,
+        'ecmpart_harga': ecmHarga
+      });
+
+      var dataSaveUpdatePartById = json.decode(response.body);
+
+      return dataSaveUpdatePartById;
+    } on SocketException catch (e) {
+      print(e);
+    } on TimeoutException catch (e) {
+      print(e);
+    } on Exception catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 final partItemMachineService = PartItemMachineService();

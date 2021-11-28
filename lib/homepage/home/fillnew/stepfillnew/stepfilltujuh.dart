@@ -29,7 +29,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
     _listDataPartSaved = await partItemMachineSaveService
         .getPartItemMachineSaveData(tokenUser, idEcmKey);
-    print("total data: ${_listDataPartSaved.length.toString()}");
+    print("total data: $idEcmKey");
 
     streamController.add(_listDataPartSaved);
 
@@ -44,7 +44,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
     // var idPart = prefs.getString("idPartItemMachine");
     print("id data: $idEcmData");
 
-    var result = await partItemMachineSaveService.deletePartMachineSaved(
+    var result = await partItemMachineSaveService.deletePartItemMachineSaved(
         idEcmData, tokenUser);
 
     print(result);
@@ -102,13 +102,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
+                        // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          Image.asset(
-                            "assets/images/empty.png",
-                            width: 250,
-                          ),
                           Center(
-                            child: Text("No spare part yet",
+                            child: Text("Loading spare part...",
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
@@ -121,77 +118,108 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                     );
                   }
 
-                  return Container(
+                  return _listDataPartSaved.isEmpty
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/empty.png",
+                                      width: 250,
+                                    ),
+                                    Center(
+                                      child: Text("No spare part yet",
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            color: Color(0xFF00AEDB),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            :  Container(
                     child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: _listDataPartSaved.length,
                       itemBuilder: (context, i) {
+                        print(_listDataPartSaved[i].ecmPartId);
                         return Container(
-                          padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(top: 8, bottom: 8),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF00AEDB),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          child: Column(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(_listDataPartSaved[i].partItemNama,
-                                  style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                  )),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    child: Text(
-                                        "Cost: ${_listDataPartSaved[i].totalHarga}",
+                                padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                width: MediaQuery.of(context).size.width,
+                                margin:
+                                    const EdgeInsets.only(top: 8, bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Column(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_listDataPartSaved[i].partItemNama,
                                         style: TextStyle(
                                           fontFamily: 'Rubik',
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w700,
                                           fontSize: 14,
                                         )),
-                                  ),
-                                  Container(
-                                    width: 60,
-                                    child: Row(
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Image.asset(
-                                          "assets/icons/akar-icons_edit.png",
-                                          width: 20,
+                                        Container(
+                                          child: Text(
+                                              "Cost: ${_listDataPartSaved[i].totalHarga}",
+                                              style: TextStyle(
+                                                fontFamily: 'Rubik',
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14,
+                                              )),
                                         ),
-                                        InkWell(
-                                          onTap: () {
-                                            deletePartMachineSaved(
-                                                _listDataPartSaved[i]
-                                                    .ecmPartId);
-                                          },
-                                          child: Image.asset(
-                                            "assets/icons/trash.png",
-                                            width: 20,
+                                        Container(
+                                          width: 60,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: (){
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(builder: (context) => AddItemFillTujuh(isFromUpdate: true, partIdEcm: _listDataPartSaved[i].ecmPartId,))
+                                                  );
+                                                },
+                                                child: Image.asset(
+                                                  "assets/icons/akar-icons_edit.png",
+                                                  width: 20,
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  deletePartMachineSaved(
+                                                      _listDataPartSaved[i]
+                                                          .ecmPartId);
+                                                },
+                                                child: Image.asset(
+                                                  "assets/icons/trash.png",
+                                                  width: 20,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                        )
                                       ],
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        );
+                                    )
+                                  ],
+                                ),
+                              );
                       },
                     ),
                   );
@@ -199,14 +227,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
               ),
             ),
             InkWell(
-              onTap: () async {
-                bool result = await Navigator.of(context).push(
+              onTap: () {
+                Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => AddItemFillTujuh()));
-
-                if (result == true) {
-                  getDataPartItemSaved();
-                }
+                        builder: (context) => AddItemFillTujuh(isFromUpdate: false,)));
               },
               child: Container(
                 margin: EdgeInsets.only(top: 50),
