@@ -24,6 +24,7 @@ class StepFillSatu extends StatefulWidget {
   final StepFillSatuState stepFillSatuState = StepFillSatuState();
 
   void getSaveFillSatu() {
+    // print("tes step 1");
     stepFillSatuState.saveFillNewSatu();
   }
 
@@ -113,8 +114,8 @@ class StepFillSatuState extends State<StepFillSatu> {
         }
       } else {
         Fluttertoast.showToast(
-            msg: 'Input field belum diisi',
-            toastLength: Toast.LENGTH_SHORT,
+            msg: 'Data tidak disimpan, cek semua input field',
+            toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
             backgroundColor: Colors.greenAccent,
@@ -475,6 +476,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
                         return ListView.builder(
                           shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: listNamaMember.isEmpty
                               ? 0
                               : listNamaMember.length,

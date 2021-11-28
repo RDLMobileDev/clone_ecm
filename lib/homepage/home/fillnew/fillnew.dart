@@ -22,10 +22,13 @@ class _FillNewState extends State<FillNew> {
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
+  final StepFillEnam _stepFillEnam = StepFillEnam();
+  final StepFillDelapan _stepFillDelapan = StepFillDelapan();
 
   int _currentStep = 0;
   final int _stepTotal = 8;
   int _stepClicked = 1;
+  String textNext = 'Next';
 
   tapped(int step) {
     print(step);
@@ -33,17 +36,30 @@ class _FillNewState extends State<FillNew> {
   }
 
   continued() {
+    // _stepFillSatu.getSaveFillSatu();
     _currentStep < 7 ? setState(() => _currentStep += 1) : null;
-    if (_currentStep == 1) {
-      _stepFillSatu.getSaveFillSatu();
-    } else if (_currentStep == 2) {
-      _stepFillDua.getSaveFillDua();
-    } else if (_currentStep == 3) {
-      _stepFillTiga.getSaveStepFillTiga();
-    }
+    if (_currentStep < 7) {
+      if (_currentStep == 1) {
+        _stepFillSatu.getSaveFillSatu();
+      } else if (_currentStep == 2) {
+        _stepFillDua.getSaveFillDua();
+      } else if (_currentStep == 3) {
+        _stepFillTiga.getSaveStepFillTiga();
+      } else if (_currentStep == 6) {
+        _stepFillEnam.getSaveFillEnam();
+      }
 
-    if (_stepClicked != 8) {
-      setState(() => _stepClicked += 1);
+      if (_stepClicked != 8) {
+        setState(() => _stepClicked += 1);
+      }
+
+      print("step sekarang: ${_currentStep.toString()}");
+      print("button step next: ${_stepClicked.toString()}");
+    } else if (_currentStep == 7) {
+      setState(() {
+        textNext = 'Finish';
+      });
+      _stepFillDelapan.getMethodPostStep();
     }
   }
 
@@ -146,7 +162,9 @@ class _FillNewState extends State<FillNew> {
                                     BorderRadius.all(Radius.circular(5))),
                             child: Center(
                               child: Text(
-                                "Next $_stepClicked/$_stepTotal",
+                                textNext == 'Next'
+                                    ? "$textNext $_stepClicked/$_stepTotal"
+                                    : textNext,
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,
