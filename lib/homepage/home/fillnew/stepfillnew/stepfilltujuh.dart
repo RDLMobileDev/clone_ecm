@@ -18,31 +18,34 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
   List<PartItemMachineSavedModel> _listDataPartSaved = [];
 
-  Future getDataPartItemSaved() async {
+  Future<List<PartItemMachineSavedModel>> getDataPartItemSaved() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     String? idEcmKey = prefs.getString("idEcm") ?? "";
 
     _listDataPartSaved = await partItemMachineSaveService
         .getPartItemMachineSaveData(tokenUser, idEcmKey);
+    print(_listDataPartSaved.length);
 
     return await partItemMachineSaveService.getPartItemMachineSaveData(
         tokenUser, idEcmKey);
   }
 
-  void deletePartMachineSaved() async {
+  Future<void> deletePartMachineSaved(String idEcmData) async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idPart = prefs.getString("idPartItemMachine");
+    // var idPart = prefs.getString("idPartItemMachine");
+    print("id data: $idEcmData");
+
     var result = await partItemMachineSaveService.deletePartMachineSaved(
-        idPart!, tokenUser);
+        idEcmData, tokenUser);
 
     print(result);
 
-    await getDataPartItemSaved();
+    getDataPartItemSaved();
 
     Fluttertoast.showToast(
-        msg: 'Data Disimpan',
+        msg: 'Data dihapus',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2,
@@ -54,6 +57,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   @override
   void initState() {
     getDataPartItemSaved();
+    print("tes step 7");
     super.initState();
   }
 
@@ -74,98 +78,91 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: _listDataPartSaved.isEmpty
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/images/empty.png",
-                            width: 250,
+              child: FutureBuilder(
+                future: getDataPartItemSaved(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container(
+                      child: Text("No data"),
+                    );
+                  }
+
+                  return Container(
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _listDataPartSaved.length,
+                      itemBuilder: (context, i) {
+                        return Container(
+                          padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(top: 8, bottom: 8),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF00AEDB),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
-                          Center(
-                            child: Text("No spare part yet",
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF00AEDB),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _listDataPartSaved.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_listDataPartSaved[i].partItemNama,
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    )),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                          "Cost: ${_listDataPartSaved[i].totalHarga}",
-                                          style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                    Container(
-                                      width: 60,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Image.asset(
-                                            "assets/icons/akar-icons_edit.png",
+                          child: Column(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_listDataPartSaved[i].partItemNama,
+                                  style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  )),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                        "Cost: ${_listDataPartSaved[i].totalHarga}",
+                                        style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                        )),
+                                  ),
+                                  Container(
+                                    width: 60,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Image.asset(
+                                          "assets/icons/akar-icons_edit.png",
+                                          width: 20,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            await deletePartMachineSaved(
+                                                _listDataPartSaved[i]
+                                                    .ecmPartId);
+                                          },
+                                          child: Image.asset(
+                                            "assets/icons/trash.png",
                                             width: 20,
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              deletePartMachineSaved();
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/trash.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
                     ),
+                  );
+                },
+              ),
             ),
             InkWell(
               onTap: () {
