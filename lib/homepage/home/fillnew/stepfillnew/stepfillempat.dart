@@ -264,7 +264,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                         builder: (context) => StepFillEmpatInput()));
 
                 if (isInputted) {
-                  setState(() => getDataItemChecking());
+                  // setState(() => getDataItemChecking());
+                  getDataItemChecking();
                 }
               },
               child: Container(

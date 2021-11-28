@@ -51,7 +51,7 @@ class PartItemMachineSaveService {
     }
   }
 
-  Future deletePartMachineSaved(String idPart, String token) async {
+  Future deletePartItemMachineSaved(String idPart, String token) async {
     var url = MyUrl().getUrlDevice();
     try {
       final response =

@@ -432,6 +432,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
                 controller: teamMemberController,
+                showCursor: true,
+                readOnly: true,
                 onTap: () {
                   setState(() {
                     isTappedTeamMember = !isTappedTeamMember;

@@ -123,6 +123,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     try {
       var result = await getUserAll(tokenUser);
 
+      print(result);
+
       switch (result['response']['status']) {
         case 200:
           var data = result['data'] as List;
@@ -180,6 +182,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         start: formValue["start"],
         end: formValue["end"],
       );
+
+      print(resultMessage);
 
       switch (result['response']['status']) {
         case 200:
@@ -247,7 +251,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
           },
         ),
       ),
