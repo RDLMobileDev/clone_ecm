@@ -4,9 +4,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
+import 'package:e_cm/homepage/home/model/item_checking_detail.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
+import 'package:e_cm/homepage/home/services/apifillnewempatgetbyid.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatinsert.dart';
+import 'package:e_cm/homepage/home/services/apifillnewempatupdate.dart';
 import 'package:e_cm/homepage/home/services/getsemuauser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,15 +33,18 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   TextEditingController? endTimePickController;
   TextEditingController? startTimePickController;
-  final TextEditingController tecItem = TextEditingController();
-  final TextEditingController tecStandard = TextEditingController();
-  final TextEditingController tecActual = TextEditingController();
-  final TextEditingController tecName = TextEditingController();
+  TextEditingController tecItem = TextEditingController();
+  TextEditingController tecStandard = TextEditingController();
+  TextEditingController tecActual = TextEditingController();
+  TextEditingController tecName = TextEditingController();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<PartModel> parts = <PartModel>[];
   var selectedPart;
   List<AllUserModel> _users = <AllUserModel>[];
   var selectedUser;
+
+  String _initialPartName = "";
+  String _initialUser = "";
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -104,6 +110,80 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     final prefs = await SharedPreferences.getInstance();
     var idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey") ?? "";
+    var result = await getIdFillNewEmpat(ecmItemId ?? "0", idUser, tokenUser);
+
+    try {
+      switch (result['response']['status']) {
+        case 200:
+          var data = (result['data'] as List)
+              .map((e) => ItemCheckingDetail.fromJson(e))
+              .toList();
+          setState(() {
+            formValue = {
+              "item": parts
+                  .firstWhere(
+                      (element) => data[0]
+                          .partNama
+                          .toString()
+                          .contains(element.mPartNama ?? "-"),
+                      orElse: () => PartModel())
+                  .mPartId
+                  .toString(),
+              "standard": data[0].partStandard,
+              "actual": data[0].actual,
+              "note": data[0].note,
+              "start": data[0].tEcmitemStart,
+              "end": data[0].tEcmitemEnd,
+              "name": _users.firstWhere(
+                  (element) => data[0]
+                      .userName
+                      .toString()
+                      .contains(element.userFullName ?? "-"),
+                  orElse: () => AllUserModel()),
+            };
+
+            _initialPartName = data[0].partNama ?? "-";
+            _initialUser = data[0].userName ?? "-";
+
+            tecStandard = TextEditingController(text: formValue["standard"]);
+            tecActual = TextEditingController(text: formValue["actual"]);
+            startTimePickController =
+                TextEditingController(text: formValue["start"]);
+            endTimePickController =
+                TextEditingController(text: formValue["end"]);
+          });
+          break;
+        default:
+          Fluttertoast.showToast(
+              msg: "Data item checking tidak ditemukan",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          break;
+      }
+    } catch (e) {
+      print("exception user occured -> $e");
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
   }
 
   void fetchLocationPartData() async {
@@ -223,6 +303,67 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     }
   }
 
+  void updateStepInputChecking() async {
+    final prefs = await SharedPreferences.getInstance();
+    var ecmId = prefs.getString("idEcm");
+    var idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    try {
+      String resultMessage = "Data disimpan";
+      var result = await fillNewEmpatUpdate(
+        token: tokenUser,
+        ecmitemId: ecmItemId,
+        ecmId: ecmId,
+        userId: idUser,
+        fullName: (formValue["name"] as AllUserModel).userFullName,
+        partId: formValue["item"],
+        actual: formValue["actual"],
+        note: formValue["note"],
+        start: formValue["start"],
+        end: formValue["end"],
+      );
+
+      switch (result['response']['status']) {
+        case 200:
+          Navigator.of(context).pop(true);
+          break;
+        default:
+          resultMessage = "Data item checking gagal diperbarui";
+          break;
+      }
+
+      Fluttertoast.showToast(
+        msg: resultMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16,
+      );
+    } catch (e) {
+      print("exception occured -> $e");
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+  }
+
   static String _displayPartOption(PartModel option) => option.mPartNama ?? "-";
 
   static String _displayUserOption(AllUserModel option) =>
@@ -233,6 +374,10 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     super.initState();
     fetchLocationPartData();
     fetchAllUser();
+
+    if (ecmItemId != null) {
+      getStepEmpatData();
+    }
   }
 
   @override
@@ -313,6 +458,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
+                      initialValue: ecmItemId != null ? _initialPartName : null,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
@@ -840,6 +986,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
+                      initialValue: ecmItemId != null ? _initialUser : null,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
@@ -916,6 +1063,11 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   onPressed: formValidations.containsValue(false)
                       ? null
                       : () {
+                          if (ecmItemId != null) {
+                            updateStepInputChecking();
+                            return;
+                          }
+
                           saveStepInputChecking();
                         },
                   child: Text(

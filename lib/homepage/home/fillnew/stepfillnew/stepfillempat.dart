@@ -5,8 +5,6 @@ import 'dart:io';
 
 import 'package:e_cm/homepage/home/fillnew/additionpage/stepfillempatinput.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
-import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
-import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatdelete.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
@@ -230,7 +228,24 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           InkWell(
-                                            onTap: () {},
+                                            onTap: () async {
+                                              bool isInputted = await Navigator
+                                                      .of(context)
+                                                  .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          StepFillEmpatInput(
+                                                            ecmItemId:
+                                                                _listItemChecking[
+                                                                        i]
+                                                                    .ecmitemId
+                                                                    .toString(),
+                                                          )));
+
+                                              if (isInputted) {
+                                                setState(() =>
+                                                    getDataItemChecking());
+                                              }
+                                            },
                                             child: Image.asset(
                                               "assets/icons/akar-icons_edit.png",
                                               width: 20,
