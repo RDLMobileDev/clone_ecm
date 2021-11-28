@@ -28,12 +28,12 @@ class StepEnamModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'checkH': checkH,
-        'checkM': checkM,
-        'repairH': repairH,
-        'garis_kuning_1': repairM,
-        'garis_kuning_2': hasilRepairH,
-        'garis_kuning_3': hasilRepairM,
-        'garis_kuning_4': mP
+        'check_h'.toString(): checkH,
+        'check_m'.toString(): checkM,
+        'repair_h'.toString(): repairH,
+        'repair_m'.toString(): repairM,
+        'hasil_checkrepair_h'.toString(): hasilRepairH,
+        'hasil_checkrepair_m'.toString(): hasilRepairM,
+        'm/p'.toString(): mP
       };
 }
