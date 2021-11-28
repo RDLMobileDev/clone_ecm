@@ -13,10 +13,8 @@ import 'package:e_cm/homepage/home/services/apifillnewempatupdate.dart';
 import 'package:e_cm/homepage/home/services/getsemuauser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:collection/collection.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
   const StepFillEmpatInput({Key? key, this.ecmItemId}) : super(key: key);
@@ -43,8 +41,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   List<AllUserModel> _users = <AllUserModel>[];
   var selectedUser;
 
-  String _initialPartName = "";
-  String _initialUser = "";
+  String _initialPartName = "Type Item Name";
+  String _initialUser = "Type Name";
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -58,14 +56,14 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     "name": false,
   };
 
-  Map<String, dynamic> formValue = {
+  Map<String, String> formValue = {
     "item": "",
     "standard": "",
     "actual": "",
     "note": "",
     "start": "",
     "end": "",
-    "name": AllUserModel(),
+    "name": ""
   };
 
   final DateTime now = DateTime.now();
@@ -129,17 +127,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       orElse: () => PartModel())
                   .mPartId
                   .toString(),
-              "standard": data[0].partStandard,
-              "actual": data[0].actual,
-              "note": data[0].note,
-              "start": data[0].tEcmitemStart,
-              "end": data[0].tEcmitemEnd,
-              "name": _users.firstWhere(
-                  (element) => data[0]
-                      .userName
-                      .toString()
-                      .contains(element.userFullName ?? "-"),
-                  orElse: () => AllUserModel()),
+              "standard": data[0].partStandard ?? "-",
+              "actual": data[0].actual ?? "-",
+              "note": data[0].note ?? "-",
+              "start": data[0].tEcmitemStart ?? "-",
+              "end": data[0].tEcmitemEnd ?? "-",
+              "name": data[0].userName ?? "-",
             };
 
             _initialPartName = data[0].partNama ?? "-";
@@ -151,6 +144,20 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 TextEditingController(text: formValue["start"]);
             endTimePickController =
                 TextEditingController(text: formValue["end"]);
+
+            switch (formValue["note"]) {
+              case "ok":
+                noteOptions["ok"] = true;
+                break;
+              case "limit":
+                noteOptions["limit"] = true;
+                break;
+              case "ng":
+                noteOptions["ng"] = true;
+                break;
+            }
+
+            formValidations.updateAll((key, value) => true);
           });
           break;
         default:
@@ -253,7 +260,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         token: tokenUser,
         ecmId: ecmId,
         userId: idUser,
-        fullName: (formValue["name"] as AllUserModel).userFullName,
+        fullName: formValue["name"],
         partId: formValue["item"],
         actual: formValue["actual"],
         note: formValue["note"],
@@ -310,19 +317,21 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     try {
-      String resultMessage = "Data disimpan";
+      String resultMessage = "Data diperbarui";
       var result = await fillNewEmpatUpdate(
         token: tokenUser,
         ecmitemId: ecmItemId,
         ecmId: ecmId,
         userId: idUser,
-        fullName: (formValue["name"] as AllUserModel).userFullName,
+        fullName: formValue["name"],
         partId: formValue["item"],
         actual: formValue["actual"],
         note: formValue["note"],
         start: formValue["start"],
         end: formValue["end"],
       );
+
+      print("response update -> $result");
 
       switch (result['response']['status']) {
         case 200:
@@ -458,7 +467,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      initialValue: ecmItemId != null ? _initialPartName : null,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
@@ -466,7 +474,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        hintText: "Type Item Name",
+                        hintStyle: TextStyle(
+                          color: ecmItemId != null ? Colors.black : Colors.grey,
+                        ),
+                        hintText: ecmItemId != null
+                            ? _initialPartName
+                            : "Type Item Name",
                       ),
                       onFieldSubmitted: (String value) {
                         onFieldSubmitted();
@@ -481,6 +494,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       },
                       onChanged: (value) {
                         setState(() {
+                          textEditingController =
+                              TextEditingController(text: value);
                           formValidations["item"] = value.isNotEmpty;
                           formValue["item"] = parts
                               .firstWhere(
@@ -978,7 +993,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   },
                   onSelected: (item) {
                     setState(() {
-                      formValue["name"] = item;
+                      formValue["name"] = item.userFullName ?? "-";
                     });
                   },
                   fieldViewBuilder: (context, textEditingController, focusNode,
@@ -986,7 +1001,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      initialValue: ecmItemId != null ? _initialUser : null,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
@@ -994,23 +1008,35 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        hintText: "Type Name",
+                        hintStyle: TextStyle(
+                          color: ecmItemId != null ? Colors.black : Colors.grey,
+                        ),
+                        hintText:
+                            ecmItemId != null ? _initialUser : "Type Name",
                       ),
                       onFieldSubmitted: (String value) {
                         onFieldSubmitted();
                         setState(() {
                           formValidations["name"] = value.isNotEmpty;
-                          formValue["name"] = _users.firstWhere((element) =>
-                              value.contains(element.userFullName ?? "-"));
+                          formValue["name"] = _users
+                                  .firstWhere((element) => value
+                                      .contains(element.userFullName ?? "-"))
+                                  .userFullName ??
+                              "-";
                         });
                       },
                       onChanged: (value) {
                         setState(() {
+                          textEditingController =
+                              TextEditingController(text: value);
                           formValidations["name"] = value.isNotEmpty;
-                          formValue["name"] = _users.firstWhere(
-                              (element) =>
-                                  value.contains(element.userFullName ?? "-"),
-                              orElse: () => AllUserModel());
+                          formValue["name"] = _users
+                                  .firstWhere(
+                                      (element) => value.contains(
+                                          element.userFullName ?? "-"),
+                                      orElse: () => AllUserModel())
+                                  .userFullName ??
+                              "-";
                         });
                       },
                     );
@@ -1031,7 +1057,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                               return GestureDetector(
                                 onTap: () {
                                   onSelected(options.elementAt(index));
-                                  formValue["name"] = options.elementAt(index);
+                                  formValue["name"] =
+                                      options.elementAt(index).userFullName ??
+                                          "-";
                                 },
                                 child: ListTile(
                                   title: Text(option),
@@ -1071,7 +1099,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                           saveStepInputChecking();
                         },
                   child: Text(
-                    'Save Checking',
+                    ecmItemId == null ? 'Save Checking' : "Update Checking",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Rubik',
