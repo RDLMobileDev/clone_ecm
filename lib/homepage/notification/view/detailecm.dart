@@ -4,6 +4,7 @@ import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
+import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -169,6 +170,27 @@ class _DetailEcmState extends State<DetailEcm> {
 
   void setStateIfMounted(f) {
     if (mounted) setState(f);
+  }
+
+  postUpdateStatus(String statusUser) async {
+    final SharedPreferences prefs = await _prefs;
+    String notifUser = "2";
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    try {
+      var response = await updateStatus(notifUser, notifUser, tokenUser);
+      print(response);
+    } catch (e) {
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Periksa jaringan internet anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
+    }
   }
 
   @override
@@ -1037,12 +1059,7 @@ class _DetailEcmState extends State<DetailEcm> {
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
             onPressed: () {
-              // saveData();
-              getDetailData();
-              getItemCheck();
-              getItemRepair();
-              getSparepart();
-              getEsign();
+              postUpdateStatus('accept');
             },
             child: Text(
               'Add Signature',
@@ -1077,7 +1094,9 @@ class _DetailEcmState extends State<DetailEcm> {
                         side: BorderSide(color: Colors.redAccent))),
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
-            onPressed: () {},
+            onPressed: () {
+              postUpdateStatus('decline');
+            },
             child: Text(
               'Decline',
               style: TextStyle(
