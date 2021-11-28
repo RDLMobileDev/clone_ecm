@@ -70,6 +70,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   @override
   void initState() {
     getPartItembyMacchine();
+
     super.initState();
   }
 

@@ -1,4 +1,6 @@
-// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, curly_braces_in_flow_control_structures
+import 'dart:async';
+
 import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
@@ -15,6 +17,8 @@ class StepFillTujuh extends StatefulWidget {
 
 class _StepFillTujuhState extends State<StepFillTujuh> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  StreamController streamController = StreamController();
+  late Timer _timer;
 
   List<PartItemMachineSavedModel> _listDataPartSaved = [];
 
@@ -25,7 +29,9 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
     _listDataPartSaved = await partItemMachineSaveService
         .getPartItemMachineSaveData(tokenUser, idEcmKey);
-    print(_listDataPartSaved.length);
+    print("total data: ${_listDataPartSaved.length.toString()}");
+
+    streamController.add(_listDataPartSaved);
 
     return await partItemMachineSaveService.getPartItemMachineSaveData(
         tokenUser, idEcmKey);
@@ -57,8 +63,18 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   @override
   void initState() {
     getDataPartItemSaved();
+    _timer =
+        Timer.periodic(Duration(seconds: 1), (timer) => getDataPartItemSaved());
     print("tes step 7");
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    //cancel the timer
+    if (_timer.isActive) _timer.cancel();
+
+    super.dispose();
   }
 
   @override
@@ -78,9 +94,9 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: FutureBuilder(
-                future: getDataPartItemSaved(),
-                builder: (context, snapshot) {
+              child: StreamBuilder(
+                stream: streamController.stream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
                     return Container(
                       child: Text("No data"),
@@ -165,9 +181,14 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
               ),
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AddItemFillTujuh()));
+              onTap: () async {
+                bool result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => AddItemFillTujuh()));
+
+                if (result == true) {
+                  getDataPartItemSaved();
+                }
               },
               child: Container(
                 margin: EdgeInsets.only(top: 50),
