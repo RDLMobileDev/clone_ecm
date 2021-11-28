@@ -37,7 +37,8 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
         tokenUser, idEcmKey);
   }
 
-  Future<void> deletePartMachineSaved(String idEcmData) async {
+  void deletePartMachineSaved(String idEcmData) async {
+    // print(idEcmData);
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     // var idPart = prefs.getString("idPartItemMachine");
@@ -48,10 +49,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
     print(result);
 
-    getDataPartItemSaved();
+    // getDataPartItemSaved();
 
     Fluttertoast.showToast(
-        msg: 'Data dihapus',
+        msg: 'Item dihapus',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2,
@@ -64,7 +65,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   void initState() {
     getDataPartItemSaved();
     _timer =
-        Timer.periodic(Duration(seconds: 1), (timer) => getDataPartItemSaved());
+        Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
     print("tes step 7");
     super.initState();
   }
@@ -99,7 +100,24 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
                     return Container(
-                      child: Text("No data"),
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "assets/images/empty.png",
+                            width: 250,
+                          ),
+                          Center(
+                            child: Text("No spare part yet",
+                                style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Color(0xFF00AEDB),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                )),
+                          ),
+                        ],
+                      ),
                     );
                   }
 
@@ -156,8 +174,8 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                           width: 20,
                                         ),
                                         InkWell(
-                                          onTap: () async {
-                                            await deletePartMachineSaved(
+                                          onTap: () {
+                                            deletePartMachineSaved(
                                                 _listDataPartSaved[i]
                                                     .ecmPartId);
                                           },
