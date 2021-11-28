@@ -15,13 +15,18 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
-  const StepFillEmpatInput({Key? key}) : super(key: key);
+  const StepFillEmpatInput({Key? key, this.ecmItemId}) : super(key: key);
+  final String? ecmItemId;
 
   @override
-  _StepFillEmpatInputState createState() => _StepFillEmpatInputState();
+  _StepFillEmpatInputState createState() =>
+      _StepFillEmpatInputState(ecmItemId: ecmItemId);
 }
 
 class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
+  final String? ecmItemId;
+  _StepFillEmpatInputState({this.ecmItemId});
+
   TextEditingController? endTimePickController;
   TextEditingController? startTimePickController;
   final TextEditingController tecItem = TextEditingController();
@@ -92,6 +97,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
         formValue["start"] = timeFormat.format(convertedValue);
       });
     });
+  }
+
+  void getStepEmpatData() async {
+    final prefs = await SharedPreferences.getInstance();
+    var idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey") ?? "";
   }
 
   void fetchLocationPartData() async {
@@ -218,7 +229,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchLocationPartData();
     fetchAllUser();

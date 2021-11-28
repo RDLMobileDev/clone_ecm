@@ -7,6 +7,7 @@ import 'package:e_cm/homepage/home/fillnew/additionpage/stepfillempatinput.dart'
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
+import 'package:e_cm/homepage/home/services/apifillnewempatdelete.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,10 +36,11 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
       switch (data["response"]['status']) {
         case 200:
-          _listItemChecking = (data['data'] as List)
-              .map((e) => ItemChecking.fromJson(e))
-              .toList();
-          print("data item checking -> $_listItemChecking");
+          setState(() {
+            _listItemChecking = (data['data'] as List)
+                .map((e) => ItemChecking.fromJson(e))
+                .toList();
+          });
           break;
         default:
           Fluttertoast.showToast(
@@ -72,30 +74,55 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void deletePartMachineSaved() async {
+  void deleteItemChecking() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idPart = prefs.getString("idPartItemMachine");
-    var result = await partItemMachineSaveService.deletePartMachineSaved(
-        idPart!, tokenUser);
+    var idEcmItem = prefs.getString("idEcmItem");
 
-    print(result);
+    var result = await fillNewEmpatDelete(idEcmItem ?? "-", tokenUser);
 
-    // await getDataPartItemSaved();
+    try {
+      String resultMessage = "Item berhasil dihapus";
+      switch (result['response']['status']) {
+        case 200:
+          getDataItemChecking();
+          break;
+        default:
+          resultMessage = "Item gagal dihapus";
+          break;
+      }
 
-    Fluttertoast.showToast(
-        msg: 'Data Disimpan',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16);
+      Fluttertoast.showToast(
+          msg: resultMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    } catch (e) {
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDataItemChecking();
   }
@@ -202,13 +229,16 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Image.asset(
-                                            "assets/icons/akar-icons_edit.png",
-                                            width: 20,
+                                          InkWell(
+                                            onTap: () {},
+                                            child: Image.asset(
+                                              "assets/icons/akar-icons_edit.png",
+                                              width: 20,
+                                            ),
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              deletePartMachineSaved();
+                                              deleteItemChecking();
                                             },
                                             child: Image.asset(
                                               "assets/icons/trash.png",
