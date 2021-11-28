@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 class ApiLocationPartService {
   static Future<List<PartModel>> getPartLocations(
       String ecmId, String tokenUser) async {
-    var result = <PartModel>[];
     var url = MyUrl().getUrlDevice();
 
     try {
@@ -17,13 +16,9 @@ class ApiLocationPartService {
         'Authorization': 'Bearer $tokenUser',
       });
 
-      var decodedData = json.decode(response.body)['data'];
+      var decodedData = json.decode(response.body)['data'] as List;
 
-      for (int i = 0; i < decodedData.length; i++) {
-        result.add(PartModel.fromJson(decodedData[i]));
-      }
-
-      return result;
+      return decodedData.map((e) => PartModel.fromJson(e)).toList();
     } catch (e) {
       print("exception occured -> $e");
       return List<PartModel>.empty();
