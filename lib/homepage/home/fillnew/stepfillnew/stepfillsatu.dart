@@ -89,6 +89,7 @@ class StepFillSatuState extends State<StepFillSatu> {
             teamId, locationId, machineId, machineDetailId);
 
         print(result['response']['status']);
+        print(result['data']['id_ecm']);
         prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
         if (result['response']['status'] == 200) {

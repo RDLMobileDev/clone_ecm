@@ -105,6 +105,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       );
 
       print("result insert 5 -> $result");
+      print(result['data']['t_ecmitem_id']);
 
       switch (result['response']['status']) {
         case 200:
