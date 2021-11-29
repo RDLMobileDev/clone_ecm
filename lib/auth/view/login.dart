@@ -64,6 +64,7 @@ class _LogInState extends State<LogIn> {
         prefs.setString("deviceKey", deviceUser ?? "");
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
+        prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
 
         print("ID user = " + (rspLogin['data']['user']['id']).toString());
         print("EMAIL user = " + rspLogin['data']['user']['email']);
@@ -337,17 +338,17 @@ class _LogInState extends State<LogIn> {
                     SizedBox(
                       height: 20,
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        "Forgot Password",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Color(0xFF00AEDB),
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {},
+                    //   child: Text(
+                    //     "Forgot Password",
+                    //     style: TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         fontSize: 16,
+                    //         color: Color(0xFF00AEDB),
+                    //         fontWeight: FontWeight.w400),
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 48,
                     ),
