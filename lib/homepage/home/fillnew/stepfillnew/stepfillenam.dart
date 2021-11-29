@@ -105,7 +105,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     });
   }
 
-  void resultCostOutHouse(String text) {
+  void resultCostOutHouse(String text) async {
+    final SharedPreferences prefs = await _prefs;
     setState(() {
       if (outHouseHController.text == '' ||
           outHouseMpController.text == '' ||
@@ -123,13 +124,15 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
         _costOutHouse = outH * outMp * outCost;
       }
-
-      print("===_newLineStopH ===");
+      prefs.setString(
+          "ttlCostOutHouse", _costOutHouse.toString().replaceAll(".", ""));
+      print("===costOutHouse ===");
       print(_costOutHouse);
     });
   }
 
-  void resultHOutHouse(String text) {
+  void resultHOutHouse(String text) async {
+    final SharedPreferences prefs = await _prefs;
     setState(() {
       if (text == '' ||
           outHouseMpController.text == '' ||
@@ -148,13 +151,15 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
         _costOutHouse = outH * outMp * outCost;
       }
-
-      print("===_newLineStopH ===");
+      prefs.setString(
+          "ttlCostOutHouse", _costOutHouse.toString().replaceAll(".", ""));
+      print("===costOutHouse ===");
       print(_costOutHouse);
     });
   }
 
-  void resultMpOutHouse(String text) {
+  void resultMpOutHouse(String text) async {
+    final SharedPreferences prefs = await _prefs;
     setState(() {
       if (outHouseHController.text == '' ||
           text == '' ||
@@ -173,8 +178,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
         _costOutHouse = outH * outMp * outCost;
       }
-
-      print("===_newLineStopH ===");
+      prefs.setString(
+          "ttlCostOutHouse", _costOutHouse.toString().replaceAll(".", ""));
+      print("===costOutHouse ===");
       print(_costOutHouse);
     });
   }
@@ -195,6 +201,33 @@ class _StepFillEnamState extends State<StepFillEnam> {
         _limitIncreamentM = int.parse(stepEnamModel.hasilRepairM.toString());
         _mp = int.parse(stepEnamModel.mP.toString());
       });
+
+      String minuteCheck = stepEnamModel.checkM.toString().length == 1
+          ? "0" + stepEnamModel.checkM.toString()
+          : stepEnamModel.checkM.toString();
+      String minuteRepair = stepEnamModel.repairM.toString().length == 1
+          ? "0" + stepEnamModel.repairM.toString()
+          : stepEnamModel.repairM.toString();
+      String minuteTotalCr = stepEnamModel.hasilRepairM.toString().length == 1
+          ? "0" + stepEnamModel.hasilRepairM.toString()
+          : stepEnamModel.hasilRepairM.toString();
+
+      prefs.setString(
+          "check", stepEnamModel.checkH.toString() + ":" + minuteCheck);
+      // prefs.setString("check", "3:00");
+      // prefs.setString("repair", "9:00");
+      // prefs.setString("totalcr", "5:00");
+      // prefs.setString("lineStart", "9:09");
+      prefs.setString(
+          "repair", stepEnamModel.repairH.toString() + ":" + minuteRepair);
+      prefs.setString("totalcr",
+          stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr);
+      String breaks = _counter.toString();
+      prefs.setString(
+          "lineStart",
+          stepEnamModel.hasilRepairH.toString() +
+              ":" +
+              stepEnamModel.hasilRepairM.toString());
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -245,8 +278,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     String ecmId = prefs.getString("idEcm").toString();
     String userId = prefs.getString("idKeyUser").toString();
-    String userName = userNameController.text;
-    String idea = ideaController.text;
+    // String userName = userNameController.text;
+    // String idea = ideaController.text;
     String check =
         stepEnamModel.checkH.toString() + ":" + stepEnamModel.checkM.toString();
     String repair = stepEnamModel.repairH.toString() +
@@ -264,51 +297,52 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String costH = _newLineStopH.toString();
     String costMp = stepEnamModel.mP.toString();
     String costTotal = _costInHouse.toString();
-    String outHouseH = outHouseHController.text;
-    String outHouseMp = outHouseMpController.text;
-    String outHouseCost = newOutHouseCost.toString();
+    // String outHouseH = outHouseHController.text;
+    // String outHouseMp = outHouseMpController.text;
+    // String outHouseCost = newOutHouseCost.toString();
     String ttlOutHouse = _costOutHouse.toString();
-
-    // prefs.setString("idea", idea);
-    // prefs.setString("check", check);
-    // prefs.setString("repair", repair);
-    // prefs.setString("totalcr", totalcr);
-    // prefs.setString("breaks", breaks);
-    // prefs.setString("lineStart", lineStart);
-    // prefs.setString("lineStop", lineStop);
-    // prefs.setString("ttlLineStop", ttlLineStop);
-    // prefs.setString("costH", costH);
-    // prefs.setString("costMp", costMp);
-    // prefs.setString("costTotal", costTotal);
-    // prefs.setString("outHouseH", outHouseH);
-    // prefs.setString("outHouseMp", outHouseMp);
-    // prefs.setString("outHouseCost", outHouseCost);
-    // prefs.setString("ttlOutHouse", ttlOutHouse);
-
     try {
+      // print(prefs.getString("idEcm").toString());
+      // print(prefs.getString("idKeyUser").toString());
+      // print(prefs.getString("userName").toString());
+      // print(prefs.getString("idea").toString());
+      // print(prefs.getString("check").toString());
+      // print(prefs.getString("repair").toString());
+      // print(prefs.getString("totalcr").toString());
+      // print(prefs.getString("breaks").toString());
+      // print(prefs.getString("lineStart").toString());
+      // print(prefs.getString("lineStop").toString());
+      // print(prefs.getString("ttlLineStop").toString());
+      // print(prefs.getString("costH").toString());
+      // print(prefs.getString("costMp").toString());
+      // print(prefs.getString("costTotal").toString());
+      // print(prefs.getString("outHouseH").toString());
+      // print(prefs.getString("outHouseMp").toString());
+      // print(prefs.getString("outHouseCost").toString());
+      // print(prefs.getString("ttlCostOutHouse").toString());
       var response = await fillNewEnam(
-          ecmId,
-          userId,
-          userName,
-          idea,
-          check,
-          repair,
-          totalcr,
-          breaks,
-          lineStart,
-          lineStop,
-          ttlLineStop,
-          costH,
-          costMp,
-          costTotal,
-          outHouseH,
-          outHouseMp,
-          outHouseCost,
-          ttlOutHouse,
+          prefs.getString("idEcm").toString(),
+          prefs.getString("idKeyUser").toString(),
+          prefs.getString("userName").toString(),
+          prefs.getString("idea").toString(),
+          prefs.getString("check").toString(),
+          prefs.getString("repair").toString(),
+          prefs.getString("totalcr").toString(),
+          prefs.getString("breaks").toString(),
+          prefs.getString("lineStart").toString(),
+          prefs.getString("lineStop").toString(),
+          prefs.getString("ttlLineStop").toString(),
+          prefs.getString("costH").toString(),
+          prefs.getString("costMp").toString(),
+          prefs.getString("costTotal").toString(),
+          prefs.getString("outHouseH").toString(),
+          prefs.getString("outHouseMp").toString(),
+          prefs.getString("outHouseCost").toString(),
+          prefs.getString("ttlCostOutHouse").toString(),
           tokenUser);
 
       var data = response['data'];
-      print(data);
+      print(response);
     } catch (e) {
       print("Something error");
     }
@@ -364,6 +398,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 controller: userNameController,
                 onTap: () {
                   setState(() {
+                    // print(prefs.getString("userName"));
                     isTapedUserName = !isTapedUserName;
                   });
                 },
@@ -397,7 +432,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       itemBuilder: (context, i) {
                         return InkWell(
                             onTap: () async {
-                              final prefs = await _prefs;
+                              final SharedPreferences prefs = await _prefs;
+                              prefs.setString("userName",
+                                  _listAllUser[i].userName.toString());
                               setState(() {
                                 userNameController = TextEditingController(
                                     text: _listAllUser[i].userName);
@@ -437,6 +474,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
+                onChanged: (value) async {
+                  final SharedPreferences prefs = await _prefs;
+                  prefs.setString("idea", value);
+                  print(prefs.getString("idea"));
+                },
                 controller: ideaController,
                 style: const TextStyle(
                     fontFamily: 'Rubik',
@@ -650,8 +692,22 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           width: 40,
                           height: 40,
                           child: IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               _decreamentCounter();
+                              final SharedPreferences prefs = await _prefs;
+                              prefs.setString(
+                                  "lineStop", _counter.toString() + ":00");
+                              prefs.setString(
+                                  "ttlLineStop",
+                                  _lineStopH.toString() +
+                                      ":" +
+                                      _lineStopM.toString());
+                              prefs.setString(
+                                  "costH", _newLineStopH.toString());
+                              prefs.setString(
+                                  "costMp", stepEnamModel.mP.toString());
+                              prefs.setString(
+                                  "costTotal", _costInHouse.toString());
                             },
                             icon: Icon(
                               Icons.remove,
@@ -664,8 +720,22 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           width: 40,
                           height: 40,
                           child: IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               _incrementCounter();
+                              final SharedPreferences prefs = await _prefs;
+                              prefs.setString(
+                                  "lineStop", _counter.toString() + ":00");
+                              prefs.setString(
+                                  "ttlLineStop",
+                                  _lineStopH.toString() +
+                                      ":" +
+                                      _lineStopM.toString());
+                              prefs.setString(
+                                  "costH", _newLineStopH.toString());
+                              prefs.setString(
+                                  "costMp", stepEnamModel.mP.toString());
+                              prefs.setString(
+                                  "costTotal", _costInHouse.toString());
                             },
                             icon: Icon(
                               Icons.add,
@@ -1029,8 +1099,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 20,
                             // height: 20,
                             child: TextFormField(
-                                onChanged: (text) {
+                                onChanged: (text) async {
                                   resultHOutHouse(text);
+                                  final SharedPreferences prefs = await _prefs;
+                                  prefs.setString("outHouseH", text);
                                 },
                                 controller: outHouseHController,
                                 keyboardType: TextInputType.number,
@@ -1087,8 +1159,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 20,
                             // height: 20,
                             child: TextFormField(
-                                onChanged: (text) {
+                                onChanged: (text) async {
                                   resultMpOutHouse(text);
+                                  final SharedPreferences prefs = await _prefs;
+                                  prefs.setString("outHouseMp", text);
                                 },
                                 controller: outHouseMpController,
                                 keyboardType: TextInputType.number,
@@ -1152,8 +1226,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 70,
                             // height: 20,
                             child: TextFormField(
-                                onChanged: (text) {
+                                onChanged: (text) async {
                                   resultCostOutHouse(text);
+                                  final SharedPreferences prefs = await _prefs;
+                                  prefs.setString(
+                                      "outHouseCost", text.replaceAll(".", ""));
                                 },
                                 controller: costOutHouseController,
                                 inputFormatters: <TextInputFormatter>[

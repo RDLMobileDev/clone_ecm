@@ -39,7 +39,9 @@ class _HomeState extends State<Home> {
     var dataEcmHistory =
         await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
 
-    _listHistoryEcmUser = dataEcmHistory;
+    setState(() {
+      _listHistoryEcmUser = dataEcmHistory;
+    });
     print(_listHistoryEcmUser);
     return dataEcmHistory;
   }
@@ -266,7 +268,7 @@ class _HomeState extends State<Home> {
               onTap: () {
                 // Navigator.of(context).push(
                 //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
-                    Navigator.of(context).push(
+                Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => ApprovedEcm()));
               },
               child: Container(
