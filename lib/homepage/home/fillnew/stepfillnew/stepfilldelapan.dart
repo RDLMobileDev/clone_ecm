@@ -52,11 +52,11 @@ class StepFillDelapanState extends State<StepFillDelapan> {
       }
     } catch (e) {
       Fluttertoast.showToast(
-          msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.greenAccent,
-        );
+        msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
       print(e);
     }
   }
