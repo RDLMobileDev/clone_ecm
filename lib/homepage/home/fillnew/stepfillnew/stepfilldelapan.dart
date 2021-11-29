@@ -47,9 +47,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
       var response = await fillNewDelapan(
           ecmId, engineerToKey, productToKey, othersToKey, tokenUser);
 
-      if (response['response']['status'] == 200) {
-        Navigator.of(context).pop();
-      }
+      if (response['response']['status'] == 200) {}
     } catch (e) {
       print(e);
       Fluttertoast.showToast(

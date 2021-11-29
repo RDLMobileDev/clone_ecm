@@ -10,6 +10,7 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltiga.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class FillNew extends StatefulWidget {
   const FillNew({Key? key}) : super(key: key);
@@ -65,6 +66,14 @@ class _FillNewState extends State<FillNew> {
     print(_stepClicked);
     if (_stepClicked == 10) {
       _stepFillDelapan.getMethodPostStep();
+      Fluttertoast.showToast(
+          msg: 'Your form has been saved and waiting to approved by staff',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
       Navigator.of(context).pop();
     }
   }
