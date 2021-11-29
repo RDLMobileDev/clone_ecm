@@ -65,7 +65,7 @@ class _FillNewState extends State<FillNew> {
     print(_stepClicked);
     if (_stepClicked == 10) {
       _stepFillDelapan.getMethodPostStep();
-      // Navigator.of(context).pop();
+      Navigator.of(context).pop();
     }
   }
 

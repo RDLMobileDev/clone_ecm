@@ -300,12 +300,17 @@ class StepFillDuaState extends State<StepFillDua> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      final prefs = await _prefs;
                       setState(() {
-                        // isShiftA = !isShiftA;
-                        // shiftA = 'Shift A';
                         incidentGroup = '1';
+                        shiftA = '1';
+                        shiftB = '0';
+                        shiftC = '0';
                       });
+                      prefs.setString("shiftA", shiftA);
+                      prefs.setString("shiftB", shiftB);
+                      prefs.setString("shiftC", shiftC);
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.25,
@@ -344,12 +349,17 @@ class StepFillDuaState extends State<StepFillDua> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      final prefs = await _prefs;
                       setState(() {
-                        // isShiftB = !isShiftB;
-                        // shiftB = 'Shift B';
                         incidentGroup = '2';
+                        shiftA = '0';
+                        shiftB = '1';
+                        shiftC = '0';
                       });
+                      prefs.setString("shiftA", shiftA);
+                      prefs.setString("shiftB", shiftB);
+                      prefs.setString("shiftC", shiftC);
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.25,
@@ -388,12 +398,17 @@ class StepFillDuaState extends State<StepFillDua> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      final prefs = await _prefs;
                       setState(() {
-                        // isShiftC = !isShiftC;
-                        // shiftC = 'Shift C';
                         incidentGroup = '3';
+                        shiftA = '0';
+                        shiftB = '0';
+                        shiftC = '1';
                       });
+                      prefs.setString("shiftA", shiftA);
+                      prefs.setString("shiftB", shiftB);
+                      prefs.setString("shiftC", shiftC);
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.25,

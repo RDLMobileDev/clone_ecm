@@ -195,12 +195,16 @@ class _StepFillLimaState extends State<StepFillLima> {
             ),
             InkWell(
               onTap: () async {
-                bool isInputted = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => FormStepFilllima()));
+                try {
+                  bool isInputted = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => FormStepFilllima()));
 
-                if (isInputted) {
-                  getDataItemRepairing();
+                  if (isInputted) {
+                    getDataItemRepairing();
+                  }
+                } catch (e) {
+                  print(e);
                 }
               },
               child: Container(
