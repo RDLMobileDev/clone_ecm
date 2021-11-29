@@ -452,19 +452,17 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   filled: true,
                 ),
-                child: Autocomplete<PartModel>(
+                child: RawAutocomplete<PartModel>(
                   displayStringForOption: _displayPartOption,
                   optionsBuilder: (TextEditingValue tev) {
-                    if (tev.text == '') {
-                      return const Iterable<PartModel>.empty();
-                    }
-
                     return parts.where((element) => element
                         .toString()
                         .contains(tev.text.toString().toLowerCase()));
                   },
                   onSelected: (item) {
                     setState(() {
+                      formValidations["item"] =
+                          item.mPartId.toString().isNotEmpty;
                       formValue["item"] = item.mPartId.toString();
                     });
                   },
@@ -473,6 +471,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
+                      readOnly: true,
+                      showCursor: false,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
@@ -987,18 +987,17 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     size: 30,
                   ),
                 ),
-                child: Autocomplete<AllUserModel>(
+                child: RawAutocomplete<AllUserModel>(
                   displayStringForOption: _displayUserOption,
                   optionsBuilder: (TextEditingValue tev) {
-                    if (tev.text == '') {
-                      return const Iterable<AllUserModel>.empty();
-                    }
                     return _users.where((element) => element
                         .toString()
                         .contains(tev.text.toString().toLowerCase()));
                   },
                   onSelected: (item) {
                     setState(() {
+                      formValidations["name"] =
+                          item.userFullName?.isNotEmpty ?? false;
                       formValue["name"] = item.userFullName ?? "-";
                     });
                   },
@@ -1007,6 +1006,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
+                      readOnly: true,
+                      showCursor: false,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
