@@ -63,9 +63,9 @@ class _FillNewState extends State<FillNew> {
       // _stepFillDelapan.getMethodPostStep();
     }
     print(_stepClicked);
-    if(_stepClicked == 10){
+    if (_stepClicked == 10) {
       _stepFillDelapan.getMethodPostStep();
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
     }
   }
 
@@ -84,7 +84,7 @@ class _FillNewState extends State<FillNew> {
         textNext = 'Next';
       });
     }
-    
+
     print("di: $_currentStep");
     print(_stepClicked);
   }

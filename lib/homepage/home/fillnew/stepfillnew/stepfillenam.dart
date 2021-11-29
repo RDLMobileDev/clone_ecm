@@ -60,7 +60,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
   //   }
   // }
 
-  void _incrementCounter() {
+  void _incrementCounter() async {
+    final SharedPreferences prefs = await _prefs;
     setState(() {
       if (_counter < _limitIncreamentH) {
         _counter++;
@@ -70,9 +71,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
       resultLineStop();
       resultCostInHouse();
     });
+    prefs.setString("breaks", _counter.toString());
   }
 
-  void _decreamentCounter() {
+  void _decreamentCounter() async {
+    final SharedPreferences prefs = await _prefs;
     setState(() {
       if (_counter > 0) {
         _counter--;
@@ -82,6 +85,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       resultLineStop();
       resultCostInHouse();
     });
+    prefs.setString("breaks", _counter.toString());
   }
 
   void resultLineStop() {
@@ -211,6 +215,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       String minuteTotalCr = stepEnamModel.hasilRepairM.toString().length == 1
           ? "0" + stepEnamModel.hasilRepairM.toString()
           : stepEnamModel.hasilRepairM.toString();
+      String minuteLineStart = "0" + stepEnamModel.hasilRepairM.toString();
 
       prefs.setString(
           "check", stepEnamModel.checkH.toString() + ":" + minuteCheck);
@@ -223,11 +228,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
       prefs.setString("totalcr",
           stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr);
       String breaks = _counter.toString();
-      prefs.setString(
-          "lineStart",
-          stepEnamModel.hasilRepairH.toString() +
-              ":" +
-              stepEnamModel.hasilRepairM.toString());
+      prefs.setString("lineStart",
+          stepEnamModel.hasilRepairH.toString() + ":" + minuteLineStart);
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -694,14 +696,15 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           child: IconButton(
                             onPressed: () async {
                               _decreamentCounter();
+                              String minuteLineStop =
+                                  _lineStopM.toString().length == 1
+                                      ? "0" + _lineStopM.toString()
+                                      : _lineStopM.toString();
                               final SharedPreferences prefs = await _prefs;
                               prefs.setString(
                                   "lineStop", _counter.toString() + ":00");
-                              prefs.setString(
-                                  "ttlLineStop",
-                                  _lineStopH.toString() +
-                                      ":" +
-                                      _lineStopM.toString());
+                              prefs.setString("ttlLineStop",
+                                  _lineStopH.toString() + ":" + minuteLineStop);
                               prefs.setString(
                                   "costH", _newLineStopH.toString());
                               prefs.setString(
@@ -722,14 +725,16 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           child: IconButton(
                             onPressed: () async {
                               _incrementCounter();
+
+                              String minuteLineStop =
+                                  _lineStopM.toString().length == 1
+                                      ? "0" + _lineStopM.toString()
+                                      : _lineStopM.toString();
                               final SharedPreferences prefs = await _prefs;
                               prefs.setString(
                                   "lineStop", _counter.toString() + ":00");
-                              prefs.setString(
-                                  "ttlLineStop",
-                                  _lineStopH.toString() +
-                                      ":" +
-                                      _lineStopM.toString());
+                              prefs.setString("ttlLineStop",
+                                  _lineStopH.toString() + ":" + minuteLineStop);
                               prefs.setString(
                                   "costH", _newLineStopH.toString());
                               prefs.setString(

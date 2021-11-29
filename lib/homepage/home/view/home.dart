@@ -1,4 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+
+import 'dart:async';
+import 'dart:io';
 
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
@@ -18,7 +21,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  StreamController historyStreamController = StreamController();
   String userName = "";
+
+  late Timer _timer;
 
   List<HistoryEcmModel> _listHistoryEcmUser = [];
 
@@ -36,14 +42,25 @@ class _HomeState extends State<Home> {
     String idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey").toString();
 
-    var dataEcmHistory =
-        await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
-
-    setState(() {
-      _listHistoryEcmUser = dataEcmHistory;
-    });
-    print(_listHistoryEcmUser);
-    return dataEcmHistory;
+    try {
+      _listHistoryEcmUser =
+          await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
+      historyStreamController.add(_listHistoryEcmUser);
+      print(_listHistoryEcmUser);
+      return await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
+    } on SocketException catch (e) {
+      print(e);
+      return [];
+    } on TimeoutException catch (e) {
+      print(e);
+      return [];
+    } on Exception catch (e) {
+      print(e);
+      return [];
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   @override
@@ -51,6 +68,8 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     getHistoryEcmByUser();
+    _timer =
+        Timer.periodic(Duration(seconds: 3), (timer) => getHistoryEcmByUser());
     getNameUser();
   }
 
@@ -148,60 +167,61 @@ class _HomeState extends State<Home> {
                 right: 16,
               ),
               width: MediaQuery.of(context).size.width,
-              child: FutureBuilder(
-                future: getHistoryEcmByUser(),
+              child: StreamBuilder(
+                stream: historyStreamController.stream,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 130,
-                        child: Center(
-                          child: Text(
-                            "Loading history...",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF979C9E)),
-                          ),
-                        ));
-                  } else {
-                    if (_listHistoryEcmUser.isEmpty) {
-                      return Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        padding: const EdgeInsets.all(16),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        height: 130,
-                        child: Center(
-                            child: Text("No history here",
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Center(
+                            child: Text("Loading history E-CM Card...",
                                 style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xFF404446)))),
-                      );
-                    } else {
-                      return Container(
-                        height: 130,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _listHistoryEcmUser.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, i) {
-                            return SliderHistory(
-                              classificationName:
-                                  _listHistoryEcmUser[i].classification,
-                              costRp: _listHistoryEcmUser[i].totalHarga,
-                              factoryPlace: _listHistoryEcmUser[i].lokasi,
-                              tanggal: _listHistoryEcmUser[i].date,
-                              itemsRepair:
-                                  _listHistoryEcmUser[i].arrayitemrepair,
-                            );
-                          },
-                        ),
-                      );
-                    }
+                                  fontFamily: 'Rubik',
+                                  color: Color(0xFF00AEDB),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                )),
+                          ),
+                        ],
+                      ),
+                    );
                   }
+                  return _listHistoryEcmUser.isEmpty
+                      ? Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.all(16),
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: 130,
+                          child: Center(
+                              child: Text("No history here",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF404446)))),
+                        )
+                      : Container(
+                          height: 130,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _listHistoryEcmUser.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, i) {
+                              return SliderHistory(
+                                classificationName:
+                                    _listHistoryEcmUser[i].classification,
+                                costRp: _listHistoryEcmUser[i].totalHarga,
+                                factoryPlace: _listHistoryEcmUser[i].lokasi,
+                                tanggal: _listHistoryEcmUser[i].date,
+                                itemsRepair:
+                                    _listHistoryEcmUser[i].arrayitemrepair,
+                              );
+                            },
+                          ),
+                        );
                 },
               ),
             ),

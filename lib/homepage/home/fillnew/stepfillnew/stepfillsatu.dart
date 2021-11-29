@@ -605,6 +605,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
+                readOnly: true,
+                showCursor: true,
                 controller: machineNameController,
                 onTap: () {
                   setState(() {

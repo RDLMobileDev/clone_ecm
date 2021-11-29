@@ -53,7 +53,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
-        toastLength: Toast.LENGTH_SHORT,
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.greenAccent,
       );

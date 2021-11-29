@@ -456,7 +456,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(top: 250),
+                margin: EdgeInsets.only(top: 230),
                 padding: const EdgeInsets.only(top: 8, bottom: 8),
                 decoration: BoxDecoration(
                     border: Border(top: BorderSide(color: Color(0xFFCDCFD0)))),
