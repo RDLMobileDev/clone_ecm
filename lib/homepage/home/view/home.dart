@@ -39,7 +39,9 @@ class _HomeState extends State<Home> {
     var dataEcmHistory =
         await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
 
-    _listHistoryEcmUser = dataEcmHistory;
+    setState(() {
+      _listHistoryEcmUser = dataEcmHistory;
+    });
     print(_listHistoryEcmUser);
     return dataEcmHistory;
   }
