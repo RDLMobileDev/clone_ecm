@@ -19,6 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String userName = "";
+  bool isVisibility = true;
 
   List<HistoryEcmModel> _listHistoryEcmUser = [];
 
@@ -31,6 +32,19 @@ class _HomeState extends State<Home> {
     return nameUser;
   }
 
+  getRoleUser() async {
+    final SharedPreferences prefs = await _prefs;
+    int jabatanUser = prefs.getInt("jabatanKey")!.toInt();
+
+    setState(() {
+      if (jabatanUser <= 5) {
+        isVisibility = false;
+      } else {
+        isVisibility = true;
+      }
+    });
+  }
+
   Future<List<HistoryEcmModel>> getHistoryEcmByUser() async {
     final SharedPreferences prefs = await _prefs;
     String idUser = prefs.getString("idKeyUser").toString();
@@ -39,11 +53,15 @@ class _HomeState extends State<Home> {
     var dataEcmHistory =
         await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
 
-    setState(() {
+    setStateIfMounted(() {
       _listHistoryEcmUser = dataEcmHistory;
     });
     print(_listHistoryEcmUser);
     return dataEcmHistory;
+  }
+
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
   }
 
   @override
@@ -52,6 +70,7 @@ class _HomeState extends State<Home> {
     super.initState();
     getHistoryEcmByUser();
     getNameUser();
+    getRoleUser();
   }
 
   @override
@@ -226,38 +245,41 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 16,
             ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(routeToFillNew());
-              },
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                ),
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Color(0xFF00AEDB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "Fill New E-CM Card",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.white,
-                    )
-                  ],
+            Visibility(
+              visible: isVisibility,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(routeToFillNew());
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                  ),
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Color(0xFF00AEDB),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "Fill New E-CM Card",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
