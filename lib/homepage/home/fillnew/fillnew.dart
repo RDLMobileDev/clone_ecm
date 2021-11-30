@@ -11,6 +11,7 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltiga.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FillNew extends StatefulWidget {
   const FillNew({Key? key}) : super(key: key);
@@ -20,11 +21,90 @@ class FillNew extends StatefulWidget {
 }
 
 class _FillNewState extends State<FillNew> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
   final StepFillEnam _stepFillEnam = StepFillEnam();
   final StepFillDelapan _stepFillDelapan = StepFillDelapan();
+
+  List<GlobalKey<FormState>> _formKeys = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+  ];
+
+  List<Step> get _steps => [
+        Step(
+          title: Text(''),
+          content: Form(key: _formKeys[_currentStep], child: StepFillSatu()),
+          isActive: _currentStep >= 0,
+          // state: _currentStep >= 0
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillDua(),
+          isActive: _currentStep >= 1,
+          // state: _currentStep >= 1
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillTiga(),
+          isActive: _currentStep >= 2,
+          // state: _currentStep >= 2
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillEmpat(),
+          isActive: _currentStep >= 3,
+          // state: _currentStep >= 3
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillLima(),
+          isActive: _currentStep >= 4,
+          // state: _currentStep >= 4
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillEnam(),
+          isActive: _currentStep >= 5,
+          // state: _currentStep >= 5
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillTujuh(),
+          isActive: _currentStep >= 6,
+          // state: _currentStep >= 6
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+        Step(
+          title: Text(''),
+          content: StepFillDelapan(),
+          isActive: _currentStep >= 7,
+          // state: _currentStep >= 0
+          //     ? StepState.complete
+          //     : StepState.disabled,
+        ),
+      ];
 
   int _currentStep = 0;
   final int _stepTotal = 8;
@@ -36,46 +116,60 @@ class _FillNewState extends State<FillNew> {
     setState(() => _currentStep = step);
   }
 
-  continued() {
-    // _stepFillSatu.getSaveFillSatu();
-    _currentStep < 7 ? setState(() => _currentStep += 1) : null;
-    if (_currentStep < 7) {
-      if (_currentStep == 1) {
-        _stepFillSatu.getSaveFillSatu();
-      } else if (_currentStep == 2) {
-        _stepFillDua.getSaveFillDua();
-      } else if (_currentStep == 3) {
-        _stepFillTiga.getSaveStepFillTiga();
-      } else if (_currentStep == 6) {
-        _stepFillEnam.getSaveFillEnam();
-      }
-
-      if (_stepClicked != 8) {
-        setState(() => _stepClicked += 1);
-      }
-
-      print("step sekarang: ${_currentStep.toString()}");
-      print("button step next: ${_stepClicked.toString()}");
-    } else if (_currentStep == 7) {
+  continued() async {
+    final prefs = await _prefs;
+    if (_formKeys[0].currentState!.validate() &&
+        prefs.getString("classBool")!.isNotEmpty &&
+        prefs.getString("dateBool")!.isNotEmpty &&
+        prefs.getString("teamMemberBool")!.isNotEmpty &&
+        prefs.getString("locationBool")!.isNotEmpty &&
+        prefs.getString("machineNameBool")!.isNotEmpty &&
+        prefs.getString("machineDetailBool")!.isNotEmpty) {
+      _stepFillSatu.getSaveFillSatu();
       setState(() {
-        textNext = 'Finish';
-        setState(() => _stepClicked += 1);
+        _currentStep++;
       });
-      // _stepFillDelapan.getMethodPostStep();
     }
-    print(_stepClicked);
-    if (_stepClicked == 10) {
-      _stepFillDelapan.getMethodPostStep();
-      Fluttertoast.showToast(
-          msg: 'Your form has been saved and waiting to approved by staff',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-      Navigator.of(context).pop();
-    }
+    // _stepFillSatu.getSaveFillSatu();
+    // _currentStep < 7 ? setState(() => _currentStep += 1) : null;
+    // if (_currentStep < 7) {
+    //   if (_currentStep == 1) {
+    //     _stepFillSatu.getSaveFillSatu();
+    //   } else if (_currentStep == 2) {
+    //     _stepFillDua.getSaveFillDua();
+    //   } else if (_currentStep == 3) {
+    //     _stepFillTiga.getSaveStepFillTiga();
+    //   } else if (_currentStep == 6) {
+    //     _stepFillEnam.getSaveFillEnam();
+    //   }
+
+    //   if (_stepClicked != 8) {
+    //     setState(() => _stepClicked += 1);
+    //   }
+
+    //   print("step sekarang: ${_currentStep.toString()}");
+    //   print("button step next: ${_stepClicked.toString()}");
+    // } else if (_currentStep == 7) {
+    //   setState(() {
+    //     textNext = 'Finish';
+    //     setState(() => _stepClicked += 1);
+    //   });
+    //   // _stepFillDelapan.getMethodPostStep();
+    // }
+    // print(_stepClicked);
+    // if (_stepClicked == 10) {
+    //   _stepFillDelapan.getMethodPostStep();
+    //   Fluttertoast.showToast(
+    //       msg: 'Data successfully saved',
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       timeInSecForIosWeb: 2,
+    //       backgroundColor: Colors.greenAccent,
+    //       textColor: Colors.white,
+    //       fontSize: 16);
+
+    //   Navigator.of(context).pop();
+    // }
   }
 
   cancel() {
@@ -96,6 +190,24 @@ class _FillNewState extends State<FillNew> {
 
     print("di: $_currentStep");
     print(_stepClicked);
+  }
+
+  Future _resetDialogBox() async {
+    setStateIfMounted(() {
+      return showDialog<String>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return Container(
+            child: const Text("data"),
+          );
+        },
+      );
+    });
+  }
+
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
   }
 
   @override
@@ -206,72 +318,7 @@ class _FillNewState extends State<FillNew> {
                   );
                 },
                 // ignore: prefer_const_literals_to_create_immutables
-                steps: [
-                  Step(
-                    title: Text(''),
-                    content: StepFillSatu(),
-                    isActive: _currentStep >= 0,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillDua(),
-                    isActive: _currentStep >= 1,
-                    // state: _currentStep >= 1
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillTiga(),
-                    isActive: _currentStep >= 2,
-                    // state: _currentStep >= 2
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillEmpat(),
-                    isActive: _currentStep >= 3,
-                    // state: _currentStep >= 3
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillLima(),
-                    isActive: _currentStep >= 4,
-                    // state: _currentStep >= 4
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillEnam(),
-                    isActive: _currentStep >= 5,
-                    // state: _currentStep >= 5
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillTujuh(),
-                    isActive: _currentStep >= 6,
-                    // state: _currentStep >= 6
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: StepFillDelapan(),
-                    isActive: _currentStep >= 7,
-                    // state: _currentStep >= 0
-                    //     ? StepState.complete
-                    //     : StepState.disabled,
-                  ),
-                ],
+                steps: _steps,
               ),
             ),
           ],

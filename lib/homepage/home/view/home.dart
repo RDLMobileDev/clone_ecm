@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
 
   getRoleUser() async {
     final SharedPreferences prefs = await _prefs;
-    int jabatanUser = prefs.getInt("jabatanKey")!.toInt();
+    int jabatanUser = prefs.getInt("jabatanKey") ?? 0;
 
     setState(() {
       if (jabatanUser <= 5) {
@@ -78,6 +78,12 @@ class _HomeState extends State<Home> {
 
   void setStateIfMounted(f) {
     if (mounted) setState(f);
+  }
+
+  @override
+  void dispose() {
+    if (_timer.isActive) _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -213,6 +219,10 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.all(16),
                           width: MediaQuery.of(context).size.width * 0.7,
                           height: 130,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            border: Border.all(color: Color(0xFF00AEDB)),
+                          ),
                           child: Center(
                               child: Text("No history here",
                                   style: TextStyle(

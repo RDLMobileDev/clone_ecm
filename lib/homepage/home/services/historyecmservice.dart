@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
@@ -38,6 +39,12 @@ class HistoryEcmService {
       }
     } on SocketException catch (e) {
       print(e);
+      Fluttertoast.showToast(
+          msg: 'Gagal memuat history, periksa koneksi Anda',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          fontSize: 16);
       return [];
     } on TimeoutException catch (e) {
       print(e);

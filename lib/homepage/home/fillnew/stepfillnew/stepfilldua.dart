@@ -72,6 +72,7 @@ class StepFillDuaState extends State<StepFillDua> {
         timePickController = TextEditingController(text: formattedTime);
       });
       prefs.setString("timePickState", formattedTime);
+      prefs.setString("timeBool", "1");
     });
   }
 
@@ -311,6 +312,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftA", shiftA);
                       prefs.setString("shiftB", shiftB);
                       prefs.setString("shiftC", shiftC);
+                      prefs.setString("shiftBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.25,
@@ -341,6 +343,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftA", shiftA);
                                       prefs.setString("shiftB", shiftB);
                                       prefs.setString("shiftC", shiftC);
+                                      prefs.setString("shiftBool", "1");
                                     }
                                   })),
                           const Text("Shift A")
@@ -360,6 +363,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftA", shiftA);
                       prefs.setString("shiftB", shiftB);
                       prefs.setString("shiftC", shiftC);
+                      prefs.setString("shiftBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.25,
@@ -390,6 +394,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftA", shiftA);
                                       prefs.setString("shiftB", shiftB);
                                       prefs.setString("shiftC", shiftC);
+                                      prefs.setString("shiftBool", "1");
                                     }
                                   })),
                           const Text("Shift B")
@@ -409,6 +414,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftA", shiftA);
                       prefs.setString("shiftB", shiftB);
                       prefs.setString("shiftC", shiftC);
+                      prefs.setString("shiftBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.25,
@@ -439,6 +445,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftA", shiftA);
                                       prefs.setString("shiftB", shiftB);
                                       prefs.setString("shiftC", shiftC);
+                                      prefs.setString("shiftBool", "1");
                                     }
                                   })),
                           const Text("Shift C")
@@ -487,6 +494,7 @@ class StepFillDuaState extends State<StepFillDua> {
                 onChanged: (value) async {
                   final prefs = await _prefs;
                   prefs.setString("problemTypeState", value);
+                  prefs.setString("ketikProblemBool", "1");
                 },
                 style: const TextStyle(
                     fontFamily: 'Rubik',

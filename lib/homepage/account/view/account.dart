@@ -32,7 +32,6 @@ class _AccountMemberState extends State<AccountMember> {
       var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
       print(rspLogut);
       if (rspLogut['response']['status'] == 200) {
-
         setState(() {
           Fluttertoast.showToast(
               msg: 'Logout Sukses',
@@ -59,16 +58,14 @@ class _AccountMemberState extends State<AccountMember> {
         });
       }
     } catch (e) {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Periksa jaringan internet anda',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
+      Fluttertoast.showToast(
+          msg: 'Periksa jaringan internet anda',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
     }
   }
 
