@@ -11,8 +11,8 @@ class StepFillDelapan extends StatefulWidget {
 
   final StepFillDelapanState stepFillDelapanState = StepFillDelapanState();
 
-  getMethodPostStep() {
-    stepFillDelapanState.postStepDelapan();
+  getMethodPostStep() async {
+    var res = await stepFillDelapanState.postStepDelapan();
   }
 
   @override
@@ -34,20 +34,20 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   }
 
   postStepDelapan() async {
-    // print("saved 8");
+    
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm").toString();
 
-    String engineerToKey = prefs.getString("engineerTo") ?? "";
-    String productToKey = prefs.getString("productTo") ?? "";
-    String othersToKey = prefs.getString("othersTo") ?? "";
+    String? engineerToKey = prefs.getString("engineerTo");
+    String? productToKey = prefs.getString("productTo");
+    String? othersToKey = prefs.getString("othersTo");
 
     try {
       var response = await fillNewDelapan(
-          ecmId, engineerToKey, productToKey, othersToKey, tokenUser);
+          ecmId, engineerToKey!, productToKey!, othersToKey!, tokenUser);
 
-      if (response['response']['status'] == 200) {}
+      print(response);
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
@@ -132,6 +132,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                       prefs.setString("engineerTo", engineerTo);
                       prefs.setString("productTo", productTo);
                       prefs.setString("othersTo", othersTo);
+                      prefs.setString("copyToBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -164,6 +165,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("engineerTo", engineerTo);
                                       prefs.setString("productTo", productTo);
                                       prefs.setString("othersTo", othersTo);
+                                      prefs.setString("copyToBool", "1");
                                     }
                                   })),
                           const Text("Engineer")
@@ -184,9 +186,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                       prefs.setString("engineerTo", engineerTo);
                       prefs.setString("productTo", productTo);
                       prefs.setString("othersTo", othersTo);
+                      prefs.setString("copyToBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -216,6 +219,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("engineerTo", engineerTo);
                                       prefs.setString("productTo", productTo);
                                       prefs.setString("othersTo", othersTo);
+                                      prefs.setString("copyToBool", "1");
                                     }
                                   })),
                           const Text("Product")
@@ -236,9 +240,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                       prefs.setString("engineerTo", engineerTo);
                       prefs.setString("productTo", productTo);
                       prefs.setString("othersTo", othersTo);
+                      prefs.setString("copyToBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -267,6 +272,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("engineerTo", engineerTo);
                                       prefs.setString("productTo", productTo);
                                       prefs.setString("othersTo", othersTo);
+                                      prefs.setString("copyToBool", "1");
                                     }
                                   })),
                           const Text("Others")

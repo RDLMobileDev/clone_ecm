@@ -90,6 +90,7 @@ class StepFillDuaState extends State<StepFillDua> {
             imageProblemPath.add(selectedImages[i].path);
           }
           prefs.setStringList("imagesKetPath", imageProblemPath);
+          prefs.setString("imageUploadBool", "1");
         } else if (selectedImages.length > 4) {
           Fluttertoast.showToast(
               msg: "Tidak boleh melebihi 4 foto",
@@ -150,6 +151,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
           imageProblemPath.add(selectedImages.path);
           prefs.setStringList("imagesKetPath", imageProblemPath);
+          prefs.setString("imageUploadBool", "1");
         } else {
           imageFileList!.clear();
           Fluttertoast.showToast(
@@ -525,6 +527,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("qualityOpt", qualityOpt);
                       prefs.setString("deliveryOpt", deliveryOpt);
                       prefs.setString("costOpt", costOpt);
+                      prefs.setString("typeProblemBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -558,6 +561,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "deliveryOpt", deliveryOpt);
                                       prefs.setString("costOpt", costOpt);
+                                      prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
                           const Text(
@@ -585,6 +589,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("qualityOpt", qualityOpt);
                       prefs.setString("deliveryOpt", deliveryOpt);
                       prefs.setString("costOpt", costOpt);
+                      prefs.setString("typeProblemBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -618,6 +623,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "deliveryOpt", deliveryOpt);
                                       prefs.setString("costOpt", costOpt);
+                                      prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
                           const Text(
@@ -648,6 +654,7 @@ class StepFillDuaState extends State<StepFillDua> {
                 prefs.setString("qualityOpt", qualityOpt);
                 prefs.setString("deliveryOpt", deliveryOpt);
                 prefs.setString("costOpt", costOpt);
+                prefs.setString("typeProblemBool", "1");
               },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
@@ -686,6 +693,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "deliveryOpt", deliveryOpt);
                                       prefs.setString("costOpt", costOpt);
+                                      prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
                           const Text(
@@ -712,6 +720,7 @@ class StepFillDuaState extends State<StepFillDua> {
                         prefs.setString("qualityOpt", qualityOpt);
                         prefs.setString("deliveryOpt", deliveryOpt);
                         prefs.setString("costOpt", costOpt);
+                        prefs.setString("typeProblemBool", "1");
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.40,
@@ -746,6 +755,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString(
                                             "deliveryOpt", deliveryOpt);
                                         prefs.setString("costOpt", costOpt);
+                                        prefs.setString("typeProblemBool", "1");
                                       }
                                     })),
                             const Text(
@@ -806,6 +816,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("productionOpt", productionOpt);
                       prefs.setString("engineerOpt", engineerOpt);
                       prefs.setString("otherOpt", otherOpt);
+                      prefs.setString("percentBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -843,6 +854,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "engineerOpt", engineerOpt);
                                       prefs.setString("otherOpt", otherOpt);
+                                      prefs.setString("percentBool", "1");
                                     }
                                   })),
                           const Text(
@@ -872,6 +884,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("productionOpt", productionOpt);
                       prefs.setString("engineerOpt", engineerOpt);
                       prefs.setString("otherOpt", otherOpt);
+                      prefs.setString("percentBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -909,6 +922,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "engineerOpt", engineerOpt);
                                       prefs.setString("otherOpt", otherOpt);
+                                      prefs.setString("percentBool", "1");
                                     }
                                   })),
                           const Text(
@@ -941,6 +955,7 @@ class StepFillDuaState extends State<StepFillDua> {
                 prefs.setString("productionOpt", productionOpt);
                 prefs.setString("engineerOpt", engineerOpt);
                 prefs.setString("otherOpt", otherOpt);
+                prefs.setString("percentBool", "1");
               },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
@@ -983,6 +998,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "engineerOpt", engineerOpt);
                                       prefs.setString("otherOpt", otherOpt);
+                                      prefs.setString("percentBool", "1");
                                     }
                                   })),
                           const Text(
@@ -1011,6 +1027,7 @@ class StepFillDuaState extends State<StepFillDua> {
                         prefs.setString("productionOpt", productionOpt);
                         prefs.setString("engineerOpt", engineerOpt);
                         prefs.setString("otherOpt", otherOpt);
+                        prefs.setString("percentBool", "1");
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.40,
@@ -1050,6 +1067,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString(
                                             "engineerOpt", engineerOpt);
                                         prefs.setString("otherOpt", otherOpt);
+                                        prefs.setString("percentBool", "1");
                                       }
                                     })),
                             const Text(
@@ -1083,6 +1101,7 @@ class StepFillDuaState extends State<StepFillDua> {
                 prefs.setString("productionOpt", productionOpt);
                 prefs.setString("engineerOpt", engineerOpt);
                 prefs.setString("otherOpt", otherOpt);
+                prefs.setString("percentBool", "1");
               },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
@@ -1125,6 +1144,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString(
                                           "engineerOpt", engineerOpt);
                                       prefs.setString("otherOpt", otherOpt);
+                                      prefs.setString("percentBool", "1");
                                     }
                                   })),
                           const Text(

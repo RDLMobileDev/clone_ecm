@@ -60,76 +60,76 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
-    // final prefs = await _prefs;
-    // // print("from prefs: ${prefs.getString("idClassification")}");
+    final prefs = await _prefs;
+    // print("from prefs: ${prefs.getString("idClassification")}");
 
-    // var idClass = prefs.getString("idClassification") ?? "";
-    // var tglStepSatu = prefs.getString("tglStepSatu") ?? "";
+    var idClass = prefs.getString("idClassification") ?? "";
+    var tglStepSatu = prefs.getString("tglStepSatu") ?? "";
 
-    // // var teamMember = prefs.getString("teamMember");
+    // var teamMember = prefs.getString("teamMember");
 
-    // List<String>? teamId = prefs.getStringList("teamMember") ?? [];
-    // var locationId = prefs.getString("locationId") ?? "";
-    // var machineId = prefs.getString("machineId") ?? "";
-    // var machineDetailId = prefs.getString("machineDetailId") ?? "";
+    List<String>? teamId = prefs.getStringList("teamMember") ?? [];
+    var locationId = prefs.getString("locationId") ?? "";
+    var machineId = prefs.getString("machineId") ?? "";
+    var machineDetailId = prefs.getString("machineDetailId") ?? "";
 
-    // String tokenUser = prefs.getString("tokenKey").toString();
-    // String idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser").toString();
 
-    // try {
-    //   if (tokenUser != "" &&
-    //       idClass != "" &&
-    //       tglStepSatu != "" &&
-    //       idUser != "" &&
-    //       teamId.length != 0 &&
-    //       locationId != "" &&
-    //       machineId != "" &&
-    //       machineDetailId != "") {
-    //     var result = await fillNewSatu(tokenUser, idClass, tglStepSatu, idUser,
-    //         teamId, locationId, machineId, machineDetailId);
+    try {
+      if (tokenUser != "" &&
+          idClass != "" &&
+          tglStepSatu != "" &&
+          idUser != "" &&
+          teamId.length != 0 &&
+          locationId != "" &&
+          machineId != "" &&
+          machineDetailId != "") {
+        var result = await fillNewSatu(tokenUser, idClass, tglStepSatu, idUser,
+            teamId, locationId, machineId, machineDetailId);
 
-    //     print(result['response']['status']);
-    //     print(result['data']['id_ecm']);
-    //     prefs.setString("idEcm", result['data']['id_ecm'].toString());
+        print(result['response']['status']);
+        print(result['data']['id_ecm']);
+        prefs.setString("idEcm", result['data']['id_ecm'].toString());
 
-    //     if (result['response']['status'] == 200) {
-    //       Fluttertoast.showToast(
-    //           msg: 'Data disimpan',
-    //           toastLength: Toast.LENGTH_SHORT,
-    //           gravity: ToastGravity.BOTTOM,
-    //           timeInSecForIosWeb: 2,
-    //           backgroundColor: Colors.greenAccent,
-    //           textColor: Colors.white,
-    //           fontSize: 16);
-    //       print(result);
-    //     } else {
-    //       Fluttertoast.showToast(
-    //           msg: 'Kesalahan jaringan. Data gagal disimpan.',
-    //           toastLength: Toast.LENGTH_SHORT,
-    //           gravity: ToastGravity.BOTTOM,
-    //           timeInSecForIosWeb: 2,
-    //           backgroundColor: Colors.greenAccent,
-    //           textColor: Colors.white,
-    //           fontSize: 16);
-    //       print(result);
-    //     }
-    //   } else {
-    //     Fluttertoast.showToast(
-    //         msg: 'Data tidak disimpan, cek semua input field',
-    //         toastLength: Toast.LENGTH_LONG,
-    //         gravity: ToastGravity.BOTTOM,
-    //         timeInSecForIosWeb: 2,
-    //         backgroundColor: Colors.greenAccent,
-    //         textColor: Colors.white,
-    //         fontSize: 16);
-    //   }
-    // } on SocketException catch (e) {
-    //   print(e);
-    // } on TimeoutException catch (e) {
-    //   print(e);
-    // } catch (e) {
-    //   print(e);
-    // }
+        if (result['response']['status'] == 200) {
+          Fluttertoast.showToast(
+              msg: 'Data disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Kesalahan jaringan. Data gagal disimpan.',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Data tidak disimpan, cek semua input field',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+    } on SocketException catch (e) {
+      print(e);
+    } on TimeoutException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void getDateFromDialog() async {
@@ -434,10 +434,6 @@ class StepFillSatuState extends State<StepFillSatu> {
               controller: teamMemberController,
               showCursor: true,
               readOnly: true,
-              validator: (value) {
-                if (value!.isEmpty) return "Team member can't empty";
-                return null;
-              },
               onTap: () {
                 setState(() {
                   isTappedTeamMember = !isTappedTeamMember;
@@ -608,12 +604,6 @@ class StepFillSatuState extends State<StepFillSatu> {
               readOnly: true,
               showCursor: true,
               controller: machineNameController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "Machine name can't empty";
-                }
-                return null;
-              },
               onTap: () {
                 setState(() {
                   isTapedMachineName = !isTapedMachineName;

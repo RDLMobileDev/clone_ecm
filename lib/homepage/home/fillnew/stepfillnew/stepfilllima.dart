@@ -18,6 +18,7 @@ class StepFillLima extends StatefulWidget {
 }
 
 class _StepFillLimaState extends State<StepFillLima> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<ItemChecking> _listItemChecking = <ItemChecking>[];
 
   void getDataItemRepairing() async {
@@ -195,12 +196,14 @@ class _StepFillLimaState extends State<StepFillLima> {
             ),
             InkWell(
               onTap: () async {
+                final prefs = await _prefs;
                 try {
                   bool isInputted = await Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => FormStepFilllima()));
 
                   if (isInputted) {
+                    prefs.setString("itemRepairBool", "1");
                     getDataItemRepairing();
                   }
                 } catch (e) {

@@ -78,6 +78,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.greenAccent,
         );
+        prefs.setString("sparePartBool", "1");
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
@@ -102,6 +103,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
       var result = await saveDataPartMachine(
           tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
       if (result['response']['status'] == 200) {
+        prefs.setString("sparePartBool", "1");
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(

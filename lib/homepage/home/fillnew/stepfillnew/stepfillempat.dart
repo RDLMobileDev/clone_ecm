@@ -274,12 +274,14 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
             ),
             InkWell(
               onTap: () async {
+                final prefs = await _prefs;
                 bool isInputted = await Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => StepFillEmpatInput()));
 
                 if (isInputted) {
                   // setState(() => getDataItemChecking());
+                  prefs.setString("itemStep4Bool", "1");
                   getDataItemChecking();
                 }
               },

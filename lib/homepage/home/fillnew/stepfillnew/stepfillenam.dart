@@ -437,6 +437,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                               final SharedPreferences prefs = await _prefs;
                               prefs.setString("userName",
                                   _listAllUser[i].userName.toString());
+                              prefs.setString("userNameBool", "1");
                               setState(() {
                                 userNameController = TextEditingController(
                                     text: _listAllUser[i].userName);
@@ -479,6 +480,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 onChanged: (value) async {
                   final SharedPreferences prefs = await _prefs;
                   prefs.setString("idea", value);
+                   prefs.setString("ideaBool", "1");
                   print(prefs.getString("idea"));
                 },
                 controller: ideaController,
@@ -711,6 +713,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   "costMp", stepEnamModel.mP.toString());
                               prefs.setString(
                                   "costTotal", _costInHouse.toString());
+                              prefs.setString(
+                                  "breakTimeBool", "1");
+                              
                             },
                             icon: Icon(
                               Icons.remove,
@@ -741,6 +746,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   "costMp", stepEnamModel.mP.toString());
                               prefs.setString(
                                   "costTotal", _costInHouse.toString());
+                                  prefs.setString(
+                                  "breakTimeBool", "1");
                             },
                             icon: Icon(
                               Icons.add,
@@ -1108,6 +1115,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   resultHOutHouse(text);
                                   final SharedPreferences prefs = await _prefs;
                                   prefs.setString("outHouseH", text);
+                                  prefs.setString("outHouseHBool", "1");
                                 },
                                 controller: outHouseHController,
                                 keyboardType: TextInputType.number,
@@ -1168,6 +1176,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   resultMpOutHouse(text);
                                   final SharedPreferences prefs = await _prefs;
                                   prefs.setString("outHouseMp", text);
+                                  prefs.setString("outHouseMpBool", "1");
                                 },
                                 controller: outHouseMpController,
                                 keyboardType: TextInputType.number,
@@ -1236,6 +1245,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   final SharedPreferences prefs = await _prefs;
                                   prefs.setString(
                                       "outHouseCost", text.replaceAll(".", ""));
+                                  prefs.setString(
+                                      "outHouseCostBool", "1");
                                 },
                                 controller: costOutHouseController,
                                 inputFormatters: <TextInputFormatter>[
