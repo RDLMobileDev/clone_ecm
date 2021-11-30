@@ -149,6 +149,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         setState(() {
           dateSelected = date;
           prefs.setString("tglStepSatu", dateSelected);
+          prefs.setString("dateBool", "1");
         });
         print(dateSelected);
       }
@@ -177,6 +178,8 @@ class StepFillSatuState extends State<StepFillSatu> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     _listMachineName =
         await machineNameService.getMachineName(idLocation, tokenUser);
+    print("data nama mesin: ");
+    print(_listMachineName.length);
   }
 
   Future<List<MachineNumberModel>> getMachineNumberbyId(
@@ -238,6 +241,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         classificationIdSelected = '1';
                         prefs.setString(
                             "idClassification", classificationIdSelected);
+                        prefs.setString("classBool", "1");
                       });
                       print(classificationIdSelected);
                     },
@@ -277,6 +281,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         classificationIdSelected = '2';
                         prefs.setString(
                             "idClassification", classificationIdSelected);
+                        prefs.setString("classBool", "1");
                       });
                       print(classificationIdSelected);
                     },
@@ -316,6 +321,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         classificationIdSelected = '3';
                         prefs.setString(
                             "idClassification", classificationIdSelected);
+                        prefs.setString("classBool", "1");
                       });
                       print(classificationIdSelected);
                     },
@@ -424,44 +430,38 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: TextFormField(
-                controller: teamMemberController,
-                showCursor: true,
-                readOnly: true,
-                onTap: () {
-                  setState(() {
-                    isTappedTeamMember = !isTappedTeamMember;
-                  });
-                },
-                onEditingComplete: () async {
-                  final prefs = await _prefs;
-                  if (teamMemberController.text.isNotEmpty) {
-                    listTeamMember.add(teamMemberController.text);
-                    print(listTeamMember);
-                  }
-                  prefs.setStringList("teamMember", listTeamMember);
-                },
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    suffixIcon: Icon(Icons.search),
-                    hintText: 'Type name',
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                    hintStyle: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-              ),
+            TextFormField(
+              controller: teamMemberController,
+              showCursor: true,
+              readOnly: true,
+              onTap: () {
+                setState(() {
+                  isTappedTeamMember = !isTappedTeamMember;
+                });
+              },
+              onEditingComplete: () async {
+                final prefs = await _prefs;
+                if (teamMemberController.text.isNotEmpty) {
+                  listTeamMember.add(teamMemberController.text);
+                  print(listTeamMember);
+                }
+                prefs.setStringList("teamMember", listTeamMember);
+              },
+              style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: const Color(0xFF979C9E))),
+                  suffixIcon: Icon(Icons.search),
+                  hintText: 'Type name',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: -5, horizontal: 10),
+                  hintStyle: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400)),
             ),
             isTappedTeamMember == false
                 ? Container()
@@ -505,6 +505,8 @@ class StepFillSatuState extends State<StepFillSatu> {
 
                                 prefs.setStringList(
                                     "teamMember", listTeamMember);
+
+                                prefs.setString("teamMemberBool", "1");
                               },
                               child: Container(
                                   padding: const EdgeInsets.all(10),
@@ -560,6 +562,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                             getMachineName(value.id);
                             // getMachineNumberbyId(machineIdSelected);
                             prefs.setString("locationId", locationIdSelected);
+                            prefs.setString("locationBool", "1");
                             print("id lokasi: $locationIdSelected");
                           },
                         ))
@@ -597,34 +600,30 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: TextFormField(
-                controller: machineNameController,
-                onTap: () {
-                  setState(() {
-                    isTapedMachineName = !isTapedMachineName;
-                  });
-                },
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    suffixIcon: Icon(Icons.search),
-                    hintText: 'Type machine',
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                    hintStyle: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-              ),
+            TextFormField(
+              readOnly: true,
+              showCursor: true,
+              controller: machineNameController,
+              onTap: () {
+                setState(() {
+                  isTapedMachineName = !isTapedMachineName;
+                });
+              },
+              style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF979C9E))),
+                  suffixIcon: Icon(Icons.search),
+                  hintText: 'Type machine',
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
+                  hintStyle: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400)),
             ),
             isTapedMachineName == true
                 ? Container(
@@ -634,37 +633,42 @@ class StepFillSatuState extends State<StepFillSatu> {
                     decoration: BoxDecoration(
                         border: Border.all(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: _listMachineName.isEmpty
-                          ? 0
-                          : _listMachineName.length,
-                      itemBuilder: (context, i) {
-                        return InkWell(
-                            onTap: () async {
-                              final prefs = await _prefs;
-                              setState(() {
-                                machineNameController = TextEditingController(
-                                    text: _listMachineName[i].nama);
-                                machineIdSelected = _listMachineName[i].idMesin;
-                                isTapedMachineName = !isTapedMachineName;
-                              });
-                              prefs.setString("machineId", machineIdSelected);
-                              // getMachineNumberbyId(_listMachineName[i].idMesin);
-                              print("id mesin: $machineIdSelected");
+                    child: _listMachineName.length == 0
+                        ? Text("No data")
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: _listMachineName.length,
+                            itemBuilder: (context, i) {
+                              return InkWell(
+                                  onTap: () async {
+                                    final prefs = await _prefs;
+                                    setState(() {
+                                      machineNameController =
+                                          TextEditingController(
+                                              text: _listMachineName[i].nama);
+                                      machineIdSelected =
+                                          _listMachineName[i].idMesin;
+                                      isTapedMachineName = !isTapedMachineName;
+                                    });
+                                    prefs.setString(
+                                        "machineId", machineIdSelected);
+                                    prefs.setString("machineNameBool", "1");
+                                    // getMachineNumberbyId(_listMachineName[i].idMesin);
+                                    print("id mesin: $machineIdSelected");
+                                  },
+                                  child: Container(
+                                      margin:
+                                          EdgeInsets.only(bottom: 8, top: 8),
+                                      child: Text(
+                                        _listMachineName[i].nama,
+                                        style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      )));
                             },
-                            child: Container(
-                                margin: EdgeInsets.only(bottom: 8, top: 8),
-                                child: Text(
-                                  _listMachineName[i].nama,
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
-                                )));
-                      },
-                    ),
+                          ),
                   )
                 : Container(),
             Container(
@@ -717,6 +721,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                               });
                               prefs.setString(
                                   "machineDetailId", machineDetailIdSelected);
+                              prefs.setString("machineDetailBool", "1");
                               print(
                                   "mesin detail id: $machineDetailIdSelected");
                             },

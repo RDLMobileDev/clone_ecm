@@ -78,14 +78,15 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.greenAccent,
         );
+        prefs.setString("sparePartBool", "1");
         Navigator.of(context).pop();
-      }else{
+      } else {
         Fluttertoast.showToast(
-        msg: 'Item gagal diperbarui',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.greenAccent,
-      );
+          msg: 'Item gagal diperbarui',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
       }
     } catch (e) {
       print(e);
@@ -102,6 +103,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
       var result = await saveDataPartMachine(
           tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
       if (result['response']['status'] == 200) {
+        prefs.setString("sparePartBool", "1");
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
@@ -149,185 +151,251 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
       body: Container(
         padding: const EdgeInsets.only(left: 16, right: 16),
         height: MediaQuery.of(context).size.height,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'Part Name',
+                                style: TextStyle(color: Color(0xFF404446))),
+                            TextSpan(
+                                text: ' * ',
+                                style: TextStyle(color: Colors.red)),
+                            TextSpan(
+                                text: ':',
+                                style: TextStyle(color: Color(0xFF404446))),
+                          ],
                         ),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'Part Name',
-                              style: TextStyle(color: Color(0xFF404446))),
-                          TextSpan(
-                              text: ' * ', style: TextStyle(color: Colors.red)),
-                          TextSpan(
-                              text: ':',
-                              style: TextStyle(color: Color(0xFF404446))),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF979C9E)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      child: TextFormField(
+                        controller: partNameController,
+                        onTap: () {
+                          setState(() {
+                            isTapPartItemMachineInput =
+                                !isTapPartItemMachineInput;
+                          });
+                        },
+                        style: const TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal),
+                        decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(top: 10, left: 10),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            hintText: 'Type Item Name'),
+                      ),
+                    ),
+                    isTapPartItemMachineInput == false
+                        ? Container()
+                        : Container(
+                            margin: const EdgeInsets.only(top: 5),
+                            width: MediaQuery.of(context).size.width,
+                            child: FutureBuilder(
+                              future: getPartItembyMacchine(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: Text("Loading part item machine..."),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: listItemMachineData.isEmpty
+                                      ? 0
+                                      : listItemMachineData.length,
+                                  itemBuilder: (context, i) {
+                                    return InkWell(
+                                      onTap: () async {
+                                        final prefs = await _prefs;
+                                        setState(() {
+                                          double stock = double.parse(
+                                              listItemMachineData[i].partStock);
+                                          qtyStock = stock.toInt();
+                                          partNameController =
+                                              TextEditingController(
+                                                  text: listItemMachineData[i]
+                                                      .partNama);
+                                          costRpController =
+                                              TextEditingController(
+                                                  text: listItemMachineData[i]
+                                                      .partHarga
+                                                      .toString());
+                                        });
+                                        prefs.setString("idPartItemMachine",
+                                            listItemMachineData[i].partitemId);
+                                      },
+                                      child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                              listItemMachineData[i].partNama)),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: 'Quantity (Used)',
+                                    style: TextStyle(color: Color(0xFF404446))),
+                                TextSpan(
+                                    text: ' * ',
+                                    style: TextStyle(color: Colors.red)),
+                                TextSpan(
+                                    text: ':',
+                                    style: TextStyle(color: Color(0xFF404446))),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: 110,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFF979C9E)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    int costRp =
+                                        int.parse(costRpController.text);
+                                    setState(() {
+                                      qtyUsed != 0 ? qtyUsed-- : null;
+                                      subTotal = costRp * qtyUsed;
+                                      if (qtyUsed == 0) {
+                                        enableSave = false;
+                                      }
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: qtyUsed != 0
+                                          ? Color(0xFF20519F)
+                                          : Color(0xFF979C9E),
+                                    ),
+                                  ),
+                                ),
+                                Text(qtyUsed.toString(),
+                                    style: TextStyle(
+                                        color: Color(0xFF404446),
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700)),
+                                InkWell(
+                                  onTap: () {
+                                    int costRp =
+                                        int.parse(costRpController.text);
+                                    setState(() {
+                                      qtyUsed++;
+                                      subTotal = costRp * qtyUsed;
+                                      enableSave = true;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Color(0xFF20519F),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF979C9E)),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
-                    child: TextFormField(
-                      controller: partNameController,
-                      onTap: () {
-                        setState(() {
-                          isTapPartItemMachineInput =
-                              !isTapPartItemMachineInput;
-                        });
-                      },
-                      style: const TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Color(0xFF404446),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(top: 10, left: 10),
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          hintText: 'Type Item Name'),
-                    ),
-                  ),
-                  isTapPartItemMachineInput == false
-                      ? Container()
-                      : Container(
-                          margin: const EdgeInsets.only(top: 5),
-                          width: MediaQuery.of(context).size.width,
-                          child: FutureBuilder(
-                            future: getPartItembyMacchine(),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: Text("Loading part item machine..."),
-                                );
-                              }
-
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: listItemMachineData.isEmpty
-                                    ? 0
-                                    : listItemMachineData.length,
-                                itemBuilder: (context, i) {
-                                  return InkWell(
-                                    onTap: () async {
-                                      final prefs = await _prefs;
-                                      setState(() {
-                                        double stock = double.parse(
-                                            listItemMachineData[i].partStock);
-                                        qtyStock = stock.toInt();
-                                        partNameController =
-                                            TextEditingController(
-                                                text: listItemMachineData[i]
-                                                    .partNama);
-                                        costRpController =
-                                            TextEditingController(
-                                                text: listItemMachineData[i]
-                                                    .partHarga
-                                                    .toString());
-                                      });
-                                      prefs.setString("idPartItemMachine",
-                                          listItemMachineData[i].partitemId);
-                                    },
-                                    child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                            listItemMachineData[i].partNama)),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: 'Quantity (Stock)',
+                                    style: TextStyle(color: Color(0xFF404446))),
+                                TextSpan(
+                                    text: ' * ',
+                                    style: TextStyle(color: Colors.red)),
+                                TextSpan(
+                                    text: ':',
+                                    style: TextStyle(color: Color(0xFF404446))),
+                              ],
                             ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'Quantity (Used)',
-                                  style: TextStyle(color: Color(0xFF404446))),
-                              TextSpan(
-                                  text: ' * ',
-                                  style: TextStyle(color: Colors.red)),
-                              TextSpan(
-                                  text: ':',
-                                  style: TextStyle(color: Color(0xFF404446))),
-                            ],
                           ),
-                        ),
-                        Container(
-                          width: 110,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xFF979C9E)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  int costRp = int.parse(costRpController.text);
-                                  setState(() {
-                                    qtyUsed != 0 ? qtyUsed-- : null;
-                                    subTotal = costRp * qtyUsed;
-                                    if (qtyUsed == 0) {
-                                      enableSave = false;
-                                    }
-                                  });
-                                },
-                                child: SizedBox(
+                          Container(
+                            width: 110,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFF979C9E)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
                                   width: 30,
                                   height: 30,
                                   child: Icon(
                                     Icons.remove,
-                                    color: qtyUsed != 0
-                                        ? Color(0xFF20519F)
-                                        : Color(0xFF979C9E),
+                                    color: Color(0xFF979C9E),
                                   ),
                                 ),
-                              ),
-                              Text(qtyUsed.toString(),
-                                  style: TextStyle(
-                                      color: Color(0xFF404446),
-                                      fontFamily: 'Rubik',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700)),
-                              InkWell(
-                                onTap: () {
-                                  int costRp = int.parse(costRpController.text);
-                                  setState(() {
-                                    qtyUsed++;
-                                    subTotal = costRp * qtyUsed;
-                                    enableSave = true;
-                                  });
-                                },
-                                child: SizedBox(
+                                Text(qtyStock.toString(),
+                                    style: TextStyle(
+                                        color: Color(0xFF404446),
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700)),
+                                SizedBox(
                                   width: 30,
                                   height: 30,
                                   child: Icon(
@@ -335,186 +403,127 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                     color: Color(0xFF20519F),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
+                              ],
                             ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'Quantity (Stock)',
-                                  style: TextStyle(color: Color(0xFF404446))),
-                              TextSpan(
-                                  text: ' * ',
-                                  style: TextStyle(color: Colors.red)),
-                              TextSpan(
-                                  text: ':',
-                                  style: TextStyle(color: Color(0xFF404446))),
-                            ],
                           ),
-                        ),
-                        Container(
-                          width: 110,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xFF979C9E)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Icon(
-                                  Icons.remove,
-                                  color: Color(0xFF979C9E),
-                                ),
-                              ),
-                              Text(qtyStock.toString(),
-                                  style: TextStyle(
-                                      color: Color(0xFF404446),
-                                      fontFamily: 'Rubik',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700)),
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Icon(
-                                  Icons.add,
-                                  color: Color(0xFF20519F),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'Cost (Rp)',
-                              style: TextStyle(color: Color(0xFF404446))),
-                          TextSpan(
-                              text: ' * ', style: TextStyle(color: Colors.red)),
-                          TextSpan(
-                              text: ':',
-                              style: TextStyle(color: Color(0xFF404446))),
                         ],
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF979C9E)),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5))),
-                    child: TextFormField(
-                      controller: costRpController,
-                      style: const TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Color(0xFF404446),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(top: 10, left: 10),
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          hintText: 'Type the cost'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: Color(0xFFCDCFD0)))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Sub Total (Rp) :",
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: RichText(
+                        text: TextSpan(
                           style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          subTotal.toString(),
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: enableSave == true && widget.isFromUpdate == false
-                        ? () {
-                            saveSparePart(
-                                qtyUsed.toString(), costRpController.text);
-                          }
-                        : enableSave == true && widget.isFromUpdate == true
-                            ? () {
-                                saveUpdatePart();
-                              }
-                            : null,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      width: MediaQuery.of(context).size.width,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: enableSave == false
-                              ? Color(0xFF979C9E)
-                              : Color(0xFF00AEDB),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Center(
-                        child: Text(
-                          "Save Spare part",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'Cost (Rp)',
+                                style: TextStyle(color: Color(0xFF404446))),
+                            TextSpan(
+                                text: ' * ',
+                                style: TextStyle(color: Colors.red)),
+                            TextSpan(
+                                text: ':',
+                                style: TextStyle(color: Color(0xFF404446))),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF979C9E)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      child: TextFormField(
+                        controller: costRpController,
+                        style: const TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal),
+                        decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(top: 10, left: 10),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            hintText: 'Type the cost'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(top: 230),
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Sub Total (Rp) :",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            subTotal.toString(),
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: enableSave == true && widget.isFromUpdate == false
+                          ? () {
+                              saveSparePart(
+                                  qtyUsed.toString(), costRpController.text);
+                            }
+                          : enableSave == true && widget.isFromUpdate == true
+                              ? () {
+                                  saveUpdatePart();
+                                }
+                              : null,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: enableSave == false
+                                ? Color(0xFF979C9E)
+                                : Color(0xFF00AEDB),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Save Spare part",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

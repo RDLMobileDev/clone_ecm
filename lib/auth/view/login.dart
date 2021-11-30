@@ -163,42 +163,58 @@ class _LogInState extends State<LogIn> {
   }
 
   void initFcmSetup() async {
-    _firebaseMessaging = FirebaseMessaging.instance;
-    deviceUser = await _firebaseMessaging.getToken();
+    try {
+      _firebaseMessaging = FirebaseMessaging.instance;
+      deviceUser = await _firebaseMessaging.getToken();
 
-    // ask permission on ios
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+      // ask permission on ios
+      NotificationSettings settings =
+          await _firebaseMessaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
 
-    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-      Fluttertoast.showToast(
-          msg: 'Notification permission are needed to use this app',
-          gravity: ToastGravity.BOTTOM,
-          toastLength: Toast.LENGTH_LONG,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-    }
-
-    FirebaseMessaging.onMessage.listen((event) {
-      LocalNotification.show(
-          event.data["title"] ?? "", event.data["body"] ?? "");
-
-      if (event.notification != null) {
-        LocalNotification.show(
-            event.notification?.title ?? "", event.notification?.body ?? "");
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        Fluttertoast.showToast(
+            msg: 'Notification permission are needed to use this app',
+            gravity: ToastGravity.BOTTOM,
+            toastLength: Toast.LENGTH_LONG,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
       }
-    });
 
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onMessage.listen((event) {
+        LocalNotification.show(
+            event.data["title"] ?? "", event.data["body"] ?? "");
+
+        if (event.notification != null) {
+          LocalNotification.show(
+              event.notification?.title ?? "", event.notification?.body ?? "");
+        }
+      });
+
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
+    } on SocketException catch (e) {
+      print("Socket Exception:");
+      print(e);
+    } on TimeoutException catch (e) {
+      print("Timeout Exception:");
+      print(e);
+    } on Exception catch (e) {
+      print("Exception:");
+      print(e);
+    } catch (e) {
+      print("catch");
+      print(e);
+    }
   }
 
   @override

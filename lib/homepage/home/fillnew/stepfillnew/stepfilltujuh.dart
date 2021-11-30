@@ -119,34 +119,34 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                   }
 
                   return _listDataPartSaved.isEmpty
-                            ? Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                  children: [
-                                    Image.asset(
-                                      "assets/images/empty.png",
-                                      width: 250,
-                                    ),
-                                    Center(
-                                      child: Text("No spare part yet",
-                                          style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            color: Color(0xFF00AEDB),
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            :  Container(
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: _listDataPartSaved.length,
-                      itemBuilder: (context, i) {
-                        print(_listDataPartSaved[i].ecmPartId);
-                        return Container(
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/images/empty.png",
+                                width: 250,
+                              ),
+                              Center(
+                                child: Text("No spare part yet",
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF00AEDB),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _listDataPartSaved.length,
+                            itemBuilder: (context, i) {
+                              print(_listDataPartSaved[i].ecmPartId);
+                              return Container(
                                 padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
                                 width: MediaQuery.of(context).size.width,
                                 margin:
@@ -191,10 +191,18 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               InkWell(
-                                                onTap: (){
+                                                onTap: () {
                                                   Navigator.of(context).push(
-                                                    MaterialPageRoute(builder: (context) => AddItemFillTujuh(isFromUpdate: true, partIdEcm: _listDataPartSaved[i].ecmPartId,))
-                                                  );
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddItemFillTujuh(
+                                                                isFromUpdate:
+                                                                    true,
+                                                                partIdEcm:
+                                                                    _listDataPartSaved[
+                                                                            i]
+                                                                        .ecmPartId,
+                                                              )));
                                                 },
                                                 child: Image.asset(
                                                   "assets/icons/akar-icons_edit.png",
@@ -203,9 +211,9 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                               ),
                                               InkWell(
                                                 onTap: () {
-                                                  // deletePartMachineSaved(
-                                                  //     _listDataPartSaved[i]
-                                                  //         .ecmPartId);
+                                                  deletePartMachineSaved(
+                                                      _listDataPartSaved[i]
+                                                          .ecmPartId);
                                                 },
                                                 child: Image.asset(
                                                   "assets/icons/trash.png",
@@ -220,17 +228,18 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                   ],
                                 ),
                               );
-                      },
-                    ),
-                  );
+                            },
+                          ),
+                        );
                 },
               ),
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => AddItemFillTujuh(isFromUpdate: false,)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AddItemFillTujuh(
+                          isFromUpdate: false,
+                        )));
               },
               child: Container(
                 margin: EdgeInsets.only(top: 50),

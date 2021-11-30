@@ -122,6 +122,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     final prefs = await _prefs;
                     setState(() {
                       prefs.setString("why1", value);
+                      prefs.setString("whyBool1", "1");
                     });
                   },
                   decoration: const InputDecoration(
@@ -155,6 +156,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     final prefs = await _prefs;
                     setState(() {
                       prefs.setString("why2", value);
+                      prefs.setString("whyBool2", "1");
                     });
                   },
                   controller: why2Controller,
@@ -190,6 +192,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     final prefs = await _prefs;
                     setState(() {
                       prefs.setString("why3", value);
+                      prefs.setString("whyBool3", "1");
                     });
                   },
                   decoration: const InputDecoration(
@@ -253,6 +256,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                   final prefs = await _prefs;
                   setState(() {
                     prefs.setString("howC", value);
+                    prefs.setString("howBool", "1");
                   });
                 },
                 decoration: const InputDecoration(

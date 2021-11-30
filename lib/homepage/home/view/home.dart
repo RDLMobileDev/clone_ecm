@@ -1,4 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+
+import 'dart:async';
+import 'dart:io';
 
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
@@ -18,8 +21,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  StreamController historyStreamController = StreamController();
   String userName = "";
   bool isVisibility = true;
+
+  late Timer _timer;
 
   List<HistoryEcmModel> _listHistoryEcmUser = [];
 
@@ -34,7 +40,7 @@ class _HomeState extends State<Home> {
 
   getRoleUser() async {
     final SharedPreferences prefs = await _prefs;
-    int jabatanUser = prefs.getInt("jabatanKey")!.toInt();
+    int jabatanUser = prefs.getInt("jabatanKey") ?? 0;
 
     setState(() {
       if (jabatanUser <= 5) {
@@ -50,14 +56,24 @@ class _HomeState extends State<Home> {
     String idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey").toString();
 
-    var dataEcmHistory =
-        await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
-
-    setStateIfMounted(() {
-      _listHistoryEcmUser = dataEcmHistory;
-    });
-    print(_listHistoryEcmUser);
-    return dataEcmHistory;
+    try {
+      _listHistoryEcmUser =
+          await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
+      historyStreamController.add(_listHistoryEcmUser);
+      return await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
+    } on SocketException catch (e) {
+      print(e);
+      return [];
+    } on TimeoutException catch (e) {
+      print(e);
+      return [];
+    } on Exception catch (e) {
+      print(e);
+      return [];
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   void setStateIfMounted(f) {
@@ -65,10 +81,18 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void dispose() {
+    if (_timer.isActive) _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getHistoryEcmByUser();
+    _timer =
+        Timer.periodic(Duration(seconds: 3), (timer) => getHistoryEcmByUser());
     getNameUser();
     getRoleUser();
   }
@@ -167,60 +191,65 @@ class _HomeState extends State<Home> {
                 right: 16,
               ),
               width: MediaQuery.of(context).size.width,
-              child: FutureBuilder(
-                future: getHistoryEcmByUser(),
+              child: StreamBuilder(
+                stream: historyStreamController.stream,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 130,
-                        child: Center(
-                          child: Text(
-                            "Loading history...",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF979C9E)),
-                          ),
-                        ));
-                  } else {
-                    if (_listHistoryEcmUser.isEmpty) {
-                      return Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        padding: const EdgeInsets.all(16),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        height: 130,
-                        child: Center(
-                            child: Text("No history here",
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Center(
+                            child: Text("Loading history E-CM Card...",
                                 style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xFF404446)))),
-                      );
-                    } else {
-                      return Container(
-                        height: 130,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _listHistoryEcmUser.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, i) {
-                            return SliderHistory(
-                              classificationName:
-                                  _listHistoryEcmUser[i].classification,
-                              costRp: _listHistoryEcmUser[i].totalHarga,
-                              factoryPlace: _listHistoryEcmUser[i].lokasi,
-                              tanggal: _listHistoryEcmUser[i].date,
-                              itemsRepair:
-                                  _listHistoryEcmUser[i].arrayitemrepair,
-                            );
-                          },
-                        ),
-                      );
-                    }
+                                  fontFamily: 'Rubik',
+                                  color: Color(0xFF00AEDB),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                )),
+                          ),
+                        ],
+                      ),
+                    );
                   }
+                  return _listHistoryEcmUser.isEmpty
+                      ? Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.all(16),
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: 130,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            border: Border.all(color: Color(0xFF00AEDB)),
+                          ),
+                          child: Center(
+                              child: Text("No history here",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF404446)))),
+                        )
+                      : Container(
+                          height: 130,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _listHistoryEcmUser.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, i) {
+                              return SliderHistory(
+                                classificationName:
+                                    _listHistoryEcmUser[i].classification,
+                                costRp: _listHistoryEcmUser[i].totalHarga,
+                                factoryPlace: _listHistoryEcmUser[i].lokasi,
+                                tanggal: _listHistoryEcmUser[i].date,
+                                itemsRepair:
+                                    _listHistoryEcmUser[i].arrayitemrepair,
+                              );
+                            },
+                          ),
+                        );
                 },
               ),
             ),
@@ -327,42 +356,42 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 16,
             ),
-            // InkWell(
-            //   onTap: () {
-            //     Navigator.of(context).push(
-            //         MaterialPageRoute(builder: (context) => ListTmName()));
-            //   },
-            //   child: Container(
-            //     margin: const EdgeInsets.only(
-            //       left: 16,
-            //       right: 16,
-            //     ),
-            //     padding: const EdgeInsets.only(left: 16, right: 16),
-            //     width: MediaQuery.of(context).size.width,
-            //     height: 40,
-            //     decoration: BoxDecoration(
-            //         color: Color(0xFF00AEDB),
-            //         borderRadius: BorderRadius.all(Radius.circular(5))),
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: const [
-            //         Text(
-            //           "List TM Name",
-            //           style: TextStyle(
-            //               fontFamily: 'Rubik',
-            //               color: Colors.white,
-            //               fontSize: 12,
-            //               fontWeight: FontWeight.w400),
-            //         ),
-            //         Icon(
-            //           Icons.arrow_forward_ios,
-            //           size: 14,
-            //           color: Colors.white,
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ListTmName()));
+              },
+              child: Container(
+                margin: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                ),
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                decoration: BoxDecoration(
+                    color: Color(0xFF00AEDB),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "List TM Name",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
