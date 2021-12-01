@@ -1,8 +1,5 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print
 
-import 'dart:math';
-
-import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
