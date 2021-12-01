@@ -384,13 +384,13 @@ class _FillNewState extends State<FillNew> {
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
-              msg: 'All forms must be filled',
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
+          msg: 'All forms must be filled',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
     }
     // _stepFillSatu.getSaveFillSatu();
     // _currentStep < 7 ? setState(() => _currentStep += 1) : null;

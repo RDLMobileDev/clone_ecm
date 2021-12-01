@@ -104,6 +104,12 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
           tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
       if (result['response']['status'] == 200) {
         prefs.setString("sparePartBool", "1");
+        Fluttertoast.showToast(
+          msg: 'Data item step 7 disimpan',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(

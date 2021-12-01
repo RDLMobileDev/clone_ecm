@@ -60,6 +60,8 @@ class _HomeState extends State<Home> {
       _listHistoryEcmUser =
           await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
       historyStreamController.add(_listHistoryEcmUser);
+      print("data history:");
+      print(_listHistoryEcmUser);
       return await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
     } on SocketException catch (e) {
       print(e);
@@ -92,7 +94,7 @@ class _HomeState extends State<Home> {
     super.initState();
     getHistoryEcmByUser();
     _timer =
-        Timer.periodic(Duration(seconds: 3), (timer) => getHistoryEcmByUser());
+        Timer.periodic(Duration(seconds: 5), (timer) => getHistoryEcmByUser());
     getNameUser();
     getRoleUser();
   }

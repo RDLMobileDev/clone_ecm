@@ -345,6 +345,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
       var data = response['data'];
       print(response);
+      Fluttertoast.showToast(
+        msg: 'Data step 6 disimpan',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
     } catch (e) {
       print("Something error");
     }
@@ -480,7 +486,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 onChanged: (value) async {
                   final SharedPreferences prefs = await _prefs;
                   prefs.setString("idea", value);
-                   prefs.setString("ideaBool", "1");
+                  prefs.setString("ideaBool", "1");
                   print(prefs.getString("idea"));
                 },
                 controller: ideaController,
@@ -713,9 +719,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   "costMp", stepEnamModel.mP.toString());
                               prefs.setString(
                                   "costTotal", _costInHouse.toString());
-                              prefs.setString(
-                                  "breakTimeBool", "1");
-                              
+                              prefs.setString("breakTimeBool", "1");
                             },
                             icon: Icon(
                               Icons.remove,
@@ -746,8 +750,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   "costMp", stepEnamModel.mP.toString());
                               prefs.setString(
                                   "costTotal", _costInHouse.toString());
-                                  prefs.setString(
-                                  "breakTimeBool", "1");
+                              prefs.setString("breakTimeBool", "1");
                             },
                             icon: Icon(
                               Icons.add,
@@ -1245,8 +1248,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   final SharedPreferences prefs = await _prefs;
                                   prefs.setString(
                                       "outHouseCost", text.replaceAll(".", ""));
-                                  prefs.setString(
-                                      "outHouseCostBool", "1");
+                                  prefs.setString("outHouseCostBool", "1");
                                 },
                                 controller: costOutHouseController,
                                 inputFormatters: <TextInputFormatter>[

@@ -21,6 +21,8 @@ class HistoryEcmService {
 
       var dataHistory = json.decode(response.body);
 
+      print(dataHistory);
+
       if (dataHistory['data'] != null) {
         for (int i = 0; i < dataHistory['data'].length; i++) {
           var dataModel = HistoryEcmModel(
