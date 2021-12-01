@@ -381,7 +381,7 @@ class _FillNewState extends State<FillNew> {
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'All forms must be filled',
+          msg: 'You are in step ${_currentStep + 1}, form must be filled',
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -389,46 +389,6 @@ class _FillNewState extends State<FillNew> {
           textColor: Colors.white,
           fontSize: 16);
     }
-    // _stepFillSatu.getSaveFillSatu();
-    // _currentStep < 7 ? setState(() => _currentStep += 1) : null;
-    // if (_currentStep < 7) {
-    //   if (_currentStep == 1) {
-    //     _stepFillSatu.getSaveFillSatu();
-    //   } else if (_currentStep == 2) {
-    //     _stepFillDua.getSaveFillDua();
-    //   } else if (_currentStep == 3) {
-    //     _stepFillTiga.getSaveStepFillTiga();
-    //   } else if (_currentStep == 6) {
-    //     _stepFillEnam.getSaveFillEnam();
-    //   }
-
-    //   if (_stepClicked != 8) {
-    //     setState(() => _stepClicked += 1);
-    //   }
-
-    //   print("step sekarang: ${_currentStep.toString()}");
-    //   print("button step next: ${_stepClicked.toString()}");
-    // } else if (_currentStep == 7) {
-    //   setState(() {
-    //     textNext = 'Finish';
-    //     setState(() => _stepClicked += 1);
-    //   });
-    //   // _stepFillDelapan.getMethodPostStep();
-    // }
-    // print(_stepClicked);
-    // if (_stepClicked == 10) {
-    //   _stepFillDelapan.getMethodPostStep();
-    //   Fluttertoast.showToast(
-    //       msg: 'Data successfully saved',
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       timeInSecForIosWeb: 2,
-    //       backgroundColor: Colors.greenAccent,
-    //       textColor: Colors.white,
-    //       fontSize: 16);
-
-    //   Navigator.of(context).pop();
-    // }
   }
 
   cancel() {
