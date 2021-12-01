@@ -227,6 +227,7 @@ class _DetailEcmState extends State<DetailEcm> {
       ),
       body: SingleChildScrollView(
         child: Container(
+          color: Colors.white,
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(16),
           child: Column(
@@ -307,7 +308,7 @@ class _DetailEcmState extends State<DetailEcm> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                child: const Text("SELANG HTM GETAS ",
+                child: Text(detailEcmModel.incidentProblem.toString(),
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -327,9 +328,10 @@ class _DetailEcmState extends State<DetailEcm> {
                       height: 200,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/img_selang1.png')),
-                          color: Colors.amberAccent,
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  detailEcmModel.incidentFoto1.toString())),
+                          color: Colors.grey[400],
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     const SizedBox(width: 10),
@@ -338,9 +340,34 @@ class _DetailEcmState extends State<DetailEcm> {
                       height: 200,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/img_selang2.png')),
-                          color: Colors.greenAccent,
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  detailEcmModel.incidentFoto2.toString())),
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  detailEcmModel.incidentFoto3.toString())),
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  detailEcmModel.incidentFoto4.toString())),
+                          color: Colors.grey[400],
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                   ],
