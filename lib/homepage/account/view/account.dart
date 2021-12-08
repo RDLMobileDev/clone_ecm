@@ -33,9 +33,9 @@ class _AccountMemberState extends State<AccountMember> {
 
   void setBahasa() async {
     final prefs = await _prefs;
-    String? bahasaBool = prefs.getString("bahasa");
+    String bahasaBool = prefs.getString("bahasa") ?? "";
 
-    if (bahasaBool!.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
       setState(() {
         bahasaSelected = false;
         bahasa = bahasaBool;
