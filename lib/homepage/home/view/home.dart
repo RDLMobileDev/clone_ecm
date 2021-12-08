@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/approved/approved.dart';
@@ -9,7 +10,10 @@ import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
 import 'package:e_cm/homepage/home/services/historyecmservice.dart';
+import 'package:e_cm/language/model/lang_model.dart';
+import 'package:e_cm/language/service/lang_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
@@ -130,8 +134,8 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            const Text(
-                              "Good Morning,",
+                            Text(
+                              "Good morning,",
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,
