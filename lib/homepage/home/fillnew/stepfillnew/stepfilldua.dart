@@ -246,7 +246,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
       print(result);
 
-      goToStepFillTiga('Data Disimpan');
+      goToStepFillTiga('Data step 2 Disimpan');
     } else {
       goToStepFillTiga('Data tidak disimpan, cek semua input field');
     }

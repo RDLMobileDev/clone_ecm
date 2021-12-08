@@ -94,7 +94,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
         if (result['response']['status'] == 200) {
           Fluttertoast.showToast(
-              msg: 'Data disimpan',
+              msg: 'Data step 1 disimpan',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -245,28 +245,36 @@ class StepFillSatuState extends State<StepFillSatu> {
                       });
                       print(classificationIdSelected);
                     },
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      height: 56,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(8)),
-                          side: isBreakDown == false
-                              ? BorderSide.none
-                              : BorderSide(color: Color(0xFF00AEDB))),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width * 0.26,
-                        child: Center(
-                          child: Text(
-                            "Breakdown Maintenance",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: isBreakDown == false
-                                    ? Color(0xFF404446)
-                                    : Color(0xFF00AEDB),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          ),
+                          border: Border.all(
+                              color: isBreakDown == false
+                                  ? Colors.white
+                                  : Color(0xFF00AEDB)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset:
+                                  Offset(0, 1), // changes position of shadow
+                            ),
+                          ]),
+                      child: Center(
+                        child: Text(
+                          "Breakdown Maintenance",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: isBreakDown == false
+                                  ? Color(0xFF404446)
+                                  : Color(0xFF00AEDB),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
@@ -285,28 +293,36 @@ class StepFillSatuState extends State<StepFillSatu> {
                       });
                       print(classificationIdSelected);
                     },
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      height: 56,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(8)),
-                          side: isPreventive == false
-                              ? BorderSide.none
-                              : BorderSide(color: Color(0xFF00AEDB))),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width * 0.26,
-                        child: Center(
-                          child: Text(
-                            "Preventive Maintenance",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: isPreventive == false
-                                    ? Color(0xFF404446)
-                                    : Color(0xFF00AEDB),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          ),
+                          border: Border.all(
+                              color: isPreventive == false
+                                  ? Colors.white
+                                  : Color(0xFF00AEDB)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset:
+                                  Offset(0, 1), // changes position of shadow
+                            ),
+                          ]),
+                      child: Center(
+                        child: Text(
+                          "Preventive Maintenance",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: isPreventive == false
+                                  ? Color(0xFF404446)
+                                  : Color(0xFF00AEDB),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
@@ -325,28 +341,36 @@ class StepFillSatuState extends State<StepFillSatu> {
                       });
                       print(classificationIdSelected);
                     },
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      height: 56,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(8)),
-                          side: isInformation == false
-                              ? BorderSide.none
-                              : BorderSide(color: Color(0xFF00AEDB))),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width * 0.26,
-                        child: Center(
-                          child: Text(
-                            "Information Maintenance",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: isInformation == false
-                                    ? Color(0xFF404446)
-                                    : Color(0xFF00AEDB),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          ),
+                          border: Border.all(
+                              color: isInformation == false
+                                  ? Colors.white
+                                  : Color(0xFF00AEDB)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset:
+                                  Offset(0, 1), // changes position of shadow
+                            ),
+                          ]),
+                      child: Center(
+                        child: Text(
+                          "Information Maintenance",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: isInformation == false
+                                  ? Color(0xFF404446)
+                                  : Color(0xFF00AEDB),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),

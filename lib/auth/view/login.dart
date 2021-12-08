@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-import 'package:e_cm/auth/model/usermodel.dart';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/util/local_notification.dart';
@@ -15,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 
 class LogIn extends StatefulWidget {
+  const LogIn({Key? key}) : super(key: key);
+
   @override
   _LogInState createState() => _LogInState();
 }
@@ -30,7 +31,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class _LogInState extends State<LogIn> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool rememberMeState = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -219,7 +220,6 @@ class _LogInState extends State<LogIn> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDeviceKey();
 
