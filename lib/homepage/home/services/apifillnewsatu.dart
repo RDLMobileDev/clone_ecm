@@ -14,6 +14,7 @@ Future fillNewSatu(
   String userId,
   List<String> teamMember,
   String locationId,
+  String locationAreaId,
   String machineId,
   String machineDetailId,
 ) async {
@@ -24,6 +25,7 @@ Future fillNewSatu(
     print(userId);
     print(teamMember);
     print(locationId);
+    print(locationAreaId);
     print(machineId);
     print(machineDetailId);
 
@@ -33,28 +35,29 @@ Future fillNewSatu(
       'classification_id': classificationId,
       'date': date,
       'user_id': userId,
-      'location_id': locationId,
+      'factory_id': locationId,
+      'group_id': locationAreaId,
       'machine_id': machineId,
       'machinedetail_id': machineDetailId
     };
 
     for (int i = 0; i < teamMember.length; i++) {
-      data.addAll({"user_nama[$i]": teamMember[i]});
+      data.addAll({"team_member[$i]": teamMember[i]});
     }
 
-    String url = MyUrl().getUrlDevice();
-    final response = await http.post(Uri.parse("$url/ecm_step1"),
-        headers: {
-          "Accept": "Application/json",
-          'Authorization': 'Bearer $token',
-        },
-        body: data);
+    // String url = MyUrl().getUrlDevice();
+    // final response = await http.post(Uri.parse("$url/ecm_step1"),
+    //     headers: {
+    //       "Accept": "Application/json",
+    //       'Authorization': 'Bearer $token',
+    //     },
+    //     body: data);
 
-    if (response.body.isNotEmpty) {
-      var convertDatatoJson = jsonDecode(response.body);
-      json.decode(response.body);
-      return convertDatatoJson;
-    }
+    // if (response.body.isNotEmpty) {
+    //   var convertDatatoJson = jsonDecode(response.body);
+    //   json.decode(response.body);
+    //   return convertDatatoJson;
+    // }
   } on SocketException catch (e) {
     print(e);
   } on TimeoutException catch (e) {
