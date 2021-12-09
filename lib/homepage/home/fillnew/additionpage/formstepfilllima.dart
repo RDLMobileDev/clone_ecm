@@ -1,15 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace
 
-import 'dart:async';
-import 'dart:io';
-
-import 'package:e_cm/homepage/home/model/item_checking.dart';
-import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
-import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 class FormStepFilllima extends StatefulWidget {
   const FormStepFilllima({Key? key}) : super(key: key);
@@ -20,11 +12,9 @@ class FormStepFilllima extends StatefulWidget {
 
 class _FormStepFilllimaState extends State<FormStepFilllima> {
   TextEditingController? startTimePickerController;
-  TextEditingController? endTimePickerController;
+  TextEditingController? endtTimePickerController;
   final TextEditingController tecItem = TextEditingController();
   final TextEditingController tecName = TextEditingController();
-  List<ItemChecking> _listData = [];
-  String _username = "";
 
   Map<String, bool> noteOptions = {
     "ok": false,
@@ -41,65 +31,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     "repair": false,
   };
 
-  Map<String, String> formValue = {
-    "item": "",
-    "note": "",
-    "start": "",
-    "end": "",
-    "name": "",
-    "repair": "",
-  };
-
   final DateTime now = DateTime.now();
-
-  void getStep4Data() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String? ecmId = prefs.getString("idEcm") ?? "-";
-    String? userId = prefs.getString("idKeyUser") ?? "-";
-
-    try {
-      var data = await getFillNewEmpat(ecmId, userId, token);
-
-      switch (data["response"]['status']) {
-        case 200:
-          setState(() {
-            _listData = (data['data'] as List)
-                .map((e) => ItemChecking.fromJson(e))
-                .toList();
-          });
-          break;
-        default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          break;
-      }
-    } catch (e) {
-      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
-      if (e is SocketException) {
-        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
-      }
-
-      if (e is TimeoutException) {
-        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
-      }
-
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-    }
-  }
 
   void getStartTime() {
     showTimePicker(
@@ -110,11 +42,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
         formValidations["start"] = true;
         startTimePickerController =
             TextEditingController(text: value!.format(context));
-
-        DateTime convertedValue =
-            DateFormat("HH:mm").parse(value.format(context));
-        DateFormat timeFormat = DateFormat("HH:mm:ss");
-        formValue["start"] = timeFormat.format(convertedValue);
       });
     });
   }
@@ -126,97 +53,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
         .then((value) {
       setState(() {
         formValidations["end"] = true;
-        endTimePickerController =
+        startTimePickerController =
             TextEditingController(text: value!.format(context));
-
-        DateTime convertedValue =
-            DateFormat("HH:mm").parse(value.format(context));
-        DateFormat timeFormat = DateFormat("HH:mm:ss");
-        formValue["end"] = timeFormat.format(convertedValue);
       });
     });
-  }
-
-  void saveStepInputRepairing() async {
-    final prefs = await SharedPreferences.getInstance();
-    var ecmItemId = prefs.getString("idEcmItem");
-    var idUser = prefs.getString("idKeyUser").toString();
-    String tokenUser = prefs.getString("tokenKey") ?? "";
-
-    print("ecm item id -> $ecmItemId");
-
-    try {
-      String resultMessage = "Data disimpan";
-      var result = await fillNewLimaInsert(
-        token: tokenUser,
-        ecmItemId: ecmItemId,
-        userId: idUser,
-        repairMessage: formValue["repair"],
-        note: formValue["note"],
-        start: formValue["start"],
-        end: formValue["end"],
-      );
-
-      print("result insert 5 -> $result");
-      print(result['data']['t_ecmitem_id']);
-
-      switch (result['response']['status']) {
-        case 200:
-          Navigator.of(context).pop(true);
-          break;
-        default:
-          resultMessage = "Data gagal disimpan";
-          break;
-      }
-
-      Fluttertoast.showToast(
-        msg: resultMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16,
-      );
-    } catch (e) {
-      print("exception occured -> $e");
-      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
-      if (e is SocketException) {
-        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
-      }
-
-      if (e is TimeoutException) {
-        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
-      }
-
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-    }
-  }
-
-  void getUsernameSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _username = prefs.getString("usernameKey") ?? "";
-      formValidations["name"] = true;
-      formValue["name"] = _username;
-    });
-  }
-
-  static String _displayPartOption(ItemChecking option) =>
-      option.partNama ?? "-";
-
-  @override
-  void initState() {
-    super.initState();
-    getStep4Data();
-    getUsernameSession();
   }
 
   @override
@@ -252,124 +92,23 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: InputDecorator(
+              child: TextField(
+                controller: tecItem,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 18),
-                  fillColor: Colors.white,
-                  focusedBorder: InputBorder.none,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  filled: true,
-                ),
-                child: RawAutocomplete<ItemChecking>(
-                  displayStringForOption: _displayPartOption,
-                  optionsBuilder: (TextEditingValue tev) {
-                    return _listData.where((element) => element
-                        .toString()
-                        .contains(tev.text.toString().toLowerCase()));
-                  },
-                  onSelected: (item) {
-                    setState(() {
-                      formValidations["item"] =
-                          item.partNama.toString().isNotEmpty;
-                      formValue["item"] = item.partNama.toString();
-                    });
-                  },
-                  fieldViewBuilder: (context, textEditingController, focusNode,
-                      onFieldSubmitted) {
-                    return TextFormField(
-                      controller: textEditingController,
-                      focusNode: focusNode,
-                      readOnly: true,
-                      showCursor: false,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        hintText: "Type Item Name",
-                      ),
-                      onFieldSubmitted: (String value) {
-                        onFieldSubmitted();
-                        setState(() {
-                          formValidations["item"] = value.isNotEmpty;
-                          formValue["item"] = _listData
-                              .firstWhere((element) =>
-                                  value.contains(element.partNama ?? "-"))
-                              .partNama
-                              .toString();
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          textEditingController =
-                              TextEditingController(text: value);
-                          formValidations["item"] = value.isNotEmpty;
-                          formValue["item"] = _listData
-                              .firstWhere(
-                                  (element) =>
-                                      value.contains(element.partNama ?? "-"),
-                                  orElse: () => ItemChecking())
-                              .partNama
-                              .toString();
-                        });
-                      },
-                    );
-                  },
-                  optionsViewBuilder: (context, onSelected, options) {
-                    return Align(
-                      alignment: Alignment.topLeft,
-                      child: Material(
-                        elevation: 4.0,
-                        child: SizedBox(
-                          height: 200.0,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(8.0),
-                            itemCount: options.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final String option =
-                                  options.elementAt(index).partNama ?? "-";
-                              return GestureDetector(
-                                onTap: () {
-                                  onSelected(options.elementAt(index));
-                                  formValue["item"] = options
-                                      .elementAt(index)
-                                      .partNama
-                                      .toString();
-                                },
-                                child: ListTile(
-                                  title: Text(option),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                    contentPadding: EdgeInsets.only(left: 18),
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    filled: true,
+                    hintText: 'Type Item Name'),
+                maxLines: 1,
+                onChanged: (value) {
+                  setState(() {
+                    formValidations["item"] = value.isNotEmpty;
+                  });
+                },
               ),
-              // TextField(
-              //   controller: tecItem,
-              //   keyboardType: TextInputType.text,
-              //   decoration: InputDecoration(
-              //       contentPadding: EdgeInsets.only(left: 18),
-              //       fillColor: Colors.white,
-              //       border: OutlineInputBorder(
-              //           borderRadius: BorderRadius.all(Radius.circular(5))),
-              //       filled: true,
-              //       hintText: 'Type Item Name'),
-              //   maxLines: 1,
-              //   onChanged: (value) {
-              //     setState(() {
-              //       formValidations["item"] = value.isNotEmpty;
-              //
-              //       formValue["item"] = value;
-              //     });
-              //   },
-              // ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -403,7 +142,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
                           formValidations["note"] =
                               noteOptions.containsValue(true);
-                          formValue["note"] = "ok";
                         });
                       },
                       child: Container(
@@ -444,7 +182,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
                         formValidations["note"] =
                             noteOptions.containsValue(true);
-                        formValue["note"] = "limit";
                       });
                     },
                     child: Container(
@@ -489,7 +226,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
                         formValidations["note"] =
                             noteOptions.containsValue(true);
-                        formValue["note"] = "ng";
                       });
                     },
                     child: Container(
@@ -608,7 +344,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     child: TextFormField(
                       onTap: () => getEndTime(),
                       readOnly: true,
-                      controller: endTimePickerController,
+                      controller: startTimePickerController,
                       decoration: const InputDecoration(
                           contentPadding: EdgeInsets.all(0),
                           fillColor: Colors.white,
@@ -644,8 +380,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               height: 40,
               child: TextFormField(
                 keyboardType: TextInputType.text,
-                readOnly: true,
-                showCursor: false,
                 decoration: const InputDecoration(
                     contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
@@ -659,12 +393,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     ),
                     hintText: 'Type Name'),
                 maxLines: 1,
-                controller: TextEditingController(text: _username),
+                controller: tecName,
                 onChanged: (value) {
                   setState(() {
                     formValidations["name"] = value.isNotEmpty;
-
-                    formValue["name"] = value;
                   });
                 },
               ),
@@ -694,8 +426,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 onChanged: (value) {
                   setState(() {
                     formValidations["repair"] = value.isNotEmpty;
-
-                    formValue["repair"] = value;
                   });
                 },
               ),
@@ -714,13 +444,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ))),
-                  onPressed: formValidations.containsValue(false)
-                      ? null
-                      : () {
-                          saveStepInputRepairing();
-                        },
+                  onPressed:
+                      formValidations.containsValue(false) ? null : () {},
                   child: Text(
-                    'Save Repairing',
+                    'Save Checking',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Rubik',
