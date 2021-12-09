@@ -187,24 +187,24 @@ class StepFillSatuState extends State<StepFillSatu> {
     }
   }
 
-  Future<void> getMachineName(String idLocation) async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    _listMachineName =
-        await machineNameService.getMachineName(idLocation, tokenUser);
-    print("data nama mesin: ");
-    print(_listMachineName.length);
-  }
+  // Future<void> getMachineName(String idLocation) async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   String? tokenUser = prefs.getString("tokenKey").toString();
+  //   _listMachineName =
+  //       await machineNameService.getMachineName(idLocation, tokenUser);
+  //   print("data nama mesin: ");
+  //   print(_listMachineName.length);
+  // }
 
-  Future<List<MachineNumberModel>> getMachineNumberbyId(
-      String idMachine) async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    _listMachineNumber =
-        await machineNumberService.getMachineNumber(idMachine, tokenUser);
-    return await machineNumberService.getMachineNumber(idMachine, tokenUser);
-    // print(_listMachineNumber);
-  }
+  // Future<List<MachineNumberModel>> getMachineNumberbyId(
+  //     String idMachine) async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   String? tokenUser = prefs.getString("tokenKey").toString();
+  //   _listMachineNumber =
+  //       await machineNumberService.getMachineNumber(idMachine, tokenUser);
+  //   return await machineNumberService.getMachineNumber(idMachine, tokenUser);
+  //   // print(_listMachineNumber);
+  // }
 
   Future<List<MemberNameModel>> getListMemberName() async {
     final SharedPreferences prefs = await _prefs;
@@ -477,14 +477,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                   isTappedTeamMember = !isTappedTeamMember;
                 });
               },
-              onEditingComplete: () async {
-                final prefs = await _prefs;
-                if (teamMemberController.text.isNotEmpty) {
-                  listTeamMember.add(teamMemberController.text);
-                  print(listTeamMember);
-                }
-                prefs.setStringList("teamMember", listTeamMember);
-              },
+              onEditingComplete: () async {},
               style: const TextStyle(
                   fontFamily: 'Rubik',
                   fontSize: 14,
@@ -531,16 +524,18 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   });
                                   teamMemberController =
                                       TextEditingController(text: members);
-                                  listTeamMember.add(listNamaMember[i].name);
+                                  // listTeamMember.add(listNamaMember[i].id);
                                 } else {
                                   setState(() {
                                     members += listNamaMember[i].name + ', ';
                                   });
                                   teamMemberController =
                                       TextEditingController(text: members);
-                                  listTeamMember.add(listNamaMember[i].name);
+                                  // listTeamMember.add(listNamaMember[i].id);
                                 }
 
+                                listTeamMember.add(listNamaMember[i].id);
+                                print(listTeamMember);
                                 prefs.setStringList(
                                     "teamMember", listTeamMember);
 
@@ -577,56 +572,28 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: FutureBuilder(
-                future: getListLocation(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text("Loading factory"),
-                    );
-                  }
-
-                  return DropdownButton(
-                    underline: DropdownButtonHideUnderline(child: Container()),
-                    isExpanded: true,
-                    items: _listLocation
-                        .map((value) => DropdownMenuItem(
-                              value: value.valueFactory,
-                              child: Text(value.valueFactory),
-                              onTap: () async {
-                                final prefs = await _prefs;
-                                setState(() {
-                                  locationIdSelected = value.enumId;
-                                });
-                                getMachineName(value.enumId);
-                                // getMachineNumberbyId(machineIdSelected);
-                                prefs.setString(
-                                    "locationId", locationIdSelected);
-                                prefs.setString("locationBool", "1");
-                                print("id lokasi: $locationIdSelected");
-                              },
-                            ))
-                        .toList(),
-                    value: locationSelected,
-                    hint: const Text('Select factory'),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          locationSelected = value as String;
-                        });
-                      }
-                    },
-                  );
-                },
-              ),
+            TextFormField(
+              readOnly: true,
+              showCursor: true,
+              controller: machineNameController,
+              onTap: () {
+                setState(() {});
+              },
+              style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF979C9E))),
+                  hintText: 'Pilih factory',
+                  suffixIcon: Icon(Icons.arrow_drop_down),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
+                  hintStyle: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400)),
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
@@ -650,62 +617,34 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: FutureBuilder(
-                future: getListAreaGroup(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text("Loading group area"),
-                    );
-                  }
-
-                  return DropdownButton(
-                    underline: DropdownButtonHideUnderline(child: Container()),
-                    isExpanded: true,
-                    items: _listGroupArea
-                        .map((value) => DropdownMenuItem(
-                              value: value.valueGroup,
-                              child: Text(value.valueGroup),
-                              onTap: () async {
-                                final prefs = await _prefs;
-                                setState(() {
-                                  locationIdSelected = value.enumId;
-                                });
-                                getMachineName(value.enumId);
-                                // getMachineNumberbyId(machineIdSelected);
-                                prefs.setString(
-                                    "locationId", locationIdSelected);
-                                prefs.setString("locationBool", "1");
-                                print("id lokasi: $locationIdSelected");
-                              },
-                            ))
-                        .toList(),
-                    value: locationSelected,
-                    hint: const Text('Select area group'),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          locationSelected = value as String;
-                        });
-                      }
-                    },
-                  );
-                },
-              ),
+            TextFormField(
+              readOnly: true,
+              showCursor: true,
+              controller: machineNameController,
+              onTap: () {
+                setState(() {});
+              },
+              style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF979C9E))),
+                  hintText: 'Pilih factory grup',
+                  suffixIcon: Icon(Icons.arrow_drop_down),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
+                  hintStyle: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400)),
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Machine Name ',
+                  text: 'Nama Mesin ',
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -739,8 +678,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: const InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  suffixIcon: Icon(Icons.search),
-                  hintText: 'Type machine',
+                  hintText: 'Tulis nama mesin',
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
                   hintStyle: TextStyle(
@@ -748,57 +686,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                       fontSize: 14,
                       fontWeight: FontWeight.w400)),
             ),
-            isTapedMachineName == true
-                ? Container(
-                    margin: EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: _listMachineName.length == 0
-                        ? Text("No data")
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: _listMachineName.length,
-                            itemBuilder: (context, i) {
-                              return InkWell(
-                                  onTap: () async {
-                                    final prefs = await _prefs;
-                                    setState(() {
-                                      machineNameController =
-                                          TextEditingController(
-                                              text: _listMachineName[i].nama);
-                                      machineIdSelected =
-                                          _listMachineName[i].idMesin;
-                                      isTapedMachineName = !isTapedMachineName;
-                                    });
-                                    prefs.setString(
-                                        "machineId", machineIdSelected);
-                                    prefs.setString("machineNameBool", "1");
-                                    // getMachineNumberbyId(_listMachineName[i].idMesin);
-                                    print("id mesin: $machineIdSelected");
-                                  },
-                                  child: Container(
-                                      margin:
-                                          EdgeInsets.only(bottom: 8, top: 8),
-                                      child: Text(
-                                        _listMachineName[i].nama,
-                                        style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400),
-                                      )));
-                            },
-                          ),
-                  )
-                : Container(),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Machine Number ',
+                  text: 'Nomor Mesin ',
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -816,57 +708,29 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: FutureBuilder(
-                future: getMachineNumberbyId(machineIdSelected),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text("Loading Machine Number..."),
-                    );
-                  }
-
-                  return DropdownButton(
-                    underline: DropdownButtonHideUnderline(child: Container()),
-                    isExpanded: true,
-                    items: _listMachineNumber
-                        .map((data) => DropdownMenuItem(
-                            onTap: () async {
-                              final prefs = await _prefs;
-                              setState(() {
-                                machineDetailIdSelected = data.id;
-                              });
-                              prefs.setString(
-                                  "machineDetailId", machineDetailIdSelected);
-                              prefs.setString("machineDetailBool", "1");
-                              print(
-                                  "mesin detail id: $machineDetailIdSelected");
-                            },
-                            value: data.numberOfMachine,
-                            child: Text(data.numberOfMachine,
-                                style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400))))
-                        .toList(),
-                    value: machineNumberSelected,
-                    hint: const Text('- Machine selected -'),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          machineNumberSelected = value.toString();
-                        });
-                      }
-                    },
-                  );
-                },
-              ),
+            TextFormField(
+              readOnly: true,
+              showCursor: true,
+              controller: machineNameController,
+              onTap: () {
+                setState(() {
+                  isTapedMachineName = !isTapedMachineName;
+                });
+              },
+              style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF979C9E))),
+                  hintText: 'Tulis nomor mesin',
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
+                  hintStyle: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400)),
             ),
           ],
         ),
