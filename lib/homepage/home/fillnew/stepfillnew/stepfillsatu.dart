@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
+import 'package:e_cm/homepage/home/model/groupareamodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
 import 'package:e_cm/homepage/home/model/machinenamemodel.dart';
 import 'package:e_cm/homepage/home/model/machinenumbermodel.dart';
@@ -53,6 +54,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
+  List<GroupAreaModel> _listGroupArea = [];
   List<MachineNameModel> _listMachineName = [];
   List<MachineNumberModel> _listMachineNumber = [];
   List<String> listTeamMember = [];
@@ -167,6 +169,18 @@ class StepFillSatuState extends State<StepFillSatu> {
       String? tokenUser = prefs.getString("tokenKey").toString();
       _listLocation = await locationService.getLocationData(tokenUser);
       return await locationService.getLocationData(tokenUser);
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<GroupAreaModel>> getListAreaGroup() async {
+    try {
+      final SharedPreferences prefs = await _prefs;
+      String? tokenUser = prefs.getString("tokenKey").toString();
+      _listGroupArea = await locationService.getAreaGroupList(tokenUser);
+      return await locationService.getAreaGroupList(tokenUser);
     } catch (e) {
       print(e);
       return [];
@@ -545,7 +559,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Location ',
+                  text: 'Factory ',
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -571,34 +585,119 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: DropdownButton(
-                underline: DropdownButtonHideUnderline(child: Container()),
-                isExpanded: true,
-                items: _listLocation
-                    .map((value) => DropdownMenuItem(
-                          value: value.nama,
-                          child: Text(value.nama),
-                          onTap: () async {
-                            final prefs = await _prefs;
-                            setState(() {
-                              locationIdSelected = value.id;
-                            });
-                            getMachineName(value.id);
-                            // getMachineNumberbyId(machineIdSelected);
-                            prefs.setString("locationId", locationIdSelected);
-                            prefs.setString("locationBool", "1");
-                            print("id lokasi: $locationIdSelected");
-                          },
-                        ))
-                    .toList(),
-                value: locationSelected,
-                hint: const Text('Select factory'),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      locationSelected = value as String;
-                    });
+              child: FutureBuilder(
+                future: getListLocation(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Text("Loading factory"),
+                    );
                   }
+
+                  return DropdownButton(
+                    underline: DropdownButtonHideUnderline(child: Container()),
+                    isExpanded: true,
+                    items: _listLocation
+                        .map((value) => DropdownMenuItem(
+                              value: value.valueFactory,
+                              child: Text(value.valueFactory),
+                              onTap: () async {
+                                final prefs = await _prefs;
+                                setState(() {
+                                  locationIdSelected = value.enumId;
+                                });
+                                getMachineName(value.enumId);
+                                // getMachineNumberbyId(machineIdSelected);
+                                prefs.setString(
+                                    "locationId", locationIdSelected);
+                                prefs.setString("locationBool", "1");
+                                print("id lokasi: $locationIdSelected");
+                              },
+                            ))
+                        .toList(),
+                    value: locationSelected,
+                    hint: const Text('Select factory'),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          locationSelected = value as String;
+                        });
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Group Area ',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF979C9E)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+              child: FutureBuilder(
+                future: getListAreaGroup(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Text("Loading group area"),
+                    );
+                  }
+
+                  return DropdownButton(
+                    underline: DropdownButtonHideUnderline(child: Container()),
+                    isExpanded: true,
+                    items: _listGroupArea
+                        .map((value) => DropdownMenuItem(
+                              value: value.valueGroup,
+                              child: Text(value.valueGroup),
+                              onTap: () async {
+                                final prefs = await _prefs;
+                                setState(() {
+                                  locationIdSelected = value.enumId;
+                                });
+                                getMachineName(value.enumId);
+                                // getMachineNumberbyId(machineIdSelected);
+                                prefs.setString(
+                                    "locationId", locationIdSelected);
+                                prefs.setString("locationBool", "1");
+                                print("id lokasi: $locationIdSelected");
+                              },
+                            ))
+                        .toList(),
+                    value: locationSelected,
+                    hint: const Text('Select area group'),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          locationSelected = value as String;
+                        });
+                      }
+                    },
+                  );
                 },
               ),
             ),
