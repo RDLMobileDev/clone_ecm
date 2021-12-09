@@ -1,9 +1,6 @@
 class LocationModel {
-  final String enumId;
-  final String keyId;
-  final String valueFactory;
-  final String category;
+  final String id;
+  final String nama;
 
-  LocationModel(this.enumId, this.keyId, this.valueFactory, this.category);
-
+  LocationModel(this.id, this.nama);
 }

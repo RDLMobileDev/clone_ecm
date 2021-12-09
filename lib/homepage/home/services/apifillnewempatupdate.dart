@@ -2,17 +2,17 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future fillNewEmpatUpdate(
-    {String? ecmId,
-    String? partId,
-    String? actual,
-    String? note,
-    String? start,
-    String? end,
-    String? userId,
-    String? fullName,
-    String? ecmitemId,
-    String? token}) async {
+Future fillNewEmpatInsert(
+    String ecmId,
+    String partId,
+    String actual,
+    String note,
+    String start,
+    String end,
+    String userId,
+    String fullName,
+    String ecmitemId,
+    String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecmstep4_update";
   final response = await http.post(Uri.parse(url), headers: {

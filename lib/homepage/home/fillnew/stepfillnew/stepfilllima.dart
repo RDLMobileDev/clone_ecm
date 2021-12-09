@@ -1,79 +1,29 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
 
-import 'dart:async';
-import 'dart:io';
-
 import 'package:e_cm/homepage/home/fillnew/additionpage/formstepfilllima.dart';
-import 'package:e_cm/homepage/home/model/item_checking.dart';
-import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillLima extends StatefulWidget {
-  const StepFillLima({Key? key}) : super(key: key);
+  final _StepFillLimaState stepFillLimaState = _StepFillLimaState();
+
+  void getSavedStepFillLima() {
+    stepFillLimaState.getSavedStepFillLima();
+  }
 
   @override
   _StepFillLimaState createState() => _StepFillLimaState();
 }
 
 class _StepFillLimaState extends State<StepFillLima> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  List<ItemChecking> _listItemChecking = <ItemChecking>[];
-
-  void getDataItemRepairing() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String? ecmId = prefs.getString("idEcm") ?? "-";
-    String? userId = prefs.getString("idKeyUser") ?? "-";
-
-    try {
-      var data = await getFillNewLima(ecmId, userId, token);
-
-      switch (data["response"]['status']) {
-        case 200:
-          setState(() {
-            _listItemChecking = (data['data'] as List)
-                .map((e) => ItemChecking.fromJson(e))
-                .toList();
-          });
-          break;
-        default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item repairing',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          break;
-      }
-    } catch (e) {
-      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
-      if (e is SocketException) {
-        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
-      }
-
-      if (e is TimeoutException) {
-        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
-      }
-
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getDataItemRepairing();
+  void getSavedStepFillLima() {
+    Fluttertoast.showToast(
+        msg: "asdasd",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.white,
+        fontSize: 16);
   }
 
   @override
@@ -94,152 +44,70 @@ class _StepFillLimaState extends State<StepFillLima> {
                     fontWeight: FontWeight.w400),
               ),
             ),
-            SizedBox(
-              height: 16.0,
-            ),
             Container(
-              width: MediaQuery.of(context).size.width,
-              child: _listItemChecking.isEmpty
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/images/empty.png",
-                            width: 250,
-                          ),
-                          Center(
-                            child: Text("Haven't repaired the item yet",
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF00AEDB),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _listItemChecking.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_listItemChecking[i].partNama ?? "-",
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    )),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                          "Repair Time: ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
-                                          style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                    Container(
-                                      width: 60,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {},
-                                            child: Image.asset(
-                                              "assets/icons/akar-icons_edit.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {},
-                                            child: Image.asset(
-                                              "assets/icons/trash.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        },
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Image.asset(
+                      "assets/images/amico.png",
+                      width: 212.5,
+                      height: 244.0,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20, bottom: 20),
+                    child: Text(
+                      "Haven’t checked the item yet",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF00AEDB),
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Rubik',
                       ),
                     ),
+                  ),
+                ],
+              ),
             ),
             InkWell(
-              onTap: () async {
-                final prefs = await _prefs;
-                try {
-                  bool isInputted = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => FormStepFilllima()));
-
-                  if (isInputted) {
-                    prefs.setString("itemRepairBool", "1");
-                    getDataItemRepairing();
-                  }
-                } catch (e) {
-                  print(e);
-                }
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FormStepFilllima()));
               },
               child: Container(
+                margin: const EdgeInsets.only(top: 5),
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.only(top: 10),
-                alignment: Alignment.center,
+                height: 40,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Color(0xFF00AEDB)),
+                    color: Color(0xFF00AEDB),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 5),
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Icon(
+                      Icons.add_circle_outline,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 5,
                     ),
                     Text(
-                      'Add item',
-                      textAlign: TextAlign.center,
+                      "Add item",
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           color: Colors.white,
-                          fontSize: 12),
-                    ),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400),
+                    )
                   ],
                 ),
               ),
+            ),
+            SizedBox(
+              height: 150,
             ),
             Container(
               child: Column(

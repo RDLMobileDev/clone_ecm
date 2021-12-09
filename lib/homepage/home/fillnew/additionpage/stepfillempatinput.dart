@@ -152,7 +152,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               margin: const EdgeInsets.only(top: 10),
               child: TextField(
                 controller: tecStandard,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
@@ -200,7 +200,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               margin: EdgeInsets.only(top: 10),
               child: TextField(
                 controller: tecActual,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                     contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
@@ -554,7 +554,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     filled: true,
                     suffixIcon: Icon(
-                      Icons.search,
+                      Icons.arrow_drop_down,
                       color: Colors.grey,
                       size: 30,
                     ),
