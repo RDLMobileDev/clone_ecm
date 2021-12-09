@@ -242,8 +242,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                                           )));
 
                                               if (isInputted) {
-                                                setState(() =>
-                                                    getDataItemChecking());
+                                                // setState(() => );
+                                                getDataItemChecking();
                                               }
                                             },
                                             child: Image.asset(

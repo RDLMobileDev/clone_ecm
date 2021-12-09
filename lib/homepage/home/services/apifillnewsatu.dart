@@ -14,6 +14,7 @@ Future fillNewSatu(
   String userId,
   List<String> teamMember,
   String locationId,
+  String locationGroupId,
   String machineId,
   String machineDetailId,
 ) async {
@@ -24,6 +25,7 @@ Future fillNewSatu(
     print(userId);
     print(teamMember);
     print(locationId);
+    print(locationGroupId);
     print(machineId);
     print(machineDetailId);
 
@@ -33,13 +35,14 @@ Future fillNewSatu(
       'classification_id': classificationId,
       'date': date,
       'user_id': userId,
-      'location_id': locationId,
-      'machine_id': machineId,
-      'machinedetail_id': machineDetailId
+      'factory_id': locationId,
+      'group_id': locationGroupId,
+      'machine_name': machineId,
+      'machine_number': machineDetailId
     };
 
     for (int i = 0; i < teamMember.length; i++) {
-      data.addAll({"user_nama[$i]": teamMember[i]});
+      data.addAll({"team_member[$i]": teamMember[i]});
     }
 
     String url = MyUrl().getUrlDevice();

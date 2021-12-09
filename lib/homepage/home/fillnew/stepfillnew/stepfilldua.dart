@@ -517,16 +517,16 @@ class StepFillDuaState extends State<StepFillDua> {
                     onTap: () async {
                       final prefs = await _prefs;
                       setState(() {
-                        problemTypeGroup = '1';
+                        isSafety = !isSafety;
                         safetyOpt = '1';
-                        qualityOpt = '0';
-                        deliveryOpt = '0';
-                        costOpt = '0';
+                        // qualityOpt = '0';
+                        // deliveryOpt = '0';
+                        // costOpt = '0';
                       });
                       prefs.setString("safetyOpt", safetyOpt);
-                      prefs.setString("qualityOpt", qualityOpt);
-                      prefs.setString("deliveryOpt", deliveryOpt);
-                      prefs.setString("costOpt", costOpt);
+                      // prefs.setString("qualityOpt", qualityOpt);
+                      // prefs.setString("deliveryOpt", deliveryOpt);
+                      // prefs.setString("costOpt", costOpt);
                       prefs.setString("typeProblemBool", "1");
                     },
                     child: Container(
@@ -543,24 +543,23 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: problemTypeGroup,
-                                  value: '1',
+                              child: Checkbox(
+                                  value: isSafety,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        problemTypeGroup = value as String;
+                                        isSafety = !isSafety;
                                         safetyOpt = '1';
-                                        qualityOpt = '0';
-                                        deliveryOpt = '0';
-                                        costOpt = '0';
+                                        // qualityOpt = '0';
+                                        // deliveryOpt = '0';
+                                        // costOpt = '0';
                                       });
                                       prefs.setString("safetyOpt", safetyOpt);
-                                      prefs.setString("qualityOpt", qualityOpt);
-                                      prefs.setString(
-                                          "deliveryOpt", deliveryOpt);
-                                      prefs.setString("costOpt", costOpt);
+                                      // prefs.setString("qualityOpt", qualityOpt);
+                                      // prefs.setString(
+                                      //     "deliveryOpt", deliveryOpt);
+                                      // prefs.setString("costOpt", costOpt);
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
@@ -579,16 +578,16 @@ class StepFillDuaState extends State<StepFillDua> {
                     onTap: () async {
                       final prefs = await _prefs;
                       setState(() {
-                        problemTypeGroup = '2';
-                        safetyOpt = '0';
+                        isQuality = !isQuality;
+                        // safetyOpt = '0';
                         qualityOpt = '1';
-                        deliveryOpt = '0';
-                        costOpt = '0';
+                        // deliveryOpt = '0';
+                        // costOpt = '0';
                       });
-                      prefs.setString("safetyOpt", safetyOpt);
+                      // prefs.setString("safetyOpt", safetyOpt);
                       prefs.setString("qualityOpt", qualityOpt);
-                      prefs.setString("deliveryOpt", deliveryOpt);
-                      prefs.setString("costOpt", costOpt);
+                      // prefs.setString("deliveryOpt", deliveryOpt);
+                      // prefs.setString("costOpt", costOpt);
                       prefs.setString("typeProblemBool", "1");
                     },
                     child: Container(
@@ -605,24 +604,22 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: problemTypeGroup,
-                                  value: '2',
+                              child: Checkbox(
+                                  value: isQuality,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        problemTypeGroup = value as String;
+                                        isQuality = !isQuality;
                                         safetyOpt = '0';
                                         qualityOpt = '1';
                                         deliveryOpt = '0';
                                         costOpt = '0';
                                       });
-                                      prefs.setString("safetyOpt", safetyOpt);
+                                      // prefs.setString("safetyOpt", safetyOpt);
                                       prefs.setString("qualityOpt", qualityOpt);
-                                      prefs.setString(
-                                          "deliveryOpt", deliveryOpt);
-                                      prefs.setString("costOpt", costOpt);
+                                      // prefs.setString("deliveryOpt", deliveryOpt);
+                                      // prefs.setString("costOpt", costOpt);
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
@@ -644,16 +641,16 @@ class StepFillDuaState extends State<StepFillDua> {
               onTap: () async {
                 final prefs = await _prefs;
                 setState(() {
-                  problemTypeGroup = '3';
-                  safetyOpt = '0';
-                  qualityOpt = '0';
+                  isDelivery = !isDelivery;
+                  // safetyOpt = '0';
+                  // qualityOpt = '0';
                   deliveryOpt = '1';
-                  costOpt = '0';
+                  // costOpt = '0';
                 });
-                prefs.setString("safetyOpt", safetyOpt);
-                prefs.setString("qualityOpt", qualityOpt);
+                // prefs.setString("safetyOpt", safetyOpt);
+                // prefs.setString("qualityOpt", qualityOpt);
                 prefs.setString("deliveryOpt", deliveryOpt);
-                prefs.setString("costOpt", costOpt);
+                // prefs.setString("costOpt", costOpt);
                 prefs.setString("typeProblemBool", "1");
               },
               child: Container(
@@ -675,24 +672,23 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: problemTypeGroup,
-                                  value: '3',
+                              child: Checkbox(
+                                  value: isDelivery,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        problemTypeGroup = value as String;
-                                        safetyOpt = '0';
-                                        qualityOpt = '0';
+                                        isDelivery = !isDelivery;
+                                        // safetyOpt = '0';
+                                        // qualityOpt = '0';
                                         deliveryOpt = '1';
-                                        costOpt = '0';
+                                        // costOpt = '0';
                                       });
-                                      prefs.setString("safetyOpt", safetyOpt);
-                                      prefs.setString("qualityOpt", qualityOpt);
+                                      // prefs.setString("safetyOpt", safetyOpt);
+                                      // prefs.setString("qualityOpt", qualityOpt);
                                       prefs.setString(
                                           "deliveryOpt", deliveryOpt);
-                                      prefs.setString("costOpt", costOpt);
+                                      // prefs.setString("costOpt", costOpt);
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
@@ -710,15 +706,15 @@ class StepFillDuaState extends State<StepFillDua> {
                       onTap: () async {
                         final prefs = await _prefs;
                         setState(() {
-                          problemTypeGroup = '4';
-                          safetyOpt = '0';
-                          qualityOpt = '0';
-                          deliveryOpt = '0';
+                          isCost = !isCost;
+                          // safetyOpt = '0';
+                          // qualityOpt = '0';
+                          // deliveryOpt = '0';
                           costOpt = '1';
                         });
-                        prefs.setString("safetyOpt", safetyOpt);
-                        prefs.setString("qualityOpt", qualityOpt);
-                        prefs.setString("deliveryOpt", deliveryOpt);
+                        // prefs.setString("safetyOpt", safetyOpt);
+                        // prefs.setString("qualityOpt", qualityOpt);
+                        // prefs.setString("deliveryOpt", deliveryOpt);
                         prefs.setString("costOpt", costOpt);
                         prefs.setString("typeProblemBool", "1");
                       },
@@ -736,24 +732,23 @@ class StepFillDuaState extends State<StepFillDua> {
                             SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: Radio(
-                                    groupValue: problemTypeGroup,
-                                    value: '4',
+                                child: Checkbox(
+                                    value: isCost,
                                     onChanged: (value) async {
                                       final prefs = await _prefs;
                                       if (value != null) {
                                         setState(() {
-                                          problemTypeGroup = value as String;
-                                          safetyOpt = '0';
-                                          qualityOpt = '0';
-                                          deliveryOpt = '0';
+                                          isCost = !isCost;
+                                          // safetyOpt = '0';
+                                          // qualityOpt = '0';
+                                          // deliveryOpt = '0';
                                           costOpt = '1';
                                         });
-                                        prefs.setString("safetyOpt", safetyOpt);
-                                        prefs.setString(
-                                            "qualityOpt", qualityOpt);
-                                        prefs.setString(
-                                            "deliveryOpt", deliveryOpt);
+                                        // prefs.setString("safetyOpt", safetyOpt);
+                                        // prefs.setString(
+                                        //     "qualityOpt", qualityOpt);
+                                        // prefs.setString(
+                                        //     "deliveryOpt", deliveryOpt);
                                         prefs.setString("costOpt", costOpt);
                                         prefs.setString("typeProblemBool", "1");
                                       }
@@ -804,18 +799,18 @@ class StepFillDuaState extends State<StepFillDua> {
                     onTap: () async {
                       final prefs = await _prefs;
                       setState(() {
-                        percentageMistakeGroup = '1';
+                        isMolding = !isMolding;
                         moldingOpt = '1';
-                        utilityOpt = '0';
-                        productionOpt = '0';
-                        engineerOpt = '0';
-                        otherOpt = '0';
+                        // utilityOpt = '0';
+                        // productionOpt = '0';
+                        // engineerOpt = '0';
+                        // otherOpt = '0';
                       });
                       prefs.setString("moldingOpt", moldingOpt);
-                      prefs.setString("utilityOpt", utilityOpt);
-                      prefs.setString("productionOpt", productionOpt);
-                      prefs.setString("engineerOpt", engineerOpt);
-                      prefs.setString("otherOpt", otherOpt);
+                      // prefs.setString("utilityOpt", utilityOpt);
+                      // prefs.setString("productionOpt", productionOpt);
+                      // prefs.setString("engineerOpt", engineerOpt);
+                      // prefs.setString("otherOpt", otherOpt);
                       prefs.setString("percentBool", "1");
                     },
                     child: Container(
@@ -832,28 +827,26 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: percentageMistakeGroup,
-                                  value: '1',
+                              child: Checkbox(
+                                  value: isMolding,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        percentageMistakeGroup =
-                                            value as String;
+                                        isMolding = !isMolding;
                                         moldingOpt = '1';
-                                        utilityOpt = '0';
-                                        productionOpt = '0';
-                                        engineerOpt = '0';
-                                        otherOpt = '0';
+                                        // utilityOpt = '0';
+                                        // productionOpt = '0';
+                                        // engineerOpt = '0';
+                                        // otherOpt = '0';
                                       });
                                       prefs.setString("moldingOpt", moldingOpt);
-                                      prefs.setString("utilityOpt", utilityOpt);
-                                      prefs.setString(
-                                          "productionOpt", productionOpt);
-                                      prefs.setString(
-                                          "engineerOpt", engineerOpt);
-                                      prefs.setString("otherOpt", otherOpt);
+                                      // prefs.setString("utilityOpt", utilityOpt);
+                                      // prefs.setString(
+                                      //     "productionOpt", productionOpt);
+                                      // prefs.setString(
+                                      //     "engineerOpt", engineerOpt);
+                                      // prefs.setString("otherOpt", otherOpt);
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
@@ -872,18 +865,18 @@ class StepFillDuaState extends State<StepFillDua> {
                     onTap: () async {
                       final prefs = await _prefs;
                       setState(() {
-                        percentageMistakeGroup = '2';
-                        moldingOpt = '0';
+                        isUtility = !isUtility;
+                        // moldingOpt = '0';
                         utilityOpt = '1';
-                        productionOpt = '0';
-                        engineerOpt = '0';
-                        otherOpt = '0';
+                        // productionOpt = '0';
+                        // engineerOpt = '0';
+                        // otherOpt = '0';
                       });
-                      prefs.setString("moldingOpt", moldingOpt);
+                      // prefs.setString("moldingOpt", moldingOpt);
                       prefs.setString("utilityOpt", utilityOpt);
-                      prefs.setString("productionOpt", productionOpt);
-                      prefs.setString("engineerOpt", engineerOpt);
-                      prefs.setString("otherOpt", otherOpt);
+                      // prefs.setString("productionOpt", productionOpt);
+                      // prefs.setString("engineerOpt", engineerOpt);
+                      // prefs.setString("otherOpt", otherOpt);
                       prefs.setString("percentBool", "1");
                     },
                     child: Container(
@@ -900,28 +893,26 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: percentageMistakeGroup,
-                                  value: '2',
+                              child: Checkbox(
+                                  value: isUtility,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        percentageMistakeGroup =
-                                            value as String;
-                                        moldingOpt = '0';
+                                        isUtility = !isUtility;
+                                        // moldingOpt = '0';
                                         utilityOpt = '1';
-                                        productionOpt = '0';
-                                        engineerOpt = '0';
-                                        otherOpt = '0';
+                                        // productionOpt = '0';
+                                        // engineerOpt = '0';
+                                        // otherOpt = '0';
                                       });
-                                      prefs.setString("moldingOpt", moldingOpt);
+                                      // prefs.setString("moldingOpt", moldingOpt);
                                       prefs.setString("utilityOpt", utilityOpt);
-                                      prefs.setString(
-                                          "productionOpt", productionOpt);
-                                      prefs.setString(
-                                          "engineerOpt", engineerOpt);
-                                      prefs.setString("otherOpt", otherOpt);
+                                      // prefs.setString(
+                                      //     "productionOpt", productionOpt);
+                                      // prefs.setString(
+                                      //     "engineerOpt", engineerOpt);
+                                      // prefs.setString("otherOpt", otherOpt);
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
@@ -943,18 +934,18 @@ class StepFillDuaState extends State<StepFillDua> {
               onTap: () async {
                 final prefs = await _prefs;
                 setState(() {
-                  percentageMistakeGroup = '3';
-                  moldingOpt = '0';
-                  utilityOpt = '0';
+                  isProduction = !isProduction;
+                  // moldingOpt = '0';
+                  // utilityOpt = '0';
                   productionOpt = '1';
-                  engineerOpt = '0';
-                  otherOpt = '0';
+                  // engineerOpt = '0';
+                  // otherOpt = '0';
                 });
-                prefs.setString("moldingOpt", moldingOpt);
-                prefs.setString("utilityOpt", utilityOpt);
+                // prefs.setString("moldingOpt", moldingOpt);
+                // prefs.setString("utilityOpt", utilityOpt);
                 prefs.setString("productionOpt", productionOpt);
-                prefs.setString("engineerOpt", engineerOpt);
-                prefs.setString("otherOpt", otherOpt);
+                // prefs.setString("engineerOpt", engineerOpt);
+                // prefs.setString("otherOpt", otherOpt);
                 prefs.setString("percentBool", "1");
               },
               child: Container(
@@ -976,28 +967,26 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: percentageMistakeGroup,
-                                  value: '3',
+                              child: Checkbox(
+                                  value: isProduction,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        percentageMistakeGroup =
-                                            value as String;
-                                        moldingOpt = '0';
-                                        utilityOpt = '0';
+                                        isProduction = !isProduction;
+                                        // moldingOpt = '0';
+                                        // utilityOpt = '0';
                                         productionOpt = '1';
-                                        engineerOpt = '0';
-                                        otherOpt = '0';
+                                        // engineerOpt = '0';
+                                        // otherOpt = '0';
                                       });
-                                      prefs.setString("moldingOpt", moldingOpt);
-                                      prefs.setString("utilityOpt", utilityOpt);
+                                      // prefs.setString("moldingOpt", moldingOpt);
+                                      // prefs.setString("utilityOpt", utilityOpt);
                                       prefs.setString(
                                           "productionOpt", productionOpt);
-                                      prefs.setString(
-                                          "engineerOpt", engineerOpt);
-                                      prefs.setString("otherOpt", otherOpt);
+                                      // prefs.setString(
+                                      //     "engineerOpt", engineerOpt);
+                                      // prefs.setString("otherOpt", otherOpt);
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
@@ -1015,18 +1004,18 @@ class StepFillDuaState extends State<StepFillDua> {
                       onTap: () async {
                         final prefs = await _prefs;
                         setState(() {
-                          percentageMistakeGroup = '4';
-                          moldingOpt = '0';
-                          utilityOpt = '0';
-                          productionOpt = '0';
+                          isEngineering = !isEngineering;
+                          // moldingOpt = '0';
+                          // utilityOpt = '0';
+                          // productionOpt = '0';
                           engineerOpt = '1';
                           otherOpt = '0';
                         });
-                        prefs.setString("moldingOpt", moldingOpt);
-                        prefs.setString("utilityOpt", utilityOpt);
-                        prefs.setString("productionOpt", productionOpt);
+                        // prefs.setString("moldingOpt", moldingOpt);
+                        // prefs.setString("utilityOpt", utilityOpt);
+                        // prefs.setString("productionOpt", productionOpt);
                         prefs.setString("engineerOpt", engineerOpt);
-                        prefs.setString("otherOpt", otherOpt);
+                        // prefs.setString("otherOpt", otherOpt);
                         prefs.setString("percentBool", "1");
                       },
                       child: Container(
@@ -1043,30 +1032,28 @@ class StepFillDuaState extends State<StepFillDua> {
                             SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: Radio(
-                                    groupValue: percentageMistakeGroup,
-                                    value: '4',
+                                child: Checkbox(
+                                    value: isEngineering,
                                     onChanged: (value) async {
                                       final prefs = await _prefs;
                                       if (value != null) {
                                         setState(() {
-                                          percentageMistakeGroup =
-                                              value as String;
-                                          moldingOpt = '0';
-                                          utilityOpt = '0';
-                                          productionOpt = '0';
+                                          isEngineering = !isEngineering;
+                                          // moldingOpt = '0';
+                                          // utilityOpt = '0';
+                                          // productionOpt = '0';
                                           engineerOpt = '1';
-                                          otherOpt = '0';
+                                          // otherOpt = '0';
                                         });
-                                        prefs.setString(
-                                            "moldingOpt", moldingOpt);
-                                        prefs.setString(
-                                            "utilityOpt", utilityOpt);
-                                        prefs.setString(
-                                            "productionOpt", productionOpt);
+                                        // prefs.setString(
+                                        //     "moldingOpt", moldingOpt);
+                                        // prefs.setString(
+                                        //     "utilityOpt", utilityOpt);
+                                        // prefs.setString(
+                                        //     "productionOpt", productionOpt);
                                         prefs.setString(
                                             "engineerOpt", engineerOpt);
-                                        prefs.setString("otherOpt", otherOpt);
+                                        // prefs.setString("otherOpt", otherOpt);
                                         prefs.setString("percentBool", "1");
                                       }
                                     })),
@@ -1089,17 +1076,17 @@ class StepFillDuaState extends State<StepFillDua> {
               onTap: () async {
                 final prefs = await _prefs;
                 setState(() {
-                  percentageMistakeGroup = '5';
-                  moldingOpt = '0';
-                  utilityOpt = '0';
-                  productionOpt = '0';
-                  engineerOpt = '0';
+                  isOther = !isOther;
+                  // moldingOpt = '0';
+                  // utilityOpt = '0';
+                  // productionOpt = '0';
+                  // engineerOpt = '0';
                   otherOpt = '1';
                 });
-                prefs.setString("moldingOpt", moldingOpt);
-                prefs.setString("utilityOpt", utilityOpt);
-                prefs.setString("productionOpt", productionOpt);
-                prefs.setString("engineerOpt", engineerOpt);
+                // prefs.setString("moldingOpt", moldingOpt);
+                // prefs.setString("utilityOpt", utilityOpt);
+                // prefs.setString("productionOpt", productionOpt);
+                // prefs.setString("engineerOpt", engineerOpt);
                 prefs.setString("otherOpt", otherOpt);
                 prefs.setString("percentBool", "1");
               },
@@ -1122,27 +1109,25 @@ class StepFillDuaState extends State<StepFillDua> {
                           SizedBox(
                               width: 30,
                               height: 30,
-                              child: Radio(
-                                  groupValue: percentageMistakeGroup,
-                                  value: '5',
+                              child: Checkbox(
+                                  value: isOther,
                                   onChanged: (value) async {
                                     final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
-                                        percentageMistakeGroup =
-                                            value as String;
-                                        moldingOpt = '0';
-                                        utilityOpt = '0';
-                                        productionOpt = '0';
-                                        engineerOpt = '0';
+                                        isOther = !isOther;
+                                        // moldingOpt = '0';
+                                        // utilityOpt = '0';
+                                        // productionOpt = '0';
+                                        // engineerOpt = '0';
                                         otherOpt = '1';
                                       });
-                                      prefs.setString("moldingOpt", moldingOpt);
-                                      prefs.setString("utilityOpt", utilityOpt);
-                                      prefs.setString(
-                                          "productionOpt", productionOpt);
-                                      prefs.setString(
-                                          "engineerOpt", engineerOpt);
+                                      // prefs.setString("moldingOpt", moldingOpt);
+                                      // prefs.setString("utilityOpt", utilityOpt);
+                                      // prefs.setString(
+                                      //     "productionOpt", productionOpt);
+                                      // prefs.setString(
+                                      //     "engineerOpt", engineerOpt);
                                       prefs.setString("otherOpt", otherOpt);
                                       prefs.setString("percentBool", "1");
                                     }

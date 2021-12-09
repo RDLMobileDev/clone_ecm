@@ -4,8 +4,15 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:e_cm/baseurl/baseurl.dart';
 
-Future saveDataPartMachine(String token, String idEcm, String partId,
-    String partQty, String partCost) async {
+Future saveDataPartMachine(
+  String token,
+  String ecmId,
+  String idMesin,
+  String partName,
+  String stock,
+  String ecmqty,
+  String harga,
+) async {
   String url = MyUrl().getUrlDevice();
 
   try {
@@ -14,10 +21,12 @@ Future saveDataPartMachine(String token, String idEcm, String partId,
       "Accept": "Application/json",
       'Authorization': 'Bearer $token',
     }, body: {
-      'ecm_id': idEcm,
-      'partitem_id': partId,
-      'ecmpart_qty': partQty,
-      'ecmpart_harga': partCost,
+      'ecm_id': ecmId,
+      'id_machine': idMesin,
+      'part_name': partName,
+      'stock': stock,
+      'ecmpart_qty': ecmqty,
+      'ecmpart_harga': harga,
     });
 
     return json.decode(response.body);

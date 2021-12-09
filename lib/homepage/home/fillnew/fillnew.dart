@@ -357,7 +357,7 @@ class _FillNewState extends State<FillNew> {
                                   BorderRadius.all(Radius.circular(5))),
                           child: Center(
                             child: Text(
-                              "Done",
+                              "View Summary",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Rubik',
@@ -378,6 +378,7 @@ class _FillNewState extends State<FillNew> {
               fontSize: 16);
         }
       }
+    
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
