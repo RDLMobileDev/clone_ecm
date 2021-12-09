@@ -71,7 +71,7 @@ class _ListTmNameState extends State<ListTmName> {
                             text: ' - ',
                             style: TextStyle(color: Color(0xFF00AEDB))),
                         TextSpan(
-                            text: 'GM',
+                            text: 'Admin',
                             style: TextStyle(color: Color(0xFF00AEDB))),
                       ],
                     ),
@@ -96,7 +96,7 @@ class _ListTmNameState extends State<ListTmName> {
                         color: Color(0xFF00AEDB),
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: AssetImage("assets/images/ario.png"))),
+                            image: AssetImage("assets/images/budi.png"))),
                   ),
                   SizedBox(
                     width: 16,
@@ -110,7 +110,7 @@ class _ListTmNameState extends State<ListTmName> {
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <TextSpan>[
                         TextSpan(
-                            text: 'Pedrosa',
+                            text: 'Rossi',
                             style: TextStyle(
                                 color: Color(0xFF00AEDB),
                                 fontWeight: FontWeight.w700)),
@@ -118,7 +118,7 @@ class _ListTmNameState extends State<ListTmName> {
                             text: ' - ',
                             style: TextStyle(color: Color(0xFF00AEDB))),
                         TextSpan(
-                            text: 'GM',
+                            text: 'Staff',
                             style: TextStyle(color: Color(0xFF00AEDB))),
                       ],
                     ),

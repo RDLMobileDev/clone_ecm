@@ -3,7 +3,9 @@
 import 'dart:async';
 
 import 'package:e_cm/auth/view/login.dart';
+import 'package:e_cm/homepage/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,11 +15,31 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  void moveToLogin() {
-    Timer(Duration(seconds: 3), () => Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => LogIn())
-    ));
+  void moveToLogin() async {
+    final SharedPreferences prefs = await _prefs;
+    String? idKeyUser = prefs.getString("idKeyUser");
+    String? emailKey = prefs.getString("emailKey");
+    String? deviceKey = prefs.getString("deviceKey");
+    String? tokenKey = prefs.getString("tokenKey");
+    String? usernameKey = prefs.getString("usernameKey");
+
+    if (idKeyUser != null &&
+        emailKey != null &&
+        deviceKey != null &&
+        tokenKey != null &&
+        usernameKey != null) {
+      Timer(
+          Duration(seconds: 3),
+          () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Dashboard())));
+    } else {
+      Timer(
+          Duration(seconds: 3),
+          () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => LogIn())));
+    }
   }
 
   @override

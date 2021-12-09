@@ -1,7 +1,12 @@
-// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, curly_braces_in_flow_control_structures
+import 'dart:async';
+
 import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
+import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
+import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillTujuh extends StatefulWidget {
   final _StepFillTujuhState stepFillTujuhState = _StepFillTujuhState();
@@ -11,10 +16,44 @@ class StepFillTujuh extends StatefulWidget {
 }
 
 class _StepFillTujuhState extends State<StepFillTujuh> {
-  void getSaveStepFillTujuh() {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  StreamController streamController = StreamController();
+  late Timer _timer;
+
+  List<PartItemMachineSavedModel> _listDataPartSaved = [];
+
+  Future<List<PartItemMachineSavedModel>> getDataPartItemSaved() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String? idEcmKey = prefs.getString("idEcm") ?? "";
+
+    _listDataPartSaved = await partItemMachineSaveService
+        .getPartItemMachineSaveData(tokenUser, idEcmKey);
+    print("total data: $idEcmKey");
+
+    streamController.add(_listDataPartSaved);
+
+    return await partItemMachineSaveService.getPartItemMachineSaveData(
+        tokenUser, idEcmKey);
+  }
+
+  void deletePartMachineSaved(String idEcmData) async {
+    // print(idEcmData);
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    // var idPart = prefs.getString("idPartItemMachine");
+    print("id data: $idEcmData");
+
+    var result = await partItemMachineSaveService.deletePartItemMachineSaved(
+        idEcmData, tokenUser);
+
+    print(result);
+
+    // getDataPartItemSaved();
+
     Fluttertoast.showToast(
-        msg: "asdasd",
-        toastLength: Toast.LENGTH_LONG,
+        msg: 'Item dihapus',
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2,
         backgroundColor: Colors.greenAccent,
@@ -23,127 +62,218 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   }
 
   @override
+  void initState() {
+    getDataPartItemSaved();
+    _timer =
+        Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
+    print("tes step 7");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    //cancel the timer
+    if (_timer.isActive) _timer.cancel();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: RichText(
-              text: TextSpan(
-                text: 'Spare Part ',
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Color(0xFF404446),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
-                children: const <TextSpan>[
-                  TextSpan(
-                      text: '*',
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w400)),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 48,
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: Image.asset(
-                    "assets/images/amico.png",
-                    width: 212.5,
-                    height: 244.0,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20, bottom: 20),
-                  child: Text(
-                    "No spare part yet",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF00AEDB),
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Rubik',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AddItemFillTujuh()));
-            },
-            child: Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
               width: MediaQuery.of(context).size.width,
-              height: 40,
-              decoration: BoxDecoration(
-                  color: Color(0xFF00AEDB),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    Icon(
-                      Icons.add_circle_outline,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      "Add Item",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
+              child: Text("Spare Part",
+                  style: TextStyle(
+                    fontFamily: 'Rubik',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                  )),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: StreamBuilder(
+                stream: streamController.stream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Center(
+                            child: Text("Loading spare part...",
+                                style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Color(0xFF00AEDB),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                )),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return _listDataPartSaved.isEmpty
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/images/empty.png",
+                                width: 250,
+                              ),
+                              Center(
+                                child: Text("No spare part yet",
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF00AEDB),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _listDataPartSaved.length,
+                            itemBuilder: (context, i) {
+                              print(_listDataPartSaved[i].ecmPartId);
+                              return Container(
+                                padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                width: MediaQuery.of(context).size.width,
+                                margin:
+                                    const EdgeInsets.only(top: 8, bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Column(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_listDataPartSaved[i].partItemNama,
+                                        style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 14,
+                                        )),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                              "Cost: ${_listDataPartSaved[i].totalHarga}",
+                                              style: TextStyle(
+                                                fontFamily: 'Rubik',
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14,
+                                              )),
+                                        ),
+                                        Container(
+                                          width: 60,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddItemFillTujuh(
+                                                                isFromUpdate:
+                                                                    true,
+                                                                partIdEcm:
+                                                                    _listDataPartSaved[
+                                                                            i]
+                                                                        .ecmPartId,
+                                                              )));
+                                                },
+                                                child: Image.asset(
+                                                  "assets/icons/akar-icons_edit.png",
+                                                  width: 20,
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  deletePartMachineSaved(
+                                                      _listDataPartSaved[i]
+                                                          .ecmPartId);
+                                                },
+                                                child: Image.asset(
+                                                  "assets/icons/trash.png",
+                                                  width: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                },
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AddItemFillTujuh(
+                          isFromUpdate: false,
+                        )));
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 50),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                decoration: BoxDecoration(
+                    color: Color(0xFF00AEDB),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Add Item",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 150,
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Divider(
-                  color: Color(0xFFCDCFD0),
-                  thickness: 2,
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total (Rp) :',
-                      style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text('0.00'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
