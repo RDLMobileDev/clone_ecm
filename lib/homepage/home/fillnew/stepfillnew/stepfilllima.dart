@@ -1,295 +1,276 @@
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
+
+import 'dart:async';
+import 'dart:io';
+
+import 'package:e_cm/homepage/home/fillnew/additionpage/formstepfilllima.dart';
+import 'package:e_cm/homepage/home/model/item_checking.dart';
+import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillLima extends StatefulWidget {
-  const StepFillLima({ Key? key }) : super(key: key);
+  const StepFillLima({Key? key}) : super(key: key);
 
   @override
   _StepFillLimaState createState() => _StepFillLimaState();
 }
 
 class _StepFillLimaState extends State<StepFillLima> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  List<ItemChecking> _listItemChecking = <ItemChecking>[];
+
+  void getDataItemRepairing() async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("tokenKey").toString();
+    String? ecmId = prefs.getString("idEcm") ?? "-";
+    String? userId = prefs.getString("idKeyUser") ?? "-";
+
+    try {
+      var data = await getFillNewLima(ecmId, userId, token);
+
+      switch (data["response"]['status']) {
+        case 200:
+          setState(() {
+            _listItemChecking = (data['data'] as List)
+                .map((e) => ItemChecking.fromJson(e))
+                .toList();
+          });
+          break;
+        default:
+          Fluttertoast.showToast(
+              msg: 'Gagal mendapat daftar item repairing',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          break;
+      }
+    } catch (e) {
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getDataItemRepairing();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: Text('Item Name',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontFamily: 'Rubik',
-              fontSize: 16,
-            ),),
-          ),
-
-           Container(
-              margin: EdgeInsets.only(top: 10),
-              width: MediaQuery.of(context).size.width,
-              child: TextField(
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))
-             ),
-              filled: true,
-              hintText: 'Type Item Name'
-            ),
-            maxLines: 1,
-          )
-        ),
-
-         Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child: Text('Note',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Rubik'
-          ),),
-        ),
-
-Row(children: <Widget>[
-          Container(
-          margin: EdgeInsets.only(top: 10, right: 10),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent),
-          child: Row(children: <Widget>[
+      width: MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Icon( 
-                Icons.circle_outlined,
-                color: Colors.grey,
-                size: 30,),
+              width: MediaQuery.of(context).size.width,
+              child: Text(
+                "Item Repairing",
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
-            Text('OK',
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: 'Rubik'
-            ),)
-         ],), 
-         ),
+            SizedBox(
+              height: 16.0,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: _listItemChecking.isEmpty
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "assets/images/empty.png",
+                            width: 250,
+                          ),
+                          Center(
+                            child: Text("Haven't repaired the item yet",
+                                style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Color(0xFF00AEDB),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                )),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _listItemChecking.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                            margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF00AEDB),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Column(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_listItemChecking[i].partNama ?? "-",
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    )),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                          "Repair Time: ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                          )),
+                                    ),
+                                    Container(
+                                      width: 60,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {},
+                                            child: Image.asset(
+                                              "assets/icons/akar-icons_edit.png",
+                                              width: 20,
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () {},
+                                            child: Image.asset(
+                                              "assets/icons/trash.png",
+                                              width: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ),
+            InkWell(
+              onTap: () async {
+                final prefs = await _prefs;
+                try {
+                  bool isInputted = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => FormStepFilllima()));
 
-         Container(
-          margin: EdgeInsets.only(top: 10, right: 10),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent),
-          child: Row(children: <Widget>[
-           Icon( 
-            Icons.change_history_outlined ,
-            color: Colors.grey,
-            size: 30,),
-            Text('Limit',
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: 'Rubik'
-            ),)
-         ],), 
-         ),
-          Container(
-          margin: EdgeInsets.only(top: 10),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent),
-          child: Row(children: <Widget>[
-           Icon( 
-            Icons.close ,
-            color: Colors.grey,
-            size: 30,),
-            Text('N / G',
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: 'Rubik'
-            ),)
-         ],), 
-         ),
-        ],),
-
-         Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child: Text('Start Time',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Rubik'
-          ),),
-        ),
-
-
-        Container(
-          padding: EdgeInsets.all(0),
-          margin: EdgeInsets.only(top: 10),
-          decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-          child: ExpansionTile(
-            tilePadding: EdgeInsets.only(left: 10, right: 5),
-            collapsedIconColor: Colors.black,
-            collapsedTextColor: Colors.black,
-            iconColor: Colors.black,
-            leading: Icon( 
-              Icons.access_time ,
-              color: Colors.grey,
-              size: 30,),
-            title: Text('HH : MM',
-            style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Rubik',
-            fontSize: 14
-          ),),
-          children: <Widget>[
-             TextFormField(
-                  decoration: const InputDecoration(
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  hintText: 'Type message..'
+                  if (isInputted) {
+                    prefs.setString("itemRepairBool", "1");
+                    getDataItemRepairing();
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.only(top: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Color(0xFF00AEDB)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(right: 5),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                    Text(
+                      'Add item',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.white,
+                          fontSize: 12),
+                    ),
+                  ],
                 ),
-                maxLines: 5,
-               )
+              ),
+            ),
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Divider(
+                    color: Color(0xFFCDCFD0),
+                    thickness: 2,
+                    height: 16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total Checking Time :',
+                        style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontWeight: FontWeight.w700,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text('0 H : 0 M'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-        ),
-        
-Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child: Text('End Time',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Rubik'
-          ),),
-        ),
-      Container(
-          padding: EdgeInsets.all(0),
-          margin: EdgeInsets.only(top: 10),
-          decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-          child: ExpansionTile(
-            tilePadding: EdgeInsets.only(left: 10, right: 5),
-            collapsedIconColor: Colors.black,
-            collapsedTextColor: Colors.black,
-            iconColor: Colors.black,
-            leading: Icon( 
-              Icons.access_time ,
-              color: Colors.grey,
-              size: 30,),
-            title: Text('HH : MM',
-            style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Rubik',
-            fontSize: 14
-          ),),
-          children: <Widget>[
-             TextFormField(
-                  decoration: const InputDecoration(
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  hintText: 'Type message..'
-                ),
-                maxLines: 5,
-               )
-          ],
-        ),
-        ),
-
-
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child: Text('Name',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Rubik'
-          ),),
-        ),
-    Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child: TextField(
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))
-            ),
-            filled: true,
-            suffixIcon:  
-            Icon( 
-              Icons.search ,
-              color: Colors.grey,
-              size: 30,),
-            hintText: 'Type Name'
-          ),
-          maxLines: 1,
-        ),
-        ),
-
-
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child: Text('Repair Mode',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Rubik'
-          ),),
-        ),
-
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 10),
-          child:  TextFormField(
-                decoration: const InputDecoration(
-                fillColor: Colors.white,
-                border: OutlineInputBorder(),
-                filled: true,
-                hintText: 'Type message..'
-            ),
-                maxLines: 5,
-            ),
-        ),
-
-        Container(
-           width: MediaQuery.of(context).size.width,
-           padding: EdgeInsets.all(15),
-           margin: EdgeInsets.only(top: 10),
-           alignment: Alignment.center,
-           decoration: BoxDecoration(
-           borderRadius: BorderRadius.all(Radius.circular(10)),
-           color: Colors.grey
-        ),
-        child:
-         Text('Save Checking',
-             textAlign: TextAlign.center,
-             style: TextStyle(
-                fontFamily: 'Rubik',
-                color: Colors.white,
-                fontSize: 16
-            ),),
-        )
-
-      ],
-    ),
-      
+      ),
     );
   }
 }

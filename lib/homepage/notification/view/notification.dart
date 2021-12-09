@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
@@ -16,7 +18,7 @@ class _NotificationMemberState extends State<NotificationMember> {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(16, 28, 24, 16),
+            padding: EdgeInsets.fromLTRB(16, 45, 24, 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -61,7 +63,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sudin",
+                                  text: "James",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -112,7 +114,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Ario",
+                                  text: "Pedrosa",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -163,7 +165,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Sudin",
+                                  text: "James",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -212,9 +214,10 @@ class _NotificationMemberState extends State<NotificationMember> {
                                 color: Colors.black,
                                 fontSize: 14.0,
                               ),
+                              // ignore: prefer_const_literals_to_create_immutables
                               children: [
                                 TextSpan(
-                                  text: "Sudin",
+                                  text: "James",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
