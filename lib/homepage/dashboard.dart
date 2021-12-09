@@ -1,13 +1,8 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:e_cm/homepage/account/view/account.dart';
 import 'package:e_cm/homepage/home/view/home.dart';
 import 'package:e_cm/homepage/notification/view/notification.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -17,12 +12,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool isHome = true, isNotif = false, isAccount = false;
-
-  String homeName = '';
-  String notifName = '';
-  String accountName = '';
 
   int _selectedIndex = 0;
   // ignore: prefer_final_fields
@@ -32,65 +22,6 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  void getLanguageEn() async {
-    var response = await rootBundle.loadString("assets/lang/lang-en.json");
-    var dataLang = json.decode(response)['data'];
-    if (mounted) {
-      setState(() {
-        homeName = dataLang['menu_nav']['home'];
-        notifName = dataLang['menu_nav']['notif'];
-        accountName = dataLang['menu_nav']['account'];
-      });
-    }
-  }
-
-  void getLanguageId() async {
-    var response = await rootBundle.loadString("assets/lang/lang-id.json");
-    var dataLang = json.decode(response)['data'];
-    if (mounted) {
-      setState(() {
-        homeName = dataLang['menu_nav']['home'];
-        notifName = dataLang['menu_nav']['notif'];
-        accountName = dataLang['menu_nav']['account'];
-      });
-    }
-  }
-
-  void setLang() async {
-    final prefs = await _prefs;
-    var langSetting = prefs.getString("bahasa") ?? "";
-    print(langSetting);
-
-    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
-      getLanguageId();
-    } else if (langSetting.isNotEmpty && langSetting == "English") {
-      getLanguageEn();
-    } else {
-      getLanguageId();
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    if (mounted) {
-      setState(() {
-        setLang();
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setLang();
-
-    Timer _timer =
-        Timer.periodic(Duration(milliseconds: 500), (timer) => setLang());
   }
 
   @override
@@ -140,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
                             width: 10,
                           ),
                           Text(
-                            homeName,
+                            "Home",
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 color: Colors.white,
@@ -189,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
                             width: 10,
                           ),
                           Text(
-                            notifName,
+                            "Notifications",
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 color: Colors.white,
@@ -237,7 +168,7 @@ class _DashboardState extends State<Dashboard> {
                             width: 10,
                           ),
                           Text(
-                            accountName,
+                            "Account",
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 color: Colors.white,
