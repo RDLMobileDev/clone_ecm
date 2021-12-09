@@ -37,14 +37,17 @@ class StepFillSatuState extends State<StepFillSatu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController? machineNameController;
   TextEditingController teamMemberController = TextEditingController();
+  TextEditingController factoryNameController = TextEditingController();
+  TextEditingController factoryNameGroupController = TextEditingController();
 
   bool isTapedMachineName = false;
   bool isBreakDown = false, isPreventive = false, isInformation = false;
-  bool isTappedTeamMember = false, isTappedFactory = false;
+  bool isTappedTeamMember = false, isTappedFactory = false, isTappedFactoryGroup = false;
 
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
   String locationIdSelected = '';
+  String locationIdGroupSelected = '';
   String machineSelected = '';
   String machineIdSelected = '';
   String? machineNumberSelected;
@@ -72,6 +75,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
     List<String>? teamId = prefs.getStringList("teamMember") ?? [];
     var locationId = prefs.getString("locationId") ?? "";
+    var locationIdGroup = prefs.getString("locationIdGroup") ?? "";
     var machineId = prefs.getString("machineId") ?? "";
     var machineDetailId = prefs.getString("machineDetailId") ?? "";
 
@@ -85,14 +89,16 @@ class StepFillSatuState extends State<StepFillSatu> {
           idUser != "" &&
           teamId.length != 0 &&
           locationId != "" &&
+          locationIdGroup != "" &&
           machineId != "" &&
           machineDetailId != "") {
         var result = await fillNewSatu(tokenUser, idClass, tglStepSatu, idUser,
-            teamId, locationId, machineId, machineDetailId);
+            teamId, locationId, locationIdGroup, machineId, machineDetailId);
 
         print(result['response']['status']);
         print(result['data']['id_ecm']);
         prefs.setString("idEcm", result['data']['id_ecm'].toString());
+         prefs.setString("id_machine_res", result['data']['id_machine'].toString());
 
         if (result['response']['status'] == 200) {
           Fluttertoast.showToast(
@@ -217,6 +223,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   void initState() {
     // getClassificationData();
     getListLocation();
+    getListAreaGroup();
     super.initState();
   }
 
@@ -575,7 +582,7 @@ class StepFillSatuState extends State<StepFillSatu> {
             TextFormField(
               readOnly: true,
               showCursor: true,
-              controller: machineNameController,
+              controller: factoryNameController,
               onTap: () {
                 setState(() {
                   isTappedFactory = !isTappedFactory;
@@ -621,6 +628,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   setState(() {
                                     locationIdSelected =
                                         _listLocation[i].enumId;
+                                        factoryNameController = TextEditingController(text: _listLocation[i].valueFactory);
                                   });
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString(
@@ -662,9 +670,11 @@ class StepFillSatuState extends State<StepFillSatu> {
             TextFormField(
               showCursor: true,
               readOnly: true,
-              controller: machineNameController,
+              controller: factoryNameGroupController,
               onTap: () {
-                setState(() {});
+                setState(() {
+                  isTappedFactoryGroup = !isTappedFactoryGroup;
+                });
               },
               style: const TextStyle(
                   fontFamily: 'Rubik',
@@ -681,6 +691,47 @@ class StepFillSatuState extends State<StepFillSatu> {
                       fontFamily: 'Rubik',
                       fontSize: 14,
                       fontWeight: FontWeight.w400)),
+            ),
+            isTappedFactoryGroup == false 
+            ? Container()
+            : Container(
+              width: MediaQuery.of(context).size.width,
+              child: FutureBuilder(
+                      future: getListAreaGroup(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Memuat data factory group..."),
+                          );
+                        }
+
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _listGroupArea.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    locationIdGroupSelected =
+                                        _listGroupArea[i].enumId;
+                                        factoryNameGroupController = TextEditingController(text: _listGroupArea[i].valueGroup);
+                                  });
+                                  // getMachineNumberbyId(machineIdSelected);
+                                  prefs.setString(
+                                      "locationIdGroup", locationIdGroupSelected);
+                                  prefs.setString("locationGroupBool", "1");
+                                  print("id lokasi: $locationIdGroupSelected");
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(_listGroupArea[i].valueGroup),
+                                ));
+                          },
+                        );
+                      },
+                    ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
@@ -707,9 +758,11 @@ class StepFillSatuState extends State<StepFillSatu> {
             TextFormField(
               controller: machineNameController,
               onTap: () {
-                setState(() {
-                  isTapedMachineName = !isTapedMachineName;
-                });
+              },
+              onChanged: (value) async {
+                final prefs = await _prefs;
+                prefs.setString("machineId", value);
+                prefs.setString("machineNameBool", "1");
               },
               style: const TextStyle(
                   fontFamily: 'Rubik',
@@ -752,8 +805,12 @@ class StepFillSatuState extends State<StepFillSatu> {
               controller: machineNameController,
               onTap: () {
                 setState(() {
-                  isTapedMachineName = !isTapedMachineName;
                 });
+              },
+              onChanged: (value) async {
+                final prefs = await _prefs;
+                prefs.setString("machineDetailId", value);
+                prefs.setString("machineDetailBool", "1");
               },
               style: const TextStyle(
                   fontFamily: 'Rubik',

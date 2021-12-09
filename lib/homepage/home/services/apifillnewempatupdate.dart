@@ -3,16 +3,18 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future fillNewEmpatUpdate(
-    {String? ecmId,
-    String? partId,
-    String? actual,
-    String? note,
-    String? start,
-    String? end,
-    String? userId,
-    String? fullName,
-    String? ecmitemId,
-    String? token}) async {
+   String ecmId,
+  String idMachine,
+  String itemCheck,
+  String standard,
+  String actual,
+  String note,
+  String start,
+  String end,
+  String userId,
+  String userName,
+  String ecmItemId,
+    String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecmstep4_update";
   final response = await http.post(Uri.parse(url), headers: {
@@ -20,14 +22,16 @@ Future fillNewEmpatUpdate(
     'Authorization': 'Bearer $token',
   }, body: {
     'ecm_id': ecmId,
-    'part_id': partId,
+    'id_machine': idMachine,
+    'item_check': itemCheck,
+    'standard': standard,
     'actual': actual,
     'note': note,
     'start': start,
     'end': end,
     'user_id': userId,
-    'user_name': fullName,
-    'ecmitem_id': ecmitemId
+    'user_name': userName,
+    'ecmitem_id': ecmItemId,
   });
 
   // print(response.body);

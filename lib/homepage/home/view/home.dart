@@ -64,8 +64,6 @@ class _HomeState extends State<Home> {
       _listHistoryEcmUser =
           await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
       historyStreamController.add(_listHistoryEcmUser);
-      print("data history:");
-      print(_listHistoryEcmUser);
       return await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
     } on SocketException catch (e) {
       print(e);
@@ -135,7 +133,7 @@ class _HomeState extends State<Home> {
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
                             Text(
-                              "Good morning,",
+                              "Hello,",
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,
@@ -165,8 +163,9 @@ class _HomeState extends State<Home> {
                       height: 16,
                     ),
                     Text(
-                      "Welcome to PT. Sugity Creatives",
+                      "Welcome to PT. Sugity Creatives\nUtility Maintenance",
                       style: TextStyle(
+                        height: 1.5,
                           fontFamily: 'Rubik',
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -180,7 +179,7 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.only(left: 16, right: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "History E-CM Card",
+                "Recent E-CM Card",
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
