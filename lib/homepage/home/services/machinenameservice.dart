@@ -24,8 +24,10 @@ class MachineNameService {
       var dataMachineName = json.decode(response.body)['data'];
 
       for (int i = 0; i < dataMachineName.length; i++) {
-        var data = MachineNameModel(dataMachineName[i]['m_machine_kode'],
-            dataMachineName[i]['m_machine_nama']);
+        var data = MachineNameModel(
+            dataMachineName[i]['m_machine_kode'],
+            dataMachineName[i]['m_machine_nama'],
+            dataMachineName[i]["m_machine_id"].toString());
 
         _listMachineNameData.add(data);
       }

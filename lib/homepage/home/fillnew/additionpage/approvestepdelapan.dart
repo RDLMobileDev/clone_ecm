@@ -10,16 +10,7 @@ class ApproveStepDelapan extends StatefulWidget {
 }
 
 class _ApproveStepDelapanState extends State<ApproveStepDelapan> {
-  String? positionSelected;
-
-  static const nomorMachine = <String>['T/L', 'Staff', 'G/L', 'C/L', 'MGR'];
-
-  final List<DropdownMenuItem<String>> _dropDownPositionItems = nomorMachine
-      .map((value) => DropdownMenuItem(
-            value: value,
-            child: Text(value),
-          ))
-      .toList();
+  String positionSelected = 'Select position';
 
   @override
   Widget build(BuildContext context) {
@@ -51,67 +42,52 @@ class _ApproveStepDelapanState extends State<ApproveStepDelapan> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(top: 16),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Position ',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF404446),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                        children: const <TextSpan>[
-                          TextSpan(
-                              text: '*',
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w400)),
-                        ],
-                      ),
+                    child: const Text(
+                      "Position",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
                     ),
                   ),
                   Container(
-                      margin: const EdgeInsets.only(top: 4),
-                      padding: const EdgeInsets.all(5),
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: DropdownButton(
-                        isExpanded: true,
-                        items: _dropDownPositionItems,
-                        value: positionSelected,
-                        hint: const Text('-Select Position-'),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              positionSelected = value as String?;
-                            });
-                          }
-                        },
-                      )),
+                    margin: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.all(5),
+                    height: 40,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xFF979C9E)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            positionSelected,
+                            style: const TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Color(0xFF979C9E),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        const SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: Icon(Icons.arrow_drop_down))
+                      ],
+                    ),
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 16),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Name ',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF404446),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                        children: const <TextSpan>[
-                          TextSpan(
-                              text: '*',
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w400)),
-                        ],
-                      ),
+                    child: const Text(
+                      "Name",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
                     ),
                   ),
                   Container(
@@ -147,18 +123,10 @@ class _ApproveStepDelapanState extends State<ApproveStepDelapan> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               decoration: BoxDecoration(
-                  color: Color(0xFF979C9E),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              child: Center(
-                child: Text(
-                  "Approve",
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                ),
+                color: Color(0xFF979C9E),
+                borderRadius: BorderRadius.all(Radius.circular(5))
               ),
+              child: Center(child: Text("Approve", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),),),
             )
           ],
         ),

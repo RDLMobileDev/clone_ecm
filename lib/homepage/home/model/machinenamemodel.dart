@@ -1,6 +1,7 @@
 class MachineNameModel {
-  final String? kode;
-  final String? nama;
+  final String idMesin;
+  final String kode;
+  final String nama;
 
-  MachineNameModel(this.kode, this.nama);
+  MachineNameModel(this.kode, this.nama, this.idMesin);
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "814957090307",
+    "project_id": "rdl-e-cm",
+    "storage_bucket": "rdl-e-cm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814957090307:android:78a968ec37c6182efa6036",
+        "android_client_info": {
+          "package_name": "com.ragdalion.e_cm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814957090307-dddju8645jvl06q4im9nrtresd75dm2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE-1OJr77DDeEKbgd7tgAAW0uhoAlG7jQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814957090307-dddju8645jvl06q4im9nrtresd75dm2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
