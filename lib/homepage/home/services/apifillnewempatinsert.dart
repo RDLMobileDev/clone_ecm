@@ -4,9 +4,7 @@ import 'dart:convert';
 
 Future fillNewEmpatInsert(
     String ecmId,
-    String machineId,
-    String checkItem,
-    String std,
+    String partId,
     String actual,
     String note,
     String start,
@@ -21,9 +19,7 @@ Future fillNewEmpatInsert(
     'Authorization': 'Bearer $token',
   }, body: {
     'ecm_id': ecmId,
-    'id_machine': machineId,
-    'item_check': checkItem,
-    'standart': std,
+    'part_id': partId,
     'actual': actual,
     'note': note,
     'start': start,
