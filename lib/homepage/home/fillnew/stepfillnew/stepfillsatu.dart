@@ -40,7 +40,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   bool isTapedMachineName = false;
   bool isBreakDown = false, isPreventive = false, isInformation = false;
-  bool isTappedTeamMember = false;
+  bool isTappedTeamMember = false, isTappedFactory = false;
 
   String dateSelected = 'DD/MM/YYYY';
   String? locationSelected;
@@ -577,7 +577,9 @@ class StepFillSatuState extends State<StepFillSatu> {
               showCursor: true,
               controller: machineNameController,
               onTap: () {
-                setState(() {});
+                setState(() {
+                  isTappedFactory = !isTappedFactory;
+                });
               },
               style: const TextStyle(
                   fontFamily: 'Rubik',
@@ -595,6 +597,46 @@ class StepFillSatuState extends State<StepFillSatu> {
                       fontSize: 14,
                       fontWeight: FontWeight.w400)),
             ),
+            isTappedFactory == false
+                ? Container()
+                : Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    child: FutureBuilder(
+                      future: getListLocation(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Memuat data factory..."),
+                          );
+                        }
+
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _listLocation.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    locationIdSelected =
+                                        _listLocation[i].enumId;
+                                  });
+                                  // getMachineNumberbyId(machineIdSelected);
+                                  prefs.setString(
+                                      "locationId", locationIdSelected);
+                                  prefs.setString("locationBool", "1");
+                                  print("id lokasi: $locationIdSelected");
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(_listLocation[i].valueFactory),
+                                ));
+                          },
+                        );
+                      },
+                    ),
+                  ),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
@@ -618,8 +660,8 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
-              readOnly: true,
               showCursor: true,
+              readOnly: true,
               controller: machineNameController,
               onTap: () {
                 setState(() {});
@@ -663,8 +705,6 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
-              readOnly: true,
-              showCursor: true,
               controller: machineNameController,
               onTap: () {
                 setState(() {
@@ -709,8 +749,6 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
-              readOnly: true,
-              showCursor: true,
               controller: machineNameController,
               onTap: () {
                 setState(() {
