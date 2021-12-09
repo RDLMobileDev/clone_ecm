@@ -94,6 +94,8 @@ class _AccountMemberState extends State<AccountMember> {
     String emailUser = prefs.getString("emailKey").toString();
     String deviceUser = prefs.getString("deviceKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
+
+    print(deviceUser);
     try {
       // prefs.clear();
       var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
