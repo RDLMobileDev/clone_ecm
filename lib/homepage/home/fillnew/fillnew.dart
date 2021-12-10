@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print, sized_box_for_whitespace
 
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
@@ -317,7 +317,7 @@ class _FillNewState extends State<FillNew> {
                       width: MediaQuery.of(context).size.width,
                       child: Center(
                         child: Text(
-                          "Thank you",
+                          "Terimakasih",
                           style: TextStyle(
                               color: Color(0xFF404446),
                               fontFamily: 'Rubik',
@@ -331,7 +331,7 @@ class _FillNewState extends State<FillNew> {
                       width: MediaQuery.of(context).size.width,
                       child: Center(
                         child: Text(
-                          "Your form has been saved and waiting to approved by staff",
+                          "Formulir Anda telah disimpan dan menunggu untuk disetujui",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Color(0xFF404446),
@@ -343,9 +343,8 @@ class _FillNewState extends State<FillNew> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
+                        Navigator.of(context).pop();
+                        summaryPopup();
                       },
                       child: Container(
                           margin: EdgeInsets.only(top: 20, left: 16, right: 16),
@@ -357,7 +356,7 @@ class _FillNewState extends State<FillNew> {
                                   BorderRadius.all(Radius.circular(5))),
                           child: Center(
                             child: Text(
-                              "View Summary",
+                              "Lihat Ringkasan",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Rubik',
@@ -378,7 +377,6 @@ class _FillNewState extends State<FillNew> {
               fontSize: 16);
         }
       }
-    
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
@@ -390,6 +388,143 @@ class _FillNewState extends State<FillNew> {
           textColor: Colors.white,
           fontSize: 16);
     }
+  }
+
+  void summaryPopup() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    "assets/icons/X.png",
+                    width: 20,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    "Ringkasan",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF404446)),
+                  ),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(left: 16, right: 16),
+                padding: EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Text(
+                      "BM",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF404446)),
+                    ),
+                    Text(
+                      "1H 0M",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF404446)),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(left: 16, right: 16),
+                padding: EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: Text(
+                  "E-CM harus disetujui oleh",
+                  style: TextStyle(
+                      color: Color(0xFF404446),
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(left: 16, right: 16),
+                padding: EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: AssetImage("assets/images/ario.png"),
+                                  fit: BoxFit.fill)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop()
+                    ..pop();
+                },
+                child: Container(
+                    margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF00AEDB),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Center(
+                      child: Text(
+                        "Selesai",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              )
+            ],
+          );
+        });
   }
 
   cancel() {
