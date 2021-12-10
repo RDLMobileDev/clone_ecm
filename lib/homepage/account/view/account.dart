@@ -9,6 +9,7 @@ import 'package:e_cm/homepage/account/services/apilogout.dart';
 import 'package:e_cm/homepage/account/services/apiuser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +31,123 @@ class _AccountMemberState extends State<AccountMember> {
 
   String logoutName = '';
   String leaveName = '';
+
+  void confirmLogout(){
+    showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.topRight,
+                        child: Image.asset(
+                          "assets/icons/X.png",
+                          width: 20,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                          child: Image.asset(
+                        "assets/images/img_attendance_logout.png",
+                        width: 150,
+                      )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8),
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Text(
+                          "Confirm",
+                          style: TextStyle(
+                              color: Color(0xFF404446),
+                              fontFamily: 'Rubik',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Text(
+                          "Do your sure to logout",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color(0xFF404446),
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                               Navigator.of(context).pop();
+                          },
+                          child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 20,right: 5),
+                              width: 130,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Color(0xFF00AEDB)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Center(
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF00AEDB),
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              )),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            postLogout();
+                            Navigator.of(context)
+                              ..pop()
+                              ..pop();
+                          },
+                          child: Container(
+                              margin: EdgeInsets.only(top: 20),
+                              width: 130,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffcf0000),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Center(
+                                child: Text(
+                                  "Logout",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              )),
+                        ),
+                      ],
+                    )
+                  ],
+                );
+                });
+  }
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -219,9 +337,80 @@ class _AccountMemberState extends State<AccountMember> {
               SizedBox(
                 height: 24,
               ),
+               Container(
+                margin: EdgeInsets.only(bottom: 16),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.lightBlue,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Icon(
+                        Icons.translate,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 14),
+                          width: MediaQuery.of(context).size.width*0.595,
+                          child: Text(
+                            bahasa,
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.lightBlue,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 14),
+                          width: MediaQuery.of(context).size.width*0.595,
+                          child: Text(
+                            bahasa == 'Bahasa Indonesia'? "Gunakan bahasa berbeda pada app ini":
+                            "Use app in another language",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 12,
+                                color: Colors.grey,),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    FlutterSwitch(
+                        width: 65,
+                        height: 30,
+                        activeText: 'EN',
+                        inactiveText: 'ID',
+                        value: bahasaSelected,
+                        showOnOff: true,
+                        onToggle: (value) async {
+                          final prefs = await _prefs;
+                          setState(() {
+                            bahasaSelected = !bahasaSelected;
+                            if (bahasaSelected == false) {
+                              bahasa = "Bahasa Indonesia";
+                            } else {
+                              bahasa = "English";
+                            }
+                          });
+                          prefs.setString("bahasa", bahasa);
+                        })
+                  ],
+                ),
+              ),
               InkWell(
                 onTap: () {
-                  postLogout();
+                  confirmLogout();
+                  // showDialog<String>(
+                  //    context: context,
+                  //    builder: (BuildContext context) => showDialogLogout());
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -276,40 +465,169 @@ class _AccountMemberState extends State<AccountMember> {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 16),
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      bahasa,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    Switch(
-                        value: bahasaSelected,
-                        onChanged: (value) async {
-                          final prefs = await _prefs;
-                          setState(() {
-                            bahasaSelected = !bahasaSelected;
-                            if (bahasaSelected == false) {
-                              bahasa = "Bahasa Indonesia";
-                            } else {
-                              bahasa = "English";
-                            }
-                          });
-                          prefs.setString("bahasa", bahasa);
-                        })
-                  ],
-                ),
-              )
+             
             ],
           ),
         ),
       ),
+    );
+  }
+
+   Widget showDialogLogout() {
+    return SimpleDialog(
+      children: [
+         InkWell(
+           onTap: (){
+             setState(() {
+               Navigator.pop(context);
+             });
+           },
+           child: Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.topRight,
+            child: Image.asset(
+              "assets/icons/X.png",
+              width: 20,
+            ),
+                 ),
+         ),
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          child: Image.asset("assets/images/img_attendance_logout.png",
+          width: 100,
+          height: 100,),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 8),
+          alignment: Alignment.center,
+          child: Row(children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width,
+              child: Text("Confirm",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black54,
+                fontFamily: 'Rubik',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),),
+            ),
+          
+          ],),
+        ),
+      
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(right: 20, left: 20),
+          child: Text("E-CM must approved by",
+          style: TextStyle(
+            fontFamily: 'Rubik',
+            color: Colors.black54,
+            fontSize: 16
+          ),),
+
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 30,
+                      height: 30,
+                      child: Image.asset("assets/images/img_ava.png"),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      width: MediaQuery.of(context).size.width*0.5,
+                      child: Text("Dadi",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                      ),),
+                    ),
+
+                    Container(
+                      width: MediaQuery.of(context).size.width*0.2,
+                      child: Text(" - ",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                      ),),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width*0.2,
+                      child: Text("GM",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                      ),),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          )
+        ),
+        InkWell(
+          onTap: () {
+            
+          },
+          child: Row(
+            children: [
+               Container(
+                  margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Color(0xFF00AEDB),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Center(
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  )),
+              InkWell(
+                onTap: (){
+                  setState(() {
+                    postLogout();
+                  });
+                },
+                child: Container(
+                    margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Center(
+                      child: Text(
+                        "Logout",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }
