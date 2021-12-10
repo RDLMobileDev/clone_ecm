@@ -64,8 +64,6 @@ class _HomeState extends State<Home> {
       _listHistoryEcmUser =
           await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
       historyStreamController.add(_listHistoryEcmUser);
-      print("data history:");
-      print(_listHistoryEcmUser);
       return await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
     } on SocketException catch (e) {
       print(e);
@@ -167,6 +165,7 @@ class _HomeState extends State<Home> {
                     Text(
                       "Welcome to PT. Sugity Creatives\nUtility Maintenance",
                       style: TextStyle(
+                        height: 1.5,
                           fontFamily: 'Rubik',
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -180,7 +179,7 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.only(left: 16, right: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "History E-CM Card",
+                "Recent E-CM Card",
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -398,56 +397,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 16,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ListTmName()));
-              },
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                ),
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Color(0xFF00AEDB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "History E-CM Card",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            // Spacer(),
-            Container(
-              height: 70,
-              alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(bottom: 16),
-              child: Text(
-                "Property of PT. Sugity Creatives",
-                style: TextStyle(
-                    color: Colors.black87, fontFamily: 'Rubick', fontSize: 12),
-              ),
-            )
           ],
         ),
       ),

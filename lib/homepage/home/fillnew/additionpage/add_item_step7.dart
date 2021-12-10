@@ -7,6 +7,7 @@ import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddItemFillTujuh extends StatefulWidget {
@@ -97,27 +98,38 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     String? idEcmKey = prefs.getString("idEcm");
+    String? idMesin = prefs.getString("id_machine_res");
     var idPartMachine = prefs.getString("idPartItemMachine");
 
     try {
-      var result = await saveDataPartMachine(
-          tokenUser, idEcmKey!, idPartMachine!, qtyUsed, costRp);
-      if (result['response']['status'] == 200) {
-        prefs.setString("sparePartBool", "1");
-        Fluttertoast.showToast(
-          msg: 'Data item step 7 disimpan',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.greenAccent,
+      if (int.parse(qtyUsed) <= qtyStock) {
+        var result = await saveDataPartMachine(
+          tokenUser, idEcmKey!, idMesin!, partNameController.text, qtyStock.toString(), qtyUsed, costRpController.text
         );
-        Navigator.of(context).pop();
-      } else {
+        if (result['response']['status'] == 200) {
+          prefs.setString("sparePartBool", "1");
+          Fluttertoast.showToast(
+            msg: 'Data item step 7 disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.greenAccent,
+          );
+          Navigator.of(context).pop();
+        } else {
+          Fluttertoast.showToast(
+            msg: 'Data gagal disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.greenAccent,
+          );
+        }
+      }else{
         Fluttertoast.showToast(
-          msg: 'Data gagal disimpan',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.greenAccent,
-        );
+            msg: 'Quantity used jangan melebihi stock',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.greenAccent,
+          );
       }
     } catch (e) {
       Fluttertoast.showToast(
@@ -198,12 +210,6 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               const BorderRadius.all(Radius.circular(5))),
                       child: TextFormField(
                         controller: partNameController,
-                        onTap: () {
-                          setState(() {
-                            isTapPartItemMachineInput =
-                                !isTapPartItemMachineInput;
-                          });
-                        },
                         style: const TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF404446),
@@ -217,56 +223,6 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             hintText: 'Type Item Name'),
                       ),
                     ),
-                    isTapPartItemMachineInput == false
-                        ? Container()
-                        : Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            width: MediaQuery.of(context).size.width,
-                            child: FutureBuilder(
-                              future: getPartItembyMacchine(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: Text("Loading part item machine..."),
-                                  );
-                                }
-
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: listItemMachineData.isEmpty
-                                      ? 0
-                                      : listItemMachineData.length,
-                                  itemBuilder: (context, i) {
-                                    return InkWell(
-                                      onTap: () async {
-                                        final prefs = await _prefs;
-                                        setState(() {
-                                          double stock = double.parse(
-                                              listItemMachineData[i].partStock);
-                                          qtyStock = stock.toInt();
-                                          partNameController =
-                                              TextEditingController(
-                                                  text: listItemMachineData[i]
-                                                      .partNama);
-                                          costRpController =
-                                              TextEditingController(
-                                                  text: listItemMachineData[i]
-                                                      .partHarga
-                                                      .toString());
-                                        });
-                                        prefs.setString("idPartItemMachine",
-                                            listItemMachineData[i].partitemId);
-                                      },
-                                      child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Text(
-                                              listItemMachineData[i].partNama)),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
                     Container(
                       margin: const EdgeInsets.only(top: 16),
                       child: Row(
@@ -302,11 +258,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    int costRp =
-                                        int.parse(costRpController.text);
                                     setState(() {
                                       qtyUsed != 0 ? qtyUsed-- : null;
-                                      subTotal = costRp * qtyUsed;
                                       if (qtyUsed == 0) {
                                         enableSave = false;
                                       }
@@ -331,11 +284,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                         fontWeight: FontWeight.w700)),
                                 InkWell(
                                   onTap: () {
-                                    int costRp =
-                                        int.parse(costRpController.text);
                                     setState(() {
                                       qtyUsed++;
-                                      subTotal = costRp * qtyUsed;
                                       enableSave = true;
                                     });
                                   },
@@ -387,12 +337,22 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: Icon(
-                                    Icons.remove,
-                                    color: Color(0xFF979C9E),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      qtyStock != 0 ? qtyStock-- : null;
+                                      if (qtyStock == 0) {
+                                        enableSave = false;
+                                      }
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: Color(0xFF979C9E),
+                                    ),
                                   ),
                                 ),
                                 Text(qtyStock.toString(),
@@ -401,12 +361,20 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                         fontFamily: 'Rubik',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700)),
-                                SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Color(0xFF20519F),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      qtyStock++;
+                                      enableSave = true;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Color(0xFF20519F),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -446,6 +414,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               const BorderRadius.all(Radius.circular(5))),
                       child: TextFormField(
                         controller: costRpController,
+                        onChanged: (value) {
+                          int costRp = int.parse(value);
+
+                          setState(() {
+                            subTotal = qtyUsed * costRp;
+                          });
+                        },
+                        keyboardType: TextInputType.number,
                         style: const TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF404446),

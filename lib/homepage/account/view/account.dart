@@ -31,27 +31,27 @@ class _AccountMemberState extends State<AccountMember> {
   String logoutName = '';
   String leaveName = '';
 
-  // void setBahasa() async {
-  //   final prefs = await _prefs;
-  //   String? bahasaBool = prefs.getString("bahasa");
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
 
-  //   if (bahasaBool!.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
-  //     setState(() {
-  //       bahasaSelected = false;
-  //       bahasa = bahasaBool;
-  //     });
-  //   } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
-  //     setState(() {
-  //       bahasaSelected = true;
-  //       bahasa = bahasaBool;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       bahasaSelected = false;
-  //       bahasa = "Bahasa Indonesia";
-  //     });
-  //   }
-  // }
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
 
   void getLanguageEn() async {
     var response = await rootBundle.loadString("assets/lang/lang-en.json");
@@ -156,7 +156,7 @@ class _AccountMemberState extends State<AccountMember> {
     // TODO: implement initState
     super.initState();
     getDataUser();
-    // setBahasa();
+    setBahasa();
     setLang();
 
     Timer _timer =
