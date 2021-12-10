@@ -10,16 +10,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DetailHistory extends StatefulWidget {
+class HistoryDetailPage extends StatefulWidget {
   final String notifId;
 
-  const DetailHistory({required this.notifId});
+  const HistoryDetailPage({required this.notifId});
 
   @override
-  _DetailHistoryState createState() => _DetailHistoryState();
+  _HistoryDetailPageState createState() => _HistoryDetailPageState();
 }
 
-class _DetailHistoryState extends State<DetailHistory> {
+class _HistoryDetailPageState extends State<HistoryDetailPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<ItemCheckModel> _listItemCheck = [];
   List<ItemRepairModel> _listItemRepair = [];

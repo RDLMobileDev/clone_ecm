@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class History extends StatefulWidget {
-  const History({Key? key}) : super(key: key);
+class HistoryPage extends StatefulWidget {
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
-  _HistoryState createState() => _HistoryState();
+  _HistoryPageState createState() => _HistoryPageState();
 }
 
-class _HistoryState extends State<History> {
+class _HistoryPageState extends State<HistoryPage> {
   List<ApprovedModel> _listApproved = [];
 
   Future<List<ApprovedModel>> getApprovedData() async {
