@@ -8,7 +8,6 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilllima.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltiga.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -358,7 +357,7 @@ class _FillNewState extends State<FillNew> {
                                   BorderRadius.all(Radius.circular(5))),
                           child: Center(
                             child: Text(
-                              "View Summary",
+                              "Done",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Rubik',
@@ -379,7 +378,6 @@ class _FillNewState extends State<FillNew> {
               fontSize: 16);
         }
       }
-    
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
@@ -545,148 +543,6 @@ class _FillNewState extends State<FillNew> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget showSummary() {
-    return SimpleDialog(
-      children: [
-         InkWell(
-           onTap: (){
-             setState(() {
-               
-             });
-           },
-           child: Container(
-            margin: EdgeInsets.only(left: 16, right: 16),
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.topRight,
-            child: Image.asset(
-              "assets/icons/X.png",
-              width: 20,
-            ),
-                 ),
-         ),
-        Container(
-          margin: EdgeInsets.only(top: 10),
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          child: Text("Summary",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black54,
-            fontFamily: 'Rubik',
-            fontSize: 18
-          ),)
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 8),
-          width: MediaQuery.of(context).size.width*0.7,
-          child: Row(children: <Widget>[
-            Container(
-              child: Text("Line stop",
-              style: TextStyle(
-                color: Colors.black54,
-                fontFamily: 'Rubik',
-                fontSize: 16,
-              ),),
-            ),
-            Container(
-              child: Text("1 H 0 M",
-              style: TextStyle(
-                color: Colors.black54,
-                fontFamily: 'Rubik',
-                fontSize: 16,
-              ),),
-            ),
-          ],),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(left: 20, right: 20),
-          height: 2,
-          color: Colors.grey,
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(right: 20, left: 20),
-          child: Text("E-CM must approved by",
-          style: TextStyle(
-            fontFamily: 'Rubik',
-            color: Colors.black54,
-            fontSize: 16
-          ),),
-
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 8, left: 16, right: 16),
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 30,
-                      height: 30,
-                      child: Image.asset("assets/images/img_ava.png"),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      width: MediaQuery.of(context).size.width*0.5,
-                      child: Text("Dadi",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                      ),),
-                    ),
-
-                    Container(
-                      width: MediaQuery.of(context).size.width*0.2,
-                      child: Text(" - ",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                      ),),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width*0.2,
-                      child: Text("GM",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                      ),),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.of(context);
-          },
-          child: Container(
-              margin: EdgeInsets.only(top: 20, left: 16, right: 16),
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              decoration: BoxDecoration(
-                  color: Color(0xFF00AEDB),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              child: Center(
-                child: Text(
-                  "Done",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Rubik',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                ),
-              )),
-        )
-      ],
     );
   }
 }
