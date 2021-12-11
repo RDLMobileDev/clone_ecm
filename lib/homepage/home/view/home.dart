@@ -438,7 +438,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 46),
+              margin: EdgeInsets.only(top: 40),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(

@@ -8,6 +8,8 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilllima.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltiga.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
+import 'package:e_cm/homepage/home/model/summaryapprovemodel.dart';
+import 'package:e_cm/homepage/home/services/summaryapproveservice.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +39,8 @@ class _FillNewState extends State<FillNew> {
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
   ];
+
+  List<SummaryApproveModel> _listSummaryApproval = [];
 
   List<Step> get _steps => [
         Step(
@@ -342,9 +346,18 @@ class _FillNewState extends State<FillNew> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        summaryPopup();
+                      onTap: () async {
+                        // Navigator.of(context).pop();
+                        final prefs = await _prefs;
+                        String idUser = prefs.getString("idKeyUser").toString();
+                        String tokenUser = prefs.getString("tokenKey").toString();
+                        String idEcm = prefs.getString("idEcm").toString();
+
+                        _listSummaryApproval = await summaryApproveService.getSummaryApproveName(tokenUser, idEcm, idUser);
+                        
+                        if(_listSummaryApproval.isNotEmpty){
+                          summaryPopup();
+                        }
                       },
                       child: Container(
                           margin: EdgeInsets.only(top: 20, left: 16, right: 16),
@@ -391,6 +404,7 @@ class _FillNewState extends State<FillNew> {
   }
 
   void summaryPopup() async {
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -446,7 +460,7 @@ class _FillNewState extends State<FillNew> {
                           color: Color(0xFF404446)),
                     ),
                     Text(
-                      "1H 0M",
+                      "${_listSummaryApproval[0].lineStopJam}H ${_listSummaryApproval[0].lineStopMenit}M",
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 14,
@@ -479,9 +493,12 @@ class _FillNewState extends State<FillNew> {
                 decoration: BoxDecoration(
                     border:
                         Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
-                child: Column(
-                  children: [
-                    Row(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: _listSummaryApproval.length,
+                  itemBuilder: (context, i) {
+                    return Row(
                       children: [
                         Container(
                           width: 48,
@@ -491,10 +508,12 @@ class _FillNewState extends State<FillNew> {
                               image: DecorationImage(
                                   image: AssetImage("assets/images/ario.png"),
                                   fit: BoxFit.fill)),
-                        )
+                        ),
+                        SizedBox(width: 16,),
+                        Text("${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
               InkWell(

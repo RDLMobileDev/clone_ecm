@@ -225,7 +225,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           borderRadius: BorderRadius.all(Radius.circular(40))),
                       // height: 20,
                       child: Text(
-                        "Montly",
+                        "Monthly",
                         style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 12,
@@ -296,13 +296,16 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 text: _listDaily[i]
                                                     .nama
                                                     .toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Color(0xFF00AEDB),
+                                                    fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.w700)),
                                             TextSpan(
                                                 text: ' Making E-CM Card',
                                                 style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  fontSize: 14,
                                                     color: Color(0xFF6C7072))),
                                           ],
                                         ),
