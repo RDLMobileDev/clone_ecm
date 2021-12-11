@@ -460,7 +460,7 @@ class _FillNewState extends State<FillNew> {
                           color: Color(0xFF404446)),
                     ),
                     Text(
-                      "${_listSummaryApproval[0].lineStopJam}H ${_listSummaryApproval[0].lineStopMenit}M",
+                      "0H 0M",
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 14,
