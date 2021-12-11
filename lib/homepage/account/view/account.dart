@@ -119,9 +119,7 @@ class _AccountMemberState extends State<AccountMember> {
                         InkWell(
                           onTap: () {
                             postLogout();
-                            Navigator.of(context)
-                              ..pop()
-                              ..pop();
+                            
                           },
                           child: Container(
                               margin: EdgeInsets.only(top: 20),
