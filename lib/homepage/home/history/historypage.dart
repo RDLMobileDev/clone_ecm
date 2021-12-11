@@ -545,7 +545,10 @@ void getDateNow() async {
                     ),
                     InkWell(
                       onTap: (){
-                       getDateFromDialog();
+                        setState(() {
+                          getDateFromDialog();
+                        });
+                       
                       },
                       child: Container(
                           alignment: Alignment.center,
@@ -553,7 +556,7 @@ void getDateNow() async {
                           width: MediaQuery.of(context).size.width * 0.65,
                           child: 
                           Text(
-                            monthSelected==null?nowDateSelected: monthSelected,
+                            monthSelected==''?nowDateSelected: monthSelected,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontFamily: 'Rubik',
