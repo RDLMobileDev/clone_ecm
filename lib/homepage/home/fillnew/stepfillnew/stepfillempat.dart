@@ -142,8 +142,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                     Container(
                       child: Center(
                           child: Image.asset(
-                        "assets/icons/done.png",
-                        width: 150,
+                        "assets/icons/Sign.png",
+                        width: 100,
                       )),
                     ),
                     Container(
@@ -151,7 +151,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       width: MediaQuery.of(context).size.width,
                       child: Center(
                         child: Text(
-                          "Terimakasih",
+                          "Confirm",
                           style: TextStyle(
                               color: Color(0xFF404446),
                               fontFamily: 'Rubik',
@@ -165,7 +165,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       width: MediaQuery.of(context).size.width,
                       child: Center(
                         child: Text(
-                          "Formulir Anda telah disimpan dan menunggu untuk disetujui",
+                          "Are you sure want to delete item?",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Color(0xFF404446),
