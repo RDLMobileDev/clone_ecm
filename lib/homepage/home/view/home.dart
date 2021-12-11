@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/history/historypage.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
 import 'package:e_cm/homepage/home/services/historyecmservice.dart';
@@ -165,7 +166,7 @@ class _HomeState extends State<Home> {
                     Text(
                       "Welcome to PT. Sugity Creatives\nUtility Maintenance",
                       style: TextStyle(
-                        height: 1.5,
+                          height: 1.5,
                           fontFamily: 'Rubik',
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -397,6 +398,56 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 16,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => HistoryPage()));
+              },
+              child: Container(
+                margin: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                ),
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                decoration: BoxDecoration(
+                    color: Color(0xFF00AEDB),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "History E-CM Card",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 46),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  "Property of PT. Sugity Creatives",
+                  style: TextStyle(
+                      color: Colors.black87, fontFamily: 'Rubik', fontSize: 12),
+                ),
+              ),
+            )
           ],
         ),
       ),
