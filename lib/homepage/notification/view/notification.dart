@@ -23,15 +23,11 @@ class _NotificationMemberState extends State<NotificationMember> {
     String tokenUser = prefs.getString("tokenKey").toString();
     String idUser = prefs.getString("idKeyUser").toString();
 
-    // String tokenUser =
-    //     "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMzY0Y2JiMDJhOGVkNDA3NzIyMmM2YzI2Yzk5YzYwNzc2N2M1MWViYzU0MmMyNmNhZGEwMGJjYTYzOGNhODZmYjNiY2JjMGExOTY1M2YzZDUiLCJpYXQiOjE2MzkyMDM4MjEsIm5iZiI6MTYzOTIwMzgyMSwiZXhwIjoxNjcwNzM5ODIxLCJzdWIiOiIxMiIsInNjb3BlcyI6W119.WehS3Hg0r-U77kWxXOjPpB-dtOgSLNgfCh_BfGqUrn4QOBHuVVVDOsWpZZ3tPFSrPTgsT-5kgn8DMYDI9dlt4wLGVz8rls7fKf__R4sa3KnHocasT_WBteBPFYbzTYoD91-u9I3ZD4VZWFSEMh_3D62RRkDC_b13XUFJsOuYEFKZ2ljTjkT5Jm3MCFlxnLyMs1cudFEWTWJEvJNipHX70cmsD6K8RnxEaNzsfMHnN4f7GyHWdVk4asa0j8CibxDGecCFZlouxj763k-o3nRMSCDeXRk6yAWjk2j5g47etXu7s1RgRPEy8hAQBRpjhsCQNfIUJJpB53EKmPbtlXsP53hilNFBxw79VxL7Ihr9NdsEE8ENvxefPXiKgLBAJah318Qfh1Xh0qKYkuMuFCnt4GXdI0MI5Zbno0OxLUbGOrnglgm6g_ZZDDNCYfHlr8nd3Z3Y9roFX1yceZXOSoOoKYD5Ohfafd8kLESpFPaZBrjnB-bppmeEpi38fccM5jvAUyR6VS4RoTLKXOMPYAQYzUIeN23ca0UKEMUSVpTTagelxF_xVJ2Ax2SAY3YR0DNfqkGcz31QlKpAXi2BbsytIKwRcGd5XY5fAvg-4q-AKWXo-caERBSbXu9RZecrPzptTGV536dW7zqjbjUelyI71_Z_PTiGxwZoZVYr3NDCTR8";
-    // String idUser = "5";
-
-    listNotif = await listNotifService.getListNotif(tokenUser, idUser);
+    listNotif = await notifikasiService.getNotificationData(tokenUser, idUser);
 
     print("notif data -> $listNotif");
 
-    return await listNotifService.getListNotif(tokenUser, idUser);
+    return await notifikasiService.getNotificationData(tokenUser, idUser);
   }
 
   @override
