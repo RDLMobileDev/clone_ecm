@@ -1168,66 +1168,113 @@ class StepFillDuaState extends State<StepFillDua> {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () {
-                showBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return optionPickImage(context);
-                    });
-              },
-              child: Container(
-                margin: const EdgeInsets.only(top: 4),
-                padding: const EdgeInsets.all(10),
-                height: 120,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF979C9E)),
-                    borderRadius: const BorderRadius.all(Radius.circular(5))),
-                child: imageFileList!.isEmpty
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: [
-                          Icon(
-                            Icons.add_a_photo,
-                            color: Color(0xFF979C9E),
-                            size: 50,
-                          ),
-                          Text(
-                            "Tap to add, max 4 photo",
-                            style: const TextStyle(
-                                color: Color(0xFF979C9E),
-                                fontSize: 14,
-                                fontFamily: 'Rubik',
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      )
-                    : GridView.builder(
-                        itemCount: imageFileList!.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 8),
-                            child: Row(
+            imageFileList!.isEmpty
+                ? InkWell(
+                    onTap: () {
+                      showBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return optionPickImage(context);
+                          });
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.all(10),
+                        height: 120,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF979C9E)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Icon(
+                              Icons.add_a_photo,
+                              color: Color(0xFF979C9E),
+                              size: 50,
+                            ),
+                            Text(
+                              "Ketuk untuk menambahkan, maksimal 4 foto",
+                              style: const TextStyle(
+                                  color: Color(0xFF979C9E),
+                                  fontSize: 14,
+                                  fontFamily: 'Rubik',
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        )),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Row(
+                          children: imageFileList!.map((img) {
+                            return Container(
+                              width: 120,
+                              height: 120,
+                              margin: EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: FileImage(File(img.path)),
+                                      fit: BoxFit.fill),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                            );
+                          }).toList(),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            imageFileList!.length != 4
+                                ? showBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return optionPickImage(context);
+                                    })
+                                : () {
+                                    Fluttertoast.showToast(
+                                        msg: "Foto sudah ada 4",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Color(0xFF00AEDB),
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                  };
+                          },
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFF979C9E)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
                               children: [
-                                Image.file(
-                                  File(imageFileList![index].path),
-                                  fit: BoxFit.cover,
-                                  width: 80,
+                                Icon(
+                                  Icons.add_a_photo,
+                                  color: Color(0xFF979C9E),
+                                  size: 50,
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                )
+                                Text(
+                                  "Tambah lagi",
+                                  style: const TextStyle(
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontFamily: 'Rubik',
+                                      fontWeight: FontWeight.w400),
+                                ),
                               ],
                             ),
-                          );
-                        },
-                      ),
-              ),
-            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
           ],
         ),
       ),
