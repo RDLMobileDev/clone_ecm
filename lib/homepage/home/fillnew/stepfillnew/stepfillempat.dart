@@ -98,6 +98,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           fontSize: 16);
+      Navigator.pop(context, true);
     } catch (e) {
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -387,18 +388,29 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                     ),
             ),
             InkWell(
-              onTap: () async {
-                final prefs = await _prefs;
-                bool isInputted = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => StepFillEmpatInput()));
+              onTap: _listItemChecking.length == 6
+                  ? () {
+                      Fluttertoast.showToast(
+                          msg: 'Item cek sudah maksimal 6',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: Colors.greenAccent,
+                          textColor: Colors.white,
+                          fontSize: 16);
+                    }
+                  : () async {
+                      final prefs = await _prefs;
+                      bool isInputted = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => StepFillEmpatInput()));
 
-                if (isInputted) {
-                  // setState(() => getDataItemChecking());
-                  prefs.setString("itemStep4Bool", "1");
-                  getDataItemChecking();
-                }
-              },
+                      if (isInputted) {
+                        // setState(() => getDataItemChecking());
+                        prefs.setString("itemStep4Bool", "1");
+                        getDataItemChecking();
+                      }
+                    },
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(5),

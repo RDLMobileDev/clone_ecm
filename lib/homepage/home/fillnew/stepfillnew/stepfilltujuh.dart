@@ -235,12 +235,23 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
               ),
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AddItemFillTujuh(
-                          isFromUpdate: false,
-                        )));
-              },
+              onTap: _listDataPartSaved.length == 7
+                  ? () {
+                      Fluttertoast.showToast(
+                          msg: 'Item sudah maksimal 7',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: Colors.greenAccent,
+                          textColor: Colors.white,
+                          fontSize: 16);
+                    }
+                  : () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AddItemFillTujuh(
+                                isFromUpdate: false,
+                              )));
+                    },
               child: Container(
                 margin: EdgeInsets.only(top: 50),
                 width: MediaQuery.of(context).size.width,
