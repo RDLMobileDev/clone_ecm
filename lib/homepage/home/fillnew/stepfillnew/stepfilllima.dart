@@ -21,7 +21,7 @@ class _StepFillLimaState extends State<StepFillLima> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<ItemChecking> _listItemChecking = <ItemChecking>[];
 
-  void confirmDelete() {
+  void confirmDeleteStep5() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -30,6 +30,7 @@ class _StepFillLimaState extends State<StepFillLima> {
             InkWell(
               onTap: () {
                 Navigator.of(context).pop();
+                print("this is showdialog");
               },
               child: Container(
                 margin: EdgeInsets.only(left: 16, right: 16),
@@ -43,24 +44,24 @@ class _StepFillLimaState extends State<StepFillLima> {
             ),
             Container(
               child: Center(
-                  child: Image.asset(
-                "assets/icons/Sign.png",
-                width: 100,
-              )),
+                child: Image.asset(
+                  "assets/images/warning.png",
+                  width: 100,
+                ),
+              ),
             ),
             Container(
               margin: EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
               child: Center(
-                child: Text(
-                  "Confirm",
-                  style: TextStyle(
-                      color: Color(0xFF404446),
-                      fontFamily: 'Rubik',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
+                  child: Text(
+                "Confirm",
+                style: TextStyle(
+                    color: Color(0xFF404446),
+                    fontFamily: 'Rubik',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700),
+              )),
             ),
             Container(
               margin: EdgeInsets.only(top: 8, left: 16, right: 16),
@@ -109,8 +110,8 @@ class _StepFillLimaState extends State<StepFillLima> {
                     width: 14,
                   ),
                   InkWell(
-                    onTap: () async {
-                      
+                    onTap: () {
+                      print("deleteItemChekingStep5");
                     },
                     child: Container(
                         width: 115,
@@ -131,7 +132,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         );
       },
@@ -293,7 +294,10 @@ class _StepFillLimaState extends State<StepFillLima> {
                                             ),
                                           ),
                                           InkWell(
-                                            onTap: () {},
+                                            onTap: () {
+                                              confirmDeleteStep5();
+                                              print("Klik delete step 5");
+                                            },
                                             child: Image.asset(
                                               "assets/icons/trash.png",
                                               width: 20,

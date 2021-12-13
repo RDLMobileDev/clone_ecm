@@ -1,26 +1,25 @@
-import 'package:e_cm/homepage/notification/model/notifmodel.dart';
-
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ApiService {
-  String _url = 'http://app.ragdalion.com/ecm/public/api';
+import 'package:e_cm/baseurl/baseurl.dart';
+import 'package:http/http.dart' as http;
 
-  Future<List<Datum>> getListApproved() async {
-    List<Datum> listApproved = [];
-    final response = await http.get(Uri.parse('$_url/get_notif'));
+class ListNotifService {
+  Future<List> getListNotif(String token, String idUser) async {
+    String url = MyUrl().getUrlDevice();
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      ResponApproved respApproved = ResponApproved.fromJson(json);
-
-      respApproved.data.forEach((item) {
-        listApproved.add(item);
+    try {
+      var response =
+          await http.get(Uri.parse("$url/get_notif?id_user=$idUser"), headers: {
+        "Accept": "Application/json",
+        'Authorization': 'Bearer $token',
       });
 
-      return listApproved;
-    } else {
+      return json.decode(response.body)['data'];
+    } catch (e) {
+      print(e);
       return [];
     }
   }
 }
+
+final listNotifService = ListNotifService();
