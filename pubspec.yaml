@@ -87,5 +87,6 @@ flutter:
    - assets/images/
    - assets/icons/
    - assets/lang/
+   - assets/month/
 
 

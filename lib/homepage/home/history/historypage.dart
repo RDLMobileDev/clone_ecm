@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'package:date_time_format/src/date_time_extension_methods.dart';
 import 'package:e_cm/homepage/home/history/model/historyall.dart';
 import 'package:e_cm/homepage/home/history/model/historydailymodel.dart';
+import 'package:e_cm/homepage/home/history/model/historymonthly.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_all.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_daily.dart';
+import 'package:e_cm/homepage/home/history/service/get_history_monthly.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,24 +22,35 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
- 
-
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<HistoryDaily> _listDaily = [];
   List<HistoryAll> _listAll = [];
+  List<HistoryMonthly> _listMonthly = [];
   DateTime _fromDate = DateTime.now();
   String dateSelected = 'DD/MM/YYYY';
   String monthSelected = '';
   String nowDateSelected = '';
+  String month = '';
+  String year = '';
+  String monthName = '';
 
   bool tabAll = false;
   bool tabDaily = true;
   bool tabMontly = false;
 
+  int idMonth = 0;
+  int idMonthPembanding = 0;
+
   String tokenKeyUser = '';
   String idUser = '';
+  List bulan = [];
 
-  
+  Future<List> getMonth() async {
+    var response = await rootBundle.loadString("assets/month/month.json");
+    var dataLang = json.decode(response)['data'];
+    bulan = dataLang;
+    return dataLang;
+  }
 
   Future<List<HistoryDaily>> getListDaily() async {
     final SharedPreferences prefs = await _prefs;
@@ -72,8 +87,52 @@ class _HistoryPageState extends State<HistoryPage> {
     return _listDaily;
   }
 
+  Future<List<HistoryMonthly>> getListMonthly() async {
+    final SharedPreferences prefs = await _prefs;
 
-   Future<List<HistoryAll>> getListAll() async {
+    tokenKeyUser = prefs.getString("tokenKey").toString();
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    try {
+      var response = await getHistoryDaily(tokenUser, year, month);
+      if (response['response']['status'] == 200) {
+        setStateIfMounted(() {
+          var data = response['data'] as List;
+          _listMonthly = data.map((e) => HistoryMonthly.fromJson(e)).toList();
+          print("===== list approved =====");
+          print(data.length);
+          // print(response['data']);
+          print("===== || =====");
+        });
+      } else if (response['response']['status'] == 201) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Data tidak ada dibulan ini',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Periksa jaringan internet anda',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+    return _listMonthly;
+  }
+
+  Future<List<HistoryAll>> getListAll() async {
     final SharedPreferences prefs = await _prefs;
     tokenKeyUser = prefs.getString("tokenKey").toString();
     idUser = prefs.getString("idKeyUser").toString();
@@ -106,7 +165,34 @@ class _HistoryPageState extends State<HistoryPage> {
     return _listAll;
   }
 
-  void getDateFromDialog() async {
+  void getDateFromDialog(BuildContext context) async {
+    final prefs = await _prefs;
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1990),
+            lastDate: DateTime(2022))
+        .then((value) {
+      if (value != null) {
+        DateTime _fromDate = DateTime.now();
+        final dateFormat = new DateFormat('dd MMMM yyyy');
+        final monthFormat = new DateFormat('MMMM yyyy');
+        _fromDate = value;
+        final String date = _fromDate.format("Y-m-d");
+
+        final String month = monthFormat.format(_fromDate);
+
+        // String date = _fromDate.format("Y-m-d");
+        setState(() {
+          dateSelected = date;
+          monthSelected = month;
+        });
+        print(dateSelected);
+      }
+    });
+  }
+
+  void getDateNow(BuildContext context) async {
     final prefs = await _prefs;
     showDatePicker(
             context: context,
@@ -120,68 +206,46 @@ class _HistoryPageState extends State<HistoryPage> {
         final monthFormat = new DateFormat('MMMM');
         _fromDate = value;
         final String date = _fromDate.format("Y-m-d");
-       
+
         final String month = monthFormat.format(_fromDate);
 
         // String date = _fromDate.format("Y-m-d");
         setState(() {
           dateSelected = date;
           monthSelected = month;
-        
         });
         print(dateSelected);
       }
     });
   }
 
-void getDateNow() async {
-    final prefs = await _prefs;
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(1990),
-            lastDate: DateTime(2022))
-        .then((value) {
-      if (value != null) {
-        DateTime _fromDate = DateTime.now();
-        final dateFormat = new DateFormat('dd MMMM yyyy');
-        final monthFormat = new DateFormat('MMMM');
-        _fromDate = value;
-        final String date = _fromDate.format("Y-m-d");
-       
-        final String month = monthFormat.format(_fromDate);
-
-        // String date = _fromDate.format("Y-m-d");
-        setState(() {
-          dateSelected = date;
-          monthSelected = month;
-        
-        });
-        print(dateSelected);
-      }
-    });
-  }
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
 
- 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getListDaily();
     getListAll();
+    getListMonthly();
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
+    final monthFormatNow = new DateFormat('M');
+    final yearFormatNow = new DateFormat('yyyy');
+
     final String dateNow = dateFormatNow.format(_fromDateNow);
+    final String monthNow = monthFormatNow.format(_fromDateNow);
+    final String yearNow = yearFormatNow.format(_fromDateNow);
+
     nowDateSelected = dateNow;
+    month = monthNow;
+    year = yearNow;
   }
 
   @override
   Widget build(BuildContext context) {
-
-    
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -288,10 +352,11 @@ void getDateNow() async {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     setState(() {
-                      // addMasjid();
+                      // getHistoryMonthly(tokenKeyUser, year, month);
                     });
+
                     tabAll = false;
                     tabDaily = false;
                     tabMontly = true;
@@ -529,8 +594,53 @@ void getDateNow() async {
                 child: Row(
                   children: <Widget>[
                     InkWell(
-                      onTap: (){
+                      onTap: () async {
+                        var result = await getHistoryMonthly(
+                            tokenKeyUser, year, idMonth);
 
+                        print("hasil monthly");
+                        print(result['response']['status']);
+
+                        String awalBulan = "Januari";
+                        if (bulan.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: 'Pilih bulan terlebih dahulu',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        } else if (idMonth == 0) {
+                          Fluttertoast.showToast(
+                              msg: 'Ini bulan awal',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        } else if (idMonth != 0) {
+                          setState(() {
+                            idMonth--;
+                            print(idMonth);
+                            getHistoryMonthly(tokenKeyUser, year, idMonth);
+                          });
+                          if (result['response']['status'] == 201) {
+                            Fluttertoast.showToast(
+                                msg: 'Data tidak ada',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.greenAccent,
+                                textColor: Colors.white,
+                                fontSize: 16);
+                          }
+                        }
+
+                        tabAll = false;
+                        tabDaily = false;
+                        tabMontly = true;
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
@@ -544,32 +654,85 @@ void getDateNow() async {
                       ),
                     ),
                     InkWell(
-                      onTap: (){
+                      onTap: () {
+                        showModalBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10))),
+                            context: context,
+                            builder: (ctx) => _showCardMonth(ctx));
                         setState(() {
-                          getDateFromDialog();
+                          // getDateFromDialog();
                         });
-                       
+                        // if(idMonth == bulan[0]["id"]){
+                        //   monthName = bulan[0]["name"];
+                        // }
                       },
                       child: Container(
                           alignment: Alignment.center,
                           margin: EdgeInsets.only(left: 10),
                           width: MediaQuery.of(context).size.width * 0.65,
-                          child: 
-                          Text(
-                            monthSelected==''?nowDateSelected: monthSelected,
+                          child: Text(
+                            monthName == ''
+                                ? nowDateSelected
+                                : bulan[idMonth]['name'],
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 fontSize: 16,
                                 color: Colors.black),
-                          )
-                        ),
+                          )),
                     ),
-                      InkWell(
-                        onTap: (){
+                    InkWell(
+                      onTap: () async {
+                        var result = await getHistoryMonthly(
+                            tokenKeyUser, year, idMonth);
 
-                        },
-                        child: Container(
+                        print("hasil monthly");
+                        print(result['response']['status']);
+
+                        if (bulan.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: 'Pilih bulan terlebih dahulu',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        } else if (idMonth == 11) {
+                          Fluttertoast.showToast(
+                              msg: 'Ini adalah akhir',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        } else if (idMonth != 12) {
+                          setState(() {
+                            idMonth++;
+                            print(idMonth);
+                            getHistoryMonthly(tokenKeyUser, year, idMonth);
+                          });
+                          if (result['response']['status'] == 201) {
+                            Fluttertoast.showToast(
+                                msg: 'Data tidak ada',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.greenAccent,
+                                textColor: Colors.white,
+                                fontSize: 16);
+                          }
+                        }
+
+                        tabAll = false;
+                        tabDaily = false;
+                        tabMontly = true;
+                      },
+                      child: Container(
                         margin: EdgeInsets.only(right: 10),
                         width: 30,
                         height: 30,
@@ -578,15 +741,86 @@ void getDateNow() async {
                           color: Colors.blue,
                           size: 30,
                         ),
-                                          ),
                       ),
-
+                    ),
                   ],
                 ),
               )
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Container _showCardMonth(BuildContext context) {
+    return Container(
+      height: 250,
+      width: 100,
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10),
+        topRight: Radius.circular(10),
+      )),
+      child: FutureBuilder(
+        future: getMonth(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemCount: bulan.length,
+                itemBuilder: (context, i) {
+                  return InkWell(
+                      onTap: () async {
+                        setState(() {
+                          monthName = bulan[i]["name"];
+                          getHistoryMonthly(tokenKeyUser, year, bulan[i]["id"]);
+
+                          idMonth = bulan[i]["id"];
+                        });
+                        var result = await getHistoryMonthly(
+                            tokenKeyUser, year, bulan[i]["id"]);
+
+                        print("hasil monthly");
+                        print(result['response']['status']);
+
+                        if (result['response']['status'] == 201) {
+                          Fluttertoast.showToast(
+                              msg: 'Data tidak ada',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        }
+
+                        Navigator.of(context).pop();
+                        tabAll = false;
+                        tabDaily = false;
+                        tabMontly = true;
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(left: 20, right: 20),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Colors.grey, width: 2))),
+                          child: Center(
+                            child: Text(
+                              bulan[i]["name"],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )));
+                });
+          }
+
+          return CircularProgressIndicator();
+        },
       ),
     );
   }
