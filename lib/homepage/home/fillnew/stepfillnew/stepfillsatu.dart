@@ -36,11 +36,12 @@ class StepFillSatu extends StatefulWidget {
 class StepFillSatuState extends State<StepFillSatu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController? machineNameController;
+  TextEditingController machineNumberController = TextEditingController();
   TextEditingController teamMemberController = TextEditingController();
   TextEditingController factoryNameController = TextEditingController();
   TextEditingController factoryNameGroupController = TextEditingController();
 
-  bool isTapedMachineName = false;
+  bool isTapedMachineName = false, isTappedMachineNumber = false;
   bool isBreakDown = false, isPreventive = false, isInformation = false;
   bool isTappedTeamMember = false,
       isTappedFactory = false,
@@ -56,6 +57,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   String machineDetailIdSelected = '';
   String classificationIdSelected = '';
   String members = '';
+  String idMachineFromName = '';
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
@@ -196,23 +198,29 @@ class StepFillSatuState extends State<StepFillSatu> {
     }
   }
 
-  Future<void> getMachineName() async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    _listMachineName = await machineNameService.getMachineName(tokenUser);
-    print("data nama mesin: ");
-    print(_listMachineName.length);
+  Future<List<MachineNameModel>> getMachineName() async {
+    try {
+      final SharedPreferences prefs = await _prefs;
+      String? tokenUser = prefs.getString("tokenKey").toString();
+      _listMachineName = await machineNameService.getMachineName(tokenUser);
+      print("data nama mesin: ");
+      print(_listMachineName.length);
+      return await machineNameService.getMachineName(tokenUser);
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
-  // Future<List<MachineNumberModel>> getMachineNumberbyId(
-  //     String idMachine) async {
-  //   final SharedPreferences prefs = await _prefs;
-  //   String? tokenUser = prefs.getString("tokenKey").toString();
-  //   _listMachineNumber =
-  //       await machineNumberService.getMachineNumber(idMachine, tokenUser);
-  //   return await machineNumberService.getMachineNumber(idMachine, tokenUser);
-  //   // print(_listMachineNumber);
-  // }
+  Future<List<MachineNumberModel>> getMachineNumberbyId() async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    _listMachineNumber = await machineNumberService.getMachineNumber(
+        idMachineFromName, tokenUser);
+    return await machineNumberService.getMachineNumber(
+        idMachineFromName, tokenUser);
+    // print(_listMachineNumber);
+  }
 
   Future<List<MemberNameModel>> getListMemberName() async {
     final SharedPreferences prefs = await _prefs;
@@ -796,6 +804,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _listMachineName.length,
                             itemBuilder: (context, i) {
@@ -805,6 +814,13 @@ class StepFillSatuState extends State<StepFillSatu> {
                                     prefs.setString("machineId",
                                         _listMachineName[i].idMesin);
                                     prefs.setString("machineNameBool", "1");
+                                    setState(() {
+                                      idMachineFromName =
+                                          _listMachineName[i].idMesin;
+                                      machineNameController =
+                                          TextEditingController(
+                                              text: _listMachineName[i].nama);
+                                    });
                                   },
                                   child: Text(_listMachineName[i].nama));
                             },
@@ -840,14 +856,16 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
-              controller: machineNameController,
+              controller: machineNumberController,
               onTap: () {
-                setState(() {});
+                setState(() {
+                  isTappedMachineNumber = !isTappedMachineNumber;
+                });
               },
               onChanged: (value) async {
-                final prefs = await _prefs;
-                prefs.setString("machineDetailId", value);
-                prefs.setString("machineDetailBool", "1");
+                // final prefs = await _prefs;
+                // prefs.setString("machineDetailId", value);
+                // prefs.setString("machineDetailBool", "1");
               },
               style: const TextStyle(
                   fontFamily: 'Rubik',
@@ -864,6 +882,47 @@ class StepFillSatuState extends State<StepFillSatu> {
                       fontSize: 14,
                       fontWeight: FontWeight.w400)),
             ),
+            isTappedMachineNumber == false
+                ? Container()
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(8),
+                    child: FutureBuilder(
+                      future: getMachineNumberbyId(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _listMachineNumber.length,
+                            itemBuilder: (context, i) {
+                              return InkWell(
+                                  onTap: () async {
+                                    final prefs = await _prefs;
+                                    prefs.setString("machineDetailId",
+                                        _listMachineNumber[i].id);
+                                    prefs.setString("machineDetailBool", "1");
+                                    setState(() {
+                                      idMachineFromName =
+                                          _listMachineName[i].idMesin;
+                                      machineNumberController =
+                                          TextEditingController(
+                                              text: _listMachineNumber[i]
+                                                  .numberOfMachine);
+                                    });
+                                  },
+                                  child: Text(
+                                      _listMachineNumber[i].numberOfMachine));
+                            },
+                          );
+                        }
+
+                        return Center(
+                          child: Text("Memuat nama mesin..."),
+                        );
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
