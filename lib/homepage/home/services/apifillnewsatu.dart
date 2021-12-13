@@ -42,24 +42,22 @@ Future fillNewSatu(
     };
 
     for (int i = 0; i < teamMember.length; i++) {
-      // print("team member id:");
-      // print(teamMember[i]);
       data.addAll({"team_member[$i]": teamMember[i]});
     }
 
-    // String url = MyUrl().getUrlDevice();
-    // final response = await http.post(Uri.parse("$url/ecm_step1"),
-    //     headers: {
-    //       "Accept": "Application/json",
-    //       'Authorization': 'Bearer $token',
-    //     },
-    //     body: data);
+    String url = MyUrl().getUrlDevice();
+    final response = await http.post(Uri.parse("$url/ecm_step1"),
+        headers: {
+          "Accept": "Application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: data);
 
-    // if (response.body.isNotEmpty) {
-    //   var convertDatatoJson = jsonDecode(response.body);
-    //   json.decode(response.body);
-    //   return convertDatatoJson;
-    // }
+    if (response.body.isNotEmpty) {
+      var convertDatatoJson = jsonDecode(response.body);
+      json.decode(response.body);
+      return convertDatatoJson;
+    }
   } on SocketException catch (e) {
     print(e);
   } on TimeoutException catch (e) {

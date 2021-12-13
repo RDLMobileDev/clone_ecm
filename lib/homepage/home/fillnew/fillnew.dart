@@ -350,12 +350,14 @@ class _FillNewState extends State<FillNew> {
                         // Navigator.of(context).pop();
                         final prefs = await _prefs;
                         String idUser = prefs.getString("idKeyUser").toString();
-                        String tokenUser = prefs.getString("tokenKey").toString();
+                        String tokenUser =
+                            prefs.getString("tokenKey").toString();
                         String idEcm = prefs.getString("idEcm").toString();
 
-                        _listSummaryApproval = await summaryApproveService.getSummaryApproveName(tokenUser, idEcm, idUser);
-                        
-                        if(_listSummaryApproval.isNotEmpty){
+                        _listSummaryApproval = await summaryApproveService
+                            .getSummaryApproveName(tokenUser, idEcm, idUser);
+
+                        if (_listSummaryApproval.isNotEmpty) {
                           summaryPopup();
                         }
                       },
@@ -404,7 +406,6 @@ class _FillNewState extends State<FillNew> {
   }
 
   void summaryPopup() async {
-
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -460,7 +461,7 @@ class _FillNewState extends State<FillNew> {
                           color: Color(0xFF404446)),
                     ),
                     Text(
-                      "${_listSummaryApproval[0].lineStopJam}H ${_listSummaryApproval[0].lineStopMenit}M",
+                      "0H 0M",
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 14,
@@ -509,8 +510,11 @@ class _FillNewState extends State<FillNew> {
                                   image: AssetImage("assets/images/ario.png"),
                                   fit: BoxFit.fill)),
                         ),
-                        SizedBox(width: 16,),
-                        Text("${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text(
+                            "${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
                       ],
                     );
                   },
