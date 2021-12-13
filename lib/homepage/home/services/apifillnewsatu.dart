@@ -19,15 +19,15 @@ Future fillNewSatu(
   String machineDetailId,
 ) async {
   try {
-    print(token);
-    print(classificationId);
-    print(date);
-    print(userId);
-    print(teamMember);
-    print(locationId);
-    print(locationGroupId);
-    print(machineId);
-    print(machineDetailId);
+    // print(token);
+    // print(classificationId);
+    // print(date);
+    // print(userId);
+    // print(teamMember);
+    // print(locationId);
+    // print(locationGroupId);
+    // print(machineId);
+    // print(machineDetailId);
 
     Map<String, String> data;
 

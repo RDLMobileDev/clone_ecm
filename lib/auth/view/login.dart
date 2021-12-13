@@ -379,49 +379,49 @@ class _LogInState extends State<LogIn> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.3,
                     ),
-                    Container(
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12.0,
-                          ),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            TextSpan(
-                              text: "By continuing, you agree to our ",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xff404446)),
-                            ),
-                            TextSpan(
-                              text: "Terms of Service ",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xff00AEDB)),
-                            ),
-                            TextSpan(
-                              text: "\nand ",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xff404446)),
-                            ),
-                            TextSpan(
-                              text: "Privacy Policy",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xff00AEDB)),
-                            ),
-                            TextSpan(
-                              text: ".",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xff404446)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   child: RichText(
+                    //     text: TextSpan(
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 12.0,
+                    //       ),
+                    //       // ignore: prefer_const_literals_to_create_immutables
+                    //       children: [
+                    //         TextSpan(
+                    //           text: "By continuing, you agree to our ",
+                    //           style: TextStyle(
+                    //               fontFamily: 'Rubik',
+                    //               color: Color(0xff404446)),
+                    //         ),
+                    //         TextSpan(
+                    //           text: "Terms of Service ",
+                    //           style: TextStyle(
+                    //               fontFamily: 'Rubik',
+                    //               color: Color(0xff00AEDB)),
+                    //         ),
+                    //         TextSpan(
+                    //           text: "\nand ",
+                    //           style: TextStyle(
+                    //               fontFamily: 'Rubik',
+                    //               color: Color(0xff404446)),
+                    //         ),
+                    //         TextSpan(
+                    //           text: "Privacy Policy",
+                    //           style: TextStyle(
+                    //               fontFamily: 'Rubik',
+                    //               color: Color(0xff00AEDB)),
+                    //         ),
+                    //         TextSpan(
+                    //           text: ".",
+                    //           style: TextStyle(
+                    //               fontFamily: 'Rubik',
+                    //               color: Color(0xff404446)),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               )

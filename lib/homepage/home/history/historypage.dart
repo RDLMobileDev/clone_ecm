@@ -380,7 +380,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           borderRadius: BorderRadius.all(Radius.circular(40))),
                       // height: 20,
                       child: Text(
-                        "Montly",
+                        "Monthly",
                         style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 12,

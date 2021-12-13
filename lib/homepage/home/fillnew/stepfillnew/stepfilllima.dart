@@ -195,21 +195,32 @@ class _StepFillLimaState extends State<StepFillLima> {
                     ),
             ),
             InkWell(
-              onTap: () async {
-                final prefs = await _prefs;
-                try {
-                  bool isInputted = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => FormStepFilllima()));
+              onTap: _listItemChecking.length == 6
+                  ? () {
+                      Fluttertoast.showToast(
+                          msg: 'Item sudah maksimal 6',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: Colors.greenAccent,
+                          textColor: Colors.white,
+                          fontSize: 16);
+                    }
+                  : () async {
+                      final prefs = await _prefs;
+                      try {
+                        bool isInputted = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => FormStepFilllima()));
 
-                  if (isInputted) {
-                    prefs.setString("itemRepairBool", "1");
-                    getDataItemRepairing();
-                  }
-                } catch (e) {
-                  print(e);
-                }
-              },
+                        if (isInputted) {
+                          prefs.setString("itemRepairBool", "1");
+                          getDataItemRepairing();
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(5),
