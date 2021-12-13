@@ -140,81 +140,167 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 22),
-                          child: Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => DetailEcm(
-                                            notifId: _listApproved[i]
-                                                .notifEcmId
-                                                .toString(),
-                                          )));
-                                  print("ok");
-                                },
-                                child: Container(
-                                  width: 63,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: const Color(0xFF00AEDB)),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5))),
-                                  child: const Center(
-                                    child: Text(
-                                      "Review",
-                                      style: TextStyle(
-                                          fontFamily: 'Rubik',
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400),
+                          child: _listApproved[i].status == "null"
+                              ? Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => DetailEcm(
+                                                      notifId: _listApproved[i]
+                                                          .notifEcmId
+                                                          .toString(),
+                                                    )));
+                                        print("ok");
+                                      },
+                                      child: Container(
+                                        width: 63,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xFF00AEDB)),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5))),
+                                        child: const Center(
+                                          child: Text(
+                                            "Review",
+                                            style: TextStyle(
+                                                fontFamily: 'Rubik',
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Container(
-                                width: 63,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFF00AEDB),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Approve",
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Container(
-                                width: 63,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFF0000),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Decline",
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                                  ],
+                                )
+                              : _listApproved[i].status == 0
+                                  ? Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DetailEcm(
+                                                          notifId:
+                                                              _listApproved[i]
+                                                                  .notifEcmId
+                                                                  .toString(),
+                                                        )));
+                                            print("ok");
+                                          },
+                                          child: Container(
+                                            width: 63,
+                                            height: 24,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: const Color(
+                                                        0xFF00AEDB)),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))),
+                                            child: const Center(
+                                              child: Text(
+                                                "Review",
+                                                style: TextStyle(
+                                                    fontFamily: 'Rubik',
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Container(
+                                          width: 63,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFF00AEDB),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Center(
+                                            child: Text(
+                                              "Approve",
+                                              style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Container(
+                                          width: 63,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFFFF0000),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Center(
+                                            child: Text(
+                                              "Decline",
+                                              style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : _listApproved[i].status == 1
+                                      ? Row(
+                                          children: [
+                                            Container(
+                                              width: 63,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xFF00AEDB),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: Center(
+                                                child: Text(
+                                                  "Approve",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Rubik',
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Container(
+                                          width: 63,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFFFF0000),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Center(
+                                            child: Text(
+                                              "Decline",
+                                              style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ),
+                                        ),
                         )
                       ],
                     ),
