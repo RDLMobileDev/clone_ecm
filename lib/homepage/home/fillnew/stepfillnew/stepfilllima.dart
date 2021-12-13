@@ -21,6 +21,123 @@ class _StepFillLimaState extends State<StepFillLima> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<ItemChecking> _listItemChecking = <ItemChecking>[];
 
+  void confirmDelete() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.topRight,
+                child: Image.asset(
+                  "assets/icons/X.png",
+                  width: 20,
+                ),
+              ),
+            ),
+            Container(
+              child: Center(
+                  child: Image.asset(
+                "assets/icons/Sign.png",
+                width: 100,
+              )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 8),
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Text(
+                  "Confirm",
+                  style: TextStyle(
+                      color: Color(0xFF404446),
+                      fontFamily: 'Rubik',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Text(
+                  "Are you sure want to delete item?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color(0xFF404446),
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      width: 115,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF00AEDB)),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Center(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                              color: Color(0xFF00AEDB),
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 14,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      
+                    },
+                    child: Container(
+                        width: 115,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFEB3434),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Delete",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   void getDataItemRepairing() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
