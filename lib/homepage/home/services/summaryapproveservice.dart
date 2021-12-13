@@ -15,21 +15,24 @@ class SummaryApproveService {
     var url = MyUrl().getUrlDevice();
 
     try {
-      final response = await http
-          .get(Uri.parse("$url/summary?ecm_id=$ecmId&user_id=$idUser"), headers: {
-        "Accept": "Application/json",
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+          Uri.parse("$url/summary?ecm_id=$ecmId&user_id=$idUser"),
+          headers: {
+            "Accept": "Application/json",
+            'Authorization': 'Bearer $token',
+          });
 
       var dataApproval = json.decode(response.body);
-      
-      for(int i=0; i<dataApproval['data']['sumary'].length; i++){
+
+      // print(dataApproval);
+
+      for (int i = 0; i < dataApproval['data']['sumary'].length; i++) {
         var dataModel = SummaryApproveModel(
-          dataApproval['data']['sumary'][i]['nama'].toString(), 
-          dataApproval['data']['sumary'][i]['photo'].toString(), 
-          dataApproval['data']['sumary'][i]['role'].toString(), 
+          dataApproval['data']['sumary'][i]['nama'].toString(),
+          dataApproval['data']['sumary'][i]['photo'].toString(),
+          dataApproval['data']['sumary'][i]['role'].toString(),
           dataApproval['data']['line_stop']['jam'].toString(),
-          dataApproval['data']['sumary']['menit'].toString(),
+          dataApproval['data']['line_stop']['menit'].toString(),
         );
 
         _listSummaryApproveName.add(dataModel);
@@ -46,6 +49,7 @@ class SummaryApproveService {
       print(e);
       return [];
     } catch (e) {
+      print("from approve");
       print(e);
       return [];
     }
