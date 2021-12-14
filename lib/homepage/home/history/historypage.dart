@@ -10,6 +10,7 @@ import 'package:e_cm/homepage/notification/view/detailecm.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -27,7 +28,9 @@ class _HistoryPageState extends State<HistoryPage> {
   DateTime _fromDate = DateTime.now();
   String dateSelected = '';
   String monthSelected = '';
+  String yearSelected = '';
   String nowDateSelected = '';
+  String nowMonthSelected = '';
   final dateFormat = new DateFormat('dd MMMM yyyy');
   String choseDate = '';
   final monthFormater = new DateFormat('MMMM');
@@ -56,10 +59,20 @@ class _HistoryPageState extends State<HistoryPage> {
           // print(response['data']);
           print("===== || =====");
         });
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Show history ' + dateSelected,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Riwayat Harian Kosong',
+              msg: 'History ' + dateSelected + ' is empty',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -74,14 +87,15 @@ class _HistoryPageState extends State<HistoryPage> {
     return _listDaily;
   }
 
-  Future<List<HistoryMonthly>> getListMonthly() async {
+  Future<List<HistoryMonthly>> getListMonthly(
+      String yearsTarget, String monthTarget) async {
     final SharedPreferences prefs = await _prefs;
 
     String? tokenUser = prefs.getString("tokenKey").toString();
-    final String year = _fromDate.format("Y");
-    final String month = _fromDate.format("m");
     try {
-      var response = await getHistoryMonthly(tokenUser, year, month);
+      print("data berdasarkan = th " + yearsTarget + " / bln " + monthTarget);
+      var response =
+          await getHistoryMonthly(tokenUser, yearsTarget, monthTarget);
       if (response['response']['status'] == 200) {
         setStateIfMounted(() {
           var data = response['data'] as List;
@@ -91,10 +105,20 @@ class _HistoryPageState extends State<HistoryPage> {
           // print(response['data']);
           print("===== || =====");
         });
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Show history ' + monthSelected,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Riwayat Bulanan Kosong',
+              msg: 'History ' + monthSelected + ' is empty',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -123,10 +147,20 @@ class _HistoryPageState extends State<HistoryPage> {
           // print(response['data']);
           print("===== || =====");
         });
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Showing all of history E-CM Card',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Riwayat Kosong',
+              msg: 'E-CM Card history is empty',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -170,6 +204,34 @@ class _HistoryPageState extends State<HistoryPage> {
     });
   }
 
+  void getMonthFromDialog() async {
+    final prefs = await _prefs;
+    showMonthPicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1990),
+            lastDate: DateTime(2022))
+        .then((value) {
+      if (value != null) {
+        DateTime _fromDate = DateTime.now();
+        final monthFormat = new DateFormat('MMMM');
+        final yearFormat = new DateFormat('yyyy');
+        _fromDate = value;
+
+        final String month = monthFormat.format(_fromDate);
+        final String years = yearFormat.format(_fromDate);
+        String chooseMonth = _fromDate.format("m");
+        // String date = _fromDate.format("Y-m-d");
+        setState(() {
+          monthSelected = month;
+          yearSelected = years;
+          getListMonthly(yearSelected, chooseMonth);
+        });
+        print("bulan & thn yg dipilih = " + yearSelected + " / " + chooseMonth);
+      }
+    });
+  }
+
   // void getDateNow() async {
   //   final prefs = await _prefs;
   //   showDatePicker(
@@ -207,14 +269,15 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final String dateTime = _fromDate.format("Y-m-d");
+    final String dateTime = _fromDate.format("m Y");
     // getListDaily(dateTime);
-    // getListMonthly();
     // getListAll();
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
+    final monthFormatNow = new DateFormat('MMMM yyyy');
     final String dateNow = dateFormatNow.format(_fromDateNow);
     nowDateSelected = dateNow;
+    nowMonthSelected = monthFormatNow.format(_fromDateNow);
   }
 
   @override
@@ -292,8 +355,8 @@ class _HistoryPageState extends State<HistoryPage> {
                     onTap: () {
                       setState(
                         () {
-                          // getListDaily(choseDate);
-                          // print(dateSelected);
+                          String dateNow = _fromDate.format("Y-m-d");
+                          getListDaily(dateNow);
                           tabAll = false;
                           tabDaily = true;
                           tabMontly = false;
@@ -335,7 +398,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        getListMonthly();
+                        // getListMonthly();
+
+                        String monthNow = _fromDate.format("m");
+                        String yearsNow = _fromDate.format("Y");
+                        getListMonthly(yearsNow, monthNow);
                         tabAll = false;
                         tabDaily = false;
                         tabMontly = true;
@@ -570,25 +637,14 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        // height: 20,
-                        // color: Colors.amberAccent,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                        child: Text(
-                          "History based on " + monthFormater.format(_fromDate),
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              color: Colors.black87),
-                        )),
                     SingleChildScrollView(
                       child: Container(
                         // color: Colors.amberAccent,
+                        margin: EdgeInsets.symmetric(vertical: 8),
                         height: MediaQuery.of(context).size.height * 0.7,
                         width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -766,74 +822,74 @@ class _HistoryPageState extends State<HistoryPage> {
                         ),
                       ),
                     ),
-                    // Container(
-                    //   width: MediaQuery.of(context).size.width,
-                    //   height: 50,
-                    //   margin: EdgeInsets.only(right: 20, left: 20, bottom: 5),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(10),
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.grey.withOpacity(0.5),
-                    //         spreadRadius: 2,
-                    //         blurRadius: 7,
-                    //         offset: Offset(0, 3),
-                    //       )
-                    //     ],
-                    //     color: Colors.white,
-                    //   ),
-                    //   child: Row(
-                    //     children: <Widget>[
-                    //       InkWell(
-                    //         onTap: () {},
-                    //         child: Container(
-                    //           margin: EdgeInsets.only(left: 10),
-                    //           width: 30,
-                    //           height: 30,
-                    //           child: Icon(
-                    //             Icons.keyboard_arrow_left,
-                    //             color: Colors.white,
-                    //             size: 30,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       InkWell(
-                    //         onTap: () {
-                    //           setState(() {
-                    //             getDateFromDialog();
-                    //           });
-                    //         },
-                    //         child: Container(
-                    //             alignment: Alignment.center,
-                    //             margin: EdgeInsets.only(left: 10),
-                    //             width: MediaQuery.of(context).size.width * 0.65,
-                    //             child: Text(
-                    //               monthSelected == ''
-                    //                   ? nowDateSelected
-                    //                   : monthSelected,
-                    //               textAlign: TextAlign.center,
-                    //               style: TextStyle(
-                    //                   fontFamily: 'Rubik',
-                    //                   fontSize: 16,
-                    //                   color: Colors.black),
-                    //             )),
-                    //       ),
-                    //       InkWell(
-                    //         onTap: () {},
-                    //         child: Container(
-                    //           margin: EdgeInsets.only(right: 10),
-                    //           width: 30,
-                    //           height: 30,
-                    //           child: Icon(
-                    //             Icons.keyboard_arrow_right,
-                    //             color: Colors.white,
-                    //             size: 30,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // )
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              width: 30,
+                              height: 30,
+                              child: Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                getMonthFromDialog();
+                              });
+                            },
+                            child: Container(
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.only(left: 10),
+                                width: MediaQuery.of(context).size.width * 0.65,
+                                child: Text(
+                                  monthSelected == ''
+                                      ? nowMonthSelected
+                                      : monthSelected + ' ' + yearSelected,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                )),
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              width: 30,
+                              height: 30,
+                              child: Icon(
+                                Icons.keyboard_arrow_right,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 )),
             Visibility(
