@@ -837,7 +837,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                                               text: _listMachineName[i].nama);
                                     });
                                   },
-                                  child: Text(_listMachineName[i].nama));
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(_listMachineName[i].nama),
+                                  ));
                             },
                           );
                         }
@@ -937,14 +940,17 @@ class StepFillSatuState extends State<StepFillSatu> {
                                                   .numberOfMachine);
                                     });
                                   },
-                                  child: Text(
-                                      _listMachineNumber[i].numberOfMachine));
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                        _listMachineNumber[i].numberOfMachine),
+                                  ));
                             },
                           );
                         }
 
                         return Center(
-                          child: Text("Memuat nama mesin..."),
+                          child: Text("Memuat nomor mesin..."),
                         );
                       },
                     ),
