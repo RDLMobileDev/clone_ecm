@@ -2,10 +2,9 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future getHistoryAll(String token, userId) async {
+Future getHistoryAll(String token) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url =
-      "$myUrl/history?user_id=$userId";
+  String url = "$myUrl/history_semua";
   final response = await http.get(Uri.parse(url), headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
