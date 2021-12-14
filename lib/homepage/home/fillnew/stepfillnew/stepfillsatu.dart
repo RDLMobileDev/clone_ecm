@@ -66,6 +66,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   List<MachineNumberModel> _listMachineNumber = [];
   List<String> listTeamMember = [];
   List<MemberNameModel> listNamaMember = [];
+  List<bool> warnaClassifications = [];
+  Map<int, bool> mapClass = {};
 
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
@@ -171,6 +173,14 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   Future<List<ClassificationModel>> getClassificationData() async {
     _listClassification = await classificationService.getClassificationData();
+
+    if (_listClassification.isNotEmpty) {
+      for (int i = 0; i < _listClassification.length; i++) {
+        warnaClassifications.add(false);
+        mapClass[i] = false;
+      }
+    }
+
     return await classificationService.getClassificationData();
   }
 
@@ -260,154 +270,91 @@ class StepFillSatuState extends State<StepFillSatu> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        isBreakDown = true;
-                        isPreventive = false;
-                        isInformation = false;
-                        classificationIdSelected = '1';
-                        prefs.setString(
-                            "idClassification", classificationIdSelected);
-                        prefs.setString("classBool", "1");
-                      });
-                      print(classificationIdSelected);
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.27,
-                      height: 56,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(
-                              color: isBreakDown == false
-                                  ? Colors.white
-                                  : Color(0xFF00AEDB)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
+              height: 60,
+              child: FutureBuilder(
+                future: getClassificationData(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Text("Memuat Klasifikasi..."),
+                    );
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _listClassification.length,
+                    itemBuilder: (context, i) {
+                      return InkWell(
+                        onTap: () async {
+                          final prefs = await _prefs;
+                          setState(() {
+                            // isBreakDown = true;
+                            // isPreventive = false;
+                            // isInformation = false;
+                            // classificationIdSelected = '1';
+                            warnaClassifications[i] = !warnaClassifications[i];
+
+                            mapClass.updateAll((key, value) => false);
+                            if (mapClass[i] != null) {
+                              mapClass[i] = !mapClass[i]!;
+                            }
+                            print("map values -> $mapClass");
+                            prefs.setString(
+                                "idClassification", _listClassification[i].id);
+                            prefs.setString("classBool", "1");
+                          });
+                          Fluttertoast.showToast(
+                              msg:
+                                  'Anda memilih ${_listClassification[i].nama}',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                          // print(prefs.getString("idClassification"));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.27,
+                          height: 56,
+                          margin: EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              border: Border.all(
+                                  color: mapClass[i] == false
+                                      ? Colors.white
+                                      : Color(0xFF00AEDB)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 1,
+                                  offset: Offset(
+                                      0, 1), // changes position of shadow
+                                ),
+                              ]),
+                          child: Center(
+                            child: Text(
+                              _listClassification[i].nama,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: mapClass[i] == false
+                                      ? Color(0xFF404446)
+                                      : Color(0xFF00AEDB),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
                             ),
-                          ]),
-                      child: Center(
-                        child: Text(
-                          "Breakdown Maintenance",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: isBreakDown == false
-                                  ? Color(0xFF404446)
-                                  : Color(0xFF00AEDB),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        isBreakDown = false;
-                        isPreventive = true;
-                        isInformation = false;
-                        classificationIdSelected = '2';
-                        prefs.setString(
-                            "idClassification", classificationIdSelected);
-                        prefs.setString("classBool", "1");
-                      });
-                      print(classificationIdSelected);
+                      );
                     },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.27,
-                      height: 56,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(
-                              color: isPreventive == false
-                                  ? Colors.white
-                                  : Color(0xFF00AEDB)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
-                            ),
-                          ]),
-                      child: Center(
-                        child: Text(
-                          "Preventive Maintenance",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: isPreventive == false
-                                  ? Color(0xFF404446)
-                                  : Color(0xFF00AEDB),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        isBreakDown = false;
-                        isPreventive = false;
-                        isInformation = true;
-                        classificationIdSelected = '3';
-                        prefs.setString(
-                            "idClassification", classificationIdSelected);
-                        prefs.setString("classBool", "1");
-                      });
-                      print(classificationIdSelected);
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.27,
-                      height: 56,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(
-                              color: isInformation == false
-                                  ? Colors.white
-                                  : Color(0xFF00AEDB)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
-                            ),
-                          ]),
-                      child: Center(
-                        child: Text(
-                          "Information Maintenance",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: isInformation == false
-                                  ? Color(0xFF404446)
-                                  : Color(0xFF00AEDB),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                  );
+                },
               ),
             ),
             Container(
@@ -837,7 +784,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                                               text: _listMachineName[i].nama);
                                     });
                                   },
-                                  child: Text(_listMachineName[i].nama));
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: Text(_listMachineName[i].nama),
+                                  ));
                             },
                           );
                         }
@@ -937,14 +887,17 @@ class StepFillSatuState extends State<StepFillSatu> {
                                                   .numberOfMachine);
                                     });
                                   },
-                                  child: Text(
-                                      _listMachineNumber[i].numberOfMachine));
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: Text(
+                                        _listMachineNumber[i].numberOfMachine),
+                                  ));
                             },
                           );
                         }
 
                         return Center(
-                          child: Text("Memuat nama mesin..."),
+                          child: Text("Memuat nomor mesin..."),
                         );
                       },
                     ),
