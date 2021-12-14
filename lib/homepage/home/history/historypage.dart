@@ -22,6 +22,102 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String history = '';
+  String all = '';
+  String today = '';
+  String monthly = '';
+  String? making;
+  String a_hour = '';
+  String one_week = '';
+  String two_week = '';
+  String one_month = '';
+  String no_data = '';
+  String no_riwayat = '';
+
+ void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        history = dataLang['riwayat']['history'];
+        all = dataLang['riwayat']['all'];
+        today = dataLang['riwayat']['today'];
+        monthly = dataLang['riwayat']['monthly'];
+        making = dataLang['riwayat']['making_ecm'];
+        a_hour = dataLang['riwayat']['a_hour_ago'];
+        one_week = dataLang['riwayat']['one_week'];
+        two_week = dataLang['riwayat']['two_week'];
+        one_month = dataLang['riwayat']['one_month'];
+        no_data = dataLang['riwayat']['no_data'];
+        no_riwayat = dataLang['riwayat']['no_riwayat'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+        history = dataLang['riwayat']['history'];
+        all = dataLang['riwayat']['all'];
+        today = dataLang['riwayat']['today'];
+        monthly = dataLang['riwayat']['monthly'];
+        making = dataLang['riwayat']['making_ecm'];
+        a_hour = dataLang['riwayat']['a_hour_ago'];
+        one_week = dataLang['riwayat']['one_week'];
+        two_week = dataLang['riwayat']['two_week'];
+        one_month = dataLang['riwayat']['one_month'];
+        no_data = dataLang['riwayat']['no_data'];
+        no_riwayat = dataLang['riwayat']['no_riwayat'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
+
+
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<HistoryDaily> _listDaily = [];
   List<HistoryAll> _listAll = [];
@@ -106,7 +202,7 @@ class _HistoryPageState extends State<HistoryPage> {
       } else if (response['response']['status'] == 201) {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Data tidak ada dibulan ini',
+              msg: no_data,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -230,6 +326,8 @@ class _HistoryPageState extends State<HistoryPage> {
     getListDaily();
     getListAll();
     getListMonthly();
+    setBahasa();
+    setLang();
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
     final monthFormatNow = new DateFormat('M');
@@ -256,8 +354,8 @@ class _HistoryPageState extends State<HistoryPage> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text(
-          "History E-CM Card",
+        title: Text(
+          history,
           style: TextStyle(
               fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w700),
         ),
@@ -303,7 +401,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         // height: 20,
                         child: Text(
-                          "All",
+                          all,
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 12,
@@ -345,7 +443,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         // height: 20,
                         child: Text(
-                          "Today",
+                          today,
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 12,
@@ -386,7 +484,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         // height: 20,
                         child: Text(
-                          "Monthly",
+                          monthly,
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 12,
@@ -406,13 +504,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: Center(
                     child: Container(
                         margin: EdgeInsets.only(top: 40),
-                        child: Text("Riwayat Kosong")))),
+                        child: Text(no_riwayat)))),
             Visibility(
                 visible: tabMontly,
                 child: Center(
                     child: Container(
                         margin: EdgeInsets.only(top: 40),
-                        child: Text("Riwayat Kosong")))),
+                        child: Text(no_riwayat)))),
             Visibility(
               visible: tabDaily,
               child: Column(
@@ -482,9 +580,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w700)),
-                                                    const TextSpan(
-                                                        text:
-                                                            ' Making E-CM Card',
+                                                    TextSpan(
+                                                        text: making,
                                                         style: TextStyle(
                                                             color: Color(
                                                                 0xFF6C7072))),

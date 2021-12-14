@@ -51,6 +51,8 @@
                 "account": "Account"
             },
             "riwayat":{
+                "no_riwayat": "History is empty",
+                "no_data": "Data not found",
                 "history": "History E-CM Card",
                 "all": "All",
                 "today": "Today",
@@ -106,7 +108,8 @@
                 "yesterday": "Yesterday"
             },
             "daftar_nama_tm":{
-                "name_tm": "TM Name"
+                "name_tm": "TM Name",
+                "loading": "Loading List TM Name..."
             },
             "informasi":{
                 "informasi": "Information",
@@ -118,9 +121,10 @@
                 "fourty_minute": "> 40 minutes = GM require e-sign"
             },
             "notifikasi_tl":{
+                "loading": "Loading Notification...",
                 "notification_all": "All Notification",
                 "mark_all": "Mark all as read",
-                "send_ecm": "Send you a E-CM Card",
+                "send_ecm": "Sent you a E-CM Card",
                 "a_hour": "a hour ago",
                 "review": "Review",
                 "approve": "Approve",
@@ -133,7 +137,7 @@
                 "mark_all": "Mark all as read",
                 "was_approve": "Was Approve your E-CM Card",
                 "a_hour": "a hour ago",
-                "two_hour": "2 Hour ago"
+                "one_day": "1 Day ago"
             },
             "step_8":{
                 "copy_to": "Copy to",

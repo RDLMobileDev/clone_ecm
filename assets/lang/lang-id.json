@@ -48,6 +48,8 @@
             "account": "Akun"
         },
         "riwayat":{
+            "no_riwayat": "Riwayat Kosong",
+            "no_data": "Data tidak ada",
             "history": "Riwayat E-CM Card",
             "all": "Semua",
             "today": "Hari ini",
@@ -103,7 +105,8 @@
             "yesterday": "Kemarin"
         },
         "daftar_nama_tm":{
-            "name_tm": "Nama TM"
+            "name_tm": "Nama TM",
+            "loading": "Memuat List Nama TM..."
         },
         "informasi":{
             "informasi": "Informasi",
@@ -115,6 +118,7 @@
             "fourty_minute": "> 40 menit = GM wajib tanda tangan"
         },
         "notifikasi_tl":{
+            "loading": "Loading Notifikasi...",
             "notification_all": "Pemberitahuan",
             "mark_all": "Telah dibaca semua",
             "send_ecm": "Mengirimi Anda E-CM Card",
@@ -130,7 +134,7 @@
             "mark_all": "Tandai dibaca semua",
             "was_approve": "Telah Menyetujui E-CM Card Anda",
             "a_hour": "1 Jam Lalu",
-            "two_hour": "2 Jam Lalu"
+            "one_day": "1 Hari Lalu"
         },
         "step_8":{
             "copy_to": "Copy to",
