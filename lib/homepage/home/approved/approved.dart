@@ -26,29 +26,25 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
     try {
       var response = await getApproved(idUser, tokenUser);
       if (response['response']['status'] == 200) {
-        setStateIfMounted(() {
-          var data = response['data'] as List;
-          _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
-          print("===== list approved =====");
-          print(_listApproved[0].status);
-          print(data.length);
-          // print(response['data']);
-          print("===== || =====");
-        });
+        var data = response['data'] as List;
+        _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
+        print("===== list approved =====");
+        print(data.length);
+        // print(response['data']);
+        print("===== || =====");
+
       } else {
-        setState(() {
-          Fluttertoast.showToast(
-              msg: 'Periksa jaringan internet anda',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        Fluttertoast.showToast(
+            msg: 'Periksa jaringan internet anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
       }
     } catch (e) {
-      print(e);
+      print("approved exception $e");
     }
     return _listApproved;
   }
@@ -59,9 +55,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getApprovedData();
   }
 
   @override
@@ -83,233 +77,197 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.all(16),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _listApproved.isEmpty ? 0 : _listApproved.length,
-            itemBuilder: (context, i) {
-              return Container(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: const BoxDecoration(
-                          color: Color(0xFF00AEDB),
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: AssetImage("assets/images/ario.png"))),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                            ),
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'E-CM Card from ',
-                                  style: TextStyle(color: Color(0xFF6C7072))),
-                              TextSpan(
-                                  text: _listApproved[i].nama.toString(),
-                                  style: TextStyle(
-                                      color: Color(0xFF00AEDB),
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
-                        ),
-                        const Text(
-                          "1 hour ago",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 10,
-                              color: Color(0xFF979C9E)),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 22),
-                          child: _listApproved[i].status == "null"
-                              ? Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) => DetailEcm(
-                                                      notifId: _listApproved[i]
-                                                          .notifEcmId
-                                                          .toString(),
-                                                    )));
-                                        print("ok");
-                                      },
-                                      child: Container(
-                                        width: 63,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: const Color(0xFF00AEDB)),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(5))),
-                                        child: const Center(
-                                          child: Text(
-                                            "Review",
-                                            style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : _listApproved[i].status == "0"
-                                  ? Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        DetailEcm(
-                                                          notifId:
-                                                              _listApproved[i]
-                                                                  .notifEcmId
-                                                                  .toString(),
-                                                        )));
-                                            print("ok");
-                                          },
-                                          child: Container(
-                                            width: 63,
-                                            height: 24,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: const Color(
-                                                        0xFF00AEDB)),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(5))),
-                                            child: const Center(
-                                              child: Text(
-                                                "Review",
-                                                style: TextStyle(
-                                                    fontFamily: 'Rubik',
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Container(
-                                          width: 63,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFF00AEDB),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Center(
-                                            child: Text(
-                                              "Approve",
-                                              style: TextStyle(
-                                                  fontFamily: 'Rubik',
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Container(
-                                          width: 63,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFFF0000),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Center(
-                                            child: Text(
-                                              "Decline",
-                                              style: TextStyle(
-                                                  fontFamily: 'Rubik',
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : _listApproved[i].status == "1"
-                                      ? Row(
-                                          children: [
-                                            Container(
-                                              width: 63,
-                                              height: 24,
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFF00AEDB),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              child: Center(
-                                                child: Text(
-                                                  "Approve",
-                                                  style: TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Container(
-                                          width: 63,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFFF0000),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Center(
-                                            child: Text(
-                                              "Decline",
-                                              style: TextStyle(
-                                                  fontFamily: 'Rubik',
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ),
-                        )
-                      ],
-                    ),
+      body: FutureBuilder(
+          future: getApprovedData(),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<ApprovedModel>> snapshot) {
+            if (snapshot.hasData) {
+              return _listApproved.isEmpty
+                  ? _buildErrorResultWidget()
+                  : _buildBodyWidget();
+            }
+
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Wrap(
+                  children: const [
+                    CircularProgressIndicator(),
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          }),
+    );
+  }
+
+  Widget _buildBodyWidget() {
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(16),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: _listApproved.length,
+          itemBuilder: (context, i) {
+            return Container(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: const BoxDecoration(
+                        color: Color(0xFF00AEDB),
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/ario.png"))),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                          ),
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'E-CM Card from ',
+                                style: TextStyle(color: Color(0xFF6C7072))),
+                            TextSpan(
+                                text: _listApproved[i].nama.toString(),
+                                style: TextStyle(
+                                    color: Color(0xFF00AEDB),
+                                    fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                      ),
+                      const Text(
+                        "1 hour ago",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 10,
+                            color: Color(0xFF979C9E)),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 22),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DetailEcm(
+                                          notifId: _listApproved[i]
+                                              .notifEcmId
+                                              .toString(),
+                                        )));
+                              },
+                              child: Container(
+                                width: 63,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color(0xFF00AEDB)),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: const Center(
+                                  child: Text(
+                                    "Review",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Visibility(
+                              visible: _listApproved[i].status != "decline",
+                              child: Container(
+                                width: 63,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                    color: _listApproved[i].status != "accept"
+                                        ? Color(0xFF00AEDB)
+                                        : Color(0xFF979C9E),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: Center(
+                                  child: Text(
+                                    _listApproved[i].status != "accept"
+                                        ? "Approve"
+                                        : "Approved",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Visibility(
+                              visible: _listApproved[i].status != "accept",
+                              child: Container(
+                                width: 63,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                    color: _listApproved[i].status != "decline"
+                                        ? Color(0xFFFF0000)
+                                        : Color(0xFF979C9E),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: Center(
+                                  child: Text(
+                                    _listApproved[i].status != "decline"
+                                        ? "Decline"
+                                        : "Declined",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorResultWidget() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: Wrap(
+          children: const [
+            Text("Data E-CM card untuk user ini tidak ada"),
+          ],
         ),
       ),
     );
