@@ -536,28 +536,39 @@ class StepFillSatuState extends State<StepFillSatu> {
                             return InkWell(
                               onTap: () async {
                                 final prefs = await _prefs;
-                                if (members.isEmpty) {
-                                  setState(() {
-                                    members = listNamaMember[i].name + ', ';
-                                  });
-                                  teamMemberController =
-                                      TextEditingController(text: members);
-                                  // listTeamMember.add(listNamaMember[i].id);
+                                if (listTeamMember.length != 6) {
+                                  if (members.isEmpty) {
+                                    setState(() {
+                                      members = listNamaMember[i].name + ', ';
+                                    });
+                                    teamMemberController =
+                                        TextEditingController(text: members);
+                                    // listTeamMember.add(listNamaMember[i].id);
+                                  } else {
+                                    setState(() {
+                                      members += listNamaMember[i].name + ', ';
+                                    });
+                                    teamMemberController =
+                                        TextEditingController(text: members);
+                                    // listTeamMember.add(listNamaMember[i].id);
+                                  }
+
+                                  listTeamMember.add(listNamaMember[i].id);
+                                  print(listTeamMember);
+                                  prefs.setStringList(
+                                      "teamMember", listTeamMember);
+
+                                  prefs.setString("teamMemberBool", "1");
                                 } else {
-                                  setState(() {
-                                    members += listNamaMember[i].name + ', ';
-                                  });
-                                  teamMemberController =
-                                      TextEditingController(text: members);
-                                  // listTeamMember.add(listNamaMember[i].id);
+                                  Fluttertoast.showToast(
+                                      msg: 'Member maksimal 6',
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: Colors.greenAccent,
+                                      textColor: Colors.white,
+                                      fontSize: 16);
                                 }
-
-                                listTeamMember.add(listNamaMember[i].id);
-                                print(listTeamMember);
-                                prefs.setStringList(
-                                    "teamMember", listTeamMember);
-
-                                prefs.setString("teamMemberBool", "1");
                               },
                               child: Container(
                                   padding: const EdgeInsets.all(10),
@@ -861,6 +872,17 @@ class StepFillSatuState extends State<StepFillSatu> {
                 setState(() {
                   isTappedMachineNumber = !isTappedMachineNumber;
                 });
+
+                if (_listMachineNumber.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: 'Pilih nama mesin dahulu',
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: Colors.greenAccent,
+                      textColor: Colors.white,
+                      fontSize: 16);
+                }
               },
               onChanged: (value) async {
                 // final prefs = await _prefs;
