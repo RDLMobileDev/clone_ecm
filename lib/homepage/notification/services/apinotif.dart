@@ -15,7 +15,7 @@ class NotifikasiService {
 
     try {
       final response = await http
-          .get(Uri.parse("$url/notif_review?user_id=$idUser"), headers: {
+          .get(Uri.parse("$url/notif_review_acc?user_id=$idUser"), headers: {
         "Accept": "Application/json",
         'Authorization': 'Bearer $token',
       });
