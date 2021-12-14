@@ -789,7 +789,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                   isTapedMachineName = !isTapedMachineName;
                 });
               },
-              onChanged: (value) async {},
+              onChanged: (value) async {
+                final prefs = await _prefs;
+                prefs.setString("machineId", value);
+                prefs.setString("machineNameBool", "1");
+              },
               style: const TextStyle(
                   fontFamily: 'Rubik',
                   fontSize: 14,
@@ -822,8 +826,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                               return InkWell(
                                   onTap: () async {
                                     final prefs = await _prefs;
-                                    prefs.setString("machineId",
-                                        _listMachineName[i].idMesin);
+                                    prefs.setString(
+                                        "machineId", _listMachineName[i].nama);
                                     prefs.setString("machineNameBool", "1");
                                     setState(() {
                                       idMachineFromName =
@@ -885,9 +889,9 @@ class StepFillSatuState extends State<StepFillSatu> {
                 }
               },
               onChanged: (value) async {
-                // final prefs = await _prefs;
-                // prefs.setString("machineDetailId", value);
-                // prefs.setString("machineDetailBool", "1");
+                final prefs = await _prefs;
+                prefs.setString("machineDetailId", value);
+                prefs.setString("machineDetailBool", "1");
               },
               style: const TextStyle(
                   fontFamily: 'Rubik',
@@ -922,7 +926,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   onTap: () async {
                                     final prefs = await _prefs;
                                     prefs.setString("machineDetailId",
-                                        _listMachineNumber[i].id);
+                                        _listMachineNumber[i].numberOfMachine);
                                     prefs.setString("machineDetailBool", "1");
                                     setState(() {
                                       idMachineFromName =
