@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/item_checking.dart';
+import 'package:e_cm/homepage/home/model/steplimaitemmodel.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FormStepFilllima extends StatefulWidget {
-  const FormStepFilllima({Key? key}) : super(key: key);
+  final bool? isUpdate;
+
+  const FormStepFilllima({Key? key, this.isUpdate}) : super(key: key);
 
   @override
   _FormStepFilllimaState createState() => _FormStepFilllimaState();
@@ -51,6 +54,63 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   };
 
   final DateTime now = DateTime.now();
+
+  void getItemStepLimaforUpdate() async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("tokenKey").toString();
+    String? userId = prefs.getString("idKeyUser") ?? "-";
+    String? idEcmItem = prefs.getString("idEcmItem");
+
+    try {
+      final data = await getFillLimaItem(idEcmItem!, userId, token);
+
+      switch (data["response"]['status']) {
+        case 200:
+          var dataItem = (data['data'] as List)
+              .map((e) => StepLimaItemModel.fromJson(e))
+              .toList();
+          setState(() {
+            formValue = {
+              "item": dataItem[0].partNama!,
+              "note": dataItem[0].note!,
+              "start": dataItem[0].tEcmitemStart!,
+              "end": dataItem[0].tEcmitemEnd!,
+              "name": dataItem[0].userName!,
+              "repair": dataItem[0].repairMade!,
+            };
+          });
+          break;
+        default:
+          Fluttertoast.showToast(
+              msg: 'Gagal mendapat daftar item checking',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          break;
+      }
+    } catch (e) {
+      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
+      if (e is SocketException) {
+        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
+      }
+
+      if (e is TimeoutException) {
+        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
+      }
+
+      Fluttertoast.showToast(
+          msg: exceptionMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    }
+  }
 
   void getStep4Data() async {
     final prefs = await SharedPreferences.getInstance();
@@ -216,6 +276,9 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   void initState() {
     super.initState();
     getStep4Data();
+    if (widget.isUpdate == true) {
+      getItemStepLimaforUpdate();
+    }
     getUsernameSession();
   }
 
