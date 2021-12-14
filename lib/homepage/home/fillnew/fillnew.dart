@@ -264,7 +264,7 @@ class _FillNewState extends State<FillNew> {
           textNext = 'Finish';
         });
         if (prefs.getString("copyToBool")!.isNotEmpty) {
-          // var res = _stepFillDelapan.getMethodPostStep();
+          var res = _stepFillDelapan.getMethodPostStep();
 
           String idUser = prefs.getString("idKeyUser").toString();
           String tokenUser = prefs.getString("tokenKey").toString();
@@ -400,7 +400,7 @@ class _FillNewState extends State<FillNew> {
         }
       }
     } catch (e) {
-      print(e);
+      print("fill new error -> $e");
       Fluttertoast.showToast(
           msg: 'Anda berada di step ${_currentStep + 1}, form diisi semua',
           toastLength: Toast.LENGTH_LONG,
