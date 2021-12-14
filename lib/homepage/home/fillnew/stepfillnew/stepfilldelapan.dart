@@ -34,7 +34,6 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   }
 
   postStepDelapan() async {
-    
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm").toString();
@@ -47,6 +46,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
       var response = await fillNewDelapan(
           ecmId, engineerToKey!, productToKey!, othersToKey!, tokenUser);
 
+      print("response step 8:");
       print(response);
     } catch (e) {
       print(e);
