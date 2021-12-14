@@ -659,10 +659,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         Text(" : "),
                         Expanded(
                           flex: 4,
-                          child: Text(
-                              _listItemCheck[i].note.toString() == "null"
-                                  ? "-"
-                                  : _listItemCheck[i].note.toString()),
+                          child: _listItemCheck[i].note.toString() == "null"
+                              ? const Text("-")
+                              : _buildNoteWidget(
+                                  _listItemCheck[i].note.toString()),
                         )
                       ],
                     ),
@@ -765,7 +765,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         Text(" : "),
                         Expanded(
                           flex: 4,
-                          child: Text(_listItemRepair[i].note.toString()),
+                          child: _buildNoteWidget(
+                            _listItemRepair[i].note.toString(),
+                          ),
                         )
                       ],
                     ),
@@ -1128,6 +1130,101 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoteWidget(String noteValue) {
+    switch (noteValue) {
+      case "ok":
+        return _buildOkWidget();
+      case "limit":
+        return _buildLimitWidget();
+      default:
+        return _buildNgWidget();
+    }
+  }
+
+  Widget _buildOkWidget() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10, right: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF00AEDB),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent),
+      // ignore: prefer_const_literals_to_create_immutables
+      child: Row(
+        children: const <Widget>[
+          Icon(
+            Icons.circle_outlined,
+            color: Color(0xFF00AEDB),
+            size: 20,
+          ),
+          Text(
+            'OK',
+            style: TextStyle(
+                color: Color(0xFF00AEDB), fontSize: 16, fontFamily: 'Rubik'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLimitWidget() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10, right: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF00AEDB),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent),
+      // ignore: prefer_const_literals_to_create_immutables
+      child: Row(
+        children: const <Widget>[
+          Icon(
+            Icons.change_history_outlined,
+            color: Color(0xFF00AEDB),
+            size: 20,
+          ),
+          Text(
+            'Limit',
+            style: TextStyle(
+                color: Color(0xFF00AEDB), fontSize: 16, fontFamily: 'Rubik'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNgWidget() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF00AEDB),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent),
+      // ignore: prefer_const_literals_to_create_immutables
+      child: Row(
+        children: const <Widget>[
+          Icon(
+            Icons.close,
+            color: Color(0xFF00AEDB),
+            size: 20,
+          ),
+          Text(
+            'N / G',
+            style: TextStyle(
+                color: Color(0xFF00AEDB), fontSize: 16, fontFamily: 'Rubik'),
+          )
         ],
       ),
     );
