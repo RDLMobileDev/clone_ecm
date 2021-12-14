@@ -255,18 +255,17 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     try {
       String resultMessage = "Data disimpan";
       var result = await fillNewEmpatInsert(
-        tokenUser,
-        ecmId!,
-        idMachineRes!,
-        formValue["item"]!,
-        formValue["standard"]!,
-         formValue["actual"]!,
-         formValue["note"]!,
-         formValue["start"]!,
-         formValue["end"]!,
-         idUser,
-         formValue["name"]!
-      );
+          tokenUser,
+          ecmId!,
+          idMachineRes!,
+          formValue["item"]!,
+          formValue["standard"]!,
+          formValue["actual"]!,
+          formValue["note"]!,
+          formValue["start"]!,
+          formValue["end"]!,
+          idUser,
+          formValue["name"]!);
 
       print(resultMessage);
 
@@ -325,19 +324,18 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     try {
       String resultMessage = "Data diperbarui";
       var result = await fillNewEmpatUpdate(
-        ecmId!,
-        idMachineRes!,
-        formValue["item"]!,
-        formValue["standard"]!,
-         formValue["actual"]!,
-         formValue["note"]!,
-         formValue["start"]!,
-         formValue["end"]!,
-         idUser,
-         formValue["name"]!,
+          ecmId!,
+          idMachineRes!,
+          formValue["item"]!,
+          formValue["standard"]!,
+          formValue["actual"]!,
+          formValue["note"]!,
+          formValue["start"]!,
+          formValue["end"]!,
+          idUser,
+          formValue["name"]!,
           idEcmItem!,
-          tokenUser
-      );
+          tokenUser);
 
       print("response update -> $result");
 
@@ -915,7 +913,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     setState(() {
                       formValidations["name"] =
                           item.userFullName?.isNotEmpty ?? false;
-                      formValue["name"] = item.userFullName ?? "-";
+                      formValue["name"] = item.userId!;
                     });
                   },
                   fieldViewBuilder: (context, textEditingController, focusNode,
