@@ -301,6 +301,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                     )
                   : Container(
                       child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: _listItemChecking.length,
                         itemBuilder: (context, i) {
