@@ -22,10 +22,9 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? idUser = prefs.getString("idKeyUser").toString();
-
+    print("jabatan = " + idUser.toString());
     try {
       var response = await getApproved(idUser, tokenUser);
-      print("response apporoved -> ${response['response']}");
       if (response['response']['status'] == 200) {
         var data = response['data'] as List;
         _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();

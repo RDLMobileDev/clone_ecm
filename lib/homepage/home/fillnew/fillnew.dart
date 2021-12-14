@@ -265,6 +265,16 @@ class _FillNewState extends State<FillNew> {
         });
         if (prefs.getString("copyToBool")!.isNotEmpty) {
           var res = _stepFillDelapan.getMethodPostStep();
+
+          String idUser = prefs.getString("idKeyUser").toString();
+          String tokenUser = prefs.getString("tokenKey").toString();
+          String idEcm = prefs.getString("idEcm").toString();
+
+          _listSummaryApproval = await summaryApproveService
+              .getSummaryApproveName(tokenUser, idEcm, idUser);
+
+          print(_listSummaryApproval[0].lineStopJam);
+
           prefs.remove("classBool");
           prefs.remove("dateBool");
           prefs.remove("teamMemberBool");
@@ -348,17 +358,14 @@ class _FillNewState extends State<FillNew> {
                     InkWell(
                       onTap: () async {
                         // Navigator.of(context).pop();
-                        final prefs = await _prefs;
-                        String idUser = prefs.getString("idKeyUser").toString();
-                        String tokenUser =
-                            prefs.getString("tokenKey").toString();
-                        String idEcm = prefs.getString("idEcm").toString();
-
-                        _listSummaryApproval = await summaryApproveService
-                            .getSummaryApproveName(tokenUser, idEcm, idUser);
+                        // final prefs = await _prefs;
 
                         if (_listSummaryApproval.isNotEmpty) {
+                          print("data approve");
+                          print(_listSummaryApproval);
                           summaryPopup();
+                        } else {
+                          print(_listSummaryApproval);
                         }
                       },
                       child: Container(
@@ -393,9 +400,9 @@ class _FillNewState extends State<FillNew> {
         }
       }
     } catch (e) {
-      print(e);
+      print("fill new error -> $e");
       Fluttertoast.showToast(
-          msg: 'You are in step ${_currentStep + 1}, form must be filled',
+          msg: 'Anda berada di step ${_currentStep + 1}, form diisi semua',
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -461,7 +468,7 @@ class _FillNewState extends State<FillNew> {
                           color: Color(0xFF404446)),
                     ),
                     Text(
-                      "0H 0M",
+                      "${_listSummaryApproval[0].lineStopJam}H ${_listSummaryApproval[0].lineStopMenit}M",
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 14,
@@ -499,24 +506,32 @@ class _FillNewState extends State<FillNew> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: _listSummaryApproval.length,
                   itemBuilder: (context, i) {
-                    return Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: AssetImage("assets/images/ario.png"),
-                                  fit: BoxFit.fill)),
+                    if (_listSummaryApproval[i].nama != "null") {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image:
+                                          AssetImage("assets/images/ario.png"),
+                                      fit: BoxFit.fill)),
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Text(
+                                "${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
+                          ],
                         ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Text(
-                            "${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
-                      ],
-                    );
+                      );
+                    }
+
+                    return Container();
                   },
                 ),
               ),
