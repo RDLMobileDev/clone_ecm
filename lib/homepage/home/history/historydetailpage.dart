@@ -411,17 +411,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 child: _buildTotalCost(),
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: _buildButtonDecline(),
-                  ),
-                  Container(
-                    child: _buildButtonAdd(),
-                  ),
-                ],
-              )
+              Container(
+                child: _buildButtonAdd(),
+              ),
             ],
           ),
         ),
@@ -1073,7 +1065,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
 
   Widget _buildButtonAdd() {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.44,
+      width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1092,10 +1084,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
             onPressed: () {
-              postUpdateStatus('accept');
+              // postUpdateStatus('Download Report');
             },
             child: Text(
-              'Add Signature',
+              'Download Report',
               style: TextStyle(
                 fontFamily: 'NunitoSans',
                 color: Colors.white,

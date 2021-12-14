@@ -8,12 +8,12 @@ class HistoryMonthly {
 
   factory HistoryMonthly.fromJson(Map<String, dynamic> json) {
     return HistoryMonthly(
-        tEcmId: json['notifecm_id'].toString(),
+        tEcmId: json['t_ecm_id'].toString(),
         nama: json['name'].toString(),
         foto: json['photo'].toString(),
         waktu: json['ago'].toString());
   }
 
   Map<String, dynamic> toJson() =>
-      {'notifecm_id': tEcmId, 'name': nama, 'photo ': foto, 'ago': waktu};
+      {'t_ecm_id': tEcmId, 'name': nama, 'photo ': foto, 'ago': waktu};
 }
