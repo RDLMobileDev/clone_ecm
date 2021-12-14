@@ -155,9 +155,10 @@
                 "quantity_used": "Quantity (Used) * :",
                 "quantity_stock": "Quantity (Stock) * :",
                 "cost": "Cost (Rp) *",
+                "type_cost": "Type the Cost",
                 "subtotal": "Sub Total (Rp):",
                 "save_sparepart": "Save Spare Part",
-                "cost_": "Cost",
+                "cost_": "Cost :",
                 "total_cost": "Total Cost (Rp):",
                 "back": "Back",
                 "next_eight": "Next 8/8"
