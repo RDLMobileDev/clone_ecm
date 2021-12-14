@@ -442,7 +442,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             onTap: () async {
                               final SharedPreferences prefs = await _prefs;
                               prefs.setString("userName",
-                                  _listAllUser[i].userName.toString());
+                                  _listAllUser[i].userId.toString());
                               prefs.setString("userNameBool", "1");
                               setState(() {
                                 userNameController = TextEditingController(

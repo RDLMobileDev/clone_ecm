@@ -30,6 +30,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
           var data = response['data'] as List;
           _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
           print("===== list approved =====");
+          print(_listApproved[0].status);
           print(data.length);
           // print(response['data']);
           print("===== || =====");
@@ -176,7 +177,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                     ),
                                   ],
                                 )
-                              : _listApproved[i].status == 0
+                              : _listApproved[i].status == "0"
                                   ? Row(
                                       children: [
                                         InkWell(
@@ -258,7 +259,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         ),
                                       ],
                                     )
-                                  : _listApproved[i].status == 1
+                                  : _listApproved[i].status == "1"
                                       ? Row(
                                           children: [
                                             Container(

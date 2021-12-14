@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController historyStreamController = StreamController();
   String userName = "";
-  bool isVisibility = true;
+  bool isVisibility = true, activitySectionJabatan = false;
 
   late Timer _timer;
 
@@ -45,15 +45,19 @@ class _HomeState extends State<Home> {
 
   getRoleUser() async {
     final SharedPreferences prefs = await _prefs;
-    int jabatanUser = prefs.getInt("jabatanKey") ?? 0;
+    int? jabatanUser = prefs.getInt("jabatanKey");
 
-    setState(() {
-      if (jabatanUser <= 5) {
-        isVisibility = false;
-      } else {
-        isVisibility = true;
-      }
-    });
+    if (jabatanUser != null) {
+      setState(() {
+        if (jabatanUser != 8) {
+          isVisibility = false;
+          activitySectionJabatan = true;
+        } else {
+          isVisibility = true;
+          activitySectionJabatan = false;
+        }
+      });
+    }
   }
 
   Future<List<HistoryEcmModel>> getHistoryEcmByUser() async {
@@ -321,118 +325,128 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 16,
             ),
-            InkWell(
-              onTap: () {
-                // Navigator.of(context).push(
-                //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ApprovedEcm()));
-              },
+            Visibility(
+              visible: activitySectionJabatan,
               child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                ),
-                padding: const EdgeInsets.only(left: 16, right: 16),
                 width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Color(0xFF00AEDB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "Approved E-Sign",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400),
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigator.of(context).push(
+                        //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ApprovedEcm()));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                        ),
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF00AEDB),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              "Approved E-Sign",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ListTmName()));
-              },
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                ),
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Color(0xFF00AEDB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "List TM Name",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400),
+                    SizedBox(
+                      height: 16,
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HistoryPage()));
-              },
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                ),
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Color(0xFF00AEDB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "History E-CM Card",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ListTmName()));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                        ),
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF00AEDB),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              "List TM Name",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.white,
-                    )
+                    SizedBox(
+                      height: 16,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => HistoryPage()));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                        ),
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF00AEDB),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              "History E-CM Card",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
