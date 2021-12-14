@@ -328,8 +328,18 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               ),
             ),
-            Visibility(visible: tabAll, child: Text("data all")),
-            Visibility(visible: tabMontly, child: Text("data monthly")),
+            Visibility(
+                visible: tabAll,
+                child: Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: 40),
+                        child: Text("Riwayat Kosong")))),
+            Visibility(
+                visible: tabMontly,
+                child: Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: 40),
+                        child: Text("Riwayat Kosong")))),
             Visibility(
               visible: tabDaily,
               child: Column(
@@ -338,7 +348,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   SingleChildScrollView(
                     child: Container(
                       // color: Colors.amberAccent,
-                      height: MediaQuery.of(context).size.height * 0.75,
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      height: MediaQuery.of(context).size.height * 0.7,
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                       child: ListView.builder(
@@ -541,7 +552,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             height: 30,
                             child: Icon(
                               Icons.keyboard_arrow_left,
-                              color: Colors.blue,
+                              color: Colors.white,
                               size: 30,
                             ),
                           ),
@@ -575,7 +586,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             height: 30,
                             child: Icon(
                               Icons.keyboard_arrow_right,
-                              color: Colors.blue,
+                              color: Colors.white,
                               size: 30,
                             ),
                           ),
