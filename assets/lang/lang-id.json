@@ -32,6 +32,8 @@
             "login": "Masuk"
         },
         "beranda":{
+            "loading": "Memuat riwayat E-CM Card...",
+            "no_data": "Tidak ada data riwayat",
             "hello": "Halo",
             "welcome_to": "Selamat Datang di PT. Sugity Creatives Utility Maintenance",
             "ecm_card_recent": "E-CM Card Terkini",
