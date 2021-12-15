@@ -5,6 +5,8 @@ import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
+import 'package:e_cm/homepage/home/model/incident_effect.dart';
+import 'package:e_cm/homepage/home/model/incident_mistake.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
@@ -213,6 +215,8 @@ class _DetailEcmState extends State<DetailEcm> {
   List<EsignModel> _listEssign = [];
   DetailEcmModel detailEcmModel = DetailEcmModel();
   RegExp regex = RegExp(r"([.]*00)(?!.*\d)");
+  String incidentEffect = "-";
+  String incidentMistake = "-";
 
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
@@ -343,8 +347,15 @@ class _DetailEcmState extends State<DetailEcm> {
       setStateIfMounted(() {
         print(response['data']);
         detailEcmModel = DetailEcmModel.fromJson(response['data']);
+        incidentEffect =
+            IncidentEffect.fromJson(response['data']['incident_effect'])
+                .toString();
+        incidentMistake =
+            IncidentMistake.fromJson(response['data']['incident_mistake'])
+                .toString();
       });
     } catch (e) {
+      print("detail ecm response -> $e");
       setState(() {
         Fluttertoast.showToast(
             msg: 'Periksa jaringan internet anda',
@@ -367,8 +378,29 @@ class _DetailEcmState extends State<DetailEcm> {
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
     try {
-      var response = await updateStatus(notifUser, notifUser, tokenUser);
+      var response = await updateStatus(notifUser, statusUser, tokenUser);
       print(response);
+      if (response['response']['status'] != 200) {
+        Fluttertoast.showToast(
+            msg: 'Pembaruan status gagal',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        return;
+      }
+
+      Fluttertoast.showToast(
+          msg: 'Pembaruan status sukses',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+      Navigator.of(context).pop();
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -462,9 +494,7 @@ class _DetailEcmState extends State<DetailEcm> {
                   ),
                 ),
               ),
-              Text("Machine :" +
-                  detailEcmModel.mesinKode.toString() +
-                  " " +
+              Text("Machine : " +
                   detailEcmModel.machineNama.toString() +
                   " (" +
                   detailEcmModel.nomormesin.toString() +
@@ -488,9 +518,9 @@ class _DetailEcmState extends State<DetailEcm> {
                         " · " +
                         detailEcmModel.incidentJam.toString() +
                         " · Effect : " +
-                        detailEcmModel.incidentEffect.toString() +
+                        incidentEffect +
                         " · Mistake : " +
-                        detailEcmModel.incidentMistake.toString(),
+                        incidentMistake,
                     style: TextStyle(fontSize: 14, color: Colors.grey)),
               ),
               SizedBox(
@@ -854,13 +884,12 @@ class _DetailEcmState extends State<DetailEcm> {
                           child: Text(note),
                         ),
                         Text(" : "),
-                        Expanded(
-                          flex: 4,
-                          child: _listItemCheck[i].note.toString() == "null"
+                        Wrap(children: [
+                          _listItemCheck[i].note.toString() == "null"
                               ? const Text("-")
                               : _buildNoteWidget(
                                   _listItemCheck[i].note.toString()),
-                        )
+                        ])
                       ],
                     ),
                   ],
