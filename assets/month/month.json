@@ -1,0 +1,52 @@
+{
+    "data": [
+        {
+            "name": "Januari",
+            "id": 1
+        },
+        {
+            "name": "Februari",
+            "id": 2
+        },
+        {
+            "name": "Maret",
+            "id": 3
+        },
+        {
+            "name": "April",
+            "id": 4
+        },
+        {
+            "name": "Mei",
+            "id": 5
+        },
+        {
+            "name": "Juni",
+            "id": 6
+        },
+        {
+            "name": "Juli",
+            "id": 7
+        },
+        {
+            "name": "Agustus",
+            "id": 8
+        },
+        {
+            "name": "September",
+            "id": 9
+        },
+        {
+            "name": "Oktober",
+            "id": 10
+        },
+        {
+            "name": "November",
+            "id": 11
+        },
+        {
+            "name": "Desember",
+            "id": 12
+        }
+    ]
+}

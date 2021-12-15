@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:e_cm/homepage/home/services/apifillnewdua.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +24,142 @@ class StepFillDua extends StatefulWidget {
 
 class StepFillDuaState extends State<StepFillDua> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String incident = '';
+  String shift_a = '';
+  String shift_b = '';
+  String shift_ns = '';
+  String hm = '';
+
+  String type_problem = '';
+  String safety = '';
+  String quality = '';
+  String delivery = '';
+  String cost = '';
+  String percentage = '';
+  String utility = '';
+
+  String molding = '';
+  String production = '';
+  String engineering = '';
+  String other = '';
+  String picture = '';
+
+  String addmax = '';
+  String select_image = '';
+  String gallery = '';
+  String camera = '';
+  String crop = '';
+  String addmore = '';
+  String picture_analis = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        incident = dataLang['step_2']['incident'];
+        shift_a = dataLang['step_2']['shift_a'];
+        shift_b = dataLang['step_2']['shift_b'];
+        shift_ns = dataLang['step_2']['shift_ns'];
+        hm = dataLang['step_2']['hm'];
+        type_problem = dataLang['step_2']['type_problem'];
+        safety = dataLang['step_2']['safety'];
+        quality = dataLang['step_2']['quality'];
+        delivery = dataLang['step_2']['delivery'];
+        cost = dataLang['step_2']['cost'];
+
+        percentage = dataLang['step_2']['percentage'];
+        utility = dataLang['step_2']['utility'];
+        molding = dataLang['step_2']['molding'];
+        production = dataLang['step_2']['production'];
+        engineering = dataLang['step_2']['engineering'];
+        other = dataLang['step_2']['other'];
+        picture = dataLang['step_2']['picture'];
+        addmax = dataLang['step_2']['addmax'];
+        select_image = dataLang['step_2']['select_image'];
+        gallery = dataLang['step_2']['gallery'];
+        camera = dataLang['step_2']['camera'];
+        crop = dataLang['step_2']['crop'];
+        addmore = dataLang['step_2']['add_more'];
+        picture = dataLang['step_2']['picture_analysis'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+        incident = dataLang['step_2']['incident'];
+        shift_a = dataLang['step_2']['shift_a'];
+        shift_b = dataLang['step_2']['shift_b'];
+        shift_ns = dataLang['step_2']['shift_ns'];
+        hm = dataLang['step_2']['hm'];
+        type_problem = dataLang['step_2']['type_problem'];
+        safety = dataLang['step_2']['safety'];
+        quality = dataLang['step_2']['quality'];
+        delivery = dataLang['step_2']['delivery'];
+        cost = dataLang['step_2']['cost'];
+
+        percentage = dataLang['step_2']['percentage'];
+        utility = dataLang['step_2']['utility'];
+        molding = dataLang['step_2']['molding'];
+        production = dataLang['step_2']['production'];
+        engineering = dataLang['step_2']['engineering'];
+        other = dataLang['step_2']['other'];
+        picture = dataLang['step_2']['picture'];
+        addmax = dataLang['step_2']['addmax'];
+        select_image = dataLang['step_2']['select_image'];
+        gallery = dataLang['step_2']['gallery'];
+        camera = dataLang['step_2']['camera'];
+        crop = dataLang['step_2']['crop'];
+        addmore = dataLang['step_2']['add_more'];
+        picture = dataLang['step_2']['picture_analysis'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   final ImagePicker imagePicker = ImagePicker();
   TextEditingController? timePickController;
 
@@ -267,6 +404,8 @@ class StepFillDuaState extends State<StepFillDua> {
   void initState() {
     print("step 2 init");
     super.initState();
+    setLang();
+    setBahasa();
   }
 
   @override
@@ -279,7 +418,7 @@ class StepFillDuaState extends State<StepFillDua> {
             Container(
               child: RichText(
                 text: TextSpan(
-                  text: 'Incident ',
+                  text: incident,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -348,7 +487,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                          const Text("Shift A")
+                           Text(shift_a)
                         ],
                       ),
                     ),
@@ -399,7 +538,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                          const Text("Shift B")
+                           Text(shift_b)
                         ],
                       ),
                     ),
@@ -450,7 +589,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                          const Text("Shift C")
+                          Text(shift_ns)
                         ],
                       ),
                     ),
@@ -472,11 +611,11 @@ class StepFillDuaState extends State<StepFillDua> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     prefixIcon: Icon(Icons.access_time),
                     suffixIcon: Icon(Icons.arrow_drop_down),
-                    hintText: 'HH:MM',
+                    hintText: hm,
                     contentPadding: EdgeInsets.all(5),
                     hintStyle: TextStyle(
                         fontFamily: 'Rubik',
@@ -502,10 +641,10 @@ class StepFillDuaState extends State<StepFillDua> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Type the problem'),
+                    hintText: type_problem),
               ),
             ),
             Container(
@@ -563,8 +702,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Safety",
+                           Text(
+                            safety,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -623,8 +762,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Quality",
+                           Text(
+                            quality,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -692,8 +831,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Delivery",
+                         Text(
+                            delivery,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -753,8 +892,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString("typeProblemBool", "1");
                                       }
                                     })),
-                            const Text(
-                              "Cost",
+                             Text(
+                              cost,
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF72777A),
@@ -772,7 +911,7 @@ class StepFillDuaState extends State<StepFillDua> {
               margin: EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Percentage Mistake ',
+                  text: percentage,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -850,8 +989,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Molding",
+                         Text(
+                            molding,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -916,8 +1055,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Utility",
+                           Text(
+                            utility,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -990,8 +1129,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Production",
+                           Text(
+                            production,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -1057,8 +1196,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString("percentBool", "1");
                                       }
                                     })),
-                            const Text(
-                              "Engineering",
+                             Text(
+                              engineering,
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF72777A),
@@ -1132,8 +1271,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                          const Text(
-                            "Other",
+                           Text(
+                            other,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFF72777A),
@@ -1150,7 +1289,7 @@ class StepFillDuaState extends State<StepFillDua> {
               margin: EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Picture and Analysis ',
+                  text: picture_analis,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -1196,7 +1335,7 @@ class StepFillDuaState extends State<StepFillDua> {
                               size: 50,
                             ),
                             Text(
-                              "Ketuk untuk menambahkan, maksimal 4 foto",
+                              addmax,
                               style: const TextStyle(
                                   color: Color(0xFF979C9E),
                                   fontSize: 14,
@@ -1261,7 +1400,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                   size: 50,
                                 ),
                                 Text(
-                                  "Tambah lagi",
+                                  addmore,
                                   style: const TextStyle(
                                       color: Color(0xFF979C9E),
                                       fontSize: 14,
@@ -1305,7 +1444,7 @@ class StepFillDuaState extends State<StepFillDua> {
           Container(
             margin: EdgeInsets.only(bottom: 35),
             width: MediaQuery.of(context).size.width,
-            child: Center(child: Text("Select image use")),
+            child: Center(child: Text(select_image)),
           ),
           Container(
             width: MediaQuery.of(context).size.width,
@@ -1326,7 +1465,7 @@ class StepFillDuaState extends State<StepFillDua> {
                         SizedBox(
                           height: 15,
                         ),
-                        Text("Camera")
+                        Text(camera)
                       ],
                     ),
                   ),
@@ -1345,7 +1484,7 @@ class StepFillDuaState extends State<StepFillDua> {
                         SizedBox(
                           height: 15,
                         ),
-                        Text("Gallery")
+                        Text(gallery)
                       ],
                     ),
                   ),

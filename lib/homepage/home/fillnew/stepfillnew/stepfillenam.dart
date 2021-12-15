@@ -1,5 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, unnecessary_const, avoid_unnecessary_containers
 
+import 'dart:convert';
+
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/getstep6model.dart';
@@ -25,6 +27,107 @@ class StepFillEnam extends StatefulWidget {
 
 class _StepFillEnamState extends State<StepFillEnam> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String improvement = '';
+  String name = '';
+  String type_name = '';
+  String idea = '';
+
+  String type_idea = '';
+  String working_time = '';
+  String repair = '';
+  String breaktime = '';
+
+  String bm = '';
+  String in_house = '';
+  String cost = '';
+  String out_house = '';
+
+  String back = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        improvement = dataLang['step_6']['improvement'];
+        name = dataLang['step_6']['name'];
+        type_name = dataLang['step_6']['type_name'];
+        idea = dataLang['step_6']['idea'];
+        type_idea = dataLang['step_6']['type_idea'];
+        working_time = dataLang['step_6']['working_time'];
+        repair = dataLang['step_6']['repair'];
+        breaktime = dataLang['step_6']['breaktime'];
+        bm = dataLang['step_6']['bm'];
+        in_house = dataLang['step_6']['in_house'];
+        cost = dataLang['step_6']['cost'];
+        out_house = dataLang['step_6']['out_house'];
+        back = dataLang['step_6']['back'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      improvement = dataLang['step_6']['improvement'];
+      name = dataLang['step_6']['name'];
+      type_name = dataLang['step_6']['type_name'];
+      idea = dataLang['step_6']['idea'];
+      type_idea = dataLang['step_6']['type_idea'];
+      working_time = dataLang['step_6']['working_time'];
+      repair = dataLang['step_6']['repair'];
+      breaktime = dataLang['step_6']['breaktime'];
+      bm = dataLang['step_6']['bm'];
+      in_house = dataLang['step_6']['in_house'];
+      cost = dataLang['step_6']['cost'];
+      out_house = dataLang['step_6']['out_house'];
+      back = dataLang['step_6']['back'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   List<AllUserModel> _listAllUser = [];
   String userSelected = '';
   TextEditingController userNameController = TextEditingController();
@@ -362,6 +465,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     super.initState();
     getAllUserData();
     getStep6();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -375,7 +480,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Improvement/Kaizen",
+                improvement,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 18,
@@ -386,7 +491,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Name",
+                name,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -414,10 +519,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     suffixIcon: Icon(Icons.search),
-                    hintText: 'User Name',
+                    hintText: type_name,
                     contentPadding: const EdgeInsets.only(top: 5, left: 5),
                     hintStyle: TextStyle(
                         fontFamily: 'Rubik',
@@ -470,7 +575,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Idea",
+                idea,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -496,9 +601,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
                 maxLines: 5,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Type your idea',
+                    hintText: type_idea,
                     contentPadding: const EdgeInsets.only(top: 5, left: 5),
                     hintStyle: TextStyle(
                         fontFamily: 'Rubik',
@@ -510,7 +615,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 24),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Working Time",
+                working_time,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 18,
@@ -525,7 +630,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   Container(
                     width: 115,
                     child: Text(
-                      "Check + Repair",
+                      repair,
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 16,
@@ -684,7 +789,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Break Time (H)  : ",
+                    breaktime,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
@@ -929,7 +1034,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 24),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Cost",
+                cost,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 18,
@@ -939,7 +1044,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: Text(
-                "In-House M/P Cost (Rp)",
+                in_house,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -1086,7 +1191,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: Text(
-                "Out-House (Rp)",
+                out_house,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,

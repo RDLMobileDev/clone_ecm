@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -6,6 +8,7 @@ import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +24,189 @@ class DetailEcm extends StatefulWidget {
 
 class _DetailEcmState extends State<DetailEcm> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  
+  String preventive_maintenance = '';
+  String tim_member = '';
+  String kejadian = '';
+  String why_analysis = '';
+  String why_1 = '';
+
+  String pengecekan_item = '';
+  String standard = '';
+  String aktual = '';
+  String jam = '';
+  String note = '';
+  String perbaikan_item = '';
+  String perbaikan = '';
+
+  String improvement = '';
+  String ide = '';
+  String waktu_kerja = '';
+  String cek_perbaikan = '';
+  String istirahat = '';
+  String bm = '';
+
+  String cost = '';
+  String in_house = '';
+  String out_house = '';
+  String sparepart = '';
+  String e_sign = '';
+  String total_cost = '';
+  String tanda_tangan = '';
+
+  String tolak = '';
+  String validasi_tanda_tangan = '';
+  String selesai = '';
+  String unduh_laporan = '';
+  String konfirmasi = '';
+  String validasi_unduh = '';
+  String batal = '';
+  String unduh = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+      
+        preventive_maintenance = dataLang['detail']['preventive'];
+
+        tim_member = dataLang['detail']['tim_member'];
+        kejadian = dataLang['detail']['incident'];
+        why_analysis = dataLang['detail']['why_analys'];
+        why_1 = dataLang['detail']['why_one'];
+        pengecekan_item = dataLang['detail']['item_checking'];
+        standard = dataLang['detail']['standard'];
+        aktual = dataLang['detail']['actual'];
+        jam = dataLang['detail']['time'];
+          
+        note = dataLang['detail']['note'];
+        perbaikan = dataLang['detail']['repairing'];
+        perbaikan_item = dataLang['detail']['item_repairing'];
+        improvement = dataLang['detail']['improvement'];
+        ide = dataLang['detail']['idea'];
+        waktu_kerja = dataLang['detail']['working_time'];
+        cek_perbaikan = dataLang['detail']['check_repair'];
+        istirahat = dataLang['detail']['break'];
+
+        bm = dataLang['detail']['line_stop'];
+        cost = dataLang['detail']['cost'];
+        in_house = dataLang['detail']['in_house'];
+        out_house = dataLang['detail']['out_house'];
+        sparepart = dataLang['detail']['sparepart'];
+        e_sign = dataLang['detail']['e_sign'];
+        total_cost = dataLang['detail']['total_cost'];
+        tanda_tangan = dataLang['detail']['signature'];
+
+        tolak = dataLang['detail']['decline'];
+        validasi_tanda_tangan = dataLang['detail']['toast_signature'];
+        selesai = dataLang['detail']['done'];
+        unduh_laporan = dataLang['detail']['download_report'];
+        konfirmasi = dataLang['detail']['confirm'];
+        validasi_unduh = dataLang['detail']['valid_download'];
+        batal = dataLang['detail']['cancel'];
+        unduh = dataLang['detail']['download'];
+   
+   
+   
+        
+       
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+          preventive_maintenance = dataLang['detail']['preventive'];
+
+        tim_member = dataLang['detail']['tim_member'];
+        kejadian = dataLang['detail']['incident'];
+        why_analysis = dataLang['detail']['why_analys'];
+        why_1 = dataLang['detail']['why_one'];
+        pengecekan_item = dataLang['detail']['item_checking'];
+        standard = dataLang['detail']['standard'];
+        aktual = dataLang['detail']['actual'];
+        jam = dataLang['detail']['time'];
+          
+        note = dataLang['detail']['note'];
+        perbaikan = dataLang['detail']['repairing'];
+        perbaikan_item = dataLang['detail']['item_repairing'];
+        improvement = dataLang['detail']['improvement'];
+        ide = dataLang['detail']['idea'];
+        waktu_kerja = dataLang['detail']['working_time'];
+        cek_perbaikan = dataLang['detail']['check_repair'];
+        istirahat = dataLang['detail']['break'];
+
+        bm = dataLang['detail']['line_stop'];
+        cost = dataLang['detail']['cost'];
+        in_house = dataLang['detail']['in_house'];
+        out_house = dataLang['detail']['out_house'];
+        sparepart = dataLang['detail']['sparepart'];
+        e_sign = dataLang['detail']['e_sign'];
+        total_cost = dataLang['detail']['total_cost'];
+        tanda_tangan = dataLang['detail']['signature'];
+
+        tolak = dataLang['detail']['decline'];
+        validasi_tanda_tangan = dataLang['detail']['toast_signature'];
+        selesai = dataLang['detail']['done'];
+        unduh_laporan = dataLang['detail']['download_report'];
+        konfirmasi = dataLang['detail']['confirm'];
+        validasi_unduh = dataLang['detail']['valid_download'];
+        batal = dataLang['detail']['cancel'];
+        unduh = dataLang['detail']['download'];
+   
+   
+     
+       
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
+
   List<ItemCheckModel> _listItemCheck = [];
   List<ItemRepairModel> _listItemRepair = [];
   List<SparepartModel> _listSparepart = [];
@@ -206,6 +392,9 @@ class _DetailEcmState extends State<DetailEcm> {
     getItemRepair();
     getSparepart();
     getEsign();
+
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -221,7 +410,7 @@ class _DetailEcmState extends State<DetailEcm> {
               Navigator.pop(context);
             }),
         title: Text(
-          "Preventive Maintance",
+          preventive_maintenance,
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
@@ -283,7 +472,7 @@ class _DetailEcmState extends State<DetailEcm> {
               _buildDivider(),
               Container(
                 width: MediaQuery.of(context).size.width,
-                child: const Text("Incident",
+                child: Text(kejadian,
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -444,7 +633,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Why Analisis",
+          child:  Text(why_analysis,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -459,7 +648,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("Why 1"),
+              child: Text(why_1),
             ),
             Text(" : "),
             Expanded(
@@ -570,7 +759,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Item Checking",
+          child:  Text(pengecekan_item,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -611,7 +800,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Standart"),
+                          child: Text(standard),
                         ),
                         Text(" : "),
                         Expanded(
@@ -628,7 +817,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Actual"),
+                          child: Text(aktual),
                         ),
                         Text(" : "),
                         Expanded(
@@ -645,7 +834,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Time"),
+                          child: Text(jam),
                         ),
                         Text(" : "),
                         Expanded(
@@ -662,7 +851,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Note"),
+                          child: Text(note),
                         ),
                         Text(" : "),
                         Expanded(
@@ -690,7 +879,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Item Repairing",
+          child:  Text(perbaikan_item,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -731,7 +920,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Time"),
+                          child: Text(jam),
                         ),
                         Text(" : "),
                         Expanded(
@@ -748,7 +937,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Repairing"),
+                          child: Text(perbaikan),
                         ),
                         Text(" : "),
                         Expanded(
@@ -768,7 +957,7 @@ class _DetailEcmState extends State<DetailEcm> {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Text("Note"),
+                          child: Text(note),
                         ),
                         Text(" : "),
                         Wrap(
@@ -796,7 +985,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Improvement/Kaizen",
+          child:  Text(improvement,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -810,7 +999,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("Idea"),
+              child: Text(ide),
             ),
             Text(" : "),
             Expanded(
@@ -829,7 +1018,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Working Time",
+          child:  Text(waktu_kerja,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -843,7 +1032,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("Check & Repair"),
+              child: Text(cek_perbaikan),
             ),
             Text(" : "),
             Expanded(
@@ -869,7 +1058,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("Break time"),
+              child: Text(istirahat),
             ),
             Text(" : "),
             Expanded(
@@ -885,7 +1074,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("Line stop"),
+              child: Text(bm),
             ),
             Text(" : "),
             Expanded(
@@ -917,7 +1106,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Cost",
+          child: Text(cost,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -931,7 +1120,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             Expanded(
               flex: 4,
-              child: Text("In-House M/P Cost (Rp)"),
+              child: Text(in_house),
             ),
             Text(detailEcmModel.kaizenCosthouse.toString()),
           ],
@@ -941,7 +1130,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             Expanded(
               flex: 4,
-              child: Text("Out-House (Rp) : "),
+              child: Text(out_house),
             ),
             Text(detailEcmModel.kaizenOutcosthouse.toString()),
           ],
@@ -956,7 +1145,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Sparepart",
+          child:  Text(sparepart,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -1012,7 +1201,7 @@ class _DetailEcmState extends State<DetailEcm> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("E-Sign",
+          child:  Text(e_sign,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -1059,7 +1248,7 @@ class _DetailEcmState extends State<DetailEcm> {
           children: [
             Expanded(
               flex: 4,
-              child: Text("Total Cost (Rp) :",
+              child: Text(total_cost,
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -1096,7 +1285,7 @@ class _DetailEcmState extends State<DetailEcm> {
               postUpdateStatus('1');
             },
             child: Text(
-              'Add Signature',
+              tanda_tangan,
               style: TextStyle(
                 fontFamily: 'NunitoSans',
                 color: Colors.white,
@@ -1132,7 +1321,7 @@ class _DetailEcmState extends State<DetailEcm> {
               postUpdateStatus('2');
             },
             child: Text(
-              'Decline',
+              tolak,
               style: TextStyle(
                 fontFamily: 'Rubick',
                 color: Colors.redAccent,
