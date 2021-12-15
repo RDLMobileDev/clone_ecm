@@ -64,7 +64,7 @@
             "preventive": "Preventive Maintenance",
             "tim_member": "Tim Member ",
             "incident": "Kejadian",
-            "why_analys": "Why Analisis",
+            "why_analys": "Why Analysis",
             "why_one": "Why 1",
             "item_checking": "Pengecekan Item",
             "standard": "Standard",
@@ -187,7 +187,7 @@
             "validation_repair": "Belum ada barang yang diperbaiki",
             "add_item": "Tambah Item",
             "item_repair": "Item Perbaikan",
-            "type_name": "Tulis Nama Item",
+            "type_name_item": "Tulis Nama Item",
             "note": "Note",
             "ok": "OK",
             "limit": "Limit",
@@ -211,7 +211,8 @@
         },
         "step_4":{
             "item_checking": "Pengecekan Item",
-            "validation_repair": "Belum ada barang yang dicek",
+            "validation_checked": "Belum ada barang yang ditandai",
+            "validation_repair": "Belum ada barang yang diperbaiki",
             "add_item": "Tambahkan Item",
             "item_check": "Cek Item",
             "type_name": "Tulis Nama Item",
@@ -236,10 +237,11 @@
             "validation_delete": "Apakah anda yakin ingin menghapus item?",
             "cancel": "Batal",
             "delete": "Hapus",
+            "add_item_": "Tambah Item",
             "next_five": "Lanjut 5/8"
         },
         "step_3":{
-            "why_analysis": "Why Analisis * :",
+            "why_analysis": "Why Analysis * :",
             "why": "Why 1 *",
             "how": "How *",
             "type_message": "Tulis pesan...",
@@ -271,6 +273,7 @@
             "back": "Kembali",
             "crop": "Potong",
             "add_more": "Tambah lagi",
+            "picture_analysis": "Gambar dan Analisa",
             "next_three": "Lanjut 3/8"
         },
         "step_1":{
@@ -291,7 +294,7 @@
             "machine_number": "Nomor Mesin",
             "type_machine_number": "Tulis Nomor Mesin",
             "cancel": "Batal",
-            "next_two": "Lanjut 2/8"
+            "next_two": "Lanjut"
         }
     }
 }

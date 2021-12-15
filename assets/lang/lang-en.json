@@ -190,7 +190,7 @@
                 "validation_repair": "Haven’t repaired the item yet",
                 "add_item": "Add Item",
                 "item_repair": "Item Repair",
-                "type_name": "Type Item Name",
+                "type_name_item": "Type Item Name",
                 "note": "Note",
                 "ok": "OK",
                 "limit": "Limit",
@@ -214,6 +214,7 @@
             },
             "step_4":{
                 "item_checking": "Item Checking",
+                "validation_checked": "Haven’t checked item yet",
                 "validation_repair": "Haven’t repaired the item yet",
                 "add_item": "Add Checking Item",
                 "item_check": "Item Check",
@@ -239,6 +240,7 @@
                 "validation_delete": "Are you sure want to delete item?",
                 "cancel": "Cancel",
                 "delete": "Delete",
+                "add_item_": "Add Item",
                 "next_five": "Next 5/8"
             },
             "step_3":{
@@ -274,6 +276,7 @@
                 "back": "Back",
                 "crop": "Crop",
                 "add_more": "Add more",
+                "picture_analysis": "Picture and Analysis",
                 "next_three": "Next 3/8"
             },
             "step_1":{
@@ -294,7 +297,7 @@
                 "machine_number": "Machine Number",
                 "type_machine_number": "Type Machine Number",
                 "cancel": "Cancel",
-                "next_two": "Next 2/8"
+                "next_two": "Next"
             }
         
 

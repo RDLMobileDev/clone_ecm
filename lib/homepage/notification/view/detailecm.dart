@@ -24,7 +24,7 @@ class DetailEcm extends StatefulWidget {
 class _DetailEcmState extends State<DetailEcm> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-   String bahasa = "Bahasa Indonesia";
+  String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
   
