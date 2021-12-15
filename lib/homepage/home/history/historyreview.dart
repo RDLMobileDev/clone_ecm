@@ -11,16 +11,16 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HistoryDetailPage extends StatefulWidget {
+class HistoryReview extends StatefulWidget {
   final String notifId;
 
-  const HistoryDetailPage({required this.notifId});
+  const HistoryReview({required this.notifId});
 
   @override
-  _HistoryDetailPageState createState() => _HistoryDetailPageState();
+  _HistoryReviewState createState() => _HistoryReviewState();
 }
 
-class _HistoryDetailPageState extends State<HistoryDetailPage> {
+class _HistoryReviewState extends State<HistoryReview> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<ItemCheckModel> _listItemCheck = [];
   List<ItemRepairModel> _listItemRepair = [];
@@ -418,9 +418,6 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 child: _buildTotalCost(),
               ),
               SizedBox(height: 20),
-              Container(
-                child: _buildButtonAdd(),
-              ),
             ],
           ),
         ),
