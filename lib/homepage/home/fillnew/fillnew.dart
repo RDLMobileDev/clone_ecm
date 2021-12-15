@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print, sized_box_for_whitespace
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
@@ -11,6 +13,7 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
 import 'package:e_cm/homepage/home/model/summaryapprovemodel.dart';
 import 'package:e_cm/homepage/home/services/summaryapproveservice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +26,79 @@ class FillNew extends StatefulWidget {
 
 class _FillNewState extends State<FillNew> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+    String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  
+  String next = '';
+  String back = '';
+
+   void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+      
+        next = dataLang['step_1']['next_two'];
+        back = dataLang['step_4']['back'];
+       
+        
+       
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+
+       next = dataLang['step_1']['next_two'];
+       back = dataLang['step_4']['back'];
+    
+       
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
@@ -608,6 +684,8 @@ class _FillNewState extends State<FillNew> {
     _stepClicked += 1;
 
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -672,7 +750,7 @@ class _FillNewState extends State<FillNew> {
                                     BorderRadius.all(Radius.circular(5))),
                             child: Center(
                               child: Text(
-                                "Back",
+                                back,
                                 style: TextStyle(
                                     fontFamily: 'Rubik',
                                     fontSize: 16,
@@ -693,9 +771,9 @@ class _FillNewState extends State<FillNew> {
                                     BorderRadius.all(Radius.circular(5))),
                             child: Center(
                               child: Text(
-                                textNext == 'Next'
-                                    ? "$textNext $_stepClicked/$_stepTotal"
-                                    : textNext,
+                                next == next
+                                    ? "$next $_stepClicked/$_stepTotal"
+                                    : next,
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,

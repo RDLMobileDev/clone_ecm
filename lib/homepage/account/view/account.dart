@@ -32,6 +32,7 @@ class _AccountMemberState extends State<AccountMember> {
   String logoutName = '';
   String leaveName = '';
 
+
   void confirmLogout(){
     showDialog(
               context: context,
@@ -183,6 +184,7 @@ class _AccountMemberState extends State<AccountMember> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
+  
     if (mounted) {
       setState(() {
         logoutName = dataLang['account']['logout'];
