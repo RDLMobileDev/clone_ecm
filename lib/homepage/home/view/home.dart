@@ -254,7 +254,7 @@ class _HomeState extends State<Home> {
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
-                                  fontSize: 32,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w700),
                             )
                           ],
