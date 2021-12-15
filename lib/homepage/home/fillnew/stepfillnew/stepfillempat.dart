@@ -113,7 +113,6 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
         delete = dataLang['step_4']['delete'];
         validation_checked = dataLang['step_4']['validation_checked'];
         add_item_ = dataLang['step_4']['add_item_'];
-
       });
     }
   }
@@ -125,34 +124,34 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     if (mounted) {
       setState(() {});
       item_checking = dataLang['step_4']['item_checking'];
-        validation_repair = dataLang['step_4']['validation_repair'];
-        add_item = dataLang['step_4']['add_item'];
-        item_check = dataLang['step_4']['item_check'];
-        standard = dataLang['step_4']['standard'];
-        type_standard = dataLang['step_4']['type_standard'];
-        actual = dataLang['step_4']['actual'];
-        type_actual = dataLang['step_4']['type_actual'];
-        note = dataLang['step_4']['note'];
-        ok = dataLang['step_4']['ok'];
+      validation_repair = dataLang['step_4']['validation_repair'];
+      add_item = dataLang['step_4']['add_item'];
+      item_check = dataLang['step_4']['item_check'];
+      standard = dataLang['step_4']['standard'];
+      type_standard = dataLang['step_4']['type_standard'];
+      actual = dataLang['step_4']['actual'];
+      type_actual = dataLang['step_4']['type_actual'];
+      note = dataLang['step_4']['note'];
+      ok = dataLang['step_4']['ok'];
 
-        limit = dataLang['step_4']['limit'];
-        ng = dataLang['step_4']['ng'];
-        starttime = dataLang['step_4']['starttime'];
-        hm = dataLang['step_4']['hm'];
-        end_time = dataLang['step_4']['end_time'];
-        name = dataLang['step_4']['name'];
-        type_name = dataLang['step_4']['type_name'];
-        save_checking = dataLang['step_4']['save_checking'];
-        checking_time = dataLang['step_4']['checking_time'];
+      limit = dataLang['step_4']['limit'];
+      ng = dataLang['step_4']['ng'];
+      starttime = dataLang['step_4']['starttime'];
+      hm = dataLang['step_4']['hm'];
+      end_time = dataLang['step_4']['end_time'];
+      name = dataLang['step_4']['name'];
+      type_name = dataLang['step_4']['type_name'];
+      save_checking = dataLang['step_4']['save_checking'];
+      checking_time = dataLang['step_4']['checking_time'];
 
-        total_checking = dataLang['step_4']['total_checking'];
-        back = dataLang['step_4']['back'];
-        confirm = dataLang['step_4']['confirm'];
-        validation_delete = dataLang['step_4']['validation_delete'];
-        cancel = dataLang['step_4']['cancel'];
-        delete = dataLang['step_4']['delete'];
-        validation_checked = dataLang['step_4']['validation_checked'];
-        add_item_ = dataLang['step_4']['add_item_'];
+      total_checking = dataLang['step_4']['total_checking'];
+      back = dataLang['step_4']['back'];
+      confirm = dataLang['step_4']['confirm'];
+      validation_delete = dataLang['step_4']['validation_delete'];
+      cancel = dataLang['step_4']['cancel'];
+      delete = dataLang['step_4']['delete'];
+      validation_checked = dataLang['step_4']['validation_checked'];
+      add_item_ = dataLang['step_4']['add_item_'];
     }
   }
 
@@ -388,10 +387,16 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     );
   }
 
+  void setBoolItemStep4() async {
+    final prefs = await _prefs;
+    prefs.setString("itemStep4Bool", "0");
+  }
+
   @override
   void initState() {
     super.initState();
     getDataItemChecking();
+    setBoolItemStep4();
     setLang();
     setBahasa();
   }

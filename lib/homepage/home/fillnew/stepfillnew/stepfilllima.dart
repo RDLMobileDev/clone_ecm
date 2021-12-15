@@ -86,7 +86,7 @@ class _StepFillLimaState extends State<StepFillLima> {
         add_item = dataLang['step_5']['add_item'];
         item_repairing = dataLang['step_5']['item_repairing'];
         type_name_item = dataLang['step_5']['type_name_item'];
-      
+
         note = dataLang['step_5']['note'];
         ok = dataLang['step_5']['ok'];
         limit = dataLang['step_5']['limit'];
@@ -102,16 +102,12 @@ class _StepFillLimaState extends State<StepFillLima> {
         save_repair = dataLang['step_5']['save_repair'];
         repair_time = dataLang['step_5']['repair_time'];
         total_repair = dataLang['step_5']['total_repair'];
-        
 
-     
         back = dataLang['step_5']['back'];
         confirm = dataLang['step_5']['confirm'];
         validation_delete = dataLang['step_5']['validation_delete'];
         cancel = dataLang['step_5']['cancel'];
         delete = dataLang['step_5']['delete'];
-       
-
       });
     }
   }
@@ -122,36 +118,33 @@ class _StepFillLimaState extends State<StepFillLima> {
 
     if (mounted) {
       setState(() {});
-       item_repair = dataLang['step_5']['item_repair'];
-        validation_repair = dataLang['step_5']['validation_repair'];
-        add_item = dataLang['step_5']['add_item'];
-        item_repairing = dataLang['step_5']['item_repairing'];
-        type_name_item = dataLang['step_5']['type_name_item'];
-      
-        note = dataLang['step_5']['note'];
-        ok = dataLang['step_5']['ok'];
-        limit = dataLang['step_5']['limit'];
-        ng = dataLang['step_5']['ng'];
-        starttime = dataLang['step_5']['starttime'];
-        hm = dataLang['step_5']['hm'];
-        end_time = dataLang['step_5']['end_time'];
-        name = dataLang['step_5']['name'];
-        type_name = dataLang['step_5']['type_name'];
+      item_repair = dataLang['step_5']['item_repair'];
+      validation_repair = dataLang['step_5']['validation_repair'];
+      add_item = dataLang['step_5']['add_item'];
+      item_repairing = dataLang['step_5']['item_repairing'];
+      type_name_item = dataLang['step_5']['type_name_item'];
 
-        repair_made = dataLang['step_5']['repair_made'];
-        type_message = dataLang['step_5']['type_message'];
-        save_repair = dataLang['step_5']['save_repair'];
-        repair_time = dataLang['step_5']['repair_time'];
-        total_repair = dataLang['step_5']['total_repair'];
-        
+      note = dataLang['step_5']['note'];
+      ok = dataLang['step_5']['ok'];
+      limit = dataLang['step_5']['limit'];
+      ng = dataLang['step_5']['ng'];
+      starttime = dataLang['step_5']['starttime'];
+      hm = dataLang['step_5']['hm'];
+      end_time = dataLang['step_5']['end_time'];
+      name = dataLang['step_5']['name'];
+      type_name = dataLang['step_5']['type_name'];
 
-     
-        back = dataLang['step_5']['back'];
-        confirm = dataLang['step_5']['confirm'];
-        validation_delete = dataLang['step_5']['validation_delete'];
-        cancel = dataLang['step_5']['cancel'];
-        delete = dataLang['step_5']['delete'];
-       
+      repair_made = dataLang['step_5']['repair_made'];
+      type_message = dataLang['step_5']['type_message'];
+      save_repair = dataLang['step_5']['save_repair'];
+      repair_time = dataLang['step_5']['repair_time'];
+      total_repair = dataLang['step_5']['total_repair'];
+
+      back = dataLang['step_5']['back'];
+      confirm = dataLang['step_5']['confirm'];
+      validation_delete = dataLang['step_5']['validation_delete'];
+      cancel = dataLang['step_5']['cancel'];
+      delete = dataLang['step_5']['delete'];
     }
   }
 
@@ -365,10 +358,16 @@ class _StepFillLimaState extends State<StepFillLima> {
     }
   }
 
+  void setBoolFinishStep5() async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setString("itemRepairBool", "0");
+  }
+
   @override
   void initState() {
     super.initState();
     getDataItemRepairing();
+    setBoolFinishStep5();
     setLang();
     setBahasa();
   }

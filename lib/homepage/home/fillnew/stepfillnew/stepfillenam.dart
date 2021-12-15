@@ -534,13 +534,14 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 ? Container(
                     margin: EdgeInsets.only(top: 4),
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    height: 180,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         border: Border.all(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      // physics: NeverScrollableScrollPhysics(),
                       itemCount: _listAllUser.isEmpty ? 0 : _listAllUser.length,
                       itemBuilder: (context, i) {
                         return InkWell(

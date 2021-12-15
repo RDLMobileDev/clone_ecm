@@ -593,6 +593,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 : Container(
                     margin: const EdgeInsets.only(top: 5),
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     child: FutureBuilder(
                       future: getListMemberName(),
                       builder: (context, snapshot) {
@@ -604,7 +605,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           itemCount: listNamaMember.isEmpty
                               ? 0
                               : listNamaMember.length,
@@ -635,6 +636,9 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       "teamMember", listTeamMember);
 
                                   prefs.setString("teamMemberBool", "1");
+                                  setState(() {
+                                    isTappedTeamMember = !isTappedTeamMember;
+                                  });
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: 'Member maksimal 6',
@@ -706,6 +710,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     margin: const EdgeInsets.only(top: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 180,
                     child: FutureBuilder(
                       future: getListLocation(),
                       builder: (context, snapshot) {
@@ -716,7 +722,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: _listLocation.length,
                           itemBuilder: (context, i) {
@@ -730,6 +736,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                         TextEditingController(
                                             text:
                                                 _listLocation[i].valueFactory);
+                                    isTappedFactory = !isTappedFactory;
                                   });
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString(
@@ -738,7 +745,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   print("id lokasi: $locationIdSelected");
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(_listLocation[i].valueFactory),
                                 ));
                           },
@@ -797,6 +804,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     child: FutureBuilder(
                       future: getListAreaGroup(),
                       builder: (context, snapshot) {
@@ -807,7 +815,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: _listGroupArea.length,
                           itemBuilder: (context, i) {
@@ -820,6 +828,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                     factoryNameGroupController =
                                         TextEditingController(
                                             text: _listGroupArea[i].valueGroup);
+                                    isTappedFactoryGroup =
+                                        !isTappedFactoryGroup;
                                   });
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString("locationIdGroup",
@@ -828,7 +838,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   print("id lokasi: $locationIdGroupSelected");
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(_listGroupArea[i].valueGroup),
                                 ));
                           },
@@ -889,13 +899,14 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     padding: EdgeInsets.all(8),
                     child: FutureBuilder(
                       future: getMachineName(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            // physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _listMachineName.length,
                             itemBuilder: (context, i) {
@@ -911,6 +922,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       machineNameController =
                                           TextEditingController(
                                               text: _listMachineName[i].nama);
+                                      isTapedMachineName = !isTapedMachineName;
                                     });
                                   },
                                   child: Padding(
@@ -991,6 +1003,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     padding: EdgeInsets.all(8),
                     child: FutureBuilder(
                       future: getMachineNumberbyId(),
@@ -1014,6 +1027,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                           TextEditingController(
                                               text: _listMachineNumber[i]
                                                   .numberOfMachine);
+                                      isTappedMachineNumber =
+                                          !isTappedMachineNumber;
                                     });
                                   },
                                   child: Padding(

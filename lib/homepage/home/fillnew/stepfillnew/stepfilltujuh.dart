@@ -61,9 +61,15 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
         fontSize: 16);
   }
 
+  void addItemStep7Finish() async {
+    final prefs = await _prefs;
+    prefs.setString("sparePartBool", "0");
+  }
+
   @override
   void initState() {
     getDataPartItemSaved();
+    addItemStep7Finish();
     _timer =
         Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
     print("tes step 7");
