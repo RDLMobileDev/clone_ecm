@@ -1,6 +1,9 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, curly_braces_in_flow_control_structures
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
@@ -19,6 +22,109 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController streamController = StreamController();
   late Timer _timer;
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String sparepart = "";
+  String no_sparepart = "";
+  String add_item = "";
+  String part_name = "";
+  String type_name = "";
+  String quantity_used = "";
+  String quantity_stock = "";
+  String cost = "";
+  String type_cost = "";
+  String subtotal = "";
+  String save_sparepart = "";
+  String cost_ = "";
+  String total_cost = "";
+  String back = "";
+  String next_eight = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
 
   List<PartItemMachineSavedModel> _listDataPartSaved = [];
 
@@ -67,6 +173,8 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
     _timer =
         Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
     print("tes step 7");
+    setBahasa();
+    setLang();
     super.initState();
   }
 
@@ -86,7 +194,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Text("Spare Part",
+              child: Text(sparepart,
                   style: TextStyle(
                     fontFamily: 'Rubik',
                     fontWeight: FontWeight.w400,
@@ -128,7 +236,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                 width: 250,
                               ),
                               Center(
-                                child: Text("No spare part yet",
+                                child: Text(no_sparepart,
                                     style: TextStyle(
                                       fontFamily: 'Rubik',
                                       color: Color(0xFF00AEDB),
@@ -176,7 +284,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                       children: [
                                         Container(
                                           child: Text(
-                                              "Cost: ${_listDataPartSaved[i].totalHarga}",
+                                              "$cost_: ${_listDataPartSaved[i].totalHarga}",
                                               style: TextStyle(
                                                 fontFamily: 'Rubik',
                                                 color: Colors.white,
@@ -270,7 +378,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        "Add Item",
+                        add_item,
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Colors.white,

@@ -1,11 +1,14 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'dart:convert';
+
 import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +35,110 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   int qtyStock = 0;
   int qtyUsed = 0;
   int subTotal = 0;
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String sparepart = "";
+  String no_sparepart = "";
+  String add_item = "";
+  String part_name = "";
+  String type_name = "";
+  String quantity_used = "";
+  String quantity_stock = "";
+  String cost = "";
+  String type_cost = "";
+  String subtotal2 = "";
+  String save_sparepart = "";
+  String cost_ = "";
+  String total_cost = "";
+  String back = "";
+  String next_eight = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal2 = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal2 = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
 
   void getItemUpdate(String idDataEcm) async {
     Map<String, dynamic> dataUpdateEcmPart = {};
@@ -104,8 +211,13 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     try {
       if (int.parse(qtyUsed) <= qtyStock) {
         var result = await saveDataPartMachine(
-          tokenUser, idEcmKey!, idMesin!, partNameController.text, qtyStock.toString(), qtyUsed, costRpController.text
-        );
+            tokenUser,
+            idEcmKey!,
+            idMesin!,
+            partNameController.text,
+            qtyStock.toString(),
+            qtyUsed,
+            costRpController.text);
         if (result['response']['status'] == 200) {
           prefs.setString("sparePartBool", "1");
           Fluttertoast.showToast(
@@ -123,13 +235,13 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             backgroundColor: Colors.greenAccent,
           );
         }
-      }else{
+      } else {
         Fluttertoast.showToast(
-            msg: 'Quantity used jangan melebihi stock',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.greenAccent,
-          );
+          msg: 'Quantity used jangan melebihi stock',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
       }
     } catch (e) {
       Fluttertoast.showToast(
@@ -189,7 +301,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                                text: 'Part Name',
+                                text: part_name,
                                 style: TextStyle(color: Color(0xFF404446))),
                             TextSpan(
                                 text: ' * ',
@@ -216,11 +328,11 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(top: 10, left: 10),
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
-                            hintText: 'Type Item Name'),
+                            hintText: type_name),
                       ),
                     ),
                     Container(
@@ -236,7 +348,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Quantity (Used)',
+                                    text: quantity_used,
                                     style: TextStyle(color: Color(0xFF404446))),
                                 TextSpan(
                                     text: ' * ',
@@ -317,7 +429,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Quantity (Stock)',
+                                    text: quantity_stock,
                                     style: TextStyle(color: Color(0xFF404446))),
                                 TextSpan(
                                     text: ' * ',
@@ -393,7 +505,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                                text: 'Cost (Rp)',
+                                text: cost,
                                 style: TextStyle(color: Color(0xFF404446))),
                             TextSpan(
                                 text: ' * ',
@@ -428,11 +540,11 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(top: 10, left: 10),
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
-                            hintText: 'Type the cost'),
+                            hintText: type_cost),
                       ),
                     ),
                   ],
@@ -453,7 +565,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Sub Total (Rp) :",
+                            subtotal2,
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 fontSize: 16,
@@ -491,7 +603,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            "Save Spare part",
+                            save_sparepart,
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 color: Colors.white,
