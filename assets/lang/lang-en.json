@@ -180,7 +180,7 @@
                 "breaktime": "Break Time (H)* :",
                 "bm": "BM :",
                 "in_house": "In-House M/P Cost (Rp)",
-                "cost_": "Cost",
+                "cost": "Cost",
                 "out_house": "Out-House (Rp)",
                 "back": "Back",
                 "next_seven": "Next 7/8"

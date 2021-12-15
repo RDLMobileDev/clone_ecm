@@ -519,7 +519,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     suffixIcon: Icon(Icons.search),
                     hintText: type_name,
@@ -601,7 +601,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
                 maxLines: 5,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: type_idea,
                     contentPadding: const EdgeInsets.only(top: 5, left: 5),
@@ -661,7 +661,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.checkH.toString() + " H",
+                        stepEnamModel.checkH.toString() == "null"
+                            ? "0 H"
+                            : stepEnamModel.checkM.toString() + " H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -678,7 +680,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.checkM.toString() + " M",
+                        stepEnamModel.checkM.toString() == "null"
+                            ? "0 M"
+                            : stepEnamModel.checkM.toString() + " M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -707,7 +711,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.repairH.toString() + " H",
+                        stepEnamModel.repairH.toString() == "null"
+                            ? "0 H"
+                            : stepEnamModel.repairH.toString() + " H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -724,7 +730,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.repairM.toString() + " M",
+                        stepEnamModel.repairM.toString() == "null"
+                            ? "0 M"
+                            : stepEnamModel.repairM.toString() + " M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -753,7 +761,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.hasilRepairH.toString() + " H",
+                        stepEnamModel.hasilRepairH.toString() == "null"
+                            ? "0 H"
+                            : stepEnamModel.hasilRepairH.toString() + " H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -770,7 +780,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.hasilRepairM.toString() + " M",
+                        stepEnamModel.hasilRepairM.toString() == "null"
+                            ? "0 M"
+                            : stepEnamModel.hasilRepairM.toString() + " M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -909,7 +921,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.hasilRepairH.toString() + " H",
+                        stepEnamModel.hasilRepairH.toString() == "null"
+                            ? "0 H"
+                            : stepEnamModel.hasilRepairH.toString() + " H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -926,7 +940,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.hasilRepairM.toString() + " M",
+                        stepEnamModel.hasilRepairM.toString() == "null"
+                            ? "0 M"
+                            : stepEnamModel.hasilRepairM.toString() + " M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -1094,7 +1110,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        stepEnamModel.mP.toString() + " M/P",
+                        stepEnamModel.mP.toString() == "null"
+                            ? "0 M/P"
+                            : stepEnamModel.mP.toString() + " M/P",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
