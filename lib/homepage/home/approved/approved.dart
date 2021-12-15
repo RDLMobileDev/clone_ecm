@@ -65,7 +65,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
         decline = dataLang['setuju_e_sign']['decline'];
         approved = dataLang['setuju_e_sign']['approved'];
         yesterday = dataLang['setuju_e_sign']['yesterday'];
-       
       });
     }
   }
@@ -73,17 +72,16 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
-       ecm_from = dataLang['setuju_e_sign']['ecm_card_from'];
+        ecm_from = dataLang['setuju_e_sign']['ecm_card_from'];
         one_hour = dataLang['setuju_e_sign']['one_hour'];
         review = dataLang['setuju_e_sign']['review'];
         approve = dataLang['setuju_e_sign']['approve'];
         decline = dataLang['setuju_e_sign']['decline'];
         approved = dataLang['setuju_e_sign']['approved'];
         yesterday = dataLang['setuju_e_sign']['yesterday'];
-       
       });
     }
   }
@@ -119,7 +117,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
         print(data.length);
         // print(response['data']);
         print("===== || =====");
-
       } else {
         Fluttertoast.showToast(
             msg: 'Periksa jaringan internet anda',
@@ -216,16 +213,16 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                             ],
                           ),
                           // ignore: prefer_const_literals_to_create_immutables
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'E-CM Card from ',
-                                style: TextStyle(color: Color(0xFF6C7072))),
-                            TextSpan(
-                                text: _listApproved[i].nama.toString(),
-                                style: TextStyle(
-                                    color: Color(0xFF00AEDB),
-                                    fontWeight: FontWeight.w700)),
-                          ],
+                          // children: <TextSpan>[
+                          //   TextSpan(
+                          //       text: 'E-CM Card from ',
+                          //       style: TextStyle(color: Color(0xFF6C7072))),
+                          //   TextSpan(
+                          //       text: _listApproved[i].nama.toString(),
+                          //       style: TextStyle(
+                          //           color: Color(0xFF00AEDB),
+                          //           fontWeight: FontWeight.w700)),
+                          // ],
                         ),
                         Text(
                           one_hour,

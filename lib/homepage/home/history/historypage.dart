@@ -24,14 +24,13 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
   String history = '';
-  String all = '';
-  String today = '';
-  String monthly = '';
+  String all = 'Semua';
+  String today = 'Hari ini';
+  String monthly = 'Bulanan';
   String? making;
   String a_hour = '';
   String one_week = '';
@@ -40,7 +39,7 @@ class _HistoryPageState extends State<HistoryPage> {
   String no_data = '';
   String no_riwayat = '';
 
- void setBahasa() async {
+  void setBahasa() async {
     final prefs = await _prefs;
     String bahasaBool = prefs.getString("bahasa") ?? "";
 
@@ -85,7 +84,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         history = dataLang['riwayat']['history'];
@@ -116,9 +115,6 @@ class _HistoryPageState extends State<HistoryPage> {
       getLanguageId();
     }
   }
-
-
-
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<HistoryDaily> _listDaily = [];
@@ -285,7 +281,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return _listAll;
   }
 
-  void getDateFromDialog(BuildContext context) async {
+  void getDateFromDialog() async {
     final prefs = await _prefs;
     showDatePicker(
             context: context,
@@ -386,6 +382,7 @@ class _HistoryPageState extends State<HistoryPage> {
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
     final monthFormatNow = new DateFormat('MMMM yyyy');
+    final yearFormatNow = new DateFormat('yyyy');
     final String dateNow = dateFormatNow.format(_fromDateNow);
     final String monthNow = monthFormatNow.format(_fromDateNow);
     final String yearNow = yearFormatNow.format(_fromDateNow);
@@ -1229,7 +1226,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      getDateFromDialog();
+                      getMonthFromDialog();
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
@@ -1309,75 +1306,75 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Container _showCardMonth(BuildContext context) {
-    return Container(
-      height: 250,
-      width: 100,
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(10),
-        topRight: Radius.circular(10),
-      )),
-      child: FutureBuilder(
-        future: getMonth(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: bulan.length,
-                itemBuilder: (context, i) {
-                  return InkWell(
-                      onTap: () async {
-                        setState(() {
-                          monthName = bulan[i]["name"];
-                          getHistoryMonthly(tokenKeyUser, year, bulan[i]["id"]);
+  // Container _showCardMonth(BuildContext context) {
+  //   return Container(
+  //     height: 250,
+  //     width: 100,
+  //     padding: const EdgeInsets.all(8.0),
+  //     decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.only(
+  //       topLeft: Radius.circular(10),
+  //       topRight: Radius.circular(10),
+  //     )),
+  //     child: FutureBuilder(
+  //       future: getMonth(),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           return ListView.builder(
+  //               itemCount: bulan.length,
+  //               itemBuilder: (context, i) {
+  //                 return InkWell(
+  //                     onTap: () async {
+  //                       setState(() {
+  //                         monthName = bulan[i]["name"];
+  //                         getHistoryMonthly(tokenKeyUser, year, bulan[i]["id"]);
 
-                          idMonth = bulan[i]["id"];
-                        });
-                        var result = await getHistoryMonthly(
-                            tokenKeyUser, year, bulan[i]["id"]);
+  //                         idMonth = bulan[i]["id"];
+  //                       });
+  //                       var result = await getHistoryMonthly(
+  //                           tokenKeyUser, year, bulan[i]["id"]);
 
-                        print("hasil monthly");
-                        print(result['response']['status']);
+  //                       print("hasil monthly");
+  //                       print(result['response']['status']);
 
-                        if (result['response']['status'] == 201) {
-                          Fluttertoast.showToast(
-                              msg: 'Data tidak ada',
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.greenAccent,
-                              textColor: Colors.white,
-                              fontSize: 16);
-                        }
+  //                       if (result['response']['status'] == 201) {
+  //                         Fluttertoast.showToast(
+  //                             msg: 'Data tidak ada',
+  //                             toastLength: Toast.LENGTH_SHORT,
+  //                             gravity: ToastGravity.BOTTOM,
+  //                             timeInSecForIosWeb: 2,
+  //                             backgroundColor: Colors.greenAccent,
+  //                             textColor: Colors.white,
+  //                             fontSize: 16);
+  //                       }
 
-                        Navigator.of(context).pop();
-                        tabAll = false;
-                        tabDaily = false;
-                        tabMontly = true;
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(left: 20, right: 20),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: Colors.grey, width: 2))),
-                          child: Center(
-                            child: Text(
-                              bulan[i]["name"],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                          )));
-                });
-          }
+  //                       Navigator.of(context).pop();
+  //                       tabAll = false;
+  //                       tabDaily = false;
+  //                       tabMontly = true;
+  //                     },
+  //                     child: Container(
+  //                         margin: EdgeInsets.only(left: 20, right: 20),
+  //                         padding: EdgeInsets.all(10),
+  //                         decoration: BoxDecoration(
+  //                             border: Border(
+  //                                 bottom: BorderSide(
+  //                                     color: Colors.grey, width: 2))),
+  //                         child: Center(
+  //                           child: Text(
+  //                             bulan[i]["name"],
+  //                             style: TextStyle(
+  //                               color: Colors.black,
+  //                               fontSize: 16,
+  //                             ),
+  //                           ),
+  //                         )));
+  //               });
+  //         }
 
-          return CircularProgressIndicator();
-        },
-      ),
-    );
-  }
+  //         return CircularProgressIndicator();
+  //       },
+  //     ),
+  //   );
+  // }
 }
