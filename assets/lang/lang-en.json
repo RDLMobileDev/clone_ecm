@@ -177,10 +177,10 @@
                 "type_idea": "Type your idea",
                 "working_time": "Working Time",
                 "repair": "Check + Repair :",
-                "breaktime": "Break Time (H)* :",
+                "breaktime": "Break Time :",
                 "bm": "BM :",
                 "in_house": "In-House M/P Cost (Rp)",
-                "cost_": "Cost",
+                "cost": "Cost",
                 "out_house": "Out-House (Rp)",
                 "back": "Back",
                 "next_seven": "Next 7/8"
