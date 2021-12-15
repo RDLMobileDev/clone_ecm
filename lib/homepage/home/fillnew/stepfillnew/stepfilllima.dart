@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/fillnew/additionpage/formstepfilllima.dart';
@@ -9,6 +10,7 @@ import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/apideletefillnewlima.dart';
 import 'package:e_cm/homepage/home/services/apifillnewlimadelete.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +23,152 @@ class StepFillLima extends StatefulWidget {
 
 class _StepFillLimaState extends State<StepFillLima> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String item_repairing = '';
+  String validation_repair = '';
+  String add_item = '';
+  String item_repair = '';
+  String type_name_item = '';
+  String note = '';
+  String ok = '';
+  String limit = '';
+
+  String ng = '';
+  String starttime = '';
+  String hm = '';
+  String end_time = '';
+  String name = '';
+  String type_name = '';
+
+  String repair_made = '';
+  String type_message = '';
+  String save_repair = '';
+  String repair_time = '';
+  String total_repair = '';
+  String back = '';
+  String confirm = '';
+  String delete = '';
+  String validation_delete = '';
+  String cancel = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        item_repair = dataLang['step_5']['item_repair'];
+        validation_repair = dataLang['step_5']['validation_repair'];
+        add_item = dataLang['step_5']['add_item'];
+        item_repairing = dataLang['step_5']['item_repairing'];
+        type_name_item = dataLang['step_5']['type_name_item'];
+      
+        note = dataLang['step_5']['note'];
+        ok = dataLang['step_5']['ok'];
+        limit = dataLang['step_5']['limit'];
+        ng = dataLang['step_5']['ng'];
+        starttime = dataLang['step_5']['starttime'];
+        hm = dataLang['step_5']['hm'];
+        end_time = dataLang['step_5']['end_time'];
+        name = dataLang['step_5']['name'];
+        type_name = dataLang['step_5']['type_name'];
+
+        repair_made = dataLang['step_5']['repair_made'];
+        type_message = dataLang['step_5']['type_message'];
+        save_repair = dataLang['step_5']['save_repair'];
+        repair_time = dataLang['step_5']['repair_time'];
+        total_repair = dataLang['step_5']['total_repair'];
+        
+
+     
+        back = dataLang['step_5']['back'];
+        confirm = dataLang['step_5']['confirm'];
+        validation_delete = dataLang['step_5']['validation_delete'];
+        cancel = dataLang['step_5']['cancel'];
+        delete = dataLang['step_5']['delete'];
+       
+
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+       item_repair = dataLang['step_5']['item_repair'];
+        validation_repair = dataLang['step_5']['validation_repair'];
+        add_item = dataLang['step_5']['add_item'];
+        item_repairing = dataLang['step_5']['item_repairing'];
+        type_name_item = dataLang['step_5']['type_name_item'];
+      
+        note = dataLang['step_5']['note'];
+        ok = dataLang['step_5']['ok'];
+        limit = dataLang['step_5']['limit'];
+        ng = dataLang['step_5']['ng'];
+        starttime = dataLang['step_5']['starttime'];
+        hm = dataLang['step_5']['hm'];
+        end_time = dataLang['step_5']['end_time'];
+        name = dataLang['step_5']['name'];
+        type_name = dataLang['step_5']['type_name'];
+
+        repair_made = dataLang['step_5']['repair_made'];
+        type_message = dataLang['step_5']['type_message'];
+        save_repair = dataLang['step_5']['save_repair'];
+        repair_time = dataLang['step_5']['repair_time'];
+        total_repair = dataLang['step_5']['total_repair'];
+        
+
+     
+        back = dataLang['step_5']['back'];
+        confirm = dataLang['step_5']['confirm'];
+        validation_delete = dataLang['step_5']['validation_delete'];
+        cancel = dataLang['step_5']['cancel'];
+        delete = dataLang['step_5']['delete'];
+       
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   List<ItemChecking> _listItemChecking = <ItemChecking>[];
 
   void getDataItemRepairing() async {
@@ -104,7 +252,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "Confirm",
+                    confirm,
                     style: TextStyle(
                         color: Color(0xFF404446),
                         fontFamily: 'Rubik',
@@ -118,7 +266,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "Are you sure want to delete item?",
+                    validation_delete,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color(0xFF404446),
@@ -147,7 +295,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                                   BorderRadius.all(Radius.circular(5))),
                           child: Center(
                             child: Text(
-                              "Cancel",
+                              cancel,
                               style: TextStyle(
                                   color: Color(0xFF00AEDB),
                                   fontFamily: 'Rubik',
@@ -170,7 +318,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                                   BorderRadius.all(Radius.circular(5))),
                           child: Center(
                             child: Text(
-                              "Delete",
+                              delete,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Rubik',
@@ -221,6 +369,8 @@ class _StepFillLimaState extends State<StepFillLima> {
   void initState() {
     super.initState();
     getDataItemRepairing();
+    setLang();
+    setBahasa();
   }
 
   @override
@@ -234,7 +384,7 @@ class _StepFillLimaState extends State<StepFillLima> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Item Repairing",
+                item_repairing,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -256,7 +406,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                             width: 250,
                           ),
                           Center(
-                            child: Text("Haven't repaired the item yet",
+                            child: Text(validation_repair,
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
@@ -301,7 +451,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                                   children: [
                                     Container(
                                       child: Text(
-                                          "Repair Time: ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
+                                          "$repair_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             color: Colors.white,
@@ -401,7 +551,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                       ),
                     ),
                     Text(
-                      'Add item',
+                      add_item,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'Rubik',

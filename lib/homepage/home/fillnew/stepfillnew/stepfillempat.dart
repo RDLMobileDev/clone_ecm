@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/fillnew/additionpage/stepfillempatinput.dart';
@@ -8,6 +9,7 @@ import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatdelete.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +23,153 @@ class StepFillEmpat extends StatefulWidget {
 
 class _StepFillEmpatState extends State<StepFillEmpat> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String item_checking = '';
+  String validation_repair = '';
+  String add_item = '';
+  String item_check = '';
+  String type_name = '';
+
+  String standard = '';
+  String type_standard = '';
+  String actual = '';
+  String type_actual = '';
+  String note = '';
+  String ok = '';
+  String limit = '';
+
+  String ng = '';
+  String starttime = '';
+  String hm = '';
+  String end_time = '';
+  String name = '';
+  String save_checking = '';
+  String checking_time = '';
+  String total_checking = '';
+  String back = '';
+  String confirm = '';
+  String validation_delete = '';
+  String cancel = '';
+  String delete = '';
+  String validation_checked = '';
+  String add_item_ = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        item_checking = dataLang['step_4']['item_checking'];
+        validation_repair = dataLang['step_4']['validation_repair'];
+        add_item = dataLang['step_4']['add_item'];
+        item_check = dataLang['step_4']['item_check'];
+        standard = dataLang['step_4']['standard'];
+        type_standard = dataLang['step_4']['type_standard'];
+        actual = dataLang['step_4']['actual'];
+        type_actual = dataLang['step_4']['type_actual'];
+        note = dataLang['step_4']['note'];
+        ok = dataLang['step_4']['ok'];
+
+        limit = dataLang['step_4']['limit'];
+        ng = dataLang['step_4']['ng'];
+        starttime = dataLang['step_4']['starttime'];
+        hm = dataLang['step_4']['hm'];
+        end_time = dataLang['step_4']['end_time'];
+        name = dataLang['step_4']['name'];
+        type_name = dataLang['step_4']['type_name'];
+        save_checking = dataLang['step_4']['save_checking'];
+        checking_time = dataLang['step_4']['checking_time'];
+
+        total_checking = dataLang['step_4']['total_checking'];
+        back = dataLang['step_4']['back'];
+        confirm = dataLang['step_4']['confirm'];
+        validation_delete = dataLang['step_4']['validation_delete'];
+        cancel = dataLang['step_4']['cancel'];
+        delete = dataLang['step_4']['delete'];
+        validation_checked = dataLang['step_4']['validation_checked'];
+        add_item_ = dataLang['step_4']['add_item_'];
+
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      item_checking = dataLang['step_4']['item_checking'];
+        validation_repair = dataLang['step_4']['validation_repair'];
+        add_item = dataLang['step_4']['add_item'];
+        item_check = dataLang['step_4']['item_check'];
+        standard = dataLang['step_4']['standard'];
+        type_standard = dataLang['step_4']['type_standard'];
+        actual = dataLang['step_4']['actual'];
+        type_actual = dataLang['step_4']['type_actual'];
+        note = dataLang['step_4']['note'];
+        ok = dataLang['step_4']['ok'];
+
+        limit = dataLang['step_4']['limit'];
+        ng = dataLang['step_4']['ng'];
+        starttime = dataLang['step_4']['starttime'];
+        hm = dataLang['step_4']['hm'];
+        end_time = dataLang['step_4']['end_time'];
+        name = dataLang['step_4']['name'];
+        type_name = dataLang['step_4']['type_name'];
+        save_checking = dataLang['step_4']['save_checking'];
+        checking_time = dataLang['step_4']['checking_time'];
+
+        total_checking = dataLang['step_4']['total_checking'];
+        back = dataLang['step_4']['back'];
+        confirm = dataLang['step_4']['confirm'];
+        validation_delete = dataLang['step_4']['validation_delete'];
+        cancel = dataLang['step_4']['cancel'];
+        delete = dataLang['step_4']['delete'];
+        validation_checked = dataLang['step_4']['validation_checked'];
+        add_item_ = dataLang['step_4']['add_item_'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   String data = "Item deleted successfully";
 
   List<ItemChecking> _listItemChecking = [];
@@ -154,7 +303,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: Text(
-                  "Confirm",
+                  confirm,
                   style: TextStyle(
                       color: Color(0xFF404446),
                       fontFamily: 'Rubik',
@@ -168,7 +317,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: Text(
-                  "Are you sure want to delete item?",
+                  validation_delete,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Color(0xFF404446),
@@ -196,7 +345,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       child: Center(
                         child: Text(
-                          "Cancel",
+                          cancel,
                           style: TextStyle(
                               color: Color(0xFF00AEDB),
                               fontFamily: 'Rubik',
@@ -221,7 +370,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            "Delete",
+                            delete,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Rubik',
@@ -243,6 +392,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   void initState() {
     super.initState();
     getDataItemChecking();
+    setLang();
+    setBahasa();
   }
 
   @override
@@ -255,7 +406,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
               width: MediaQuery.of(context).size.width,
               child: RichText(
                 text: TextSpan(
-                  text: 'Item Checking ',
+                  text: item_checking,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -288,7 +439,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                             width: 250,
                           ),
                           Center(
-                            child: Text("Haven't checked item yet",
+                            child: Text(validation_checked,
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
@@ -334,7 +485,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                   children: [
                                     Container(
                                       child: Text(
-                                          "Checking Time: ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
+                                          "$checking_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             color: Colors.white,
@@ -437,7 +588,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       ),
                     ),
                     Text(
-                      'Add item',
+                      add_item_,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'Rubik',
