@@ -1,5 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, unnecessary_const, avoid_unnecessary_containers
 
+import 'dart:convert';
+
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/getstep6model.dart';
@@ -25,6 +27,107 @@ class StepFillEnam extends StatefulWidget {
 
 class _StepFillEnamState extends State<StepFillEnam> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String improvement = '';
+  String name = '';
+  String type_name = '';
+  String idea = '';
+
+  String type_idea = '';
+  String working_time = '';
+  String repair = '';
+  String breaktime = '';
+
+  String bm = '';
+  String in_house = '';
+  String cost = 'Cost';
+  String out_house = '';
+
+  String back = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        improvement = dataLang['step_6']['improvement'];
+        name = dataLang['step_6']['name'];
+        type_name = dataLang['step_6']['type_name'];
+        idea = dataLang['step_6']['idea'];
+        type_idea = dataLang['step_6']['type_idea'];
+        working_time = dataLang['step_6']['working_time'];
+        repair = dataLang['step_6']['repair'];
+        breaktime = dataLang['step_6']['breaktime'];
+        bm = dataLang['step_6']['bm'];
+        in_house = dataLang['step_6']['in_house'];
+        cost = dataLang['step_6']['cost'];
+        out_house = dataLang['step_6']['out_house'];
+        back = dataLang['step_6']['back'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      improvement = dataLang['step_6']['improvement'];
+      name = dataLang['step_6']['name'];
+      type_name = dataLang['step_6']['type_name'];
+      idea = dataLang['step_6']['idea'];
+      type_idea = dataLang['step_6']['type_idea'];
+      working_time = dataLang['step_6']['working_time'];
+      repair = dataLang['step_6']['repair'];
+      breaktime = dataLang['step_6']['breaktime'];
+      bm = dataLang['step_6']['bm'];
+      in_house = dataLang['step_6']['in_house'];
+      cost = dataLang['step_6']['cost'];
+      out_house = dataLang['step_6']['out_house'];
+      back = dataLang['step_6']['back'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   List<AllUserModel> _listAllUser = [];
   String userSelected = '';
   TextEditingController userNameController = TextEditingController();
@@ -37,6 +140,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   StepEnamModel stepEnamModel = StepEnamModel();
 
   int _counter = 0;
+  int _counterMinutes = 0;
   int _limitIncreamentH = 0;
   int _limitIncreamentM = 0;
   int _lineStopH = 0;
@@ -63,7 +167,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   void _incrementCounter() async {
     final SharedPreferences prefs = await _prefs;
     setState(() {
-      if (_counter < _limitIncreamentH) {
+      if (_counter < _limitIncreamentH - 1) {
         _counter++;
       } else {
         _counter = _counter;
@@ -88,22 +192,82 @@ class _StepFillEnamState extends State<StepFillEnam> {
     prefs.setString("breaks", _counter.toString());
   }
 
+  void _incrementCounterMinutes() async {
+    final SharedPreferences prefs = await _prefs;
+    setState(() {
+      // if (_counterMinutes < _limitIncreamentM - 1) {
+      //   _counterMinutes++;
+      // } else {
+      //   _counterMinutes = _counterMinutes;
+      // }
+      if (_limitIncreamentM == 0) {
+        if (_counterMinutes < 60) {
+          _counterMinutes++;
+          if (_counterMinutes == 60) {
+            _counter = _counter + 1;
+            _counterMinutes = 0;
+          }
+        } else {
+          _counterMinutes = _counterMinutes;
+        }
+      } else if (_limitIncreamentM != 0) {
+        if (_counterMinutes < _limitIncreamentM) {
+          _counterMinutes++;
+        } else {
+          _counterMinutes = _counterMinutes;
+        }
+      }
+      resultLineStop();
+      resultCostInHouse();
+    });
+    prefs.setString("breaks", _counter.toString());
+  }
+
+  void _decreamentCounterMinutes() async {
+    final SharedPreferences prefs = await _prefs;
+    setState(() {
+      if (_counterMinutes > 0) {
+        _counterMinutes--;
+      } else {
+        _counterMinutes = _counterMinutes;
+      }
+      resultLineStop();
+      resultCostInHouse();
+    });
+    prefs.setString("breaks", _counter.toString());
+  }
+
   void resultLineStop() {
     setState(() {
-      _lineStopH = _limitIncreamentH - _counter;
-      _lineStopM = _limitIncreamentM - 0;
+      if (_counterMinutes > 0 && _counter == _limitIncreamentH - 1) {
+        _lineStopH = 0;
+      } else {
+        _lineStopH = _limitIncreamentH - _counter;
+      }
+
+      if (_limitIncreamentM == 0) {
+        _lineStopM = 60 - _counterMinutes;
+        if (_lineStopM == 60) {
+          // _lineStopH = 0;
+          _lineStopM = 0;
+        }
+      } else if (_limitIncreamentM != 0) {
+        _lineStopM = _limitIncreamentM - _counterMinutes;
+      }
     });
   }
 
   void resultCostInHouse() {
     setState(() {
-      if (_lineStopM < 30) {
-        _newLineStopH = _lineStopH;
-        _costInHouse = (_newLineStopH * _mp * 60000) + 30000;
-      } else {
-        _newLineStopH = _lineStopH + 1;
-        _costInHouse = (_newLineStopH * _mp * 60000) + 30000;
-      }
+      // if (_lineStopM < 30) {
+      //   _newLineStopH = _lineStopH;
+      //   _costInHouse = (_newLineStopH * _mp * 60000) + 30000;
+      // } else {
+      //   _newLineStopH = _lineStopH + 1;
+      //   _costInHouse = (_newLineStopH * _mp * 60000) + 30000;
+      // }
+      _newLineStopH = _lineStopH * 60;
+      _costInHouse = ((_newLineStopH + _lineStopM) * 1000) + 30000;
       print("===_newLineStopH ===");
       print(_newLineStopH);
     });
@@ -362,6 +526,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     super.initState();
     getAllUserData();
     getStep6();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -375,7 +541,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Improvement/Kaizen",
+                improvement,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 18,
@@ -386,7 +552,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Name",
+                name,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -414,10 +580,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     suffixIcon: Icon(Icons.search),
-                    hintText: 'User Name',
+                    hintText: type_name,
                     contentPadding: const EdgeInsets.only(top: 5, left: 5),
                     hintStyle: TextStyle(
                         fontFamily: 'Rubik',
@@ -429,13 +595,14 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 ? Container(
                     margin: EdgeInsets.only(top: 4),
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    height: 180,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         border: Border.all(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      // physics: NeverScrollableScrollPhysics(),
                       itemCount: _listAllUser.isEmpty ? 0 : _listAllUser.length,
                       itemBuilder: (context, i) {
                         return InkWell(
@@ -469,7 +636,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Idea",
+                idea,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -495,9 +662,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
                 maxLines: 5,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Type your idea',
+                    hintText: type_idea,
                     contentPadding: const EdgeInsets.only(top: 5, left: 5),
                     hintStyle: TextStyle(
                         fontFamily: 'Rubik',
@@ -509,7 +676,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 24),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Working Time",
+                working_time,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 18,
@@ -524,7 +691,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   Container(
                     width: 115,
                     child: Text(
-                      "Check + Repair",
+                      repair,
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 16,
@@ -683,7 +850,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Break Time (H)  : ",
+                    breaktime + ' (H)',
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
@@ -734,6 +901,96 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           child: IconButton(
                             onPressed: () async {
                               _incrementCounter();
+
+                              String minuteLineStop =
+                                  _lineStopM.toString().length == 1
+                                      ? "0" + _lineStopM.toString()
+                                      : _lineStopM.toString();
+                              final SharedPreferences prefs = await _prefs;
+                              prefs.setString(
+                                  "lineStop", _counter.toString() + ":00");
+                              prefs.setString("ttlLineStop",
+                                  _lineStopH.toString() + ":" + minuteLineStop);
+                              prefs.setString(
+                                  "costH", _newLineStopH.toString());
+                              prefs.setString(
+                                  "costMp", stepEnamModel.mP.toString());
+                              prefs.setString(
+                                  "costTotal", _costInHouse.toString());
+                              prefs.setString("breakTimeBool", "1");
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Color(0xFF20519F),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 16),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    breaktime + ' (M)',
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  Container(
+                    width: 150,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF979C9E)),
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            onPressed: () async {
+                              _decreamentCounterMinutes();
+                              String minuteLineStop =
+                                  _lineStopM.toString().length == 1
+                                      ? "0" + _lineStopM.toString()
+                                      : _lineStopM.toString();
+                              final SharedPreferences prefs = await _prefs;
+                              prefs.setString(
+                                  "lineStop", _counter.toString() + ":00");
+                              prefs.setString("ttlLineStop",
+                                  _lineStopH.toString() + ":" + minuteLineStop);
+                              prefs.setString(
+                                  "costH", _newLineStopH.toString());
+                              prefs.setString(
+                                  "costMp", stepEnamModel.mP.toString());
+                              prefs.setString(
+                                  "costTotal", _costInHouse.toString());
+                              prefs.setString("breakTimeBool", "1");
+                            },
+                            icon: Icon(
+                              Icons.remove,
+                              color: Color(0xFF979C9E),
+                            ),
+                          ),
+                        ),
+                        Text("$_counterMinutes"),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            onPressed: () async {
+                              if (_counter < _limitIncreamentH) {
+                                _incrementCounterMinutes();
+                              }
 
                               String minuteLineStop =
                                   _lineStopM.toString().length == 1
@@ -866,7 +1123,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "0 M",
+                        "$_counterMinutes M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -928,7 +1185,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               margin: const EdgeInsets.only(top: 24),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Cost",
+                cost,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 18,
@@ -938,7 +1195,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: Text(
-                "In-House M/P Cost (Rp)",
+                in_house,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -959,7 +1216,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "$_newLineStopH H",
+                        "${_newLineStopH + _lineStopM} M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
@@ -1085,7 +1342,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: Text(
-                "Out-House (Rp)",
+                out_house,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -1291,32 +1548,27 @@ class _StepFillEnamState extends State<StepFillEnam> {
             SizedBox(
               height: 10,
             ),
-            InkWell(
-              onTap: () {
-                // postFillEnam();
-              },
-              child: Container(
-                margin: const EdgeInsets.only(top: 4),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF979C9E)),
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: Center(
-                  child: Text(
-                    "Total = Rp. " +
-                        NumberFormat.currency(
-                                locale: 'id', decimalDigits: 0, symbol: '')
-                            .format(_costOutHouse),
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        color: Color(0xFF404446),
-                        fontWeight: FontWeight.w700),
-                  ),
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF979C9E)),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              child: Center(
+                child: Text(
+                  "Total = Rp. " +
+                      NumberFormat.currency(
+                              locale: 'id', decimalDigits: 0, symbol: '')
+                          .format(_costOutHouse),
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      color: Color(0xFF404446),
+                      fontWeight: FontWeight.w700),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

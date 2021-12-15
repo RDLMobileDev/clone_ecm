@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/home/listname/service/listtmservice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListTmName extends StatefulWidget {
@@ -12,6 +15,75 @@ class ListTmName extends StatefulWidget {
 }
 
 class _ListTmNameState extends State<ListTmName> {
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String list_tm = '';
+  String loading = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        list_tm = dataLang['daftar_nama_tm']['name_tm'];
+        loading = dataLang['daftar_nama_tm']['loading'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+        list_tm = dataLang['daftar_nama_tm']['name_tm'];
+        loading = dataLang['daftar_nama_tm']['loading'];
+      
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+  
+  
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   List listTmName = [];
@@ -30,6 +102,8 @@ class _ListTmNameState extends State<ListTmName> {
   void initState() {
     getListTmFromService();
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -45,7 +119,7 @@ class _ListTmNameState extends State<ListTmName> {
           },
         ),
         title: Text(
-          "TM Name",
+          list_tm,
           style: TextStyle(
               fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w700),
         ),
@@ -61,7 +135,7 @@ class _ListTmNameState extends State<ListTmName> {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Center(child: Text("Loading List TM Name...",style: TextStyle(
+                child: Center(child: Text(loading,style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
                       ),),),

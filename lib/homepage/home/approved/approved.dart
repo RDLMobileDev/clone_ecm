@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/home/model/approvedmodel.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
 import 'package:e_cm/util/dialog_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +20,88 @@ class ApprovedEcm extends StatefulWidget {
 }
 
 class _ApprovedEcmState extends State<ApprovedEcm> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String? ecm_from;
+  String one_hour = '';
+  String review = '';
+  String approve = '';
+  String decline = '';
+  String approved = '';
+  String yesterday = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        ecm_from = dataLang['setuju_e_sign']['ecm_card_from'];
+        one_hour = dataLang['setuju_e_sign']['one_hour'];
+        review = dataLang['setuju_e_sign']['review'];
+        approve = dataLang['setuju_e_sign']['approve'];
+        decline = dataLang['setuju_e_sign']['decline'];
+        approved = dataLang['setuju_e_sign']['approved'];
+        yesterday = dataLang['setuju_e_sign']['yesterday'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        ecm_from = dataLang['setuju_e_sign']['ecm_card_from'];
+        one_hour = dataLang['setuju_e_sign']['one_hour'];
+        review = dataLang['setuju_e_sign']['review'];
+        approve = dataLang['setuju_e_sign']['approve'];
+        decline = dataLang['setuju_e_sign']['decline'];
+        approved = dataLang['setuju_e_sign']['approved'];
+        yesterday = dataLang['setuju_e_sign']['yesterday'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   List<ApprovedModel> _listApproved = [];
 
   Future<List<ApprovedModel>> getApprovedData() async {
@@ -57,6 +142,9 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
   @override
   void initState() {
     super.initState();
+    getApprovedData();
+    setBahasa();
+    setLang();
   }
 
   @override

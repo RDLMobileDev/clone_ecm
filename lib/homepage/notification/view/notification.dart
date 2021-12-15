@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/notification/model/notifmodel.dart';
 import 'package:e_cm/homepage/notification/services/apinotif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationMember extends StatefulWidget {
@@ -15,6 +18,110 @@ class NotificationMember extends StatefulWidget {
 
 class _NotificationMemberState extends State<NotificationMember> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  
+  String all_notification = '';
+  String mark_as_read = '';
+  String approve_ecm = '';
+  String one_hour = '';
+  String one_day_ago = '';
+
+  String sent_you_ecm = '';
+  String review = '';
+  String approve = '';
+  String decline = '';
+  String declined = '';
+  String approved = '';
+  String loading = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+      
+        all_notification = dataLang['notifikasi_tl']['notification_all'];
+        mark_as_read = dataLang['notifikasi_tl']['mark_all'];
+        approve_ecm = dataLang['notifikasi_staff']['was_approve'];
+        one_hour = dataLang['notifikasi_tl']['a_hour'];
+        one_day_ago = dataLang['notifikasi_staff']['one_day'];
+        sent_you_ecm = dataLang['notifikasi_tl']['send_ecm'];
+        review = dataLang['notifikasi_tl']['review'];
+        approve = dataLang['notifikasi_tl']['approve'];
+        decline = dataLang['notifikasi_tl']['decline'];
+        declined = dataLang['notifikasi_tl']['declined'];
+        approved = dataLang['notifikasi_tl']['approved'];
+        loading = dataLang['notifikasi_tl']['loading'];
+        
+       
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+         all_notification = dataLang['notifikasi_tl']['notification_all'];
+        mark_as_read = dataLang['notifikasi_tl']['mark_all'];
+        approve_ecm = dataLang['notifikasi_staff']['was_approve'];
+        one_hour = dataLang['notifikasi_tl']['a_hour'];
+        one_day_ago = dataLang['notifikasi_staff']['one_day'];
+        sent_you_ecm = dataLang['notifikasi_tl']['send_ecm'];
+        review = dataLang['notifikasi_tl']['review'];
+        approve = dataLang['notifikasi_tl']['approve'];
+        decline = dataLang['notifikasi_tl']['decline'];
+        declined = dataLang['notifikasi_tl']['declined'];
+        approved = dataLang['notifikasi_tl']['approved'];
+        loading = dataLang['notifikasi_tl']['loading'];
+     
+       
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   List<NotificationModel> listNotificationEcm = [];
 
   Future getListNotif() async {
@@ -32,6 +139,8 @@ class _NotificationMemberState extends State<NotificationMember> {
   void initState() {
     getListNotif();
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -45,13 +154,13 @@ class _NotificationMemberState extends State<NotificationMember> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("All Notification",
+                Text(all_notification,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
                         color: Color(0xff404446),
                         fontWeight: FontWeight.w700)),
-                Text("Mark all as read",
+                Text(mark_as_read,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 12,
@@ -68,7 +177,7 @@ class _NotificationMemberState extends State<NotificationMember> {
               future: getListNotif(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Text("Memuat notifikasi...");
+                  return Text(loading);
                 }
 
                 return ListView.builder(
@@ -102,7 +211,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                                   ),
                                   TextSpan(text: " "),
                                   TextSpan(
-                                    text: "Was Aproved yout E-CM Card",
+                                    text: approve_ecm,
                                     style: TextStyle(
                                         fontSize: 14, color: Colors.grey),
                                   )

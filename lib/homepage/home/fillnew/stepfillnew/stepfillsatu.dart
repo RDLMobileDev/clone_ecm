@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors, prefer_is_empty
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
@@ -16,6 +17,7 @@ import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
 import 'package:e_cm/homepage/home/services/membernameservice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +37,131 @@ class StepFillSatu extends StatefulWidget {
 
 class StepFillSatuState extends State<StepFillSatu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  
+  String classification = '';
+  String b_m = '';
+  String p_m = '';
+  String i_m = '';
+  String tanggal = '';
+
+  String hbt = '';
+  String t_m = '';
+  String selectmember = '';
+  String factory = '';
+  String select_factory = '';
+  String group_area = '';
+  String select_group_area = '';
+
+  String machine_name = '';
+  String type_machine = '';
+  String machine_number = '';
+  String type_machine_number = '';
+  String cancel = '';
+  String next_two = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+      
+        classification = dataLang['step_1']['classification'];
+        b_m = dataLang['step_1']['b_m'];
+        p_m = dataLang['step_1']['p_m'];
+        i_m = dataLang['step_1']['i_m'];
+        tanggal = dataLang['step_1']['tanggal'];
+        hbt = dataLang['step_1']['hbt'];
+        t_m = dataLang['step_1']['t_m'];
+        selectmember = dataLang['step_1']['selectmember'];
+        factory = dataLang['step_1']['factory'];
+        select_factory = dataLang['step_1']['select_factory'];
+
+        group_area = dataLang['step_1']['group_area'];
+        select_group_area = dataLang['step_1']['select_group_area'];
+        machine_name = dataLang['step_1']['machine_name'];
+        type_machine = dataLang['step_1']['type_machine'];
+        machine_number = dataLang['step_1']['machine_number'];
+        type_machine_number = dataLang['step_1']['type_machine_number'];
+        cancel = dataLang['step_1']['cancel'];
+        next_two = dataLang['step_1']['next_two'];
+        
+       
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+        classification = dataLang['step_1']['classification'];
+        b_m = dataLang['step_1']['b_m'];
+        p_m = dataLang['step_1']['p_m'];
+        i_m = dataLang['step_1']['i_m'];
+        tanggal = dataLang['step_1']['tanggal'];
+        hbt = dataLang['step_1']['hbt'];
+        t_m = dataLang['step_1']['t_m'];
+        selectmember = dataLang['step_1']['selectmember'];
+        factory = dataLang['step_1']['factory'];
+        select_factory = dataLang['step_1']['select_factory'];
+
+        group_area = dataLang['step_1']['group_area'];
+        select_group_area = dataLang['step_1']['select_group_area'];
+        machine_name = dataLang['step_1']['machine_name'];
+        type_machine = dataLang['step_1']['type_machine'];
+        machine_number = dataLang['step_1']['machine_number'];
+        type_machine_number = dataLang['step_1']['type_machine_number'];
+        cancel = dataLang['step_1']['cancel'];
+        next_two = dataLang['step_1']['next_two'];
+     
+       
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
+
   TextEditingController? machineNameController;
   TextEditingController machineNumberController = TextEditingController();
   TextEditingController teamMemberController = TextEditingController();
@@ -246,6 +373,8 @@ class StepFillSatuState extends State<StepFillSatu> {
     getListAreaGroup();
     getMachineName();
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -258,8 +387,8 @@ class StepFillSatuState extends State<StepFillSatu> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: const Text(
-                "Classification",
+              child: Text(
+                classification,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     color: Color(0xFF404446),
@@ -361,7 +490,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Date ',
+                  text: tanggal,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -415,7 +544,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Team Member ',
+                  text: t_m,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -464,6 +593,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 : Container(
                     margin: const EdgeInsets.only(top: 5),
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     child: FutureBuilder(
                       future: getListMemberName(),
                       builder: (context, snapshot) {
@@ -475,7 +605,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           itemCount: listNamaMember.isEmpty
                               ? 0
                               : listNamaMember.length,
@@ -506,6 +636,9 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       "teamMember", listTeamMember);
 
                                   prefs.setString("teamMemberBool", "1");
+                                  setState(() {
+                                    isTappedTeamMember = !isTappedTeamMember;
+                                  });
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: 'Member maksimal 6',
@@ -530,7 +663,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Factory ',
+                  text: factory,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -561,10 +694,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                   fontFamily: 'Rubik',
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: 'Pilih factory',
+                  hintText: select_factory,
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
@@ -577,6 +710,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     margin: const EdgeInsets.only(top: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 180,
                     child: FutureBuilder(
                       future: getListLocation(),
                       builder: (context, snapshot) {
@@ -587,7 +722,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: _listLocation.length,
                           itemBuilder: (context, i) {
@@ -601,6 +736,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                         TextEditingController(
                                             text:
                                                 _listLocation[i].valueFactory);
+                                    isTappedFactory = !isTappedFactory;
                                   });
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString(
@@ -609,7 +745,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   print("id lokasi: $locationIdSelected");
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(_listLocation[i].valueFactory),
                                 ));
                           },
@@ -621,7 +757,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Group Area ',
+                  text: group_area,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -652,10 +788,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                   fontFamily: 'Rubik',
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: 'Pilih factory grup',
+                  hintText: select_factory,
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
@@ -668,6 +804,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     child: FutureBuilder(
                       future: getListAreaGroup(),
                       builder: (context, snapshot) {
@@ -678,7 +815,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: _listGroupArea.length,
                           itemBuilder: (context, i) {
@@ -691,6 +828,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                     factoryNameGroupController =
                                         TextEditingController(
                                             text: _listGroupArea[i].valueGroup);
+                                    isTappedFactoryGroup =
+                                        !isTappedFactoryGroup;
                                   });
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString("locationIdGroup",
@@ -699,7 +838,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   print("id lokasi: $locationIdGroupSelected");
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(_listGroupArea[i].valueGroup),
                                 ));
                           },
@@ -711,7 +850,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               margin: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Nama Mesin ',
+                  text: machine_name,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
@@ -745,10 +884,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                   fontFamily: 'Rubik',
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: 'Tulis nama mesin',
+                  hintText: type_machine,
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
                   hintStyle: TextStyle(
@@ -760,13 +899,14 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     padding: EdgeInsets.all(8),
                     child: FutureBuilder(
                       future: getMachineName(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            // physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _listMachineName.length,
                             itemBuilder: (context, i) {
@@ -782,6 +922,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       machineNameController =
                                           TextEditingController(
                                               text: _listMachineName[i].nama);
+                                      isTapedMachineName = !isTapedMachineName;
                                     });
                                   },
                                   child: Padding(
@@ -847,10 +988,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                   fontFamily: 'Rubik',
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: 'Tulis nomor mesin',
+                  hintText: type_machine_number,
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
                   hintStyle: TextStyle(
@@ -862,6 +1003,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ? Container()
                 : Container(
                     width: MediaQuery.of(context).size.width,
+                    height: 180,
                     padding: EdgeInsets.all(8),
                     child: FutureBuilder(
                       future: getMachineNumberbyId(),
@@ -885,6 +1027,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                           TextEditingController(
                                               text: _listMachineNumber[i]
                                                   .numberOfMachine);
+                                      isTappedMachineNumber =
+                                          !isTappedMachineNumber;
                                     });
                                   },
                                   child: Padding(

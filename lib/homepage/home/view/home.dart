@@ -8,6 +8,7 @@ import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/history/historypage.dart';
+import 'package:e_cm/homepage/home/history/historyreview.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
 import 'package:e_cm/homepage/home/services/historyecmservice.dart';
@@ -25,6 +26,108 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String halo = '';
+  String welcometo = '';
+  String recent_ecm = '';
+  String activity = '';
+  String add_ecm = '';
+  String sign_ecm = '';
+  String listname = '';
+  String history_ecm = '';
+  String properti_ecm = '';
+  String home = '';
+  String notification = '';
+  String account = '';
+  String loading = '';
+  String no_data = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        halo = dataLang['beranda']['hello'];
+        welcometo = dataLang['beranda']['welcome_to'];
+        recent_ecm = dataLang['beranda']['ecm_card_recent'];
+        activity = dataLang['beranda']['activity'];
+        add_ecm = dataLang['beranda']['fill_ecm'];
+        sign_ecm = dataLang['beranda']['approved_sign'];
+        listname = dataLang['beranda']['list_tm'];
+        history_ecm = dataLang['beranda']['history_ecm'];
+        properti_ecm = dataLang['beranda']['property_of'];
+        home = dataLang['beranda']['home'];
+        notification = dataLang['beranda']['notif'];
+        account = dataLang['beranda']['account'];
+        loading = dataLang['beranda']['loading'];
+        no_data = dataLang['beranda']['no_data'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+  
+    if (mounted) {
+      setState(() {
+        halo = dataLang['beranda']['hello'];
+        welcometo = dataLang['beranda']['welcome_to'];
+        recent_ecm = dataLang['beranda']['ecm_card_recent'];
+        activity = dataLang['beranda']['activity'];
+        add_ecm = dataLang['beranda']['fill_ecm'];
+        sign_ecm = dataLang['beranda']['approved_sign'];
+        listname = dataLang['beranda']['list_tm'];
+        history_ecm = dataLang['beranda']['history_ecm'];
+        properti_ecm = dataLang['beranda']['property_of'];
+        home = dataLang['beranda']['home'];
+        notification = dataLang['beranda']['notif'];
+        account = dataLang['beranda']['account'];
+        loading = dataLang['beranda']['loading'];
+        no_data = dataLang['beranda']['no_data'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController historyStreamController = StreamController();
   String userName = "";
@@ -104,6 +207,8 @@ class _HomeState extends State<Home> {
         Timer.periodic(Duration(seconds: 10), (timer) => getHistoryEcmByUser());
     getNameUser();
     getRoleUser();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -138,7 +243,7 @@ class _HomeState extends State<Home> {
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
                             Text(
-                              "Hello,",
+                              halo,
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 16,
@@ -149,7 +254,7 @@ class _HomeState extends State<Home> {
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
-                                  fontSize: 32,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w700),
                             )
                           ],
@@ -168,7 +273,7 @@ class _HomeState extends State<Home> {
                       height: 16,
                     ),
                     Text(
-                      "Welcome to PT. Sugity Creatives\nUtility Maintenance",
+                      welcometo,
                       style: TextStyle(
                           height: 1.5,
                           fontFamily: 'Rubik',
@@ -184,7 +289,7 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.only(left: 16, right: 16),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Recent E-CM Card",
+                recent_ecm,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -211,7 +316,7 @@ class _HomeState extends State<Home> {
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
                           Center(
-                            child: Text("Loading history E-CM Card...",
+                            child: Text(loading,
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
@@ -234,7 +339,7 @@ class _HomeState extends State<Home> {
                             border: Border.all(color: Color(0xFF00AEDB)),
                           ),
                           child: Center(
-                              child: Text("No history here",
+                              child: Text(no_data,
                                   style: TextStyle(
                                       fontFamily: 'Rubik',
                                       fontSize: 16,
@@ -248,14 +353,24 @@ class _HomeState extends State<Home> {
                             itemCount: _listHistoryEcmUser.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, i) {
-                              return SliderHistory(
-                                classificationName:
-                                    _listHistoryEcmUser[i].classification,
-                                costRp: _listHistoryEcmUser[i].totalHarga,
-                                factoryPlace: _listHistoryEcmUser[i].lokasi,
-                                tanggal: _listHistoryEcmUser[i].date,
-                                itemsRepair:
-                                    _listHistoryEcmUser[i].arrayitemrepair,
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => HistoryReview(
+                                            notifId: _listHistoryEcmUser[i]
+                                                .ecmId
+                                                .toString(),
+                                          )));
+                                },
+                                child: SliderHistory(
+                                  classificationName:
+                                      _listHistoryEcmUser[i].classification,
+                                  costRp: _listHistoryEcmUser[i].totalHarga,
+                                  factoryPlace: _listHistoryEcmUser[i].lokasi,
+                                  tanggal: _listHistoryEcmUser[i].date,
+                                  itemsRepair:
+                                      _listHistoryEcmUser[i].arrayitemrepair,
+                                ),
                               );
                             },
                           ),
@@ -273,7 +388,7 @@ class _HomeState extends State<Home> {
               ),
               width: MediaQuery.of(context).size.width,
               child: Text(
-                "Activity",
+                activity,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
@@ -303,9 +418,9 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children:  [
                       Text(
-                        "Fill New E-CM Card",
+                        add_ecm,
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Colors.white,
@@ -351,9 +466,9 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children: [
                             Text(
-                              "Approved E-Sign",
+                              sign_ecm,
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Colors.white,
@@ -390,9 +505,9 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children:  [
                             Text(
-                              "List TM Name",
+                              listname,
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Colors.white,
@@ -429,9 +544,9 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children:  [
                             Text(
-                              "History E-CM Card",
+                              history_ecm,
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Colors.white,
@@ -456,7 +571,7 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  "Property of PT. Sugity Creatives",
+                  properti_ecm,
                   style: TextStyle(
                       color: Colors.black87, fontFamily: 'Rubik', fontSize: 12),
                 ),

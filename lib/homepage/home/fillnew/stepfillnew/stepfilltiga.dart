@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/services/apifillnewtiga.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +23,77 @@ class StepFillTiga extends StatefulWidget {
 
 class _StepFillTigaState extends State<StepFillTiga> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String why_analysis = '';
+  String why = '';
+  String how = '';
+  String type_message = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        why_analysis = dataLang['step_3']['why_analysis'];
+        why = dataLang['step_3']['why'];
+        how = dataLang['step_3']['how'];
+        type_message = dataLang['step_3']['type_message'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      why_analysis = dataLang['step_3']['why_analysis'];
+      why = dataLang['step_3']['why'];
+      how = dataLang['step_3']['how'];
+      type_message = dataLang['step_3']['type_message'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   GlobalKey<FormState> formKeyStep3 = GlobalKey();
 
   TextEditingController why1Controller = TextEditingController();
@@ -86,6 +159,13 @@ class _StepFillTigaState extends State<StepFillTiga> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    setLang();
+    setBahasa();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Form(
       key: formKeyStep3,
@@ -94,7 +174,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Text(
-              'Why Analysis',
+              why_analysis,
               textAlign: TextAlign.left,
               style: TextStyle(
                   color: Colors.black, fontSize: 16, fontFamily: 'Rubik'),
@@ -111,7 +191,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               collapsedIconColor: Colors.white,
               collapsedTextColor: Colors.black,
               title: Text(
-                'Why 1',
+                why,
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'Rubik', fontSize: 14),
               ),
@@ -125,11 +205,11 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       prefs.setString("whyBool1", "1");
                     });
                   },
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
-                      hintText: 'Type message..'),
+                      hintText: type_message),
                   maxLines: 5,
                 )
               ],
@@ -160,11 +240,11 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     });
                   },
                   controller: why2Controller,
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
-                      hintText: 'Type message..'),
+                      hintText: type_message),
                   maxLines: 5,
                 )
               ],
@@ -195,11 +275,11 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       prefs.setString("whyBool3", "1");
                     });
                   },
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
-                      hintText: 'Type message..'),
+                      hintText: type_message),
                   maxLines: 5,
                 )
               ],
@@ -229,11 +309,11 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       prefs.setString("why4", value);
                     });
                   },
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
-                      hintText: 'Type message..'),
+                      hintText: type_message),
                   maxLines: 5,
                 )
               ],
@@ -242,7 +322,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Text(
-              'How',
+              how,
               textAlign: TextAlign.left,
               style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
             ),
@@ -259,10 +339,10 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     prefs.setString("howBool", "1");
                   });
                 },
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     border: OutlineInputBorder(),
                     filled: true,
-                    hintText: 'Type message..'),
+                    hintText: type_message),
                 maxLines: 3,
               ))
         ],

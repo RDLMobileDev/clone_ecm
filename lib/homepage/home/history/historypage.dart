@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:date_time_format/src/date_time_extension_methods.dart';
 import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/model/historyall.dart';
@@ -9,6 +10,7 @@ import 'package:e_cm/homepage/home/history/service/get_history_monthly.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -22,6 +24,98 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String history = '';
+  String all = 'Semua';
+  String today = 'Hari ini';
+  String monthly = 'Bulanan';
+  String? making;
+  String a_hour = '';
+  String one_week = '';
+  String two_week = '';
+  String one_month = '';
+  String no_data = '';
+  String no_riwayat = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        history = dataLang['riwayat']['history'];
+        all = dataLang['riwayat']['all'];
+        today = dataLang['riwayat']['today'];
+        monthly = dataLang['riwayat']['monthly'];
+        making = dataLang['riwayat']['making_ecm'];
+        a_hour = dataLang['riwayat']['a_hour_ago'];
+        one_week = dataLang['riwayat']['one_week'];
+        two_week = dataLang['riwayat']['two_week'];
+        one_month = dataLang['riwayat']['one_month'];
+        no_data = dataLang['riwayat']['no_data'];
+        no_riwayat = dataLang['riwayat']['no_riwayat'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        history = dataLang['riwayat']['history'];
+        all = dataLang['riwayat']['all'];
+        today = dataLang['riwayat']['today'];
+        monthly = dataLang['riwayat']['monthly'];
+        making = dataLang['riwayat']['making_ecm'];
+        a_hour = dataLang['riwayat']['a_hour_ago'];
+        one_week = dataLang['riwayat']['one_week'];
+        two_week = dataLang['riwayat']['two_week'];
+        one_month = dataLang['riwayat']['one_month'];
+        no_data = dataLang['riwayat']['no_data'];
+        no_riwayat = dataLang['riwayat']['no_riwayat'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<HistoryDaily> _listDaily = [];
   List<HistoryAll> _listAll = [];
@@ -40,8 +134,19 @@ class _HistoryPageState extends State<HistoryPage> {
   bool tabDaily = true;
   bool tabMontly = false;
 
+  int idMonth = 0;
+  int idMonthPembanding = 0;
+
   String tokenKeyUser = '';
   String idUser = '';
+  List bulan = [];
+
+  Future<List> getMonth() async {
+    var response = await rootBundle.loadString("assets/month/month.json");
+    var dataLang = json.decode(response)['data'];
+    bulan = dataLang;
+    return dataLang;
+  }
 
   Future<List<HistoryDaily>> getListDaily(String dateTarget) async {
     final SharedPreferences prefs = await _prefs;
@@ -187,7 +292,7 @@ class _HistoryPageState extends State<HistoryPage> {
       if (value != null) {
         DateTime _fromDate = DateTime.now();
         final dateFormat = new DateFormat('dd MMMM yyyy');
-        final monthFormat = new DateFormat('MMMM');
+        final monthFormat = new DateFormat('MMMM yyyy');
         _fromDate = value;
         final String date = _fromDate.format("Y-m-d");
 
@@ -270,13 +375,18 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     final String dateTime = _fromDate.format("m Y");
     // getListDaily(dateTime);
     // getListAll();
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
     final monthFormatNow = new DateFormat('MMMM yyyy');
+    final yearFormatNow = new DateFormat('yyyy');
     final String dateNow = dateFormatNow.format(_fromDateNow);
+    final String monthNow = monthFormatNow.format(_fromDateNow);
+    final String yearNow = yearFormatNow.format(_fromDateNow);
+
     nowDateSelected = dateNow;
     nowMonthSelected = monthFormatNow.format(_fromDateNow);
   }
@@ -293,8 +403,8 @@ class _HistoryPageState extends State<HistoryPage> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text(
-          "History E-CM Card",
+        title: Text(
+          history,
           style: TextStyle(
               fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w700),
         ),
@@ -340,7 +450,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         // height: 20,
                         child: Text(
-                          "All",
+                          all,
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 12,
@@ -384,7 +494,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         // height: 20,
                         child: Text(
-                          "Today",
+                          today,
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 12,
@@ -429,7 +539,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         // height: 20,
                         child: Text(
-                          "Monthly",
+                          monthly,
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 12,
@@ -1116,7 +1226,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      getDateFromDialog();
+                      getMonthFromDialog();
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
@@ -1195,4 +1305,76 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
     );
   }
+
+  // Container _showCardMonth(BuildContext context) {
+  //   return Container(
+  //     height: 250,
+  //     width: 100,
+  //     padding: const EdgeInsets.all(8.0),
+  //     decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.only(
+  //       topLeft: Radius.circular(10),
+  //       topRight: Radius.circular(10),
+  //     )),
+  //     child: FutureBuilder(
+  //       future: getMonth(),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           return ListView.builder(
+  //               itemCount: bulan.length,
+  //               itemBuilder: (context, i) {
+  //                 return InkWell(
+  //                     onTap: () async {
+  //                       setState(() {
+  //                         monthName = bulan[i]["name"];
+  //                         getHistoryMonthly(tokenKeyUser, year, bulan[i]["id"]);
+
+  //                         idMonth = bulan[i]["id"];
+  //                       });
+  //                       var result = await getHistoryMonthly(
+  //                           tokenKeyUser, year, bulan[i]["id"]);
+
+  //                       print("hasil monthly");
+  //                       print(result['response']['status']);
+
+  //                       if (result['response']['status'] == 201) {
+  //                         Fluttertoast.showToast(
+  //                             msg: 'Data tidak ada',
+  //                             toastLength: Toast.LENGTH_SHORT,
+  //                             gravity: ToastGravity.BOTTOM,
+  //                             timeInSecForIosWeb: 2,
+  //                             backgroundColor: Colors.greenAccent,
+  //                             textColor: Colors.white,
+  //                             fontSize: 16);
+  //                       }
+
+  //                       Navigator.of(context).pop();
+  //                       tabAll = false;
+  //                       tabDaily = false;
+  //                       tabMontly = true;
+  //                     },
+  //                     child: Container(
+  //                         margin: EdgeInsets.only(left: 20, right: 20),
+  //                         padding: EdgeInsets.all(10),
+  //                         decoration: BoxDecoration(
+  //                             border: Border(
+  //                                 bottom: BorderSide(
+  //                                     color: Colors.grey, width: 2))),
+  //                         child: Center(
+  //                           child: Text(
+  //                             bulan[i]["name"],
+  //                             style: TextStyle(
+  //                               color: Colors.black,
+  //                               fontSize: 16,
+  //                             ),
+  //                           ),
+  //                         )));
+  //               });
+  //         }
+
+  //         return CircularProgressIndicator();
+  //       },
+  //     ),
+  //   );
+  // }
 }
