@@ -113,29 +113,25 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
     try {
       var response = await getApproved(idUser, tokenUser);
       if (response['response']['status'] == 200) {
-        setStateIfMounted(() {
-          var data = response['data'] as List;
-          _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
-          print("===== list approved =====");
-          print(_listApproved[0].status);
-          print(data.length);
-          // print(response['data']);
-          print("===== || =====");
-        });
+        var data = response['data'] as List;
+        _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
+        print("===== list approved =====");
+        print(data.length);
+        // print(response['data']);
+        print("===== || =====");
+
       } else {
-        setState(() {
-          Fluttertoast.showToast(
-              msg: 'Periksa jaringan internet anda',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        Fluttertoast.showToast(
+            msg: 'Periksa jaringan internet anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
       }
     } catch (e) {
-      print(e);
+      print("approved exception $e");
     }
     return _listApproved;
   }
@@ -146,7 +142,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getApprovedData();
     setBahasa();
@@ -220,6 +215,17 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                       fontWeight: FontWeight.w700)),
                             ],
                           ),
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'E-CM Card from ',
+                                style: TextStyle(color: Color(0xFF6C7072))),
+                            TextSpan(
+                                text: _listApproved[i].nama.toString(),
+                                style: TextStyle(
+                                    color: Color(0xFF00AEDB),
+                                    fontWeight: FontWeight.w700)),
+                          ],
                         ),
                         Text(
                           one_hour,

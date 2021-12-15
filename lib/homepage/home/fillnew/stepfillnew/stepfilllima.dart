@@ -466,7 +466,15 @@ class _StepFillLimaState extends State<StepFillLima> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           InkWell(
-                                            onTap: () async {},
+                                            onTap: () async {
+                                              final result =
+                                                  await Navigator.of(context)
+                                                      .push(MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FormStepFilllima(
+                                                                isUpdate: true,
+                                                              )));
+                                            },
                                             child: Image.asset(
                                               "assets/icons/akar-icons_edit.png",
                                               width: 20,
@@ -509,9 +517,11 @@ class _StepFillLimaState extends State<StepFillLima> {
                   : () async {
                       final prefs = await _prefs;
                       try {
-                        bool isInputted = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => FormStepFilllima()));
+                        bool isInputted =
+                            await Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => FormStepFilllima(
+                                      isUpdate: false,
+                                    )));
 
                         if (isInputted) {
                           prefs.setString("itemRepairBool", "1");
