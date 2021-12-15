@@ -217,10 +217,16 @@ class _StepFillLimaState extends State<StepFillLima> {
     }
   }
 
+  void setBoolFinishStep5() async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setString("itemRepairBool", "0");
+  }
+
   @override
   void initState() {
     super.initState();
     getDataItemRepairing();
+    setBoolFinishStep5();
   }
 
   @override

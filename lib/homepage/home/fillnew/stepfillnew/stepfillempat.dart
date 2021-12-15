@@ -239,10 +239,16 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     );
   }
 
+  void setBoolItemStep4() async {
+    final prefs = await _prefs;
+    prefs.setString("itemStep4Bool", "0");
+  }
+
   @override
   void initState() {
     super.initState();
     getDataItemChecking();
+    setBoolItemStep4();
   }
 
   @override

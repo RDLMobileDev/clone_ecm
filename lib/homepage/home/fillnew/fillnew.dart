@@ -188,34 +188,38 @@ class _FillNewState extends State<FillNew> {
       }
 
       if (_currentStep == 3) {
-        if (prefs.getString("itemStep4Bool")!.isNotEmpty) {
+        String? itemStep4Bool = prefs.getString("itemStep4Bool");
+        if (itemStep4Bool!.isNotEmpty && itemStep4Bool == "1") {
           setState(() {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Tambahkan item dahulu',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
+        } else if (itemStep4Bool.isNotEmpty && itemStep4Bool == "0") {
+          setState(() {
+            _currentStep++;
+            _stepClicked != 8 ? _stepClicked += 1 : null;
+          });
+          // Fluttertoast.showToast(
+          //     msg: 'Tambahkan item dahulu',
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     fontSize: 16);
         }
       }
 
       if (_currentStep == 4) {
-        if (prefs.getString("itemRepairBool")!.isNotEmpty) {
+        String? itemRepairBool = prefs.getString("itemRepairBool");
+        if (itemRepairBool!.isNotEmpty && itemRepairBool == "1") {
           setState(() {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Tambahkan item dahulu',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
+        } else if (itemRepairBool.isNotEmpty && itemRepairBool == "0") {
+          setState(() {
+            _currentStep++;
+            _stepClicked != 8 ? _stepClicked += 1 : null;
+          });
         }
       }
 
@@ -243,19 +247,23 @@ class _FillNewState extends State<FillNew> {
       }
 
       if (_currentStep == 6) {
-        // print(prefs.getString("sparePartBool"));
-        if (prefs.getString("sparePartBool")!.isNotEmpty) {
+        String? sparePartBool = prefs.getString("sparePartBool");
+        if (sparePartBool!.isNotEmpty && sparePartBool == "1") {
           setState(() {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Tambahkan item dahulu',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
+        } else if (sparePartBool.isNotEmpty && sparePartBool == "0") {
+          setState(() {
+            _currentStep++;
+            _stepClicked != 8 ? _stepClicked += 1 : null;
+          });
+          // Fluttertoast.showToast(
+          //     msg: 'Tambahkan item dahulu',
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     fontSize: 16);
         }
       }
 
