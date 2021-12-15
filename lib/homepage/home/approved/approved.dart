@@ -2,7 +2,9 @@
 
 import 'package:e_cm/homepage/home/model/approvedmodel.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
+import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
+import 'package:e_cm/util/dialog_util.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +34,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
         print(data.length);
         // print(response['data']);
         print("===== || =====");
-
       } else {
         Fluttertoast.showToast(
             msg: 'Periksa jaringan internet anda',
@@ -172,8 +173,8 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         )));
                               },
                               child: Container(
-                                width: 63,
-                                height: 24,
+                                width: 70,
+                                height: 32,
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: const Color(0xFF00AEDB)),
@@ -194,54 +195,95 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                               width: 8,
                             ),
                             Visibility(
-                              visible: _listApproved[i].status != "decline",
+                              visible: _listApproved[i].status != "2",
                               child: Container(
-                                width: 63,
-                                height: 24,
+                                width: 70,
+                                height: 32,
                                 decoration: BoxDecoration(
-                                    color: _listApproved[i].status != "accept"
+                                    color: _listApproved[i].status != "1"
                                         ? Color(0xFF00AEDB)
                                         : Color(0xFF979C9E),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5))),
                                 child: Center(
-                                  child: Text(
-                                    _listApproved[i].status != "accept"
-                                        ? "Approve"
-                                        : "Approved",
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
+                                  child: TextButton(
+                                    onPressed: _listApproved[i].status != "1"
+                                        ? () => showCustomDialog(
+                                              context: context,
+                                              assetPath:
+                                                  "assets/icons/Sign.png",
+                                              title: "Confirm",
+                                              message: "Yakin untuk menyetujui",
+                                              positiveButtonTitle: "Approved",
+                                              positiveCallback: () =>
+                                                  postUpdateStatus(
+                                                "1",
+                                                _listApproved[i]
+                                                    .notifEcmId
+                                                    .toString(),
+                                              ),
+                                            )
+                                        : () {},
+                                    child: Text(
+                                      _listApproved[i].status == "1"
+                                          ? "Approved"
+                                          : "Approve",
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 8,
+                            Visibility(
+                              visible: _listApproved[i].status != "2",
+                              child: SizedBox(
+                                width: 8,
+                              ),
                             ),
                             Visibility(
-                              visible: _listApproved[i].status != "accept",
+                              visible: _listApproved[i].status != "1",
                               child: Container(
-                                width: 63,
-                                height: 24,
+                                width: 70,
+                                height: 32,
                                 decoration: BoxDecoration(
-                                    color: _listApproved[i].status != "decline"
+                                    color: _listApproved[i].status != "2"
                                         ? Color(0xFFFF0000)
                                         : Color(0xFF979C9E),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5))),
                                 child: Center(
-                                  child: Text(
-                                    _listApproved[i].status != "decline"
-                                        ? "Decline"
-                                        : "Declined",
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
+                                  child: TextButton(
+                                    onPressed: _listApproved[i].status != "2"
+                                        ? () => showCustomDialog(
+                                              context: context,
+                                              assetPath:
+                                                  "assets/icons/Sign.png",
+                                              title: "Confirm",
+                                              message: "Yakin untuk menolak",
+                                              positiveButtonTitle: "Decline",
+                                              positiveCallback:
+                                                  postUpdateStatus(
+                                                "2",
+                                                _listApproved[i]
+                                                    .notifEcmId
+                                                    .toString(),
+                                              ),
+                                            )
+                                        : () {},
+                                    child: Text(
+                                      _listApproved[i].status == "2"
+                                          ? "Declined"
+                                          : "Decline",
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -271,5 +313,48 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
         ),
       ),
     );
+  }
+
+  postUpdateStatus(String statusUser, String notifUser) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    try {
+      var response = await updateStatus(notifUser, statusUser, tokenUser);
+
+      if (response['response']['status'] != 200) {
+        Fluttertoast.showToast(
+            msg: 'Pembaruan status gagal',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        return;
+      }
+
+      Fluttertoast.showToast(
+          msg: 'Pembaruan status sukses',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+      setState(() {
+        getApprovedData();
+      });
+    } catch (e) {
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Periksa jaringan internet anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
+    }
   }
 }
