@@ -83,8 +83,8 @@ class _LogInState extends State<LogIn> {
               fontSize: 16);
         });
 
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const Dashboard()));
       } else if (rspLogin['response']['status'] == 201) {
         setState(() {
           Fluttertoast.showToast(

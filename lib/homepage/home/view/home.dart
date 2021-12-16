@@ -226,7 +226,7 @@ class _HomeState extends State<Home> {
               height: 200,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                image: AssetImage("assets/images/Dashboard.png"),
+                image: AssetImage("assets/images/bg-dashboard.png"),
                 fit: BoxFit.fill,
               )),
               child: Padding(
