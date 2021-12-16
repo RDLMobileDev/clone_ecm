@@ -167,7 +167,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   void _incrementCounter() async {
     final SharedPreferences prefs = await _prefs;
     setState(() {
-      if (_counter < _limitIncreamentH - 1) {
+      if (_counter <= _limitIncreamentH - 1) {
         _counter++;
       } else {
         _counter = _counter;
@@ -211,7 +211,13 @@ class _StepFillEnamState extends State<StepFillEnam> {
           _counterMinutes = _counterMinutes;
         }
       } else if (_limitIncreamentM != 0) {
-        if (_counterMinutes < _limitIncreamentM) {
+        if (_counter < _limitIncreamentH ||
+            _counterMinutes < _limitIncreamentM) {
+          if (_counterMinutes == 60) {
+            _counterMinutes = 0;
+            _counter++;
+          }
+
           _counterMinutes++;
         } else {
           _counterMinutes = _counterMinutes;
@@ -988,9 +994,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           height: 40,
                           child: IconButton(
                             onPressed: () async {
-                              if (_counter < _limitIncreamentH) {
-                                _incrementCounterMinutes();
-                              }
+                              _incrementCounterMinutes();
 
                               String minuteLineStop =
                                   _lineStopM.toString().length == 1
