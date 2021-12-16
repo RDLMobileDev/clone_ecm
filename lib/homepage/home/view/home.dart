@@ -26,7 +26,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
@@ -93,7 +92,7 @@ class _HomeState extends State<Home> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         halo = dataLang['beranda']['hello'];
@@ -226,7 +225,7 @@ class _HomeState extends State<Home> {
               height: 200,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                image: AssetImage("assets/images/Dashboard.png"),
+                image: AssetImage("assets/images/bg-dashboard.png"),
                 fit: BoxFit.fill,
               )),
               child: Padding(
@@ -418,7 +417,7 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:  [
+                    children: [
                       Text(
                         add_ecm,
                         style: TextStyle(
@@ -505,7 +504,7 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:  [
+                          children: [
                             Text(
                               listname,
                               style: TextStyle(
@@ -544,7 +543,7 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:  [
+                          children: [
                             Text(
                               history_ecm,
                               style: TextStyle(
