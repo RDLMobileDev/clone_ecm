@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/historypage.dart';
 import 'package:e_cm/homepage/home/history/historyreview.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
@@ -26,7 +27,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         halo = dataLang['beranda']['hello'];
@@ -356,10 +356,11 @@ class _HomeState extends State<Home> {
                               return InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => HistoryReview(
+                                      builder: (context) => HistoryDetailPage(
                                             notifId: _listHistoryEcmUser[i]
                                                 .ecmId
                                                 .toString(),
+                                            isShowButton: false,
                                           )));
                                 },
                                 child: SliderHistory(
@@ -418,7 +419,7 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:  [
+                    children: [
                       Text(
                         add_ecm,
                         style: TextStyle(
@@ -505,7 +506,7 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:  [
+                          children: [
                             Text(
                               listname,
                               style: TextStyle(
@@ -544,7 +545,7 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:  [
+                          children: [
                             Text(
                               history_ecm,
                               style: TextStyle(
