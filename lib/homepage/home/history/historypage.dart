@@ -38,6 +38,9 @@ class _HistoryPageState extends State<HistoryPage> {
   String one_month = '';
   String no_data = '';
   String no_riwayat = '';
+  String show = 'Menampilkan riwayat';
+  String his_empty = 'Riwayat ';
+  String empty = ' kosong';
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -77,6 +80,9 @@ class _HistoryPageState extends State<HistoryPage> {
         one_month = dataLang['riwayat']['one_month'];
         no_data = dataLang['riwayat']['no_data'];
         no_riwayat = dataLang['riwayat']['no_riwayat'];
+        show = dataLang['riwayat']['show'];
+        his_empty = dataLang['riwayat']['his_empty'];
+        empty = dataLang['riwayat']['empty'];
       });
     }
   }
@@ -98,6 +104,9 @@ class _HistoryPageState extends State<HistoryPage> {
         one_month = dataLang['riwayat']['one_month'];
         no_data = dataLang['riwayat']['no_data'];
         no_riwayat = dataLang['riwayat']['no_riwayat'];
+        show = dataLang['riwayat']['show'];
+        his_empty = dataLang['riwayat']['his_empty'];
+        empty = dataLang['riwayat']['empty'];
       });
     }
   }
@@ -167,7 +176,7 @@ class _HistoryPageState extends State<HistoryPage> {
         });
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Show history ' + dateSelected,
+              msg: show + dateSelected,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -178,7 +187,7 @@ class _HistoryPageState extends State<HistoryPage> {
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'History ' + dateSelected + ' is empty',
+              msg: his_empty + dateSelected + empty,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -213,7 +222,7 @@ class _HistoryPageState extends State<HistoryPage> {
         });
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Show history ' + monthSelected,
+              msg: show + monthSelected,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -224,7 +233,7 @@ class _HistoryPageState extends State<HistoryPage> {
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'History ' + monthSelected + ' is empty',
+              msg: his_empty + monthSelected + empty,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -375,7 +384,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    setLang();
     final String dateTime = _fromDate.format("m Y");
     // getListDaily(dateTime);
     // getListAll();
