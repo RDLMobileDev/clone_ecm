@@ -1039,16 +1039,40 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             itemBuilder: (context, i) {
               return Container(
                   margin: EdgeInsets.only(bottom: 8, top: 8),
-                  child: Text(
-                    (i + 1).toString() +
-                        ". " +
-                        _listEssign[i].nama.toString() +
-                        " - " +
-                        _listEssign[i].jabatan.toString(),
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        (i + 1).toString() +
+                            ". " +
+                            _listEssign[i].nama.toString() +
+                            " - " +
+                            _listEssign[i].jabatan.toString(),
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(
+                          _listEssign[i].status.toString() == "null"
+                              ? " "
+                              : _listEssign[i].status.toString() == "0"
+                                  ? "⊙ Pending"
+                                  : _listEssign[i].status.toString() == "1"
+                                      ? "✔ Approved"
+                                      : "✘ Decline",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: _listEssign[i].status.toString() == "null"
+                                  ? Colors.transparent
+                                  : _listEssign[i].status.toString() == "0"
+                                      ? Colors.grey
+                                      : _listEssign[i].status.toString() == "1"
+                                          ? Colors.blueAccent
+                                          : Colors.redAccent,
+                              fontWeight: FontWeight.w600))
+                    ],
                   ));
             },
           ),
