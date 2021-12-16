@@ -1044,7 +1044,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         ". " +
                         _listEssign[i].nama.toString() +
                         " - " +
-                        _listEssign[i].nama.toString(),
+                        _listEssign[i].jabatan.toString(),
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 14,
