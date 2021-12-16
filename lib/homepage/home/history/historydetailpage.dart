@@ -15,8 +15,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HistoryDetailPage extends StatefulWidget {
   final String notifId;
+  final bool isShowButton;
 
-  const HistoryDetailPage({required this.notifId});
+  const HistoryDetailPage({required this.notifId, required this.isShowButton});
 
   @override
   _HistoryDetailPageState createState() => _HistoryDetailPageState();
@@ -427,7 +428,8 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               ),
               SizedBox(height: 20),
               Container(
-                child: _buildButtonAdd(),
+                child: Visibility(
+                    visible: widget.isShowButton, child: _buildButtonAdd()),
               ),
             ],
           ),

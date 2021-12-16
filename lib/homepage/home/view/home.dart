@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/historypage.dart';
 import 'package:e_cm/homepage/home/history/historyreview.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
@@ -355,10 +356,11 @@ class _HomeState extends State<Home> {
                               return InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => HistoryReview(
+                                      builder: (context) => HistoryDetailPage(
                                             notifId: _listHistoryEcmUser[i]
                                                 .ecmId
                                                 .toString(),
+                                            isShowButton: false,
                                           )));
                                 },
                                 child: SliderHistory(
