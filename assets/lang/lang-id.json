@@ -58,7 +58,10 @@
             "a_hour_ago": "Sejam lalu",
             "one_week": "1 Minggu lalu",
             "two_week": "2 Minggu lalu",
-            "one_month": "1 Bulan lalu"
+            "one_month": "1 Bulan lalu",
+            "show": "Menampilkan riwayat ",
+            "his_empty" : "Riwayat ",
+            "empty": " kosong"
         },
         "detail":{
             "preventive": "Preventive Maintenance",

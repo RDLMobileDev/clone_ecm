@@ -61,7 +61,10 @@
                 "a_hour_ago": "a hour ago",
                 "one_week": "1 Week ago",
                 "two_week": "2 Week ago",
-                "one_month": "1 Month ago"
+                "one_month": "1 Month ago",
+                "show": "Show history of",
+                "his_empty": "History of",
+                "empty": "is empty"
             },
             "detail":{
                 "preventive": "Preventive Maintenance",
