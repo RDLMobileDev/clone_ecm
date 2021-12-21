@@ -27,6 +27,7 @@ class StepFillEmpatInput extends StatefulWidget {
 
 class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   final String? ecmItemId;
+
   _StepFillEmpatInputState({this.ecmItemId});
 
   TextEditingController? endTimePickController;
@@ -68,11 +69,39 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   final DateTime now = DateTime.now();
 
+  bool _isEndTimeGreaterThanStart(String start, String end) {
+    DateFormat format = DateFormat("HH:mm");
+    DateTime parsedStart = format.parse(start);
+    DateTime parsedEnd = format.parse(end);
+    return parsedStart.isBefore(parsedEnd);
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+  }
+
   void getEndTime() {
     showTimePicker(
             context: context,
             initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
         .then((value) {
+      if (formValidations["start"] == false) {
+        showToast("Silahkan atur start time terlebih dahulu");
+        return;
+      }
+
+      if (!_isEndTimeGreaterThanStart(
+          startTimePickController!.text, value!.format(context))) {
+        showToast("End time harus lebih besar dari start time");
+        return;
+      }
       setState(() {
         formValidations["end"] = true;
         endTimePickController =
@@ -921,8 +950,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     return TextFormField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      readOnly: true,
-                      showCursor: false,
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         border: InputBorder.none,
