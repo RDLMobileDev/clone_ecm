@@ -191,6 +191,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           });
           break;
         default:
+          setState(() {
+            _listItemChecking = [];
+          });
           Fluttertoast.showToast(
               msg: 'Gagal mendapat daftar item checking',
               toastLength: Toast.LENGTH_SHORT,
