@@ -1,8 +1,11 @@
 // ignore_for_file: sized_box_for_whitespace, unnecessary_const, avoid_unnecessary_containers
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
 import 'package:e_cm/homepage/home/services/apifillnewdelapan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +26,98 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String? copyToGroup;
   String engineerTo = '', productTo = '', othersTo = '';
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String copy_to = "";
+  String engineer = "";
+  String product = "";
+  String others = "";
+  String thankyou = "";
+  String validation = "";
+  String view_summary = "";
+  String summary = "";
+  String bm = "";
+  String ecm_approved = "";
+  String done = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        copy_to = dataLang['step_8']['copy_to'];
+        engineer = dataLang['step_8']['engineer'];
+        product = dataLang['step_8']['product'];
+        others = dataLang['step_8']['others'];
+        thankyou = dataLang['step_8']['thankyou'];
+        validation = dataLang['step_8']['validation'];
+        view_summary = dataLang['step_8']['view_summary'];
+        summary = dataLang['step_8']['summary'];
+        bm = dataLang['step_8']['bm'];
+        ecm_approved = dataLang['step_8']['ecm_approved'];
+        done = dataLang['step_8']['done'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        copy_to = dataLang['step_8']['copy_to'];
+        engineer = dataLang['step_8']['engineer'];
+        product = dataLang['step_8']['product'];
+        others = dataLang['step_8']['others'];
+        thankyou = dataLang['step_8']['thankyou'];
+        validation = dataLang['step_8']['validation'];
+        view_summary = dataLang['step_8']['view_summary'];
+        summary = dataLang['step_8']['summary'];
+        bm = dataLang['step_8']['bm'];
+        ecm_approved = dataLang['step_8']['ecm_approved'];
+        done = dataLang['step_8']['done'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
 
   setCopyTo() {
     print("Engineer");
@@ -63,6 +158,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   @override
   void initState() {
     // TODO: implement initState
+    setBahasa();
+    setLang();
     super.initState();
   }
 
@@ -105,8 +202,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
             //   ),
             // ),
             Container(
-              child: const Text(
-                "Copy to",
+              child: Text(
+                copy_to,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     color: Color(0xFF404446),
@@ -168,7 +265,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("copyToBool", "1");
                                     }
                                   })),
-                          const Text("Engineer")
+                          Text(engineer)
                         ],
                       ),
                     ),
@@ -222,7 +319,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("copyToBool", "1");
                                     }
                                   })),
-                          const Text("Product")
+                          Text(product)
                         ],
                       ),
                     ),
@@ -275,7 +372,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("copyToBool", "1");
                                     }
                                   })),
-                          const Text("Others")
+                          Text(others)
                         ],
                       ),
                     ),

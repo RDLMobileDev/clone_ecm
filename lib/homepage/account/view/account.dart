@@ -2,7 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+
+import 'dart:io';
 
 import 'package:e_cm/auth/view/login.dart';
 import 'package:e_cm/homepage/account/services/apilogout.dart';
@@ -22,6 +23,23 @@ class AccountMember extends StatefulWidget {
 
 class _AccountMemberState extends State<AccountMember> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  final String locale = Platform.localeName;
+
+  static const _localizedValues = <String, Map<String, String>>{
+    'en_US': {
+      'logout_sukses': 'Login Success',
+      'check': 'Check your connection',
+      'problem': 'There was a problem with your connection',
+      // 'logout': 'Are you sure to logout'
+    },
+    'id_ID': {
+      'logout_sukses': 'Login sukses',
+      'check': 'Periksa koneksi internet',
+      'problem': 'Terjadi masalah pada koneksi Anda',
+      // 'logout': 'Apakah anda yakin ingin keluar?'
+    },
+  };
 
   String userName = "";
   String emailName = "";
@@ -68,7 +86,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    confirm,
+                    "Confirm",
                     style: TextStyle(
                         color: Color(0xFF404446),
                         fontFamily: 'Rubik',
@@ -82,7 +100,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    confirm_logout,
+                    "Are you sure to logout",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color(0xFF404446),
@@ -110,7 +128,7 @@ class _AccountMemberState extends State<AccountMember> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            cancel,
+                            "Cancel",
                             style: TextStyle(
                                 color: Color(0xFF00AEDB),
                                 fontFamily: 'Rubik',
@@ -132,7 +150,7 @@ class _AccountMemberState extends State<AccountMember> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            logoutName,
+                            "Logout",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Rubik',
@@ -225,7 +243,8 @@ class _AccountMemberState extends State<AccountMember> {
       if (rspLogut['response']['status'] == 200) {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Logout Sukses',
+              msg:
+                  _localizedValues[locale]!['logout_sukses'] ?? "Logout sukses",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -234,12 +253,13 @@ class _AccountMemberState extends State<AccountMember> {
               fontSize: 16);
         });
         prefs.clear();
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => LogIn()));
-      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LogIn()),
+            (Route<dynamic> route) => false);
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Periksa jaringan internet anda',
+              msg: _localizedValues[locale]!['check'] ??
+                  'Periksa jaringan internet anda',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -250,7 +270,8 @@ class _AccountMemberState extends State<AccountMember> {
       }
     } catch (e) {
       Fluttertoast.showToast(
-          msg: 'Periksa jaringan internet anda',
+          msg: _localizedValues[locale]!['check'] ??
+              'Periksa jaringan internet anda',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
