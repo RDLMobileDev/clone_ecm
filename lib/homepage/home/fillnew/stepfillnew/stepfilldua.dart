@@ -100,14 +100,14 @@ class StepFillDuaState extends State<StepFillDua> {
         production = dataLang['step_2']['production'];
         engineering = dataLang['step_2']['engineering'];
         other = dataLang['step_2']['other'];
-        picture = dataLang['step_2']['picture'];
+        picture_analis = dataLang['step_2']['picture'];
         addmax = dataLang['step_2']['addmax'];
         select_image = dataLang['step_2']['select_image'];
         gallery = dataLang['step_2']['gallery'];
         camera = dataLang['step_2']['camera'];
         crop = dataLang['step_2']['crop'];
         addmore = dataLang['step_2']['add_more'];
-        picture = dataLang['step_2']['picture_analysis'];
+        // picture = dataLang['step_2']['picture'];
       });
     }
   }
@@ -135,14 +135,14 @@ class StepFillDuaState extends State<StepFillDua> {
       production = dataLang['step_2']['production'];
       engineering = dataLang['step_2']['engineering'];
       other = dataLang['step_2']['other'];
-      picture = dataLang['step_2']['picture'];
+      picture_analis = dataLang['step_2']['picture'];
       addmax = dataLang['step_2']['addmax'];
       select_image = dataLang['step_2']['select_image'];
       gallery = dataLang['step_2']['gallery'];
       camera = dataLang['step_2']['camera'];
       crop = dataLang['step_2']['crop'];
       addmore = dataLang['step_2']['add_more'];
-      picture = dataLang['step_2']['picture_analysis'];
+      // picture = dataLang['step_2']['picture'];
     }
   }
 

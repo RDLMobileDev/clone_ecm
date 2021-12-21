@@ -172,6 +172,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   saveUpdatePart() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
+    print("tes update step 7");
 
     try {
       var resultUpdate = await partItemMachineService.saveUpdateFroEcm(
@@ -257,7 +258,12 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   void initState() {
     getPartItembyMacchine();
 
-    widget.isFromUpdate == true ? getItemUpdate(widget.partIdEcm!) : null;
+    if (widget.isFromUpdate == true) {
+      getItemUpdate(widget.partIdEcm!);
+      setState(() {
+        enableSave = true;
+      });
+    }
 
     super.initState();
     setBahasa();
