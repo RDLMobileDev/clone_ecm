@@ -526,6 +526,20 @@ class _StepFillEnamState extends State<StepFillEnam> {
     }
   }
 
+  void setFormValueStep6AfterChoosing() async {
+    final prefs = await _prefs;
+
+    String? namaImprovement = prefs.getString("namaImprovement");
+    String? idea = prefs.getString("idea");
+
+    if (namaImprovement != null && idea != null) {
+      setState(() {
+        userNameController = TextEditingController(text: namaImprovement);
+        ideaController = TextEditingController(text: idea);
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -534,6 +548,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
     getStep6();
     setBahasa();
     setLang();
+    setFormValueStep6AfterChoosing();
   }
 
   @override
@@ -616,6 +631,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
                               final SharedPreferences prefs = await _prefs;
                               prefs.setString("userName",
                                   _listAllUser[i].userId.toString());
+                              prefs.setString(
+                                  "namaImprovement", _listAllUser[i].userName!);
                               prefs.setString("userNameBool", "1");
                               setState(() {
                                 userNameController = TextEditingController(

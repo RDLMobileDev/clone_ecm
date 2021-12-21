@@ -103,11 +103,6 @@ class _StepFillTigaState extends State<StepFillTiga> {
   TextEditingController howController = TextEditingController();
 
   bool _customTileExpanded = false;
-  final TextEditingController tecWhy1 = TextEditingController();
-  final TextEditingController tecWhy2 = TextEditingController();
-  final TextEditingController tecWhy3 = TextEditingController();
-  final TextEditingController tecWhy4 = TextEditingController();
-  final TextEditingController tecHow = TextEditingController();
 
   void saveStepFillTiga() async {
     final prefs = await _prefs;
@@ -158,11 +153,29 @@ class _StepFillTigaState extends State<StepFillTiga> {
     }
   }
 
+  void setFormStep3AfterChoosing() async {
+    final prefs = await _prefs;
+
+    String? why1 = prefs.getString("why1");
+    String? why2 = prefs.getString("why2");
+    String? why3 = prefs.getString("why3");
+    String? why4 = prefs.getString("why4");
+    String? howC = prefs.getString("howC");
+
+    if (why1 != null && why2 != null && why3 != null && howC != null) {
+      why1Controller = TextEditingController(text: why1);
+      why2Controller = TextEditingController(text: why2);
+      why3Controller = TextEditingController(text: why3);
+      howController = TextEditingController(text: howC);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     setLang();
     setBahasa();
+    setFormStep3AfterChoosing();
   }
 
   @override
@@ -205,7 +218,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       prefs.setString("whyBool1", "1");
                     });
                   },
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
@@ -240,7 +253,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     });
                   },
                   controller: why2Controller,
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
@@ -275,7 +288,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       prefs.setString("whyBool3", "1");
                     });
                   },
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
@@ -309,7 +322,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       prefs.setString("why4", value);
                     });
                   },
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       filled: true,
@@ -339,7 +352,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     prefs.setString("howBool", "1");
                   });
                 },
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     filled: true,
                     hintText: type_message),
