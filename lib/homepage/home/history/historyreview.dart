@@ -3,8 +3,6 @@ import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
-import 'package:e_cm/homepage/home/model/incident_effect.dart';
-import 'package:e_cm/homepage/home/model/incident_mistake.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +11,16 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HistoryDetailPage extends StatefulWidget {
+class HistoryReview extends StatefulWidget {
   final String notifId;
-  final bool isShowButton;
 
-  const HistoryDetailPage({required this.notifId, required this.isShowButton});
+  const HistoryReview({required this.notifId});
 
   @override
-  _HistoryDetailPageState createState() => _HistoryDetailPageState();
+  _HistoryReviewState createState() => _HistoryReviewState();
 }
 
-class _HistoryDetailPageState extends State<HistoryDetailPage> {
+class _HistoryReviewState extends State<HistoryReview> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<ItemCheckModel> _listItemCheck = [];
   List<ItemRepairModel> _listItemRepair = [];
@@ -31,8 +28,6 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   List<EsignModel> _listEssign = [];
   DetailEcmModel detailEcmModel = DetailEcmModel();
   RegExp regex = RegExp(r"([.]*00)(?!.*\d)");
-  String incidentEffect = "-";
-  String incidentMistake = "-";
 
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
@@ -163,12 +158,6 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
       setStateIfMounted(() {
         print(response['data']);
         detailEcmModel = DetailEcmModel.fromJson(response['data']);
-        incidentEffect =
-            IncidentEffect.fromJson(response['data']['incident_effect'])
-                .toString();
-        incidentMistake =
-            IncidentMistake.fromJson(response['data']['incident_mistake'])
-                .toString();
       });
     } catch (e) {
       setState(() {
@@ -291,7 +280,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                   ),
                 ),
               ),
-              Text("Machine : " +
+              Text("Machine :" +
+                  detailEcmModel.mesinKode.toString() +
+                  " " +
                   detailEcmModel.machineNama.toString() +
                   " (" +
                   detailEcmModel.nomormesin.toString() +
@@ -315,9 +306,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         " · " +
                         detailEcmModel.incidentJam.toString() +
                         " · Effect : " +
-                        incidentEffect +
+                        detailEcmModel.incidentEffect.toString() +
                         " · Mistake : " +
-                        incidentMistake,
+                        detailEcmModel.incidentMistake.toString(),
                     style: TextStyle(fontSize: 14, color: Colors.grey)),
               ),
               SizedBox(
@@ -427,10 +418,6 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 child: _buildTotalCost(),
               ),
               SizedBox(height: 20),
-              Container(
-                child: Visibility(
-                    visible: widget.isShowButton, child: _buildButtonAdd()),
-              ),
             ],
           ),
         ),
@@ -674,12 +661,13 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           child: Text("Note"),
                         ),
                         Text(" : "),
-                        Wrap(children: [
-                          _listItemCheck[i].note.toString() == "null"
+                        Expanded(
+                          flex: 4,
+                          child: _listItemCheck[i].note.toString() == "null"
                               ? const Text("-")
                               : _buildNoteWidget(
                                   _listItemCheck[i].note.toString()),
-                        ])
+                        )
                       ],
                     ),
                   ],
@@ -779,12 +767,11 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           child: Text("Note"),
                         ),
                         Text(" : "),
-                        Wrap(
-                          children: [
-                            _buildNoteWidget(
-                              _listItemRepair[i].note.toString(),
-                            )
-                          ],
+                        Expanded(
+                          flex: 4,
+                          child: _buildNoteWidget(
+                            _listItemRepair[i].note.toString(),
+                          ),
                         )
                       ],
                     ),
@@ -1039,40 +1026,16 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             itemBuilder: (context, i) {
               return Container(
                   margin: EdgeInsets.only(bottom: 8, top: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        (i + 1).toString() +
-                            ". " +
-                            _listEssign[i].nama.toString() +
-                            " - " +
-                            _listEssign[i].jabatan.toString(),
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      Text(
-                          _listEssign[i].status.toString() == "null"
-                              ? " "
-                              : _listEssign[i].status.toString() == "0"
-                                  ? "⊙ Pending"
-                                  : _listEssign[i].status.toString() == "1"
-                                      ? "✔ Approved"
-                                      : "✘ Decline",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 14,
-                              color: _listEssign[i].status.toString() == "null"
-                                  ? Colors.transparent
-                                  : _listEssign[i].status.toString() == "0"
-                                      ? Colors.grey
-                                      : _listEssign[i].status.toString() == "1"
-                                          ? Colors.blueAccent
-                                          : Colors.redAccent,
-                              fontWeight: FontWeight.w600))
-                    ],
+                  child: Text(
+                    (i + 1).toString() +
+                        ". " +
+                        _listEssign[i].nama.toString() +
+                        " - " +
+                        _listEssign[i].nama.toString(),
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
                   ));
             },
           ),

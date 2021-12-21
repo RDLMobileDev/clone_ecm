@@ -49,6 +49,10 @@ class _AccountMemberState extends State<AccountMember> {
 
   String logoutName = '';
   String leaveName = '';
+  String confirm = '';
+  String confirm_logout = '';
+  String cancel = '';
+  String leave = '';
 
   void confirmLogout() {
     showDialog(
@@ -191,6 +195,9 @@ class _AccountMemberState extends State<AccountMember> {
       setState(() {
         logoutName = dataLang['account']['logout'];
         leaveName = dataLang['account']['leave'];
+        confirm = dataLang['account']['confirm'];
+        confirm_logout = dataLang['account']['confirm_logout'];
+        cancel = dataLang['account']['cancel'];
       });
     }
   }
@@ -203,6 +210,9 @@ class _AccountMemberState extends State<AccountMember> {
       setState(() {
         logoutName = dataLang['account']['logout'];
         leaveName = dataLang['account']['leave'];
+        confirm = dataLang['account']['confirm'];
+        confirm_logout = dataLang['account']['confirm_logout'];
+        cancel = dataLang['account']['cancel'];
       });
     }
   }

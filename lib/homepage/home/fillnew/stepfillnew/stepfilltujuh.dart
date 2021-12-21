@@ -290,6 +290,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   @override
   void initState() {
     getDataPartItemSaved();
+    // addItemStep7Finish();
     _timer =
         Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
     print("tes step 7");

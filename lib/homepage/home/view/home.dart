@@ -7,7 +7,9 @@ import 'dart:io';
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/historypage.dart';
+import 'package:e_cm/homepage/home/history/historyreview.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
 import 'package:e_cm/homepage/home/services/historyecmservice.dart';
@@ -252,7 +254,7 @@ class _HomeState extends State<Home> {
                               style: TextStyle(
                                   fontFamily: 'Rubik',
                                   color: Color(0xFF00AEDB),
-                                  fontSize: 32,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w700),
                             )
                           ],
@@ -351,14 +353,27 @@ class _HomeState extends State<Home> {
                             itemCount: _listHistoryEcmUser.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, i) {
-                              return SliderHistory(
-                                classificationName:
-                                    _listHistoryEcmUser[i].classification,
-                                costRp: _listHistoryEcmUser[i].totalHarga,
-                                factoryPlace: _listHistoryEcmUser[i].lokasi,
-                                tanggal: _listHistoryEcmUser[i].date,
-                                itemsRepair:
-                                    _listHistoryEcmUser[i].arrayitemrepair,
+                              return InkWell(
+                                onTap: () {
+                                  // print(
+                                  //     _listHistoryEcmUser[i].ecmId.toString());
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => HistoryDetailPage(
+                                            notifId: _listHistoryEcmUser[i]
+                                                .ecmId
+                                                .toString(),
+                                            isShowButton: false,
+                                          )));
+                                },
+                                child: SliderHistory(
+                                  classificationName:
+                                      _listHistoryEcmUser[i].classification,
+                                  costRp: _listHistoryEcmUser[i].totalHarga,
+                                  factoryPlace: _listHistoryEcmUser[i].lokasi,
+                                  tanggal: _listHistoryEcmUser[i].date,
+                                  itemsRepair:
+                                      _listHistoryEcmUser[i].arrayitemrepair,
+                                ),
                               );
                             },
                           ),

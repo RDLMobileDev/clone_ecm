@@ -5,6 +5,8 @@ import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
+import 'package:e_cm/homepage/home/model/incident_effect.dart';
+import 'package:e_cm/homepage/home/model/incident_mistake.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class DetailEcm extends StatefulWidget {
   final String notifId;
 
   const DetailEcm({required this.notifId});
+
   @override
   _DetailEcmState createState() => _DetailEcmState();
 }
@@ -24,7 +27,7 @@ class DetailEcm extends StatefulWidget {
 class _DetailEcmState extends State<DetailEcm> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-   String bahasa = "Bahasa Indonesia";
+  String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
   
@@ -212,6 +215,8 @@ class _DetailEcmState extends State<DetailEcm> {
   List<EsignModel> _listEssign = [];
   DetailEcmModel detailEcmModel = DetailEcmModel();
   RegExp regex = RegExp(r"([.]*00)(?!.*\d)");
+  String incidentEffect = "-";
+  String incidentMistake = "-";
 
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
@@ -342,8 +347,15 @@ class _DetailEcmState extends State<DetailEcm> {
       setStateIfMounted(() {
         print(response['data']);
         detailEcmModel = DetailEcmModel.fromJson(response['data']);
+        incidentEffect =
+            IncidentEffect.fromJson(response['data']['incident_effect'])
+                .toString();
+        incidentMistake =
+            IncidentMistake.fromJson(response['data']['incident_mistake'])
+                .toString();
       });
     } catch (e) {
+      print("detail ecm response -> $e");
       setState(() {
         Fluttertoast.showToast(
             msg: 'Periksa jaringan internet anda',
@@ -366,8 +378,29 @@ class _DetailEcmState extends State<DetailEcm> {
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
     try {
-      var response = await updateStatus(notifUser, notifUser, tokenUser);
+      var response = await updateStatus(notifUser, statusUser, tokenUser);
       print(response);
+      if (response['response']['status'] != 200) {
+        Fluttertoast.showToast(
+            msg: 'Pembaruan status gagal',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        return;
+      }
+
+      Fluttertoast.showToast(
+          msg: 'Pembaruan status sukses',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+      Navigator.of(context).pop();
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -461,9 +494,7 @@ class _DetailEcmState extends State<DetailEcm> {
                   ),
                 ),
               ),
-              Text("Machine :" +
-                  detailEcmModel.mesinKode.toString() +
-                  " " +
+              Text("Machine : " +
                   detailEcmModel.machineNama.toString() +
                   " (" +
                   detailEcmModel.nomormesin.toString() +
@@ -487,9 +518,9 @@ class _DetailEcmState extends State<DetailEcm> {
                         " · " +
                         detailEcmModel.incidentJam.toString() +
                         " · Effect : " +
-                        detailEcmModel.incidentEffect.toString() +
+                        incidentEffect +
                         " · Mistake : " +
-                        detailEcmModel.incidentMistake.toString(),
+                        incidentMistake,
                     style: TextStyle(fontSize: 14, color: Colors.grey)),
               ),
               SizedBox(
@@ -853,13 +884,12 @@ class _DetailEcmState extends State<DetailEcm> {
                           child: Text(note),
                         ),
                         Text(" : "),
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                              _listItemCheck[i].note.toString() == "null"
-                                  ? "-"
-                                  : _listItemCheck[i].note.toString()),
-                        )
+                        Wrap(children: [
+                          _listItemCheck[i].note.toString() == "null"
+                              ? const Text("-")
+                              : _buildNoteWidget(
+                                  _listItemCheck[i].note.toString()),
+                        ])
                       ],
                     ),
                   ],
@@ -959,9 +989,12 @@ class _DetailEcmState extends State<DetailEcm> {
                           child: Text(note),
                         ),
                         Text(" : "),
-                        Expanded(
-                          flex: 4,
-                          child: Text(_listItemRepair[i].note.toString()),
+                        Wrap(
+                          children: [
+                            _buildNoteWidget(
+                              _listItemRepair[i].note.toString(),
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -1278,7 +1311,7 @@ class _DetailEcmState extends State<DetailEcm> {
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
             onPressed: () {
-              postUpdateStatus('accept');
+              postUpdateStatus('1');
             },
             child: Text(
               tanda_tangan,
@@ -1314,7 +1347,7 @@ class _DetailEcmState extends State<DetailEcm> {
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
             onPressed: () {
-              postUpdateStatus('decline');
+              postUpdateStatus('2');
             },
             child: Text(
               tolak,
@@ -1324,6 +1357,101 @@ class _DetailEcmState extends State<DetailEcm> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoteWidget(String noteValue) {
+    switch (noteValue) {
+      case "ok":
+        return _buildOkWidget();
+      case "limit":
+        return _buildLimitWidget();
+      default:
+        return _buildNgWidget();
+    }
+  }
+
+  Widget _buildOkWidget() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10, right: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF00AEDB),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent),
+      // ignore: prefer_const_literals_to_create_immutables
+      child: Row(
+        children: const <Widget>[
+          Icon(
+            Icons.circle_outlined,
+            color: Color(0xFF00AEDB),
+            size: 20,
+          ),
+          Text(
+            'OK',
+            style: TextStyle(
+                color: Color(0xFF00AEDB), fontSize: 16, fontFamily: 'Rubik'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLimitWidget() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10, right: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF00AEDB),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent),
+      // ignore: prefer_const_literals_to_create_immutables
+      child: Row(
+        children: const <Widget>[
+          Icon(
+            Icons.change_history_outlined,
+            color: Color(0xFF00AEDB),
+            size: 20,
+          ),
+          Text(
+            'Limit',
+            style: TextStyle(
+                color: Color(0xFF00AEDB), fontSize: 16, fontFamily: 'Rubik'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNgWidget() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF00AEDB),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent),
+      // ignore: prefer_const_literals_to_create_immutables
+      child: Row(
+        children: const <Widget>[
+          Icon(
+            Icons.close,
+            color: Color(0xFF00AEDB),
+            size: 20,
+          ),
+          Text(
+            'N / G',
+            style: TextStyle(
+                color: Color(0xFF00AEDB), fontSize: 16, fontFamily: 'Rubik'),
+          )
         ],
       ),
     );
