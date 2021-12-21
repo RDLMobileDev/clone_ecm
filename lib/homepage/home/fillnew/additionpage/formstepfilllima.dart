@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/steplimaitemmodel.dart';
+import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               "repair": dataItem[0].repairMade!,
             };
           });
+          // print(formValue["item"]);
           break;
         default:
           Fluttertoast.showToast(
@@ -119,8 +121,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String? userId = prefs.getString("idKeyUser") ?? "-";
 
     try {
-      var data = await getFillNewEmpat(ecmId, userId, token);
-
+      var data = await getFillNewLima(ecmId, userId, token);
+      print(data);
       switch (data["response"]['status']) {
         case 200:
           setState(() {
@@ -131,7 +133,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           break;
         default:
           Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
+              msg: "Gagal memuat data",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
