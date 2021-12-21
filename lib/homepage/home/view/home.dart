@@ -355,6 +355,8 @@ class _HomeState extends State<Home> {
                             itemBuilder: (context, i) {
                               return InkWell(
                                 onTap: () {
+                                  // print(
+                                  //     _listHistoryEcmUser[i].ecmId.toString());
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => HistoryDetailPage(
                                             notifId: _listHistoryEcmUser[i]
