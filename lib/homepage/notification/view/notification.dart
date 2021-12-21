@@ -128,73 +128,73 @@ class _NotificationMemberState extends State<NotificationMember> {
     return notifikasiService.getNotificationData(tokenUser, idUser);
   }
 
-  String bahasa = "Bahasa Indonesia";
-  bool bahasaSelected = false;
+  // String bahasa = "Bahasa Indonesia";
+  // bool bahasaSelected = false;
 
-  String all_notification = "";
+  // String all_notification = "";
   String mark = "";
   String notification = "";
 
-  void setBahasa() async {
-    final prefs = await _prefs;
-    String bahasaBool = prefs.getString("bahasa") ?? "";
+  // void setBahasa() async {
+  //   final prefs = await _prefs;
+  //   String bahasaBool = prefs.getString("bahasa") ?? "";
 
-    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
-      setState(() {
-        bahasaSelected = false;
-        bahasa = bahasaBool;
-      });
-    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
-      setState(() {
-        bahasaSelected = true;
-        bahasa = bahasaBool;
-      });
-    } else {
-      setState(() {
-        bahasaSelected = false;
-        bahasa = "Bahasa Indonesia";
-      });
-    }
-  }
+  //   if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+  //     setState(() {
+  //       bahasaSelected = false;
+  //       bahasa = bahasaBool;
+  //     });
+  //   } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+  //     setState(() {
+  //       bahasaSelected = true;
+  //       bahasa = bahasaBool;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       bahasaSelected = false;
+  //       bahasa = "Bahasa Indonesia";
+  //     });
+  //   }
+  // }
 
-  void getLanguageEn() async {
-    var response = await rootBundle.loadString("assets/lang/lang-en.json");
-    var dataLang = json.decode(response)['data'];
-    if (mounted) {
-      setState(() {
-        all_notification = dataLang['notification']['all_notification'];
-        mark = dataLang['notification']['mark'];
-        notification = dataLang['notification']['notification'];
-      });
-    }
-  }
+  // void getLanguageEn() async {
+  //   var response = await rootBundle.loadString("assets/lang/lang-en.json");
+  //   var dataLang = json.decode(response)['data'];
+  //   if (mounted) {
+  //     setState(() {
+  //       all_notification = dataLang['notification']['all_notification'];
+  //       mark = dataLang['notification']['mark'];
+  //       notification = dataLang['notification']['notification'];
+  //     });
+  //   }
+  // }
 
-  void getLanguageId() async {
-    var response = await rootBundle.loadString("assets/lang/lang-id.json");
-    var dataLang = json.decode(response)['data'];
+  // void getLanguageId() async {
+  //   var response = await rootBundle.loadString("assets/lang/lang-id.json");
+  //   var dataLang = json.decode(response)['data'];
 
-    if (mounted) {
-      setState(() {
-        all_notification = dataLang['notification']['all_notification'];
-        mark = dataLang['notification']['mark'];
-        notification = dataLang['notification']['notification'];
-      });
-    }
-  }
+  //   if (mounted) {
+  //     setState(() {
+  //       all_notification = dataLang['notification']['all_notification'];
+  //       mark = dataLang['notification']['mark'];
+  //       notification = dataLang['notification']['notification'];
+  //     });
+  //   }
+  // }
 
-  void setLang() async {
-    final prefs = await _prefs;
-    var langSetting = prefs.getString("bahasa") ?? "";
-    print(langSetting);
+  // void setLang() async {
+  //   final prefs = await _prefs;
+  //   var langSetting = prefs.getString("bahasa") ?? "";
+  //   print(langSetting);
 
-    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
-      getLanguageId();
-    } else if (langSetting.isNotEmpty && langSetting == "English") {
-      getLanguageEn();
-    } else {
-      getLanguageId();
-    }
-  }
+  //   if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+  //     getLanguageId();
+  //   } else if (langSetting.isNotEmpty && langSetting == "English") {
+  //     getLanguageEn();
+  //   } else {
+  //     getLanguageId();
+  //   }
+  // }
 
   @override
   void initState() {
