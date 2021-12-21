@@ -40,6 +40,32 @@ class _LogInState extends State<LogIn> {
   bool _initialEnabledButton = false;
   String? deviceUser = "";
   late final FirebaseMessaging _firebaseMessaging;
+  final String locale = Platform.localeName;
+
+  static const _localizedValues = <String, Map<String, String>>{
+    'en_US': {
+      'login_sukses': 'Login Success',
+      'login_gagal': 'Login Failed',
+      'device_lain': 'You are logged in using another device',
+      'update': 'Please update the latest version',
+      'check': 'Check your connection',
+      'problem': 'There was a problem with your connection',
+      'format_email': 'Email format is invalid',
+      'format_password': 'Password cannot be empty'
+    },
+    'id_ID': {
+      'login_sukses': 'Login sukses',
+      'login_gagal': 'Login gagal',
+      'device_lain': 'Anda login menggunakan device lain',
+      'update': 'Silahkan update versi terbaru',
+      'check': 'Periksa koneksi internet',
+      'problem': 'Terjadi masalah pada koneksi Anda',
+      'format_email': 'Format email tidak benar',
+      'format_password': 'Kata sandi tidak boleh kosong'
+    },
+  };
+
+  // static List<String> languages() => _localizedValues.keys.toList();
 
   getDeviceKey() async {
     var deviceKey = await PlatformDeviceId.getDeviceId;
@@ -74,7 +100,7 @@ class _LogInState extends State<LogIn> {
 
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Login Sukses',
+              msg: _localizedValues[locale]!['login_sukses']!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -93,7 +119,7 @@ class _LogInState extends State<LogIn> {
       } else if (rspLogin['response']['status'] == 201) {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Login Gagal',
+              msg: _localizedValues[locale]!['login_gagal']!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -104,7 +130,7 @@ class _LogInState extends State<LogIn> {
       } else if (rspLogin['response']['status'] == 202) {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Anda login menggunakan device lain',
+              msg: _localizedValues[locale]!['device_lain']!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -115,7 +141,7 @@ class _LogInState extends State<LogIn> {
       } else if (rspLogin['response']['status'] == 203) {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Silahkan Update versi terbaru',
+              msg: _localizedValues[locale]!['update']!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -126,7 +152,7 @@ class _LogInState extends State<LogIn> {
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Periksa koneksi internet',
+              msg: _localizedValues[locale]!['check']!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -138,7 +164,8 @@ class _LogInState extends State<LogIn> {
     } on SocketException catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'Terjadi masalah pada koneksi Anda',
+          msg: _localizedValues[locale]!['problem'] ??
+              'Terjadi masalah pada koneksi Anda',
           gravity: ToastGravity.BOTTOM,
           toastLength: Toast.LENGTH_LONG,
           timeInSecForIosWeb: 2,
@@ -148,7 +175,8 @@ class _LogInState extends State<LogIn> {
     } on TimeoutException catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'Terjadi masalah pada koneksi Anda',
+          msg: _localizedValues[locale]!['problem'] ??
+              'Terjadi masalah pada koneksi Anda',
           gravity: ToastGravity.BOTTOM,
           toastLength: Toast.LENGTH_LONG,
           timeInSecForIosWeb: 2,
@@ -158,7 +186,8 @@ class _LogInState extends State<LogIn> {
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'Terjadi masalah pada koneksi Anda',
+          msg: _localizedValues[locale]!['problem'] ??
+              'Terjadi masalah pada koneksi Anda',
           gravity: ToastGravity.BOTTOM,
           toastLength: Toast.LENGTH_LONG,
           timeInSecForIosWeb: 2,
@@ -276,8 +305,9 @@ class _LogInState extends State<LogIn> {
                         ),
                         labelText: 'Email',
                         suffixStyle: TextStyle(color: Colors.green),
-                        errorText:
-                            _isEmailError ? "Format email tidak benar" : null,
+                        errorText: _isEmailError
+                            ? _localizedValues[locale]!['format_email']
+                            : null,
                       ),
                       textInputAction: TextInputAction.next,
                       inputFormatters: [LengthLimitingTextInputFormatter(40)],
@@ -316,7 +346,7 @@ class _LogInState extends State<LogIn> {
                           labelText: 'Password',
                           suffixStyle: TextStyle(color: Colors.green),
                           errorText: _isPasswordError
-                              ? "Kata sandi tidak boleh kosong"
+                              ? _localizedValues[locale]!['format_password']
                               : null,
                         ),
                         obscureText: true,
