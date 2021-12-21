@@ -260,6 +260,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     widget.isFromUpdate == true ? getItemUpdate(widget.partIdEcm!) : null;
 
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override

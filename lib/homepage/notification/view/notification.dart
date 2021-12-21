@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, duplicate_ignore
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/notification/model/notifmodel.dart';
 import 'package:e_cm/homepage/notification/services/apinotif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationMember extends StatefulWidget {
@@ -28,10 +31,80 @@ class _NotificationMemberState extends State<NotificationMember> {
     return notifikasiService.getNotificationData(tokenUser, idUser);
   }
 
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String all_notification = "";
+  String mark = "";
+  String notification = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        all_notification = dataLang['notification']['all_notification'];
+        mark = dataLang['notification']['mark'];
+        notification = dataLang['notification']['notification'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        all_notification = dataLang['notification']['all_notification'];
+        mark = dataLang['notification']['mark'];
+        notification = dataLang['notification']['notification'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   @override
   void initState() {
     getListNotif();
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -45,13 +118,13 @@ class _NotificationMemberState extends State<NotificationMember> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("All Notification",
+                Text(all_notification,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
                         color: Color(0xff404446),
                         fontWeight: FontWeight.w700)),
-                Text("Mark all as read",
+                Text(mark,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 12,
@@ -68,7 +141,7 @@ class _NotificationMemberState extends State<NotificationMember> {
               future: getListNotif(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Text("Memuat notifikasi...");
+                  return Text(notification);
                 }
 
                 return ListView.builder(
