@@ -332,50 +332,50 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                 width: 8,
                               ),
                             ),
-                            Visibility(
-                              visible: _listApproved[i].status != "1",
-                              child: Container(
-                                width: 70,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                    color: _listApproved[i].status != "2"
-                                        ? Color(0xFFFF0000)
-                                        : Color(0xFF979C9E),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: _listApproved[i].status != "2"
-                                        ? () => showCustomDialog(
-                                              context: context,
-                                              assetPath:
-                                                  "assets/icons/Sign.png",
-                                              title: "Confirm",
-                                              message: "Yakin untuk menolak",
-                                              positiveButtonTitle: "Decline",
-                                              positiveCallback:
-                                                  postUpdateStatus(
-                                                "2",
-                                                _listApproved[i]
-                                                    .notifEcmId
-                                                    .toString(),
-                                              ),
-                                            )
-                                        : () {},
-                                    child: Text(
-                                      _listApproved[i].status == "2"
-                                          ? "Declined"
-                                          : "Decline",
-                                      style: TextStyle(
-                                          fontFamily: 'Rubik',
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Visibility(
+                            //   visible: _listApproved[i].status != "1",
+                            //   child: Container(
+                            //     width: 70,
+                            //     height: 32,
+                            //     decoration: BoxDecoration(
+                            //         color: _listApproved[i].status != "2"
+                            //             ? Color(0xFFFF0000)
+                            //             : Color(0xFF979C9E),
+                            //         borderRadius:
+                            //             BorderRadius.all(Radius.circular(5))),
+                            //     child: Center(
+                            //       child: TextButton(
+                            //         onPressed: _listApproved[i].status != "2"
+                            //             ? () => showCustomDialog(
+                            //                   context: context,
+                            //                   assetPath:
+                            //                       "assets/icons/Sign.png",
+                            //                   title: "Confirm",
+                            //                   message: "Yakin untuk menolak",
+                            //                   positiveButtonTitle: "Decline",
+                            //                   positiveCallback:
+                            //                       postUpdateStatus(
+                            //                     "2",
+                            //                     _listApproved[i]
+                            //                         .notifEcmId
+                            //                         .toString(),
+                            //                   ),
+                            //                 )
+                            //             : () {},
+                            //         child: Text(
+                            //           _listApproved[i].status == "2"
+                            //               ? "Declined"
+                            //               : "Decline",
+                            //           style: TextStyle(
+                            //               fontFamily: 'Rubik',
+                            //               color: Colors.white,
+                            //               fontSize: 12,
+                            //               fontWeight: FontWeight.w400),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       )

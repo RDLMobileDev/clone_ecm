@@ -108,7 +108,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       breaktime = dataLang['step_6']['breaktime'];
       bm = dataLang['step_6']['bm'];
       in_house = dataLang['step_6']['in_house'];
-      cost = dataLang['step_6']['cost'];
+      cost = dataLang['step_6']['cost_'];
       out_house = dataLang['step_6']['out_house'];
       back = dataLang['step_6']['back'];
     }

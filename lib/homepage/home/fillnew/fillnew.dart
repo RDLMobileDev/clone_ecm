@@ -27,14 +27,13 @@ class FillNew extends StatefulWidget {
 class _FillNewState extends State<FillNew> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-    String bahasa = "Bahasa Indonesia";
+  String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
-  
   String next = '';
   String back = '';
 
-   void setBahasa() async {
+  void setBahasa() async {
     final prefs = await _prefs;
     String bahasaBool = prefs.getString("bahasa") ?? "";
 
@@ -61,12 +60,8 @@ class _FillNewState extends State<FillNew> {
     var dataLang = json.decode(response)['data'];
     if (mounted) {
       setState(() {
-      
         next = dataLang['step_1']['next_two'];
         back = dataLang['step_4']['back'];
-       
-        
-       
       });
     }
   }
@@ -74,14 +69,11 @@ class _FillNewState extends State<FillNew> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
-
-       next = dataLang['step_1']['next_two'];
-       back = dataLang['step_4']['back'];
-    
-       
+        next = dataLang['step_1']['next_two'];
+        back = dataLang['step_4']['back'];
       });
     }
   }
@@ -99,6 +91,7 @@ class _FillNewState extends State<FillNew> {
       getLanguageId();
     }
   }
+
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
