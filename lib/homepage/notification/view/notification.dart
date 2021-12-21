@@ -19,11 +19,9 @@ class NotificationMember extends StatefulWidget {
 class _NotificationMemberState extends State<NotificationMember> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
-  
   String all_notification = '';
   String mark_as_read = '';
   String approve_ecm = '';
@@ -65,7 +63,6 @@ class _NotificationMemberState extends State<NotificationMember> {
     var dataLang = json.decode(response)['data'];
     if (mounted) {
       setState(() {
-      
         all_notification = dataLang['notifikasi_tl']['notification_all'];
         mark_as_read = dataLang['notifikasi_tl']['mark_all'];
         approve_ecm = dataLang['notifikasi_staff']['was_approve'];
@@ -78,8 +75,6 @@ class _NotificationMemberState extends State<NotificationMember> {
         declined = dataLang['notifikasi_tl']['declined'];
         approved = dataLang['notifikasi_tl']['approved'];
         loading = dataLang['notifikasi_tl']['loading'];
-        
-       
       });
     }
   }
@@ -87,10 +82,10 @@ class _NotificationMemberState extends State<NotificationMember> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
-         all_notification = dataLang['notifikasi_tl']['notification_all'];
+        all_notification = dataLang['notifikasi_tl']['notification_all'];
         mark_as_read = dataLang['notifikasi_tl']['mark_all'];
         approve_ecm = dataLang['notifikasi_staff']['was_approve'];
         one_hour = dataLang['notifikasi_tl']['a_hour'];
@@ -102,8 +97,6 @@ class _NotificationMemberState extends State<NotificationMember> {
         declined = dataLang['notifikasi_tl']['declined'];
         approved = dataLang['notifikasi_tl']['approved'];
         loading = dataLang['notifikasi_tl']['loading'];
-     
-       
       });
     }
   }
@@ -135,6 +128,74 @@ class _NotificationMemberState extends State<NotificationMember> {
     return notifikasiService.getNotificationData(tokenUser, idUser);
   }
 
+  // String bahasa = "Bahasa Indonesia";
+  // bool bahasaSelected = false;
+
+  // String all_notification = "";
+  String mark = "";
+  String notification = "";
+
+  // void setBahasa() async {
+  //   final prefs = await _prefs;
+  //   String bahasaBool = prefs.getString("bahasa") ?? "";
+
+  //   if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+  //     setState(() {
+  //       bahasaSelected = false;
+  //       bahasa = bahasaBool;
+  //     });
+  //   } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+  //     setState(() {
+  //       bahasaSelected = true;
+  //       bahasa = bahasaBool;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       bahasaSelected = false;
+  //       bahasa = "Bahasa Indonesia";
+  //     });
+  //   }
+  // }
+
+  // void getLanguageEn() async {
+  //   var response = await rootBundle.loadString("assets/lang/lang-en.json");
+  //   var dataLang = json.decode(response)['data'];
+  //   if (mounted) {
+  //     setState(() {
+  //       all_notification = dataLang['notification']['all_notification'];
+  //       mark = dataLang['notification']['mark'];
+  //       notification = dataLang['notification']['notification'];
+  //     });
+  //   }
+  // }
+
+  // void getLanguageId() async {
+  //   var response = await rootBundle.loadString("assets/lang/lang-id.json");
+  //   var dataLang = json.decode(response)['data'];
+
+  //   if (mounted) {
+  //     setState(() {
+  //       all_notification = dataLang['notification']['all_notification'];
+  //       mark = dataLang['notification']['mark'];
+  //       notification = dataLang['notification']['notification'];
+  //     });
+  //   }
+  // }
+
+  // void setLang() async {
+  //   final prefs = await _prefs;
+  //   var langSetting = prefs.getString("bahasa") ?? "";
+  //   print(langSetting);
+
+  //   if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+  //     getLanguageId();
+  //   } else if (langSetting.isNotEmpty && langSetting == "English") {
+  //     getLanguageEn();
+  //   } else {
+  //     getLanguageId();
+  //   }
+  // }
+
   @override
   void initState() {
     getListNotif();
@@ -160,7 +221,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                         fontSize: 16,
                         color: Color(0xff404446),
                         fontWeight: FontWeight.w700)),
-                Text(mark_as_read,
+                Text(mark,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 12,
@@ -177,7 +238,7 @@ class _NotificationMemberState extends State<NotificationMember> {
               future: getListNotif(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Text(loading);
+                  return Text(notification);
                 }
 
                 return ListView.builder(
