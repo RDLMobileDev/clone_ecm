@@ -9,13 +9,17 @@ class LocalNotification {
   static const String channelDesc = "E-CM Notifications";
 
   static Future<void> show(String title, String body) async {
-    var android = const AndroidNotificationDetails(channelId, channelName,
-        channelDescription: channelDesc,
-        priority: Priority.high,
-        importance: Importance.max);
-    var iOS = const IOSNotificationDetails();
-    var platform = NotificationDetails(android: android, iOS: iOS);
+    try {
+      var android = const AndroidNotificationDetails(channelId, channelName,
+          channelDescription: channelDesc,
+          priority: Priority.high,
+          importance: Importance.max);
+      var iOS = const IOSNotificationDetails();
+      var platform = NotificationDetails(android: android, iOS: iOS);
 
-    await plugin.show(notificationId, title, body, platform);
+      await plugin.show(notificationId, title, body, platform);
+    } catch (e) {
+      print(e);
+    }
   }
 }
