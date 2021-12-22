@@ -40,7 +40,7 @@ class _LogInState extends State<LogIn> {
   bool _initialEnabledButton = false;
   String? deviceUser = "";
   late final FirebaseMessaging _firebaseMessaging;
-  final String locale = Platform.localeName;
+  String locale = Platform.localeName;
 
   static const _localizedValues = <String, Map<String, String>>{
     'en_US': {
@@ -255,6 +255,13 @@ class _LogInState extends State<LogIn> {
   @override
   void initState() {
     super.initState();
+
+    if (Platform.localeName != "en_US" || Platform.localeName != "id_ID") {
+      setState(() {
+        locale = "en_US";
+      });
+    }
+
     getDeviceKey();
 
     initFcmSetup();
