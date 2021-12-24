@@ -155,6 +155,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
       qtyUsed = double.parse(dataUpdateEcmPart['used']).toInt();
       costRpController =
           TextEditingController(text: dataUpdateEcmPart['harga'].toString());
+
+      subTotal = qtyUsed * double.parse(costRpController.text).toInt();
     });
   }
 
@@ -535,7 +537,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                       child: TextFormField(
                         controller: costRpController,
                         onChanged: (value) {
-                          int costRp = int.parse(value);
+                          int costRp = value.isEmpty ? 0 : int.parse(value);
 
                           setState(() {
                             subTotal = qtyUsed * costRp;

@@ -187,7 +187,7 @@ class _HistoryPageState extends State<HistoryPage> {
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: his_empty + dateSelected + empty,
+              msg: "Tidak ada data",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -233,7 +233,7 @@ class _HistoryPageState extends State<HistoryPage> {
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: his_empty + monthSelected + empty,
+              msg: his_empty + " " + monthSelected,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,

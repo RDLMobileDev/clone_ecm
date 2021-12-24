@@ -11,10 +11,10 @@ Future getFillNewEmpat(String ecmId, String userId, String token) async {
     'Authorization': 'Bearer $token'
   });
   print('Token : ${token}');
-  print(response);
 
   if (response.body.isNotEmpty) {
     var convertDatatoJson = jsonDecode(response.body);
+    print(convertDatatoJson);
     json.decode(response.body);
     return convertDatatoJson;
   }
