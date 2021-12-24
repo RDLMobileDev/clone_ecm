@@ -433,7 +433,9 @@ class StepFillSatuState extends State<StepFillSatu> {
                     );
                   }
 
-                  return ListView.builder(
+                  return _listClassification.isEmpty ? 
+                  Container(child: Center(child: Text("No data classifications"),),)
+                  :ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,

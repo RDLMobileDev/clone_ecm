@@ -105,7 +105,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
       setState(() {
         formValidations["end"] = true;
         endTimePickController =
-            TextEditingController(text: value!.format(context));
+            TextEditingController(text: value.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
