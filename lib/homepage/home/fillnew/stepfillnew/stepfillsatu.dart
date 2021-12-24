@@ -41,7 +41,6 @@ class StepFillSatuState extends State<StepFillSatu> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
-  
   String classification = '';
   String b_m = '';
   String p_m = '';
@@ -90,7 +89,6 @@ class StepFillSatuState extends State<StepFillSatu> {
     var dataLang = json.decode(response)['data'];
     if (mounted) {
       setState(() {
-      
         classification = dataLang['step_1']['classification'];
         b_m = dataLang['step_1']['b_m'];
         p_m = dataLang['step_1']['p_m'];
@@ -110,8 +108,6 @@ class StepFillSatuState extends State<StepFillSatu> {
         type_machine_number = dataLang['step_1']['type_machine_number'];
         cancel = dataLang['step_1']['cancel'];
         next_two = dataLang['step_1']['next_two'];
-        
-       
       });
     }
   }
@@ -119,7 +115,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         classification = dataLang['step_1']['classification'];
@@ -141,8 +137,6 @@ class StepFillSatuState extends State<StepFillSatu> {
         type_machine_number = dataLang['step_1']['type_machine_number'];
         cancel = dataLang['step_1']['cancel'];
         next_two = dataLang['step_1']['next_two'];
-     
-       
       });
     }
   }
@@ -160,7 +154,6 @@ class StepFillSatuState extends State<StepFillSatu> {
       getLanguageId();
     }
   }
-
 
   TextEditingController? machineNameController;
   TextEditingController machineNumberController = TextEditingController();
@@ -366,15 +359,46 @@ class StepFillSatuState extends State<StepFillSatu> {
     return await getDataMemberName(tokenUser);
   }
 
+  void setFormStep1AfterChoosing() async {
+    final prefs = await _prefs;
+
+    String? namaKlasifikasi = prefs.getString("namaKlasifikasi");
+    String? tglStepSatu = prefs.getString("tglStepSatu");
+    String? namaMember = prefs.getString("namaMember");
+    String? namaLokasi = prefs.getString("namaLokasi");
+    String? namaGroupLokasi = prefs.getString("namaGroupLokasi");
+    String? machineId = prefs.getString("machineId");
+    String? machineDetailId = prefs.getString("machineDetailId");
+
+    if (namaKlasifikasi != null &&
+        tglStepSatu != null &&
+        namaMember != null &&
+        namaLokasi != null &&
+        namaGroupLokasi != null &&
+        machineId != null &&
+        machineDetailId != null) {
+      setState(() {
+        dateSelected = tglStepSatu;
+        teamMemberController = TextEditingController(text: namaMember);
+        factoryNameController = TextEditingController(text: namaLokasi);
+        factoryNameGroupController =
+            TextEditingController(text: namaGroupLokasi);
+        machineNameController = TextEditingController(text: machineId);
+        machineNumberController = TextEditingController(text: machineDetailId);
+      });
+    }
+  }
+
   @override
   void initState() {
+    super.initState();
     // getClassificationData();
     getListLocation();
     getListAreaGroup();
     getMachineName();
-    super.initState();
     setBahasa();
     setLang();
+    setFormStep1AfterChoosing();
   }
 
   @override
@@ -409,7 +433,9 @@ class StepFillSatuState extends State<StepFillSatu> {
                     );
                   }
 
-                  return ListView.builder(
+                  return _listClassification.isEmpty ? 
+                  Container(child: Center(child: Text("No data classifications"),),)
+                  :ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -432,6 +458,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                             print("map values -> $mapClass");
                             prefs.setString(
                                 "idClassification", _listClassification[i].id);
+                            prefs.setString(
+                                "namaKlasifikasi", _listClassification[i].nama);
                             prefs.setString("classBool", "1");
                           });
                           Fluttertoast.showToast(
@@ -634,6 +662,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   print(listTeamMember);
                                   prefs.setStringList(
                                       "teamMember", listTeamMember);
+                                  prefs.setString("namaMember", members);
 
                                   prefs.setString("teamMemberBool", "1");
                                   setState(() {
@@ -741,6 +770,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString(
                                       "locationId", locationIdSelected);
+                                  prefs.setString("namaLokasi",
+                                      _listLocation[i].valueFactory);
                                   prefs.setString("locationBool", "1");
                                   print("id lokasi: $locationIdSelected");
                                 },
@@ -834,6 +865,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString("locationIdGroup",
                                       locationIdGroupSelected);
+                                  prefs.setString("namaGroupLokasi",
+                                      _listGroupArea[i].valueGroup);
                                   prefs.setString("locationGroupBool", "1");
                                   print("id lokasi: $locationIdGroupSelected");
                                 },

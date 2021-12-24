@@ -24,7 +24,7 @@ class AccountMember extends StatefulWidget {
 class _AccountMemberState extends State<AccountMember> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  final String locale = Platform.localeName;
+  String locale = Platform.localeName;
 
   static const _localizedValues = <String, Map<String, String>>{
     'en_US': {
@@ -303,6 +303,12 @@ class _AccountMemberState extends State<AccountMember> {
     getDataUser();
     setBahasa();
     setLang();
+
+    if (Platform.localeName != "en_US" || Platform.localeName != "id_ID") {
+      setState(() {
+        locale = "en_US";
+      });
+    }
 
     Timer _timer =
         Timer.periodic(Duration(milliseconds: 500), (timer) => setLang());

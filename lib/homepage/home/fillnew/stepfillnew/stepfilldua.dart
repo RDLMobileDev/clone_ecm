@@ -100,14 +100,14 @@ class StepFillDuaState extends State<StepFillDua> {
         production = dataLang['step_2']['production'];
         engineering = dataLang['step_2']['engineering'];
         other = dataLang['step_2']['other'];
-        picture = dataLang['step_2']['picture'];
+        picture_analis = dataLang['step_2']['picture'];
         addmax = dataLang['step_2']['addmax'];
         select_image = dataLang['step_2']['select_image'];
         gallery = dataLang['step_2']['gallery'];
         camera = dataLang['step_2']['camera'];
         crop = dataLang['step_2']['crop'];
         addmore = dataLang['step_2']['add_more'];
-        picture = dataLang['step_2']['picture_analysis'];
+        // picture = dataLang['step_2']['picture'];
       });
     }
   }
@@ -118,31 +118,31 @@ class StepFillDuaState extends State<StepFillDua> {
 
     if (mounted) {
       setState(() {});
-        incident = dataLang['step_2']['incident'];
-        shift_a = dataLang['step_2']['shift_a'];
-        shift_b = dataLang['step_2']['shift_b'];
-        shift_ns = dataLang['step_2']['shift_ns'];
-        hm = dataLang['step_2']['hm'];
-        type_problem = dataLang['step_2']['type_problem'];
-        safety = dataLang['step_2']['safety'];
-        quality = dataLang['step_2']['quality'];
-        delivery = dataLang['step_2']['delivery'];
-        cost = dataLang['step_2']['cost'];
+      incident = dataLang['step_2']['incident'];
+      shift_a = dataLang['step_2']['shift_a'];
+      shift_b = dataLang['step_2']['shift_b'];
+      shift_ns = dataLang['step_2']['shift_ns'];
+      hm = dataLang['step_2']['hm'];
+      type_problem = dataLang['step_2']['type_problem'];
+      safety = dataLang['step_2']['safety'];
+      quality = dataLang['step_2']['quality'];
+      delivery = dataLang['step_2']['delivery'];
+      cost = dataLang['step_2']['cost'];
 
-        percentage = dataLang['step_2']['percentage'];
-        utility = dataLang['step_2']['utility'];
-        molding = dataLang['step_2']['molding'];
-        production = dataLang['step_2']['production'];
-        engineering = dataLang['step_2']['engineering'];
-        other = dataLang['step_2']['other'];
-        picture = dataLang['step_2']['picture'];
-        addmax = dataLang['step_2']['addmax'];
-        select_image = dataLang['step_2']['select_image'];
-        gallery = dataLang['step_2']['gallery'];
-        camera = dataLang['step_2']['camera'];
-        crop = dataLang['step_2']['crop'];
-        addmore = dataLang['step_2']['add_more'];
-        picture = dataLang['step_2']['picture_analysis'];
+      percentage = dataLang['step_2']['percentage'];
+      utility = dataLang['step_2']['utility'];
+      molding = dataLang['step_2']['molding'];
+      production = dataLang['step_2']['production'];
+      engineering = dataLang['step_2']['engineering'];
+      other = dataLang['step_2']['other'];
+      picture_analis = dataLang['step_2']['picture'];
+      addmax = dataLang['step_2']['addmax'];
+      select_image = dataLang['step_2']['select_image'];
+      gallery = dataLang['step_2']['gallery'];
+      camera = dataLang['step_2']['camera'];
+      crop = dataLang['step_2']['crop'];
+      addmore = dataLang['step_2']['add_more'];
+      // picture = dataLang['step_2']['picture'];
     }
   }
 
@@ -162,6 +162,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
   final ImagePicker imagePicker = ImagePicker();
   TextEditingController? timePickController;
+  TextEditingController problemTypeController = TextEditingController();
 
   List<XFile>? imageFileList = [];
   List<File>? imageFileListCamera = [];
@@ -400,12 +401,27 @@ class StepFillDuaState extends State<StepFillDua> {
         fontSize: 16);
   }
 
+  void setFormStep2AfterChoosing() async {
+    final prefs = await _prefs;
+
+    String? timePickState = prefs.getString("timePickState");
+    String? problemTypeState = prefs.getString("problemTypeState");
+
+    if (timePickState != null && problemTypeState != null) {
+      setState(() {
+        timePickController = TextEditingController(text: timePickState);
+        problemTypeController = TextEditingController(text: problemTypeState);
+      });
+    }
+  }
+
   @override
   void initState() {
     print("step 2 init");
     super.initState();
     setLang();
     setBahasa();
+    setFormStep2AfterChoosing();
   }
 
   @override
@@ -487,7 +503,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                           Text(shift_a)
+                          Text(shift_a)
                         ],
                       ),
                     ),
@@ -535,10 +551,12 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftA", shiftA);
                                       prefs.setString("shiftB", shiftB);
                                       prefs.setString("shiftC", shiftC);
+                                      prefs.setString(
+                                          "insidenShift", incidentGroup!);
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                           Text(shift_b)
+                          Text(shift_b)
                         ],
                       ),
                     ),
@@ -611,7 +629,7 @@ class StepFillDuaState extends State<StepFillDua> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     prefixIcon: Icon(Icons.access_time),
                     suffixIcon: Icon(Icons.arrow_drop_down),
@@ -631,6 +649,7 @@ class StepFillDuaState extends State<StepFillDua> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
+                controller: problemTypeController,
                 maxLines: 5,
                 onChanged: (value) async {
                   final prefs = await _prefs;
@@ -641,7 +660,7 @@ class StepFillDuaState extends State<StepFillDua> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: type_problem),
@@ -702,7 +721,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             safety,
                             style: TextStyle(
                                 fontSize: 16,
@@ -762,7 +781,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             quality,
                             style: TextStyle(
                                 fontSize: 16,
@@ -831,7 +850,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                         Text(
+                          Text(
                             delivery,
                             style: TextStyle(
                                 fontSize: 16,
@@ -892,7 +911,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString("typeProblemBool", "1");
                                       }
                                     })),
-                             Text(
+                            Text(
                               cost,
                               style: TextStyle(
                                   fontSize: 16,
@@ -989,7 +1008,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                         Text(
+                          Text(
                             molding,
                             style: TextStyle(
                                 fontSize: 16,
@@ -1055,7 +1074,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             utility,
                             style: TextStyle(
                                 fontSize: 16,
@@ -1129,7 +1148,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             production,
                             style: TextStyle(
                                 fontSize: 16,
@@ -1196,7 +1215,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString("percentBool", "1");
                                       }
                                     })),
-                             Text(
+                            Text(
                               engineering,
                               style: TextStyle(
                                   fontSize: 16,
@@ -1271,7 +1290,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("percentBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             other,
                             style: TextStyle(
                                 fontSize: 16,
