@@ -21,6 +21,7 @@ class MachineNameService {
 
       var dataMachineName = json.decode(response.body)['data'];
 
+      print("nama mesin");
       print(dataMachineName);
 
       for (int i = 0; i < dataMachineName.length; i++) {
