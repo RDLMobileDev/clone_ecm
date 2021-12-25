@@ -131,7 +131,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           break;
         default:
           Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
+              msg: 'Gagal mendapat daftar item checkings',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -184,6 +184,19 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             context: context,
             initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
         .then((value) {
+      if (!_isEndTimeGreaterThanStart(
+          startTimePickerController!.text, value!.format(context))) {
+        Fluttertoast.showToast(
+          msg: "End time harus lebih besar dari start time",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+        return;
+      }
       setState(() {
         formValidations["end"] = true;
         endTimePickerController =
@@ -267,6 +280,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       formValidations["name"] = true;
       formValue["name"] = _username;
     });
+  }
+
+  bool _isEndTimeGreaterThanStart(String start, String end) {
+    DateFormat format = DateFormat("HH:mm");
+    DateTime parsedStart = format.parse(start);
+    DateTime parsedEnd = format.parse(end);
+    return parsedStart.isBefore(parsedEnd);
   }
 
   static String _displayPartOption(ItemChecking option) =>

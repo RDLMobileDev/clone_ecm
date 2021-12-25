@@ -642,32 +642,45 @@ class StepFillSatuState extends State<StepFillSatu> {
                               onTap: () async {
                                 final prefs = await _prefs;
                                 if (listTeamMember.length != 6) {
-                                  if (members.isEmpty) {
+                                  if (!listTeamMember
+                                      .contains(listNamaMember[i].id)) {
+                                    if (members.isEmpty) {
+                                      setState(() {
+                                        members = listNamaMember[i].name + ', ';
+                                      });
+                                      teamMemberController =
+                                          TextEditingController(text: members);
+                                      // listTeamMember.add(listNamaMember[i].id);
+                                    } else {
+                                      setState(() {
+                                        members +=
+                                            listNamaMember[i].name + ', ';
+                                      });
+                                      teamMemberController =
+                                          TextEditingController(text: members);
+                                      // listTeamMember.add(listNamaMember[i].id);
+                                    }
+
+                                    listTeamMember.add(listNamaMember[i].id);
+                                    print(listTeamMember);
+                                    prefs.setStringList(
+                                        "teamMember", listTeamMember);
+                                    prefs.setString("namaMember", members);
+
+                                    prefs.setString("teamMemberBool", "1");
                                     setState(() {
-                                      members = listNamaMember[i].name + ', ';
+                                      isTappedTeamMember = !isTappedTeamMember;
                                     });
-                                    teamMemberController =
-                                        TextEditingController(text: members);
-                                    // listTeamMember.add(listNamaMember[i].id);
                                   } else {
-                                    setState(() {
-                                      members += listNamaMember[i].name + ', ';
-                                    });
-                                    teamMemberController =
-                                        TextEditingController(text: members);
-                                    // listTeamMember.add(listNamaMember[i].id);
+                                    Fluttertoast.showToast(
+                                        msg: 'Tidak boleh pilih nama yang sama',
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: Colors.greenAccent,
+                                        textColor: Colors.white,
+                                        fontSize: 16);
                                   }
-
-                                  listTeamMember.add(listNamaMember[i].id);
-                                  print(listTeamMember);
-                                  prefs.setStringList(
-                                      "teamMember", listTeamMember);
-                                  prefs.setString("namaMember", members);
-
-                                  prefs.setString("teamMemberBool", "1");
-                                  setState(() {
-                                    isTappedTeamMember = !isTappedTeamMember;
-                                  });
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: 'Member maksimal 6',
@@ -902,6 +915,8 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
+              readOnly: true,
+              showCursor: true,
               controller: machineNameController,
               onTap: () {
                 setState(() {
@@ -995,6 +1010,8 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
+              readOnly: true,
+              showCursor: true,
               controller: machineNumberController,
               onTap: () {
                 setState(() {
