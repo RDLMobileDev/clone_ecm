@@ -423,7 +423,7 @@ class StepFillSatuState extends State<StepFillSatu> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
-              height: 60,
+              height: 70,
               child: FutureBuilder(
                 future: getClassificationData(),
                 builder: (context, snapshot) {
@@ -475,7 +475,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.27,
-                          height: 56,
+                          height: 50,
                           margin: EdgeInsets.only(right: 10),
                           decoration: BoxDecoration(
                               color: Colors.white,
