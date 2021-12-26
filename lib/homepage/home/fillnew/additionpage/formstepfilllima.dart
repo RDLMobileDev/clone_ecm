@@ -22,12 +22,16 @@ class FormStepFilllima extends StatefulWidget {
 }
 
 class _FormStepFilllimaState extends State<FormStepFilllima> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController? startTimePickerController;
   TextEditingController? endTimePickerController;
+  TextEditingController repairMadeController = TextEditingController();
   final TextEditingController tecItem = TextEditingController();
-  final TextEditingController tecName = TextEditingController();
+  TextEditingController tecName = TextEditingController();
   List<ItemChecking> _listData = [];
   String _username = "";
+
+  bool itemNameTapped = false;
 
   Map<String, bool> noteOptions = {
     "ok": false,
@@ -56,59 +60,50 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   final DateTime now = DateTime.now();
 
   void getItemStepLimaforUpdate() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String? userId = prefs.getString("idKeyUser") ?? "-";
-    String? idEcmItem = prefs.getString("idEcmItem");
+    final prefs = await _prefs;
 
-    try {
-      final data = await getFillLimaItem(idEcmItem!, userId, token);
+    String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
+    String noteStep5 = prefs.getString("noteStep5") ?? "";
+    String startTimeStep5 = prefs.getString("startTimeStep5") ?? "";
+    String endTimeStep5 = prefs.getString("endTimeStep5") ?? "";
+    String repairMade = prefs.getString("repairMade") ?? "";
 
-      switch (data["response"]['status']) {
-        case 200:
-          var dataItem = (data['data'] as List)
-              .map((e) => StepLimaItemModel.fromJson(e))
-              .toList();
-          setState(() {
-            formValue = {
-              "item": dataItem[0].partNama!,
-              "note": dataItem[0].note!,
-              "start": dataItem[0].tEcmitemStart!,
-              "end": dataItem[0].tEcmitemEnd!,
-              "name": dataItem[0].userName!,
-              "repair": dataItem[0].repairMade!,
-            };
-          });
-          break;
-        default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          break;
-      }
-    } catch (e) {
-      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
-      if (e is SocketException) {
-        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
-      }
+    if(itemNameStepLima.isNotEmpty && itemNameStepLima != ""){
+      tecName = TextEditingController(text: itemNameStepLima);
+    }
 
-      if (e is TimeoutException) {
-        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
-      }
+    if(noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ok"){
+      setState(() {
+        noteOptions["ok"] = true;
+        noteOptions["limit"] = false;
+        noteOptions["ng"] = false;
+      });
+    } else if(noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "limit"){
+      setState(() {
+        noteOptions["ok"] = false;
+        noteOptions["limit"] = true;
+        noteOptions["ng"] = false;
+      });
+    } else if(noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ng"){
+      setState(() {
+        noteOptions["ok"] = false;
+        noteOptions["limit"] = false;
+        noteOptions["ng"] = true;
+      });
+    }
 
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+    if(startTimeStep5.isNotEmpty && startTimeStep5 != ""){
+      startTimePickerController =
+            TextEditingController(text: startTimeStep5);
+    }
+
+    if(endTimeStep5.isNotEmpty && endTimeStep5 != ""){
+      endTimePickerController =
+            TextEditingController(text: endTimeStep5);
+    }
+
+    if(repairMade.isNotEmpty && repairMade != ""){
+      repairMadeController = TextEditingController(text: repairMade);
     }
   }
 
@@ -161,7 +156,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     }
   }
 
-  void getStartTime() {
+  void getStartTime() async {
+    final prefs = await _prefs;
     showTimePicker(
             context: context,
             initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
@@ -170,6 +166,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
         formValidations["start"] = true;
         startTimePickerController =
             TextEditingController(text: value!.format(context));
+        prefs.setString("startTimeStep5", value.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
@@ -179,7 +176,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     });
   }
 
-  void getEndTime() {
+  void getEndTime() async {
+    final prefs = await _prefs;
     showTimePicker(
             context: context,
             initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
@@ -200,7 +198,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       setState(() {
         formValidations["end"] = true;
         endTimePickerController =
-            TextEditingController(text: value!.format(context));
+            TextEditingController(text: value.format(context));
+        prefs.setString("endTimeStep5", value.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
@@ -295,9 +294,11 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   @override
   void initState() {
     super.initState();
-    getStep4Data();
+    
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
+    }else{
+      Future.delayed(Duration(seconds: 3), () => getStep4Data());
     }
     getUsernameSession();
   }
@@ -335,124 +336,45 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: InputDecorator(
+              child: TextFormField(
+                controller: tecName,
+                showCursor: true,
+                readOnly: true,
+                onTap: (){
+                  setState(() {
+                    itemNameTapped = !itemNameTapped;
+                  });
+                },
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 18),
-                  fillColor: Colors.white,
-                  focusedBorder: InputBorder.none,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  filled: true,
-                ),
-                child: RawAutocomplete<ItemChecking>(
-                  displayStringForOption: _displayPartOption,
-                  optionsBuilder: (TextEditingValue tev) {
-                    return _listData.where((element) => element
-                        .toString()
-                        .contains(tev.text.toString().toLowerCase()));
-                  },
-                  onSelected: (item) {
-                    setState(() {
-                      formValidations["item"] =
-                          item.partNama.toString().isNotEmpty;
-                      formValue["item"] = item.partNama.toString();
-                    });
-                  },
-                  fieldViewBuilder: (context, textEditingController, focusNode,
-                      onFieldSubmitted) {
-                    return TextFormField(
-                      controller: textEditingController,
-                      focusNode: focusNode,
-                      readOnly: true,
-                      showCursor: false,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        hintText: "Type Item Name",
-                      ),
-                      onFieldSubmitted: (String value) {
-                        onFieldSubmitted();
-                        setState(() {
-                          formValidations["item"] = value.isNotEmpty;
-                          formValue["item"] = _listData
-                              .firstWhere((element) =>
-                                  value.contains(element.partNama ?? "-"))
-                              .partNama
-                              .toString();
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          textEditingController =
-                              TextEditingController(text: value);
-                          formValidations["item"] = value.isNotEmpty;
-                          formValue["item"] = _listData
-                              .firstWhere(
-                                  (element) =>
-                                      value.contains(element.partNama ?? "-"),
-                                  orElse: () => ItemChecking())
-                              .partNama
-                              .toString();
-                        });
-                      },
-                    );
-                  },
-                  optionsViewBuilder: (context, onSelected, options) {
-                    return Align(
-                      alignment: Alignment.topLeft,
-                      child: Material(
-                        elevation: 4.0,
-                        child: SizedBox(
-                          height: 200.0,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(8.0),
-                            itemCount: options.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final String option =
-                                  options.elementAt(index).partNama ?? "-";
-                              return GestureDetector(
-                                onTap: () {
-                                  onSelected(options.elementAt(index));
-                                  formValue["item"] = options
-                                      .elementAt(index)
-                                      .partNama
-                                      .toString();
-                                },
-                                child: ListTile(
-                                  title: Text(option),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                  contentPadding: EdgeInsets.all(10),
+                  border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))
                 ),
               ),
-              // TextField(
-              //   controller: tecItem,
-              //   keyboardType: TextInputType.text,
-              //   decoration: InputDecoration(
-              //       contentPadding: EdgeInsets.only(left: 18),
-              //       fillColor: Colors.white,
-              //       border: OutlineInputBorder(
-              //           borderRadius: BorderRadius.all(Radius.circular(5))),
-              //       filled: true,
-              //       hintText: 'Type Item Name'),
-              //   maxLines: 1,
-              //   onChanged: (value) {
-              //     setState(() {
-              //       formValidations["item"] = value.isNotEmpty;
-              //
-              //       formValue["item"] = value;
-              //     });
-              //   },
-              // ),
+            ),
+            itemNameTapped == false 
+            ? Container()
+            : Container(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _listData.length,
+                itemBuilder: (context, i) {
+                  return InkWell(
+                    onTap: () async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        tecName = TextEditingController(text: _listData[i].partNama);
+                        formValidations["item"] =
+                          _listData[i].partNama.toString().isNotEmpty;
+                        itemNameTapped = !itemNameTapped;
+                      });
+                      prefs.setString("itemNameStepLima", _listData[i].partNama.toString());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(_listData[i].partNama!),
+                    ));
+                },
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -478,7 +400,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                         color: Colors.transparent),
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        final prefs = await _prefs;
                         setState(() {
                           noteOptions["ok"] = !(noteOptions["ok"] ?? false);
                           noteOptions["limit"] = false;
@@ -488,6 +411,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                               noteOptions.containsValue(true);
                           formValue["note"] = "ok";
                         });
+                        prefs.setString("noteStep5", "ok");
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 10),
@@ -519,7 +443,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      final prefs = await _prefs;
                       setState(() {
                         noteOptions["limit"] = !(noteOptions["limit"] ?? false);
                         noteOptions["ok"] = false;
@@ -529,6 +454,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                             noteOptions.containsValue(true);
                         formValue["note"] = "limit";
                       });
+                      prefs.setString("noteStep5", "limit");
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 10, right: 10),
@@ -564,7 +490,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      final prefs = await _prefs;
                       setState(() {
                         noteOptions["ng"] = !(noteOptions["ng"] ?? false);
                         noteOptions["limit"] = false;
@@ -574,6 +501,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                             noteOptions.containsValue(true);
                         formValue["note"] = "ng";
                       });
+                      prefs.setString("noteStep5", "ng");
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 10),
@@ -764,6 +692,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: TextFormField(
+                controller: repairMadeController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   hintText: 'Type message...',
@@ -774,12 +703,14 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     ),
                   ),
                 ),
-                onChanged: (value) {
+                onChanged: (value) async {
+                  final prefs = await _prefs;
                   setState(() {
                     formValidations["repair"] = value.isNotEmpty;
 
                     formValue["repair"] = value;
                   });
+                  prefs.setString("repairMade", value);
                 },
               ),
             ),
