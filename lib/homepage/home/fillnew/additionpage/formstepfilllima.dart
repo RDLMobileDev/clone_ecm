@@ -68,23 +68,25 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String endTimeStep5 = prefs.getString("endTimeStep5") ?? "";
     String repairMade = prefs.getString("repairMade") ?? "";
 
-    if(itemNameStepLima.isNotEmpty && itemNameStepLima != ""){
+    if (itemNameStepLima.isNotEmpty && itemNameStepLima != "") {
       tecName = TextEditingController(text: itemNameStepLima);
     }
 
-    if(noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ok"){
+    if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ok") {
       setState(() {
         noteOptions["ok"] = true;
         noteOptions["limit"] = false;
         noteOptions["ng"] = false;
       });
-    } else if(noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "limit"){
+    } else if (noteStep5.isNotEmpty &&
+        noteStep5 != "" &&
+        noteStep5 == "limit") {
       setState(() {
         noteOptions["ok"] = false;
         noteOptions["limit"] = true;
         noteOptions["ng"] = false;
       });
-    } else if(noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ng"){
+    } else if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ng") {
       setState(() {
         noteOptions["ok"] = false;
         noteOptions["limit"] = false;
@@ -92,17 +94,15 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       });
     }
 
-    if(startTimeStep5.isNotEmpty && startTimeStep5 != ""){
-      startTimePickerController =
-            TextEditingController(text: startTimeStep5);
+    if (startTimeStep5.isNotEmpty && startTimeStep5 != "") {
+      startTimePickerController = TextEditingController(text: startTimeStep5);
     }
 
-    if(endTimeStep5.isNotEmpty && endTimeStep5 != ""){
-      endTimePickerController =
-            TextEditingController(text: endTimeStep5);
+    if (endTimeStep5.isNotEmpty && endTimeStep5 != "") {
+      endTimePickerController = TextEditingController(text: endTimeStep5);
     }
 
-    if(repairMade.isNotEmpty && repairMade != ""){
+    if (repairMade.isNotEmpty && repairMade != "") {
       repairMadeController = TextEditingController(text: repairMade);
     }
   }
@@ -112,9 +112,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String token = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm") ?? "-";
     String? userId = prefs.getString("idKeyUser") ?? "-";
+    print("from step 5 item");
+    print(ecmId);
 
     try {
       var data = await getFillNewEmpat(ecmId, userId, token);
+
+      print(data);
 
       switch (data["response"]['status']) {
         case 200:
@@ -294,10 +298,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   @override
   void initState() {
     super.initState();
-    
+
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
-    }else{
+    } else {
       Future.delayed(Duration(seconds: 3), () => getStep4Data());
     }
     getUsernameSession();
@@ -340,42 +344,44 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 controller: tecName,
                 showCursor: true,
                 readOnly: true,
-                onTap: (){
+                onTap: () {
                   setState(() {
                     itemNameTapped = !itemNameTapped;
                   });
                 },
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))
-                ),
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey))),
               ),
             ),
-            itemNameTapped == false 
-            ? Container()
-            : Container(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _listData.length,
-                itemBuilder: (context, i) {
-                  return InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        tecName = TextEditingController(text: _listData[i].partNama);
-                        formValidations["item"] =
-                          _listData[i].partNama.toString().isNotEmpty;
-                        itemNameTapped = !itemNameTapped;
-                      });
-                      prefs.setString("itemNameStepLima", _listData[i].partNama.toString());
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(_listData[i].partNama!),
-                    ));
-                },
-              ),
-            ),
+            itemNameTapped == false
+                ? Container()
+                : Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _listData.length,
+                      itemBuilder: (context, i) {
+                        return InkWell(
+                            onTap: () async {
+                              final prefs = await _prefs;
+                              setState(() {
+                                tecName = TextEditingController(
+                                    text: _listData[i].partNama);
+                                formValidations["item"] =
+                                    _listData[i].partNama.toString().isNotEmpty;
+                                itemNameTapped = !itemNameTapped;
+                              });
+                              prefs.setString("itemNameStepLima",
+                                  _listData[i].partNama.toString());
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Text(_listData[i].partNama!),
+                            ));
+                      },
+                    ),
+                  ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
