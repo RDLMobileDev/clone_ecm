@@ -60,8 +60,8 @@
             "two_week": "2 Minggu lalu",
             "one_month": "1 Bulan lalu",
             "show": "Data bulanan",
-            "his_empty": "Tidak ada datas",
-            "empty": "Tidak ada datav"
+            "his_empty": "Tidak ada data",
+            "empty": "Tidak ada data"
         },
         "detail":{
             "preventive": "Preventive Maintenance",

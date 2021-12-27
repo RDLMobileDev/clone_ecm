@@ -292,13 +292,15 @@ class StepFillSatuState extends State<StepFillSatu> {
   }
 
   Future<List<ClassificationModel>> getClassificationData() async {
+    if (_listClassification.isNotEmpty) {
+      return await classificationService.getClassificationData();
+    }
     _listClassification = await classificationService.getClassificationData();
 
-    if (_listClassification.isNotEmpty) {
-      for (int i = 0; i < _listClassification.length; i++) {
-        warnaClassifications.add(false);
-        mapClass[i] = false;
-      }
+    print("is list classification empty ? ${_listClassification.isEmpty}");
+    for (int i = 0; i < _listClassification.length; i++) {
+      warnaClassifications.add(false);
+      mapClass[i] = false;
     }
 
     return await classificationService.getClassificationData();
@@ -423,7 +425,7 @@ class StepFillSatuState extends State<StepFillSatu> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
-              height: 60,
+              height: 70,
               child: FutureBuilder(
                 future: getClassificationData(),
                 builder: (context, snapshot) {
@@ -433,84 +435,82 @@ class StepFillSatuState extends State<StepFillSatu> {
                     );
                   }
 
-                  return _listClassification.isEmpty ? 
-                  Container(child: Center(child: Text("No data classifications"),),)
-                  :ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _listClassification.length,
-                    itemBuilder: (context, i) {
-                      return InkWell(
-                        onTap: () async {
-                          final prefs = await _prefs;
-                          setState(() {
-                            // isBreakDown = true;
-                            // isPreventive = false;
-                            // isInformation = false;
-                            // classificationIdSelected = '1';
-                            warnaClassifications[i] = !warnaClassifications[i];
-
-                            mapClass.updateAll((key, value) => false);
-                            if (mapClass[i] != null) {
-                              mapClass[i] = !mapClass[i]!;
-                            }
-                            print("map values -> $mapClass");
-                            prefs.setString(
-                                "idClassification", _listClassification[i].id);
-                            prefs.setString(
-                                "namaKlasifikasi", _listClassification[i].nama);
-                            prefs.setString("classBool", "1");
-                          });
-                          Fluttertoast.showToast(
-                              msg:
-                                  'Anda memilih ${_listClassification[i].nama}',
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.greenAccent,
-                              textColor: Colors.white,
-                              fontSize: 16);
-                          // print(prefs.getString("idClassification"));
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.27,
-                          height: 56,
-                          margin: EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                              border: Border.all(
-                                  color: mapClass[i] == false
-                                      ? Colors.white
-                                      : Color(0xFF00AEDB)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 1,
-                                  offset: Offset(
-                                      0, 1), // changes position of shadow
-                                ),
-                              ]),
+                  return _listClassification.isEmpty
+                      ? Container(
                           child: Center(
-                            child: Text(
-                              _listClassification[i].nama,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: mapClass[i] == false
-                                      ? Color(0xFF404446)
-                                      : Color(0xFF00AEDB),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
-                            ),
+                            child: Text("No data classifications"),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _listClassification.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                              onTap: () async {
+                                final prefs = await _prefs;
+                                setState(() {
+                                  mapClass.updateAll((key, value) => false);
+                                  if (mapClass[i] != null) {
+                                    mapClass[i] = true;
+                                  }
+                                  print("map values -> $mapClass");
+                                  prefs.setString("idClassification",
+                                      _listClassification[i].id);
+                                  prefs.setString("namaKlasifikasi",
+                                      _listClassification[i].nama);
+                                  prefs.setString("classBool", "1");
+                                });
+                                Fluttertoast.showToast(
+                                    msg:
+                                        'Anda memilih ${_listClassification[i].nama}',
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: Colors.greenAccent,
+                                    textColor: Colors.white,
+                                    fontSize: 16);
+                                // print(prefs.getString("idClassification"));
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.27,
+                                height: 50,
+                                margin: EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    border: Border.all(
+                                        color: mapClass[i] == false
+                                            ? Colors.white
+                                            : Color(0xFF00AEDB)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                        offset: Offset(
+                                            0, 1), // changes position of shadow
+                                      ),
+                                    ]),
+                                child: Center(
+                                  child: Text(
+                                    _listClassification[i].nama,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: mapClass[i] == false
+                                            ? Color(0xFF404446)
+                                            : Color(0xFF00AEDB),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
                 },
               ),
             ),
@@ -642,32 +642,45 @@ class StepFillSatuState extends State<StepFillSatu> {
                               onTap: () async {
                                 final prefs = await _prefs;
                                 if (listTeamMember.length != 6) {
-                                  if (members.isEmpty) {
+                                  if (!listTeamMember
+                                      .contains(listNamaMember[i].id)) {
+                                    if (members.isEmpty) {
+                                      setState(() {
+                                        members = listNamaMember[i].name + ', ';
+                                      });
+                                      teamMemberController =
+                                          TextEditingController(text: members);
+                                      // listTeamMember.add(listNamaMember[i].id);
+                                    } else {
+                                      setState(() {
+                                        members +=
+                                            listNamaMember[i].name + ', ';
+                                      });
+                                      teamMemberController =
+                                          TextEditingController(text: members);
+                                      // listTeamMember.add(listNamaMember[i].id);
+                                    }
+
+                                    listTeamMember.add(listNamaMember[i].id);
+                                    print(listTeamMember);
+                                    prefs.setStringList(
+                                        "teamMember", listTeamMember);
+                                    prefs.setString("namaMember", members);
+
+                                    prefs.setString("teamMemberBool", "1");
                                     setState(() {
-                                      members = listNamaMember[i].name + ', ';
+                                      isTappedTeamMember = !isTappedTeamMember;
                                     });
-                                    teamMemberController =
-                                        TextEditingController(text: members);
-                                    // listTeamMember.add(listNamaMember[i].id);
                                   } else {
-                                    setState(() {
-                                      members += listNamaMember[i].name + ', ';
-                                    });
-                                    teamMemberController =
-                                        TextEditingController(text: members);
-                                    // listTeamMember.add(listNamaMember[i].id);
+                                    Fluttertoast.showToast(
+                                        msg: 'Tidak boleh pilih nama yang sama',
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: Colors.greenAccent,
+                                        textColor: Colors.white,
+                                        fontSize: 16);
                                   }
-
-                                  listTeamMember.add(listNamaMember[i].id);
-                                  print(listTeamMember);
-                                  prefs.setStringList(
-                                      "teamMember", listTeamMember);
-                                  prefs.setString("namaMember", members);
-
-                                  prefs.setString("teamMemberBool", "1");
-                                  setState(() {
-                                    isTappedTeamMember = !isTappedTeamMember;
-                                  });
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: 'Member maksimal 6',
@@ -902,6 +915,8 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
+              readOnly: true,
+              showCursor: true,
               controller: machineNameController,
               onTap: () {
                 setState(() {
@@ -995,6 +1010,8 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
+              readOnly: true,
+              showCursor: true,
               controller: machineNumberController,
               onTap: () {
                 setState(() {
