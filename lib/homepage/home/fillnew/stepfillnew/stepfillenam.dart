@@ -201,7 +201,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       //   _counterMinutes = _counterMinutes;
       // }
       if (_limitIncreamentM == 0) {
-        if (_counterMinutes < 60) {
+        if (_counterMinutes < 60 && _counter <= _limitIncreamentH - 1) {
           _counterMinutes++;
           if (_counterMinutes == 60) {
             _counter = _counter + 1;
@@ -744,13 +744,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           fontWeight: FontWeight.w400),
                     ),
                   ),
-                  Text(
-                    ":",
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                  ),
                 ],
               ),
             ),
@@ -907,12 +900,38 @@ class _StepFillEnamState extends State<StepFillEnam> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    breaktime + ' (H)',
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
+                  RichText(
+                    text: TextSpan(
+                      text: breaktime,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                        TextSpan(
+                            text: ' :',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400)),
+                        TextSpan(
+                            text: ' (H)',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400)),
+                      ],
+                    ),
                   ),
                   Container(
                     width: 150,
@@ -996,7 +1015,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    breaktime + ' (M)',
+                    breaktime + '  : (M)',
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
@@ -1570,6 +1589,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   prefs.setString("outHouseCostBool", "1");
                                 },
                                 controller: costOutHouseController,
+                                maxLength: 9,
                                 inputFormatters: <TextInputFormatter>[
                                   CurrencyTextInputFormatter(
                                     locale: 'IDN',
@@ -1587,6 +1607,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
                                     disabledBorder: InputBorder.none,
+                                    counterText: "",
                                     hintText: '0',
                                     hintStyle: TextStyle(
                                         fontFamily: 'Rubik',
