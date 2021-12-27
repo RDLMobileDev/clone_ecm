@@ -221,7 +221,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                         fontSize: 16,
                         color: Color(0xff404446),
                         fontWeight: FontWeight.w700)),
-                Text(mark,
+                Text(mark_as_read,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 12,
