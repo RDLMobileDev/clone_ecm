@@ -287,11 +287,12 @@ class _AccountMemberState extends State<AccountMember> {
     String emailUser = prefs.getString("emailKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
     String nameUser = prefs.getString("usernameKey").toString();
-    // String roleUser = prefs.getString("roleKey").toString();
+    String roleUser = prefs.getString("namaJabatanKey").toString();
     print(emailUser);
     setState(() {
       userName = nameUser;
       emailName = emailUser;
+      roleName = roleUser;
     });
 
     var rspGetUser = await getUser(emailUser, tokenUser);
@@ -350,7 +351,7 @@ class _AccountMemberState extends State<AccountMember> {
                               color: Color(0xFF404446)),
                         ),
                         Text(
-                          emailName + " - (" + "teamleader" + ")",
+                          emailName + " - (" + roleName + ")",
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
