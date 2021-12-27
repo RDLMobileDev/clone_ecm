@@ -23,7 +23,7 @@
                 "language": "Language",
                 "use_app": "Use app in another language",
                 "confirm": "Confirm",
-                "confirm_logout": "Do you sure to logout",
+                "confirm_logout": "Do you sure to logout?",
                 "cancel": "Cancel",
                 "leave": "Leave the app"
             },
@@ -37,7 +37,7 @@
             "beranda":{
                 "loading": "Loading history E-CM Card...",
                 "no_data": "No history here",
-                "hello": "Hello",
+                "hello": "Hello,",
                 "welcome_to": "Welcome to PT. Sugity Creatives Utility Maintenance",
                 "ecm_card_recent": "Recent E-CM Card",
                 "activity": "Activity",

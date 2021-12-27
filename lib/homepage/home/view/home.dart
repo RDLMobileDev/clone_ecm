@@ -385,199 +385,215 @@ class _HomeState extends State<Home> {
               height: 25,
             ),
             Container(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-              ),
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                activity,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF404446)),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Visibility(
-              visible: isVisibility,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(routeToFillNew());
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
+              height: 220,
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      activity,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF404446)),
+                    ),
                   ),
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  width: MediaQuery.of(context).size.width,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Color(0xFF00AEDB),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        add_ecm,
+                  Visibility(
+                    visible: isVisibility,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(routeToFillNew());
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          top: 16,
+                          left: 16,
+                          right: 16,
+                        ),
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF00AEDB),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              add_ecm,
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Visibility(
+                    visible: activitySectionJabatan,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              // Navigator.of(context).push(
+                              //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ApprovedEcm()));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                              ),
+                              padding:
+                                  const EdgeInsets.only(left: 16, right: 16),
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    sign_ecm,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ListTmName()));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                              ),
+                              padding:
+                                  const EdgeInsets.only(left: 16, right: 16),
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    listname,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => HistoryPage()));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                              ),
+                              padding:
+                                  const EdgeInsets.only(left: 16, right: 16),
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    history_ecm,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Container(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        properti_ecm,
                         style: TextStyle(
+                            color: Colors.black87,
                             fontFamily: 'Rubik',
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400),
+                            fontSize: 12),
                       ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 14,
-                        color: Colors.white,
-                      )
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Visibility(
-              visible: activitySectionJabatan,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        // Navigator.of(context).push(
-                        //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ApprovedEcm()));
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                        ),
-                        padding: const EdgeInsets.only(left: 16, right: 16),
-                        width: MediaQuery.of(context).size.width,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF00AEDB),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              sign_ecm,
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ListTmName()));
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                        ),
-                        padding: const EdgeInsets.only(left: 16, right: 16),
-                        width: MediaQuery.of(context).size.width,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF00AEDB),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              listname,
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HistoryPage()));
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                        ),
-                        padding: const EdgeInsets.only(left: 16, right: 16),
-                        width: MediaQuery.of(context).size.width,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF00AEDB),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              history_ecm,
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 40),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  properti_ecm,
-                  style: TextStyle(
-                      color: Colors.black87, fontFamily: 'Rubik', fontSize: 12),
-                ),
+                ],
               ),
             )
           ],
