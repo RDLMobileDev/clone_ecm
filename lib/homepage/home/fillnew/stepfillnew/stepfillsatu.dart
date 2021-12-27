@@ -412,16 +412,26 @@ class StepFillSatuState extends State<StepFillSatu> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                classification,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Color(0xFF404446),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  text: TextSpan(
+                    text: classification,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                )),
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
@@ -431,7 +441,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
-                      child: Text("Memuat Klasifikasi..."),
+                      child: Text("Memuat Klasifikasi"),
                     );
                   }
 
@@ -549,16 +559,22 @@ class StepFillSatuState extends State<StepFillSatu> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Icon(Icons.calendar_today)),
-                    Text(
-                      dateSelected,
-                      style: const TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
+                    Container(
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Icon(Icons.calendar_today)),
+                          Text(
+                            dateSelected,
+                            style: const TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                         width: 40,
@@ -608,7 +624,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: const Color(0xFF979C9E))),
                   suffixIcon: Icon(Icons.search),
-                  hintText: 'Type name',
+                  hintText: 'Pilih member',
                   contentPadding:
                       EdgeInsets.symmetric(vertical: -5, horizontal: 10),
                   hintStyle: TextStyle(
@@ -627,7 +643,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
-                            child: Text("Loading member..."),
+                            child: Text("Memuat member"),
                           );
                         }
 
@@ -759,7 +775,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
-                            child: Text("Memuat data factory..."),
+                            child: Text("Memuat data factory"),
                           );
                         }
 
@@ -854,7 +870,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
-                            child: Text("Memuat data factory group..."),
+                            child: Text("Memuat data factory group"),
                           );
                         }
 
@@ -982,7 +998,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return Center(
-                          child: Text("Memuat nama mesin..."),
+                          child: Text("Memuat nama mesin"),
                         );
                       },
                     ),
@@ -1091,7 +1107,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return Center(
-                          child: Text("Memuat nomor mesin..."),
+                          child: Text("Memuat nomor mesin"),
                         );
                       },
                     ),
