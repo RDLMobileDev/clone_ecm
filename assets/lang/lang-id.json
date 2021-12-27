@@ -20,7 +20,7 @@
             "language": "Bahasa",
             "use_app": "Gunakan dalam bahasa lain di app",
             "confirm": "Konfirmasi",
-            "confirm_logout": "Anda yakin ingin keluar",
+            "confirm_logout": "Anda yakin ingin keluar?",
             "cancel": "Batal",
             "leave": "Keluar dari aplikasi"
         },
@@ -34,7 +34,7 @@
         "beranda":{
             "loading": "Memuat riwayat E-CM Card...",
             "no_data": "Tidak ada data riwayat",
-            "hello": "Halo",
+            "hello": "Halo,",
             "welcome_to": "Selamat Datang di PT. Sugity Creatives Utility Maintenance",
             "ecm_card_recent": "E-CM Card Terkini",
             "activity": "Aktivitas",
