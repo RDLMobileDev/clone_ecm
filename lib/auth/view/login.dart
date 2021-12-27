@@ -92,13 +92,14 @@ class _LogInState extends State<LogIn> {
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
         prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
-        // prefs.setString("roleKey", rspLogin['data']['user']['role']);
+        prefs.setString(
+            "namaJabatanKey", rspLogin['data']['user']['namajabatan']);
 
         print("ID user = " + (rspLogin['data']['user']['id']).toString());
         print("EMAIL user = " + rspLogin['data']['user']['email']);
         print("USERNAME user = " + rspLogin['data']['user']['username']);
         print("TOKEN user = " + rspLogin['data']['token']);
-        // print("ROLE user = " + rspLogin['data']['jabatan']);
+        print("JABATAN user = " + rspLogin['data']['user']['namajabatan']);
 
         setState(() {
           Fluttertoast.showToast(
