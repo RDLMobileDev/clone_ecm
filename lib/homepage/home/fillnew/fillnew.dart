@@ -294,12 +294,13 @@ class _FillNewState extends State<FillNew> {
 
       if (_currentStep == 5) {
         // print("object step 6");
+        // &&
+        //     prefs.getString("outHouseHBool")!.isNotEmpty &&
+        //     prefs.getString("outHouseMpBool")!.isNotEmpty &&
+        //     prefs.getString("outHouseCostBool")!.isNotEmpty
         if (prefs.getString("userNameBool")!.isNotEmpty &&
             prefs.getString("ideaBool")!.isNotEmpty &&
-            prefs.getString("breakTimeBool")!.isNotEmpty &&
-            prefs.getString("outHouseHBool")!.isNotEmpty &&
-            prefs.getString("outHouseMpBool")!.isNotEmpty &&
-            prefs.getString("outHouseCostBool")!.isNotEmpty) {
+            prefs.getString("breakTimeBool")!.isNotEmpty) {
           _stepFillEnam.getSaveFillEnam();
           setState(() {
             _currentStep++;
@@ -377,6 +378,13 @@ class _FillNewState extends State<FillNew> {
           prefs.remove("outHouseCostBool");
           prefs.remove("sparePartBool");
           prefs.remove("copyToBool");
+          prefs.remove("namaKlasifikasi");
+          prefs.remove("tglStepSatu");
+          prefs.remove("namaMember");
+          prefs.remove("namaLokasi");
+          prefs.remove("namaGroupLokasi");
+          prefs.remove("machineId");
+          prefs.remove("machineDetailId");
           showDialog(
               context: context,
               builder: (BuildContext context) {
