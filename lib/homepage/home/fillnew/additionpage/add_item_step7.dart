@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
@@ -246,6 +248,20 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
           backgroundColor: Colors.greenAccent,
         );
       }
+    } on SocketException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Koneksi Anda terputus, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    } on TimeoutException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Waktu koneksi Anda habis, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Terjadi kesalahan, periksa koneksi Anda',
@@ -528,20 +544,31 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                       ),
                     ),
                     Container(
+                      padding: EdgeInsets.all(4),
                       margin: const EdgeInsets.only(top: 5),
-                      height: 40,
+                      height: 50,
                       decoration: BoxDecoration(
                           border: Border.all(color: const Color(0xFF979C9E)),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(5))),
                       child: TextFormField(
                         controller: costRpController,
+                        maxLength: 7,
                         onChanged: (value) {
-                          int costRp = value.isEmpty ? 0 : int.parse(value);
+                          if (value.length <= 7) {
+                            int costRp = value.isEmpty ? 0 : int.parse(value);
 
-                          setState(() {
-                            subTotal = qtyUsed * costRp;
-                          });
+                            setState(() {
+                              subTotal = qtyUsed * costRp;
+                            });
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: 'Cost tidak boleh melebihi 7 angka',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.greenAccent,
+                            );
+                          }
                         },
                         keyboardType: TextInputType.number,
                         style: const TextStyle(
@@ -551,7 +578,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal),
                         decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(top: 10, left: 10),
+                            contentPadding: EdgeInsets.only(
+                              top: 10,
+                            ),
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: type_cost),

@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, curly_braces_in_flow_control_structures
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -151,21 +152,51 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
     // var idPart = prefs.getString("idPartItemMachine");
     print("id data: $idEcmData");
 
-    var result = await partItemMachineSaveService.deletePartItemMachineSaved(
-        idEcmData, tokenUser);
+    try {
+      var result = await partItemMachineSaveService.deletePartItemMachineSaved(
+          idEcmData, tokenUser);
 
-    print(result);
+      print(result);
 
-    // getDataPartItemSaved();
+      // getDataPartItemSaved();
 
-    Fluttertoast.showToast(
-        msg: 'Item dihapus',
+      Fluttertoast.showToast(
+          msg: 'Item dihapus',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    } on SocketException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Koneksi Anda terputus, coba lagi nanti',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
         backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16);
+      );
+    } on TimeoutException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Waktu koneksi Anda terputus, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    } on PlatformException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Terjadi gangguan di sistem Anda, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Terjadi kesalahan, periksa koneksi Anda',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    }
   }
 
   void confirmDelete(int index) {

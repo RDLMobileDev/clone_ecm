@@ -572,12 +572,24 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                name,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              child: RichText(
+                text: TextSpan(
+                  text: name,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -658,12 +670,24 @@ class _StepFillEnamState extends State<StepFillEnam> {
             Container(
               margin: const EdgeInsets.only(top: 16),
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                idea,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              child: RichText(
+                text: TextSpan(
+                  text: idea,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -712,7 +736,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
               child: Row(
                 children: [
                   Container(
-                    width: 115,
                     child: Text(
                       repair,
                       style: TextStyle(
@@ -720,13 +743,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           fontSize: 16,
                           fontWeight: FontWeight.w400),
                     ),
-                  ),
-                  Text(
-                    ":",
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
@@ -884,12 +900,27 @@ class _StepFillEnamState extends State<StepFillEnam> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    breaktime + ' (H)',
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
+                  Row(
+                    children: [
+                      Text(
+                        breaktime + " (H)",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(" *",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400)),
+                      Text(":",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400))
+                    ],
                   ),
                   Container(
                     width: 150,
@@ -972,12 +1003,27 @@ class _StepFillEnamState extends State<StepFillEnam> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    breaktime + ' (M)',
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
+                  Row(
+                    children: [
+                      Text(
+                        breaktime + " (M)",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(" *",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400)),
+                      Text(":",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400))
+                    ],
                   ),
                   Container(
                     width: 150,
