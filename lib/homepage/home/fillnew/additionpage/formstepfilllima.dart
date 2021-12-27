@@ -117,9 +117,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String token = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm") ?? "-";
     String? userId = prefs.getString("idKeyUser") ?? "-";
+    print("from step 5 item");
+    print(ecmId);
 
     try {
       var data = await getFillNewEmpat(ecmId, userId, token);
+
+      print(data);
 
       switch (data["response"]['status']) {
         case 200:
@@ -200,7 +204,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       setState(() {
         formValidations["end"] = true;
         endTimePickerController =
-            TextEditingController(text: value!.format(context));
+            TextEditingController(text: value.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
@@ -295,9 +299,12 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   @override
   void initState() {
     super.initState();
-    getStep4Data();
+
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
+      // getStep4Data();
+    } else {
+      getStep4Data();
     }
     getUsernameSession();
   }
