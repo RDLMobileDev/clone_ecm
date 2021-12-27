@@ -130,7 +130,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           break;
         default:
           Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
+              msg: 'Gagal mendapat daftar item checkings',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
