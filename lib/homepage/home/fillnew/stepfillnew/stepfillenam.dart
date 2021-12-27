@@ -369,37 +369,49 @@ class _StepFillEnamState extends State<StepFillEnam> {
       var response = await getFillNewEnam(ecmId, userId, ecmitemId, tokenUser);
       print("======= getData step 6 =======");
       print(response['data']);
-      setState(() {
-        stepEnamModel = StepEnamModel.fromJson(response['data']);
-        _limitIncreamentH = int.parse(stepEnamModel.hasilRepairH.toString());
-        _limitIncreamentM = int.parse(stepEnamModel.hasilRepairM.toString());
-        _mp = int.parse(stepEnamModel.mP.toString());
-      });
 
-      String minuteCheck = stepEnamModel.checkM.toString().length == 1
-          ? "0" + stepEnamModel.checkM.toString()
-          : stepEnamModel.checkM.toString();
-      String minuteRepair = stepEnamModel.repairM.toString().length == 1
-          ? "0" + stepEnamModel.repairM.toString()
-          : stepEnamModel.repairM.toString();
-      String minuteTotalCr = stepEnamModel.hasilRepairM.toString().length == 1
-          ? "0" + stepEnamModel.hasilRepairM.toString()
-          : stepEnamModel.hasilRepairM.toString();
-      String minuteLineStart = "0" + stepEnamModel.hasilRepairM.toString();
+      if (response['data'] != null) {
+        setState(() {
+          stepEnamModel = StepEnamModel.fromJson(response['data']);
+          _limitIncreamentH = int.parse(stepEnamModel.hasilRepairH.toString());
+          _limitIncreamentM = int.parse(stepEnamModel.hasilRepairM.toString());
+          _mp = int.parse(stepEnamModel.mP.toString());
+        });
 
-      prefs.setString(
-          "check", stepEnamModel.checkH.toString() + ":" + minuteCheck);
-      // prefs.setString("check", "3:00");
-      // prefs.setString("repair", "9:00");
-      // prefs.setString("totalcr", "5:00");
-      // prefs.setString("lineStart", "9:09");
-      prefs.setString(
-          "repair", stepEnamModel.repairH.toString() + ":" + minuteRepair);
-      prefs.setString("totalcr",
-          stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr);
-      String breaks = _counter.toString();
-      prefs.setString("lineStart",
-          stepEnamModel.hasilRepairH.toString() + ":" + minuteLineStart);
+        String minuteCheck = stepEnamModel.checkM.toString().length == 1
+            ? "0" + stepEnamModel.checkM.toString()
+            : stepEnamModel.checkM.toString();
+        String minuteRepair = stepEnamModel.repairM.toString().length == 1
+            ? "0" + stepEnamModel.repairM.toString()
+            : stepEnamModel.repairM.toString();
+        String minuteTotalCr = stepEnamModel.hasilRepairM.toString().length == 1
+            ? "0" + stepEnamModel.hasilRepairM.toString()
+            : stepEnamModel.hasilRepairM.toString();
+        String minuteLineStart = "0" + stepEnamModel.hasilRepairM.toString();
+
+        prefs.setString(
+            "check", stepEnamModel.checkH.toString() + ":" + minuteCheck);
+        // prefs.setString("check", "3:00");
+        // prefs.setString("repair", "9:00");
+        // prefs.setString("totalcr", "5:00");
+        // prefs.setString("lineStart", "9:09");
+        prefs.setString(
+            "repair", stepEnamModel.repairH.toString() + ":" + minuteRepair);
+        prefs.setString("totalcr",
+            stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr);
+        String breaks = _counter.toString();
+        prefs.setString("lineStart",
+            stepEnamModel.hasilRepairH.toString() + ":" + minuteLineStart);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Tidak ada data dari step 4 dan 5',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -1014,12 +1026,27 @@ class _StepFillEnamState extends State<StepFillEnam> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    breaktime + '  : (M)',
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
+                  Row(
+                    children: [
+                      Text(
+                        breaktime + " (M)",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(" *",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400)),
+                      Text(":",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400))
+                    ],
                   ),
                   Container(
                     width: 150,

@@ -257,17 +257,17 @@ class _AccountMemberState extends State<AccountMember> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LogIn()),
             (Route<dynamic> route) => false);
-        setState(() {
-          Fluttertoast.showToast(
-              msg: _localizedValues[locale]!['check'] ??
-                  'Periksa jaringan internet anda',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        // setState(() {
+        //   Fluttertoast.showToast(
+        //       msg: _localizedValues[locale]!['check'] ??
+        //           'Periksa jaringan internet anda',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.greenAccent,
+        //       textColor: Colors.white,
+        //       fontSize: 16);
+        // });
       }
     } catch (e) {
       Fluttertoast.showToast(
