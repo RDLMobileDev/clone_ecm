@@ -166,6 +166,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
       why1Controller = TextEditingController(text: why1);
       why2Controller = TextEditingController(text: why2);
       why3Controller = TextEditingController(text: why3);
+      why4Controller = TextEditingController(text: why4);
       howController = TextEditingController(text: howC);
     }
   }
@@ -186,11 +187,24 @@ class _StepFillTigaState extends State<StepFillTiga> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            child: Text(
-              why_analysis,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  color: Colors.black, fontSize: 16, fontFamily: 'Rubik'),
+            child: RichText(
+              text: TextSpan(
+                text: why_analysis,
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    color: Color(0xFF404446),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                children: const <TextSpan>[
+                  TextSpan(
+                      text: ' *',
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w400)),
+                ],
+              ),
             ),
           ),
           Container(
@@ -203,10 +217,24 @@ class _StepFillTigaState extends State<StepFillTiga> {
               tilePadding: EdgeInsets.only(left: 10, right: 5),
               collapsedIconColor: Colors.white,
               collapsedTextColor: Colors.black,
-              title: Text(
-                why,
-                style: TextStyle(
-                    color: Colors.white, fontFamily: 'Rubik', fontSize: 14),
+              title: RichText(
+                text: TextSpan(
+                  text: why,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
               children: <Widget>[
                 TextFormField(
@@ -238,10 +266,24 @@ class _StepFillTigaState extends State<StepFillTiga> {
               tilePadding: EdgeInsets.only(left: 10, right: 5),
               collapsedIconColor: Colors.white,
               collapsedTextColor: Colors.black,
-              title: Text(
-                'Why 2',
-                style: TextStyle(
-                    color: Colors.white, fontFamily: 'Rubik', fontSize: 14),
+              title: RichText(
+                text: TextSpan(
+                  text: 'Why 2',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
               children: <Widget>[
                 TextFormField(
@@ -273,10 +315,24 @@ class _StepFillTigaState extends State<StepFillTiga> {
               tilePadding: EdgeInsets.only(left: 10, right: 5),
               collapsedIconColor: Colors.white,
               collapsedTextColor: Colors.black,
-              title: Text(
-                'Why 3',
-                style: TextStyle(
-                    color: Colors.white, fontFamily: 'Rubik', fontSize: 14),
+              title: RichText(
+                text: TextSpan(
+                  text: 'Why 3',
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
               children: <Widget>[
                 TextFormField(
@@ -334,10 +390,24 @@ class _StepFillTigaState extends State<StepFillTiga> {
           ),
           Container(
             width: MediaQuery.of(context).size.width,
-            child: Text(
-              how,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+            child: RichText(
+              text: TextSpan(
+                text: how,
+                style: TextStyle(
+                    fontFamily: 'Rubik',
+                    color: Color(0xFF404446),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                children: const <TextSpan>[
+                  TextSpan(
+                      text: ' *',
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w400)),
+                ],
+              ),
             ),
           ),
           Container(

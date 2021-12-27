@@ -45,7 +45,7 @@ class _LogInState extends State<LogIn> {
   static const _localizedValues = <String, Map<String, String>>{
     'en_US': {
       'login_sukses': 'Login Success',
-      'login_gagal': 'Login Failed',
+      'login_gagal': 'Wrong username/password',
       'device_lain': 'You are logged in using another device',
       'update': 'Please update the latest version',
       'check': 'Check your connection',
@@ -55,7 +55,7 @@ class _LogInState extends State<LogIn> {
     },
     'id_ID': {
       'login_sukses': 'Login sukses',
-      'login_gagal': 'Login gagal',
+      'login_gagal': 'Username/password salah',
       'device_lain': 'Anda login menggunakan device lain',
       'update': 'Silahkan update versi terbaru',
       'check': 'Periksa koneksi internet',
@@ -92,11 +92,14 @@ class _LogInState extends State<LogIn> {
         prefs.setString("tokenKey", rspLogin['data']['token']);
         prefs.setString("usernameKey", rspLogin['data']['user']['username']);
         prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
+        prefs.setString(
+            "namaJabatanKey", rspLogin['data']['user']['namajabatan']);
 
         print("ID user = " + (rspLogin['data']['user']['id']).toString());
         print("EMAIL user = " + rspLogin['data']['user']['email']);
         print("USERNAME user = " + rspLogin['data']['user']['username']);
         print("TOKEN user = " + rspLogin['data']['token']);
+        print("JABATAN user = " + rspLogin['data']['user']['namajabatan']);
 
         setState(() {
           Fluttertoast.showToast(
