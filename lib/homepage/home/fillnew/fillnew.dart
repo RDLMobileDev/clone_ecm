@@ -379,6 +379,42 @@ class _FillNewState extends State<FillNew> {
           prefs.remove("sparePartBool");
           prefs.remove("copyToBool");
 
+          // remove session step 1
+          prefs.remove("namaKlasifikasi");
+          prefs.remove("tglStepSatu");
+          prefs.remove("namaMember");
+          prefs.remove("namaLokasi");
+          prefs.remove("namaGroupLokasi");
+          prefs.remove("machineId");
+          prefs.remove("machineDetailId");
+
+          // remove session step 2
+          prefs.remove("shiftA");
+          prefs.remove("shiftB");
+          prefs.remove("shiftC");
+          prefs.remove("timePickState");
+          prefs.remove("problemTypeState");
+          prefs.remove("safetyOpt");
+          prefs.remove("qualityOpt");
+          prefs.remove("deliveryOpt");
+          prefs.remove("costOpt");
+          prefs.remove("moldingOpt");
+          prefs.remove("utilityOpt");
+          prefs.remove("productionOpt");
+          prefs.remove("engineerOpt");
+          prefs.remove("otherOpt");
+
+          // remove session step 3
+          prefs.remove("why1");
+          prefs.remove("why2");
+          prefs.remove("why3");
+          prefs.remove("why4");
+          prefs.remove("howC");
+
+          // remove session step 6
+          prefs.remove("namaImprovement");
+          prefs.remove("idea");
+
           showDialog(
               context: context,
               builder: (BuildContext context) {
