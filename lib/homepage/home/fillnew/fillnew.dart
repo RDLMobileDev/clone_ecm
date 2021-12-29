@@ -378,13 +378,7 @@ class _FillNewState extends State<FillNew> {
           prefs.remove("outHouseCostBool");
           prefs.remove("sparePartBool");
           prefs.remove("copyToBool");
-          prefs.remove("namaKlasifikasi");
-          prefs.remove("tglStepSatu");
-          prefs.remove("namaMember");
-          prefs.remove("namaLokasi");
-          prefs.remove("namaGroupLokasi");
-          prefs.remove("machineId");
-          prefs.remove("machineDetailId");
+
           showDialog(
               context: context,
               builder: (BuildContext context) {
