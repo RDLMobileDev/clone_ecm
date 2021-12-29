@@ -5,6 +5,7 @@ import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
 import 'package:e_cm/homepage/home/model/incident_effect.dart';
 import 'package:e_cm/homepage/home/model/incident_mistake.dart';
+import 'package:e_cm/homepage/home/services/api_detail_history_home.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['item_check'] as List;
@@ -68,7 +69,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['item_repair'] as List;
@@ -98,7 +99,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['sparepart'] as List;
@@ -128,7 +129,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['esign'] as List;
@@ -158,7 +159,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     try {
       setStateIfMounted(() {
         print(response['data']);
@@ -224,6 +225,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     getItemRepair();
     getSparepart();
     getEsign();
+    print("id ecm history widget = " + widget.notifId);
   }
 
   @override
