@@ -201,9 +201,17 @@ class StepFillDuaState extends State<StepFillDua> {
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       String formattedTime =
           localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
       setState(() {

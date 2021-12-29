@@ -164,9 +164,17 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   void getStartTime() async {
     final prefs = await _prefs;
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       setState(() {
         formValidations["start"] = true;
         startTimePickerController =
@@ -184,9 +192,17 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   void getEndTime() async {
     final prefs = await _prefs;
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       if (!_isEndTimeGreaterThanStart(
           startTimePickerController!.text, value!.format(context))) {
         Fluttertoast.showToast(

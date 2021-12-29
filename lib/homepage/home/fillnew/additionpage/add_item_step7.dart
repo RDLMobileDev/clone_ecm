@@ -398,6 +398,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   onTap: () {
                                     setState(() {
                                       qtyUsed != 0 ? qtyUsed-- : null;
+
+                                      int costRp =
+                                          costRpController.text.isNotEmpty
+                                              ? int.parse(costRpController.text)
+                                              : 0;
+
+                                      subTotal = qtyUsed * costRp;
+
                                       if (qtyUsed == 0) {
                                         enableSave = false;
                                       }
@@ -424,6 +432,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   onTap: () {
                                     setState(() {
                                       qtyUsed++;
+
+                                      int costRp =
+                                          costRpController.text.isNotEmpty
+                                              ? int.parse(costRpController.text)
+                                              : 0;
+
+                                      subTotal = qtyUsed * costRp;
+
                                       enableSave = true;
                                     });
                                   },
@@ -489,7 +505,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                     height: 30,
                                     child: Icon(
                                       Icons.remove,
-                                      color: Color(0xFF979C9E),
+                                      color: qtyStock != 0
+                                          ? Color(0xFF20519F)
+                                          : Color(0xFF979C9E),
                                     ),
                                   ),
                                 ),
