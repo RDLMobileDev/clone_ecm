@@ -441,7 +441,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                                 fontFamily: 'Rubik',
                                 color: (noteOptions["ok"] ?? false)
                                     ? Color(0xFF00AEDB)
-                                    : Colors.black,
+                                    : Colors.grey,
                               ),
                             )
                           ],
