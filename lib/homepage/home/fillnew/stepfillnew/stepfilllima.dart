@@ -182,14 +182,9 @@ class _StepFillLimaState extends State<StepFillLima> {
           });
           break;
         default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item repairing',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
+          setState(() {
+            _listItemChecking = [];
+          });
           break;
       }
     } catch (e) {
