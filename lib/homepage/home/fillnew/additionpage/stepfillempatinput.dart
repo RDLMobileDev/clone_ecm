@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/item_checking_detail.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
+import 'package:e_cm/homepage/home/services/api_get_user_byid.dart';
 import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatgetbyid.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatinsert.dart';
@@ -159,7 +160,24 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
             };
 
             _initialPartName = data[0].partNama ?? "-";
-            _initialUser = data[0].userName ?? "-";
+            getUserNameById(data[0].userName ?? "-", tokenUser).then((value) {
+              if (value['response']['status'] != 200) {
+                Fluttertoast.showToast(
+                    msg: "Username tidak ditemukan",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: Colors.greenAccent,
+                    textColor: Colors.white,
+                    fontSize: 16);
+                return;
+              }
+
+              setState(() {
+                formValue['name'] = value['data']['id'].toString();
+                _initialUser = value['data']['username'] ?? "-";
+              });
+            });
 
             tecItem = TextEditingController(text: formValue["item"]);
             tecStandard = TextEditingController(text: formValue["standard"]);
@@ -494,7 +512,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   },
                   onSelected: (item) {
                     setState(() {
-                      formValue["item"] = item.mPartId.toString();
+                      formValue["item"] = item.mPartNama.toString();
                     });
                   },
                   fieldViewBuilder: (context, textEditingController, focusNode,
@@ -521,10 +539,10 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         setState(() {
                           formValidations["item"] = value.isNotEmpty;
                           formValue["item"] = parts
-                              .firstWhere((element) =>
-                                  value.contains(element.mPartNama ?? "-"))
-                              .mPartId
-                              .toString();
+                                  .firstWhere((element) =>
+                                      value.contains(element.mPartNama ?? "-"))
+                                  .mPartNama ??
+                              value;
                         });
                       },
                       onChanged: (value) {
@@ -533,12 +551,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                               TextEditingController(text: value);
                           formValidations["item"] = value.isNotEmpty;
                           formValue["item"] = parts
-                              .firstWhere(
-                                  (element) =>
-                                      value.contains(element.mPartNama ?? "-"),
-                                  orElse: () => PartModel())
-                              .mPartId
-                              .toString();
+                                  .firstWhere(
+                                      (element) => value
+                                          .contains(element.mPartNama ?? "-"),
+                                      orElse: () => PartModel())
+                                  .mPartNama ??
+                              value;
                         });
                       },
                     );
@@ -561,7 +579,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                   onSelected(options.elementAt(index));
                                   formValue["item"] = options
                                       .elementAt(index)
-                                      .mPartId
+                                      .mPartNama
                                       .toString();
                                 },
                                 child: ListTile(
@@ -1026,7 +1044,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   onSelected: (item) {
                     setState(() {
                       formValidations["name"] =
-                          item.userFullName?.isNotEmpty ?? false;
+                          item.userId?.isNotEmpty ?? false;
                       formValue["name"] = item.userId!;
                     });
                   },
@@ -1055,7 +1073,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                           formValue["name"] = _users
                                   .firstWhere((element) => value
                                       .contains(element.userFullName ?? "-"))
-                                  .userFullName ??
+                                  .userId ??
                               "-";
                         });
                       },
@@ -1069,7 +1087,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                       (element) => value.contains(
                                           element.userFullName ?? "-"),
                                       orElse: () => AllUserModel())
-                                  .userFullName ??
+                                  .userId ??
                               "-";
                         });
                       },
@@ -1092,8 +1110,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                 onTap: () {
                                   onSelected(options.elementAt(index));
                                   formValue["name"] =
-                                      options.elementAt(index).userFullName ??
-                                          "-";
+                                      options.elementAt(index).userId ?? "-";
                                 },
                                 child: ListTile(
                                   title: Text(option),
