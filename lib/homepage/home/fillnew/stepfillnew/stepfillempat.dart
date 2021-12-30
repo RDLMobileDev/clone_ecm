@@ -194,14 +194,6 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           setState(() {
             _listItemChecking = [];
           });
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
           break;
       }
     } catch (e) {
