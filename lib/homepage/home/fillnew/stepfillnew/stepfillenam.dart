@@ -140,7 +140,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   StepEnamModel stepEnamModel = StepEnamModel();
 
   int _counter = 0;
-  int _counterMinutes = 0;
+  int _counterMinutes = 45;
   int _limitIncreamentH = 0;
   int _limitIncreamentM = 0;
   int _lineStopH = 0;
