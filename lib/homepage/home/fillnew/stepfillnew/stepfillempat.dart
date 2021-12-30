@@ -220,7 +220,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void deleteItemChecking() async {
+  void deleteItemChecking(String ecmItemId) async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     var idEcmItem = prefs.getString("idEcmItem");
@@ -268,7 +268,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void confirmDelete() {
+  void confirmDelete(String ecmItemId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -357,7 +357,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                   ),
                   InkWell(
                     onTap: () async {
-                      deleteItemChecking();
+                      deleteItemChecking(ecmItemId);
                     },
                     child: Container(
                         width: 115,
@@ -528,7 +528,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              confirmDelete();
+                                              confirmDelete(_listItemChecking[i]
+                                                  .ecmitemId
+                                                  .toString());
                                             },
                                             child: Image.asset(
                                               "assets/icons/trash.png",
