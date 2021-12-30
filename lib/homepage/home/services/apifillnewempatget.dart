@@ -6,15 +6,14 @@ Future getFillNewEmpat(String ecmId, String userId, String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecmstep4_get?ecm_id=$ecmId&user_id=$userId";
   final response = await http.get(Uri.parse(url), headers: {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer $token'
   });
-  print('Token : ${token}');
+  // print('Token : ${token}');
 
   if (response.body.isNotEmpty) {
     var convertDatatoJson = jsonDecode(response.body);
-    print(convertDatatoJson);
     json.decode(response.body);
     return convertDatatoJson;
   }

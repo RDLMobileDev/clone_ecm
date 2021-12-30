@@ -161,8 +161,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     var response = await getDetailEcm(notifUser, tokenUser);
     try {
       setStateIfMounted(() {
+        print("data detail");
         print(response['data']);
         detailEcmModel = DetailEcmModel.fromJson(response['data']);
+
         incidentEffect =
             IncidentEffect.fromJson(response['data']['incident_effect'])
                 .toString();
@@ -239,7 +241,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               Navigator.pop(context);
             }),
         title: Text(
-          "Preventive Maintance",
+          "Preventive Maintances",
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,

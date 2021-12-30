@@ -201,9 +201,17 @@ class StepFillDuaState extends State<StepFillDua> {
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       String formattedTime =
           localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
       setState(() {
@@ -291,9 +299,9 @@ class StepFillDuaState extends State<StepFillDua> {
           prefs.setStringList("imagesKetPath", imageProblemPath);
           prefs.setString("imageUploadBool", "1");
         } else {
-          imageFileList!.clear();
+          // imageFileList!.clear();
           Fluttertoast.showToast(
-              msg: "Tidak boleh melebihi 4 foto",
+              msg: "Foto tidak dipilih",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -404,9 +412,98 @@ class StepFillDuaState extends State<StepFillDua> {
   void setFormStep2AfterChoosing() async {
     final prefs = await _prefs;
 
+    String shiftA = prefs.getString("shiftA") ?? "";
+    String shiftB = prefs.getString("shiftB") ?? "";
+    String shiftC = prefs.getString("shiftC") ?? "";
+
     String? timePickState = prefs.getString("timePickState");
     String? problemTypeState = prefs.getString("problemTypeState");
 
+    String safetyOpt = prefs.getString("safetyOpt") ?? "";
+    String qualityOpt = prefs.getString("qualityOpt") ?? "";
+    String deliveryOpt = prefs.getString("deliveryOpt") ?? "";
+    String costOpt = prefs.getString("costOpt") ?? "";
+
+    String moldingOpt = prefs.getString("moldingOpt") ?? "";
+    String utilityOpt = prefs.getString("utilityOpt") ?? "";
+    String productionOpt = prefs.getString("productionOpt") ?? "";
+    String engineerOpt = prefs.getString("engineerOpt") ?? "";
+    String otherOpt = prefs.getString("otherOpt") ?? "";
+
+    // PERCENTAGE MISTAKE
+    if (moldingOpt.isNotEmpty && moldingOpt != "" && moldingOpt == "1") {
+      setState(() {
+        isMolding = !isMolding;
+      });
+    }
+
+    if (utilityOpt.isNotEmpty && utilityOpt != "" && utilityOpt == "1") {
+      setState(() {
+        isUtility = !isUtility;
+      });
+    }
+
+    if (productionOpt.isNotEmpty &&
+        productionOpt != "" &&
+        productionOpt == "1") {
+      setState(() {
+        isProduction = !isProduction;
+      });
+    }
+
+    if (engineerOpt.isNotEmpty && engineerOpt != "" && engineerOpt == "1") {
+      setState(() {
+        isEngineering = !isEngineering;
+      });
+    }
+
+    if (otherOpt.isNotEmpty && otherOpt != "" && otherOpt == "1") {
+      setState(() {
+        isOther = !isOther;
+      });
+    }
+
+    // PROBLEM TYPE
+    if (safetyOpt.isNotEmpty && safetyOpt != "" && safetyOpt == "1") {
+      setState(() {
+        isSafety = !isSafety;
+      });
+    }
+
+    if (qualityOpt.isNotEmpty && qualityOpt != "" && qualityOpt == "1") {
+      setState(() {
+        isQuality = !isQuality;
+      });
+    }
+
+    if (deliveryOpt.isNotEmpty && deliveryOpt != "" && deliveryOpt == "1") {
+      setState(() {
+        isDelivery = !isDelivery;
+      });
+    }
+
+    if (costOpt.isNotEmpty && costOpt != "" && costOpt == "1") {
+      setState(() {
+        isCost = !isCost;
+      });
+    }
+
+    // SHIFT
+    if (shiftA.isNotEmpty && shiftA != "" && shiftA == "1") {
+      setState(() {
+        incidentGroup = '1';
+      });
+    } else if (shiftB.isNotEmpty && shiftB != "" && shiftB == "1") {
+      setState(() {
+        incidentGroup = '2';
+      });
+    } else if (shiftC.isNotEmpty && shiftC != "" && shiftC == "1") {
+      setState(() {
+        incidentGroup = '3';
+      });
+    }
+
+    // TIME AND DESC PROBLEM
     if (timePickState != null && problemTypeState != null) {
       setState(() {
         timePickController = TextEditingController(text: timePickState);
@@ -472,7 +569,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -523,7 +620,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -576,7 +673,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(

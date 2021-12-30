@@ -89,9 +89,17 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void getEndTime() {
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       if (formValidations["start"] == false) {
         showToast("Silahkan atur start time terlebih dahulu");
         return;
@@ -117,9 +125,17 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void getStartTime() {
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       setState(() {
         formValidations["start"] = true;
         startTimePickController =
@@ -472,24 +488,109 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               width: MediaQuery.of(context).size.width,
               height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: TextField(
-                controller: tecItem,
-                keyboardType: TextInputType.text,
+              child: InputDecorator(
                 decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    filled: true,
-                    hintText: 'Type item name'),
-                maxLines: 1,
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["item"] = value.isNotEmpty;
+                  contentPadding: EdgeInsets.only(left: 18),
+                  fillColor: Colors.white,
+                  focusedBorder: InputBorder.none,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  filled: true,
+                ),
+                child: Autocomplete<PartModel>(
+                  displayStringForOption: _displayPartOption,
+                  optionsBuilder: (TextEditingValue tev) {
+                    if (tev.text == '') {
+                      return const Iterable<PartModel>.empty();
+                    }
 
-                    formValue["item"] = value;
-                  });
-                },
+                    return parts.where((element) => element
+                        .toString()
+                        .contains(tev.text.toString().toLowerCase()));
+                  },
+                  onSelected: (item) {
+                    setState(() {
+                      formValue["item"] = item.mPartId.toString();
+                    });
+                  },
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintStyle: TextStyle(
+                          color: ecmItemId != null ? Colors.black : Colors.grey,
+                        ),
+                        hintText: ecmItemId != null
+                            ? _initialPartName
+                            : "Type Item Name",
+                      ),
+                      onFieldSubmitted: (String value) {
+                        onFieldSubmitted();
+                        setState(() {
+                          formValidations["item"] = value.isNotEmpty;
+                          formValue["item"] = parts
+                              .firstWhere((element) =>
+                                  value.contains(element.mPartNama ?? "-"))
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          textEditingController =
+                              TextEditingController(text: value);
+                          formValidations["item"] = value.isNotEmpty;
+                          formValue["item"] = parts
+                              .firstWhere(
+                                  (element) =>
+                                      value.contains(element.mPartNama ?? "-"),
+                                  orElse: () => PartModel())
+                              .mPartId
+                              .toString();
+                        });
+                      },
+                    );
+                  },
+                  optionsViewBuilder: (context, onSelected, options) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Material(
+                        elevation: 4.0,
+                        child: SizedBox(
+                          height: 200.0,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: options.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final String option =
+                                  options.elementAt(index).mPartNama ?? "-";
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelected(options.elementAt(index));
+                                  formValue["item"] = options
+                                      .elementAt(index)
+                                      .mPartId
+                                      .toString();
+                                },
+                                child: ListTile(
+                                  title: Text(option),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Container(

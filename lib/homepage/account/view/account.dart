@@ -31,18 +31,19 @@ class _AccountMemberState extends State<AccountMember> {
       'logout_sukses': 'Login Success',
       'check': 'Check your connection',
       'problem': 'There was a problem with your connection',
-      // 'logout': 'Are you sure to logout'
+      'logout': 'Do you sure to logout?'
     },
     'id_ID': {
       'logout_sukses': 'Login sukses',
       'check': 'Periksa koneksi internet',
       'problem': 'Terjadi masalah pada koneksi Anda',
-      // 'logout': 'Apakah anda yakin ingin keluar?'
+      'logout': 'Apakah anda yakin ingin keluar?'
     },
   };
 
   String userName = "";
   String emailName = "";
+  String roleName = "";
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -86,7 +87,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "Confirm",
+                    confirm,
                     style: TextStyle(
                         color: Color(0xFF404446),
                         fontFamily: 'Rubik',
@@ -100,7 +101,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "Are you sure to logout",
+                    confirm_logout,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color(0xFF404446),
@@ -256,17 +257,17 @@ class _AccountMemberState extends State<AccountMember> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LogIn()),
             (Route<dynamic> route) => false);
-        setState(() {
-          Fluttertoast.showToast(
-              msg: _localizedValues[locale]!['check'] ??
-                  'Periksa jaringan internet anda',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        // setState(() {
+        //   Fluttertoast.showToast(
+        //       msg: _localizedValues[locale]!['check'] ??
+        //           'Periksa jaringan internet anda',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.greenAccent,
+        //       textColor: Colors.white,
+        //       fontSize: 16);
+        // });
       }
     } catch (e) {
       Fluttertoast.showToast(
@@ -286,10 +287,12 @@ class _AccountMemberState extends State<AccountMember> {
     String emailUser = prefs.getString("emailKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
     String nameUser = prefs.getString("usernameKey").toString();
+    String roleUser = prefs.getString("namaJabatanKey").toString();
     print(emailUser);
     setState(() {
       userName = nameUser;
       emailName = emailUser;
+      roleName = roleUser;
     });
 
     var rspGetUser = await getUser(emailUser, tokenUser);
@@ -348,7 +351,7 @@ class _AccountMemberState extends State<AccountMember> {
                               color: Color(0xFF404446)),
                         ),
                         Text(
-                          emailName,
+                          emailName + " - (" + roleName + ")",
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
