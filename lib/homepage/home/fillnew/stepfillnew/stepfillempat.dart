@@ -182,6 +182,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     try {
       var data = await getFillNewEmpat(ecmId, userId, token);
 
+      print("data from hasil input form step 4");
+      print(data['data']);
+
       switch (data["response"]['status']) {
         case 200:
           setState(() {
