@@ -179,6 +179,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   String members = '';
   String idMachineFromName = '';
 
+  String namaKlasifikasiFromSession = '';
+
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
   List<GroupAreaModel> _listGroupArea = [];
@@ -380,6 +382,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         machineId != null &&
         machineDetailId != null) {
       setState(() {
+        namaKlasifikasiFromSession = namaKlasifikasi;
         dateSelected = tglStepSatu;
         teamMemberController = TextEditingController(text: namaMember);
         factoryNameController = TextEditingController(text: namaLokasi);
@@ -457,6 +460,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                           scrollDirection: Axis.horizontal,
                           itemCount: _listClassification.length,
                           itemBuilder: (context, i) {
+                            if (namaKlasifikasiFromSession ==
+                                _listClassification[i].nama) {
+                              mapClass[i] = true;
+                            }
+
                             return InkWell(
                               onTap: () async {
                                 final prefs = await _prefs;
@@ -465,6 +473,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   if (mapClass[i] != null) {
                                     mapClass[i] = true;
                                   }
+
                                   print("map values -> $mapClass");
                                   prefs.setString("idClassification",
                                       _listClassification[i].id);
