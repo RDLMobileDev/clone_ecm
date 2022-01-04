@@ -28,13 +28,13 @@ class _AccountMemberState extends State<AccountMember> {
 
   static const _localizedValues = <String, Map<String, String>>{
     'en_US': {
-      'logout_sukses': 'Login Success',
+      'logout_sukses': 'Logout Success',
       'check': 'Check your connection',
       'problem': 'There was a problem with your connection',
       'logout': 'Do you sure to logout?'
     },
     'id_ID': {
-      'logout_sukses': 'Login sukses',
+      'logout_sukses': 'Logout sukses',
       'check': 'Periksa koneksi internet',
       'problem': 'Terjadi masalah pada koneksi Anda',
       'logout': 'Apakah anda yakin ingin keluar?'
