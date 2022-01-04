@@ -403,6 +403,7 @@ class _FillNewState extends State<FillNew> {
           prefs.remove("productionOpt");
           prefs.remove("engineerOpt");
           prefs.remove("otherOpt");
+          prefs.remove("imagesKetPath");
 
           // remove session step 3
           prefs.remove("why1");
@@ -414,6 +415,11 @@ class _FillNewState extends State<FillNew> {
           // remove session step 6
           prefs.remove("namaImprovement");
           prefs.remove("idea");
+          prefs.remove("breakHours");
+          prefs.remove("breakMinutes");
+          prefs.remove("outHouseH");
+          prefs.remove("outHouseMp");
+          prefs.remove("outHouseCost");
 
           showDialog(
               context: context,

@@ -182,6 +182,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     try {
       var data = await getFillNewEmpat(ecmId, userId, token);
 
+      print("data from hasil input form step 4");
+      print(data['data']);
+
       switch (data["response"]['status']) {
         case 200:
           setState(() {
@@ -194,14 +197,6 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           setState(() {
             _listItemChecking = [];
           });
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
           break;
       }
     } catch (e) {
@@ -225,7 +220,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void deleteItemChecking() async {
+  void deleteItemChecking(String ecmItemId) async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     var idEcmItem = prefs.getString("idEcmItem");
@@ -273,7 +268,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void confirmDelete() {
+  void confirmDelete(String ecmItemId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -362,7 +357,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                   ),
                   InkWell(
                     onTap: () async {
-                      deleteItemChecking();
+                      deleteItemChecking(ecmItemId);
                     },
                     child: Container(
                         width: 115,
@@ -533,7 +528,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              confirmDelete();
+                                              confirmDelete(_listItemChecking[i]
+                                                  .ecmitemId
+                                                  .toString());
                                             },
                                             child: Image.asset(
                                               "assets/icons/trash.png",

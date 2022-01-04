@@ -182,14 +182,9 @@ class _StepFillLimaState extends State<StepFillLima> {
           });
           break;
         default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item repairing',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
+          setState(() {
+            _listItemChecking = [];
+          });
           break;
       }
     } catch (e) {
@@ -213,7 +208,7 @@ class _StepFillLimaState extends State<StepFillLima> {
     }
   }
 
-  void confirmDelete() {
+  void confirmDelete(String ecmItemId) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -298,9 +293,21 @@ class _StepFillLimaState extends State<StepFillLima> {
                           )),
                     ),
                     InkWell(
-                      onTap: () async {
-                        await hapusItemStepLima();
-                        getDataItemRepairing();
+                      onTap: () {
+                        hapusItemStepLima(ecmItemId).then((value) {
+                          if (value['response']['status'] != 200) {
+                            Fluttertoast.showToast(
+                                msg: 'Item gagal dihapus',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.greenAccent,
+                                textColor: Colors.white,
+                                fontSize: 16);
+                          }
+                          Navigator.of(context).pop(true);
+                          getDataItemRepairing();
+                        });
                       },
                       child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
@@ -328,34 +335,13 @@ class _StepFillLimaState extends State<StepFillLima> {
         });
   }
 
-  Future hapusItemStepLima() async {
+  Future hapusItemStepLima(String ecmItemId) async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
-    String? ecmItemId = prefs.getString("idEcmItem");
 
-    var result = await deleteFillLima.hapusItemFillLima(token, ecmItemId!);
+    var result = await deleteFillLima.hapusItemFillLima(token, ecmItemId);
 
-    if (result['response']['status'] == 200) {
-      Fluttertoast.showToast(
-          msg: 'Item dihapus',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-      Navigator.of(context).pop(true);
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Item gagal dihapus',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-      Navigator.of(context).pop(true);
-    }
+    return result;
   }
 
   void setBoolFinishStep5() async {
@@ -480,9 +466,10 @@ class _StepFillLimaState extends State<StepFillLima> {
                                             ),
                                           ),
                                           InkWell(
-                                            onTap: () async {
-                                              confirmDelete();
-                                              print("Klik delete step 5");
+                                            onTap: () {
+                                              confirmDelete(_listItemChecking[i]
+                                                  .ecmitemId
+                                                  .toString());
                                             },
                                             child: Image.asset(
                                               "assets/icons/trash.png",

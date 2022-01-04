@@ -429,6 +429,7 @@ class StepFillDuaState extends State<StepFillDua> {
     String productionOpt = prefs.getString("productionOpt") ?? "";
     String engineerOpt = prefs.getString("engineerOpt") ?? "";
     String otherOpt = prefs.getString("otherOpt") ?? "";
+    List<String> imagesKetPath = prefs.getStringList("imagesKetPath") ?? [];
 
     // PERCENTAGE MISTAKE
     if (moldingOpt.isNotEmpty && moldingOpt != "" && moldingOpt == "1") {
@@ -501,6 +502,12 @@ class StepFillDuaState extends State<StepFillDua> {
       setState(() {
         incidentGroup = '3';
       });
+    }
+
+    if(imagesKetPath.isNotEmpty){
+      imageProblemPath.addAll(imagesKetPath);
+    }else{
+      print("asdjfghasdjk");
     }
 
     // TIME AND DESC PROBLEM
@@ -1423,57 +1430,21 @@ class StepFillDuaState extends State<StepFillDua> {
                 ),
               ),
             ),
-            imageFileList!.isEmpty
-                ? InkWell(
-                    onTap: () {
-                      showBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return optionPickImage(context);
-                          });
-                    },
-                    child: Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        padding: const EdgeInsets.all(10),
-                        height: 120,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFF979C9E)),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            Icon(
-                              Icons.add_a_photo,
-                              color: Color(0xFF979C9E),
-                              size: 50,
-                            ),
-                            Text(
-                              addmax,
-                              style: const TextStyle(
-                                  color: Color(0xFF979C9E),
-                                  fontSize: 14,
-                                  fontFamily: 'Rubik',
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ],
-                        )),
-                  )
-                : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+
+               imageProblemPath.isNotEmpty ?
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                       children: [
                         Row(
-                          children: imageFileList!.map((img) {
+                          children: imageProblemPath.map((img) {
                             return Container(
                               width: 120,
                               height: 120,
                               margin: EdgeInsets.only(right: 8),
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: FileImage(File(img.path)),
+                                      image: FileImage(File(img)),
                                       fit: BoxFit.fill),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8))),
@@ -1529,6 +1500,43 @@ class StepFillDuaState extends State<StepFillDua> {
                         )
                       ],
                     ),
+                )
+                : InkWell(
+                    onTap: () {
+                      showBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return optionPickImage(context);
+                          });
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.all(10),
+                        height: 120,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF979C9E)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Icon(
+                              Icons.add_a_photo,
+                              color: Color(0xFF979C9E),
+                              size: 50,
+                            ),
+                            Text(
+                              addmax,
+                              style: const TextStyle(
+                                  color: Color(0xFF979C9E),
+                                  fontSize: 14,
+                                  fontFamily: 'Rubik',
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        )),
                   ),
           ],
         ),

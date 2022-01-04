@@ -176,6 +176,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       resultCostInHouse();
     });
     prefs.setString("breaks", _counter.toString());
+    prefs.setString("breakHours", _counter.toString());
   }
 
   void _decreamentCounter() async {
@@ -190,6 +191,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       resultCostInHouse();
     });
     prefs.setString("breaks", _counter.toString());
+    prefs.setString("breakHours", _counter.toString());
   }
 
   void _incrementCounterMinutes() async {
@@ -227,6 +229,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       resultCostInHouse();
     });
     prefs.setString("breaks", _counter.toString());
+    prefs.setString("breakMinutes", _counterMinutes.toString());
   }
 
   void _decreamentCounterMinutes() async {
@@ -241,6 +244,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       resultCostInHouse();
     });
     prefs.setString("breaks", _counter.toString());
+    prefs.setString("breakMinutes", _counterMinutes.toString());
   }
 
   void resultLineStop() {
@@ -543,11 +547,24 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
     String? namaImprovement = prefs.getString("namaImprovement");
     String? idea = prefs.getString("idea");
+    String? breakHours = prefs.getString("breakHours");
+    String? breakMinutes = prefs.getString("breakMinutes");
+    String? outHouseH = prefs.getString("outHouseH");
+    String? outHouseMp = prefs.getString("outHouseMp");
+    String? outHouseCost = prefs.getString("outHouseCost");
 
-    if (namaImprovement != null && idea != null) {
+    if (namaImprovement != null &&
+        idea != null &&
+        outHouseMp != null &&
+        outHouseCost != null && breakHours != null && breakMinutes != null) {
       setState(() {
         userNameController = TextEditingController(text: namaImprovement);
         ideaController = TextEditingController(text: idea);
+        _counter = int.parse(breakHours);
+        _counterMinutes = int.parse(breakMinutes);
+        outHouseHController = TextEditingController(text: outHouseH);
+        outHouseMpController = TextEditingController(text: outHouseMp);
+        costOutHouseController = TextEditingController(text: outHouseCost);
       });
     }
   }
