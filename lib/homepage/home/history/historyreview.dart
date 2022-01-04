@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -233,195 +235,214 @@ class _HistoryReviewState extends State<HistoryReview> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 12),
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/img_ava.png')),
+      body: detailEcmModel.nama.toString() == "null"
+          ? Container(
+              color: Colors.white,
+              child: Center(
+                // Display Progress Indicator
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
                 ),
-              ),
-              Text(
-                detailEcmModel.nama.toString(),
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff00AEDB)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                // color: Colors.amberAccent,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .center, //Center Column contents vertically,
-                    crossAxisAlignment: CrossAxisAlignment
-                        .center, //Center Column contents horizontally,
-                    children: [
-                      Icon(Icons.location_on_outlined, color: Colors.grey),
-                      Text(
-                        detailEcmModel.lokasi.toString() +
-                            " · " +
-                            detailEcmModel.tanggal.toString(),
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Text("Machine :" +
-                  detailEcmModel.mesinKode.toString() +
-                  " " +
-                  detailEcmModel.machineNama.toString() +
-                  " (" +
-                  detailEcmModel.nomormesin.toString() +
-                  ")"),
-              _buildDivider(),
-              Container(
+              ))
+          : SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
                 width: MediaQuery.of(context).size.width,
-                child: const Text("Incident",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Text(
-                    detailEcmModel.incidentShift.toString() +
-                        " · " +
-                        detailEcmModel.incidentJam.toString() +
-                        " · Effect : " +
-                        detailEcmModel.incidentEffect.toString() +
-                        " · Mistake : " +
-                        detailEcmModel.incidentMistake.toString(),
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Text(detailEcmModel.incidentProblem.toString(),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 200,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 200,
-                      height: 200,
+                      margin: EdgeInsets.only(bottom: 12),
+                      width: 100,
+                      height: 100,
                       decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto1.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/img_ava.png')),
+                      ),
                     ),
-                    const SizedBox(width: 10),
+                    Text(
+                      detailEcmModel.nama.toString(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xff00AEDB)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto2.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      // color: Colors.amberAccent,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .center, //Center Column contents vertically,
+                          crossAxisAlignment: CrossAxisAlignment
+                              .center, //Center Column contents horizontally,
+                          children: [
+                            Icon(Icons.location_on_outlined,
+                                color: Colors.grey),
+                            Text(
+                              detailEcmModel.lokasi.toString() +
+                                  " · " +
+                                  detailEcmModel.tanggal.toString(),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(width: 10),
+                    Text("Machine :" +
+                        detailEcmModel.mesinKode.toString() +
+                        " " +
+                        detailEcmModel.machineNama.toString() +
+                        " (" +
+                        detailEcmModel.nomormesin.toString() +
+                        ")"),
+                    _buildDivider(),
                     Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto3.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      width: MediaQuery.of(context).size.width,
+                      child: const Text("Incident",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87)),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto4.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                          detailEcmModel.incidentShift.toString() +
+                              " · " +
+                              detailEcmModel.incidentJam.toString() +
+                              " · Effect : " +
+                              detailEcmModel.incidentEffect.toString() +
+                              " · Mistake : " +
+                              detailEcmModel.incidentMistake.toString(),
+                          style: TextStyle(fontSize: 14, color: Colors.grey)),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(detailEcmModel.incidentProblem.toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 200,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto1
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto2
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto3
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto4
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildItemAnalyst(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildItemCheck(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildItemRepairing(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildImprovement(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildWorkingTime(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildCost(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildSparePart(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildSign(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildTotalCost(),
+                    ),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),
-              _buildDivider(),
-              Container(
-                child: _buildItemAnalyst(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildItemCheck(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildItemRepairing(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildImprovement(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildWorkingTime(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildCost(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildSparePart(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildSign(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildTotalCost(),
-              ),
-              SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
