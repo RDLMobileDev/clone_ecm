@@ -2,7 +2,7 @@
     package="com.ragdalion.e_cm">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="e_cm"
+        android:label="E-CM Card"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
         <activity
