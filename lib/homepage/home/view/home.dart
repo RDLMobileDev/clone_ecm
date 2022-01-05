@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
@@ -44,6 +44,10 @@ class _HomeState extends State<Home> {
   String account = '';
   String loading = '';
   String no_data = '';
+  String ecm_approved = '';
+  String ecm_declined = '';
+  String ecm_pending = '';
+  var cardStatus;
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -86,6 +90,9 @@ class _HomeState extends State<Home> {
         account = dataLang['beranda']['account'];
         loading = dataLang['beranda']['loading'];
         no_data = dataLang['beranda']['no_data'];
+        ecm_approved = dataLang['beranda']['approved'];
+        ecm_declined = dataLang['beranda']['declined'];
+        ecm_pending = dataLang['beranda']['pending'];
       });
     }
   }
@@ -110,6 +117,9 @@ class _HomeState extends State<Home> {
         account = dataLang['beranda']['account'];
         loading = dataLang['beranda']['loading'];
         no_data = dataLang['beranda']['no_data'];
+        ecm_approved = dataLang['beranda']['approved'];
+        ecm_declined = dataLang['beranda']['declined'];
+        ecm_pending = dataLang['beranda']['pending'];
       });
     }
   }
@@ -188,6 +198,27 @@ class _HomeState extends State<Home> {
     }
   }
 
+  getCardStatus() async {
+    final SharedPreferences prefs = await _prefs;
+    String idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey").toString();
+    var url =
+        "http://app.ragdalion.com/ecm/public/api/home_cekecm?id_user=$idUser";
+    try {
+      final response = await http.get(Uri.parse(url), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $tokenUser'
+      });
+      setState(() {
+        cardStatus = json.decode(response.body)['data'];
+      });
+      return cardStatus;
+    } catch (err) {
+      print(err);
+      return null;
+    }
+  }
+
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
@@ -209,6 +240,7 @@ class _HomeState extends State<Home> {
     getRoleUser();
     setBahasa();
     setLang();
+    getCardStatus();
   }
 
   @override
@@ -442,6 +474,109 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  Visibility(
+                      visible: isVisibility,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(top: 8, right: 16, left: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                                padding: EdgeInsets.only(top: 8, bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(ecm_approved,
+                                        style: TextStyle(
+                                            color: Color(0xff72C885),
+                                            fontFamily: 'Rubik',
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400)),
+                                    Text(
+                                      cardStatus == null
+                                          ? "0"
+                                          : cardStatus['ecm_approved']
+                                              .toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Rubik',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  ],
+                                )),
+                            Divider(
+                              height: 3,
+                              color: Color(0xffE3E5E5),
+                            ),
+                            Container(
+                                padding: EdgeInsets.only(top: 8, bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      ecm_declined,
+                                      style: TextStyle(
+                                          color: Color(
+                                            0xffFB4949,
+                                          ),
+                                          fontFamily: 'Rubik',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    Text(
+                                      cardStatus == null
+                                          ? "0"
+                                          : cardStatus['ecm_reject'].toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Rubik',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  ],
+                                )),
+                            Divider(
+                              height: 3,
+                              color: Color(0xffE3E5E5),
+                            ),
+                            Container(
+                                padding: EdgeInsets.only(top: 8, bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      ecm_pending,
+                                      style: TextStyle(
+                                          color: Color(0xff979C9E),
+                                          fontFamily: 'Rubik',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    Text(
+                                      cardStatus == null
+                                          ? "0"
+                                          : cardStatus['ecm_masuk'].toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Rubik',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  ],
+                                )),
+                            Divider(
+                              height: 3,
+                              color: Color(0xffE3E5E5),
+                            ),
+                          ],
+                        ),
+                      )),
                   SizedBox(
                     height: 16,
                   ),
@@ -478,8 +613,8 @@ class _HomeState extends State<Home> {
                                   Text(
                                     sign_ecm,
                                     style: TextStyle(
-                                        fontFamily: 'Rubik',
                                         color: Colors.white,
+                                        fontFamily: 'Rubik',
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400),
                                   ),

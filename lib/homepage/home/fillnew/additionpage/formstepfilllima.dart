@@ -403,7 +403,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                'Note',
+                'Judgement',
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
               ),
