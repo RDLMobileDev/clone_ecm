@@ -358,9 +358,10 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   Future<List<MemberNameModel>> getListMemberName() async {
     final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    listNamaMember = await getDataMemberName(tokenUser);
-    return await getDataMemberName(tokenUser);
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser") ?? "";
+    listNamaMember = await getDataMemberName(tokenUser, idUser);
+    return await getDataMemberName(tokenUser, idUser);
   }
 
   void setFormStep1AfterChoosing() async {
