@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
+import 'package:e_cm/homepage/home/services/api_get_item_steptujuh.dart';
 import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddItemFillTujuh extends StatefulWidget {
   final bool? isFromUpdate;
   final String? partIdEcm;
-  const AddItemFillTujuh({Key? key, this.isFromUpdate, this.partIdEcm}) : super(key: key);
+  const AddItemFillTujuh({Key? key, this.isFromUpdate, this.partIdEcm})
+      : super(key: key);
 
   @override
   _AddItemFillTujuhState createState() => _AddItemFillTujuhState();
@@ -30,6 +32,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   TextEditingController costRpController = TextEditingController();
 
   List<PartItemMachineModel> listItemMachineData = [];
+  List itemPartStepTujuh = [];
 
   bool isTapPartItemMachineInput = false;
   bool enableSave = false;
@@ -145,14 +148,17 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     Map<String, dynamic> dataUpdateEcmPart = {};
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    dataUpdateEcmPart = await partItemMachineService.getDataForUpdateEcm(idDataEcm, tokenUser);
+    dataUpdateEcmPart =
+        await partItemMachineService.getDataForUpdateEcm(idDataEcm, tokenUser);
     print(idDataEcm);
 
     setState(() {
-      partNameController = TextEditingController(text: dataUpdateEcmPart['partname']);
+      partNameController =
+          TextEditingController(text: dataUpdateEcmPart['partname']);
       qtyStock = double.parse(dataUpdateEcmPart['stock']).toInt();
       qtyUsed = double.parse(dataUpdateEcmPart['used']).toInt();
-      costRpController = TextEditingController(text: dataUpdateEcmPart['harga'].toString());
+      costRpController =
+          TextEditingController(text: dataUpdateEcmPart['harga'].toString());
 
       subTotal = qtyUsed * double.parse(costRpController.text).toInt();
     });
@@ -163,7 +169,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     String tokenUser = prefs.getString("tokenKey").toString();
     String idEcmKey = prefs.getString("idEcm") ?? "";
 
-    listItemMachineData = await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
+    listItemMachineData =
+        await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
 
     return await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
   }
@@ -175,7 +182,10 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
     try {
       var resultUpdate = await partItemMachineService.saveUpdateFroEcm(
-          tokenUser, widget.partIdEcm!, qtyUsed.toString(), costRpController.text);
+          tokenUser,
+          widget.partIdEcm!,
+          qtyUsed.toString(),
+          costRpController.text);
       if (resultUpdate['response']['status'] == 200) {
         Fluttertoast.showToast(
           msg: 'Item berhasil diperbarui',
@@ -207,8 +217,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
     try {
       if (int.parse(qtyUsed) <= qtyStock) {
-        var result = await saveDataPartMachine(tokenUser, idEcmKey!, idMesin!, partNameController.text,
-            qtyStock.toString(), qtyUsed, costRpController.text);
+        var result = await saveDataPartMachine(
+            tokenUser,
+            idEcmKey!,
+            idMesin!,
+            partNameController.text,
+            qtyStock.toString(),
+            qtyUsed,
+            costRpController.text);
         if (result['response']['status'] == 200) {
           prefs.setString("sparePartBool", "1");
           Fluttertoast.showToast(
@@ -256,6 +272,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
         backgroundColor: Colors.greenAccent,
       );
     }
+  }
+
+  void getItemForStep7() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idEcmKey = prefs.getString("idEcm") ?? "";
+
+    itemPartStepTujuh = await getItemStepTujuh(tokenUser, idEcmKey);
   }
 
   @override
@@ -312,9 +336,15 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             fontSize: 16,
                           ),
                           children: <TextSpan>[
-                            TextSpan(text: part_name, style: TextStyle(color: Color(0xFF404446))),
-                            TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
-                            TextSpan(text: ':', style: TextStyle(color: Color(0xFF404446))),
+                            TextSpan(
+                                text: part_name,
+                                style: TextStyle(color: Color(0xFF404446))),
+                            TextSpan(
+                                text: ' * ',
+                                style: TextStyle(color: Colors.red)),
+                            TextSpan(
+                                text: ':',
+                                style: TextStyle(color: Color(0xFF404446))),
                           ],
                         ),
                       ),
@@ -324,7 +354,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                       height: 40,
                       decoration: BoxDecoration(
                           border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius: const BorderRadius.all(Radius.circular(5))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
                       child: TextFormField(
                         controller: partNameController,
                         style: const TextStyle(
@@ -335,7 +366,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             fontStyle: FontStyle.normal),
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(top: 10, left: 10),
-                            border: OutlineInputBorder(borderSide: BorderSide.none),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: type_name),
                       ),
                     ),
@@ -351,9 +383,15 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                 fontSize: 16,
                               ),
                               children: <TextSpan>[
-                                TextSpan(text: quantity_used, style: TextStyle(color: Color(0xFF404446))),
-                                TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
-                                TextSpan(text: ':', style: TextStyle(color: Color(0xFF404446))),
+                                TextSpan(
+                                    text: quantity_used,
+                                    style: TextStyle(color: Color(0xFF404446))),
+                                TextSpan(
+                                    text: ' * ',
+                                    style: TextStyle(color: Colors.red)),
+                                TextSpan(
+                                    text: ':',
+                                    style: TextStyle(color: Color(0xFF404446))),
                               ],
                             ),
                           ),
@@ -361,7 +399,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             width: 110,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Color(0xFF979C9E)),
-                                borderRadius: BorderRadius.all(Radius.circular(30))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -371,7 +410,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                       qtyUsed != 0 ? qtyUsed-- : null;
 
                                       int costRp =
-                                          costRpController.text.isNotEmpty ? int.parse(costRpController.text) : 0;
+                                          costRpController.text.isNotEmpty
+                                              ? int.parse(costRpController.text)
+                                              : 0;
 
                                       subTotal = qtyUsed * costRp;
 
@@ -385,7 +426,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                     height: 30,
                                     child: Icon(
                                       Icons.remove,
-                                      color: qtyUsed != 0 ? Color(0xFF20519F) : Color(0xFF979C9E),
+                                      color: qtyUsed != 0
+                                          ? Color(0xFF20519F)
+                                          : Color(0xFF979C9E),
                                     ),
                                   ),
                                 ),
@@ -401,7 +444,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                       qtyUsed++;
 
                                       int costRp =
-                                          costRpController.text.isNotEmpty ? int.parse(costRpController.text) : 0;
+                                          costRpController.text.isNotEmpty
+                                              ? int.parse(costRpController.text)
+                                              : 0;
 
                                       subTotal = qtyUsed * costRp;
 
@@ -435,9 +480,15 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                 fontSize: 16,
                               ),
                               children: <TextSpan>[
-                                TextSpan(text: quantity_stock, style: TextStyle(color: Color(0xFF404446))),
-                                TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
-                                TextSpan(text: ':', style: TextStyle(color: Color(0xFF404446))),
+                                TextSpan(
+                                    text: quantity_stock,
+                                    style: TextStyle(color: Color(0xFF404446))),
+                                TextSpan(
+                                    text: ' * ',
+                                    style: TextStyle(color: Colors.red)),
+                                TextSpan(
+                                    text: ':',
+                                    style: TextStyle(color: Color(0xFF404446))),
                               ],
                             ),
                           ),
@@ -445,7 +496,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             width: 110,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Color(0xFF979C9E)),
-                                borderRadius: BorderRadius.all(Radius.circular(30))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -463,7 +515,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                     height: 30,
                                     child: Icon(
                                       Icons.remove,
-                                      color: qtyStock != 0 ? Color(0xFF20519F) : Color(0xFF979C9E),
+                                      color: qtyStock != 0
+                                          ? Color(0xFF20519F)
+                                          : Color(0xFF979C9E),
                                     ),
                                   ),
                                 ),
@@ -508,9 +562,17 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   fontSize: 16,
                                 ),
                                 children: <TextSpan>[
-                                  TextSpan(text: cost, style: TextStyle(color: Color(0xFF404446))),
-                                  TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
-                                  TextSpan(text: ':', style: TextStyle(color: Color(0xFF404446))),
+                                  TextSpan(
+                                      text: cost,
+                                      style:
+                                          TextStyle(color: Color(0xFF404446))),
+                                  TextSpan(
+                                      text: ' * ',
+                                      style: TextStyle(color: Colors.red)),
+                                  TextSpan(
+                                      text: ':',
+                                      style:
+                                          TextStyle(color: Color(0xFF404446))),
                                 ],
                               ),
                             ),
@@ -520,14 +582,17 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             margin: const EdgeInsets.only(top: 5),
                             height: 50,
                             decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xFF979C9E)),
-                                borderRadius: const BorderRadius.all(Radius.circular(5))),
+                                border:
+                                    Border.all(color: const Color(0xFF979C9E)),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
                               controller: costRpController,
                               maxLength: 7,
                               onChanged: (value) {
                                 if (value.length <= 7) {
-                                  int costRp = value.isEmpty ? 0 : int.parse(value);
+                                  int costRp =
+                                      value.isEmpty ? 0 : int.parse(value);
 
                                   setState(() {
                                     subTotal = qtyUsed * costRp;
@@ -552,7 +617,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   contentPadding: EdgeInsets.only(
                                     top: 10,
                                   ),
-                                  border: OutlineInputBorder(borderSide: BorderSide.none),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
                                   hintText: type_cost),
                             ),
                           ),
@@ -566,7 +632,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 230),
                 padding: const EdgeInsets.only(top: 8, bottom: 8),
-                decoration: BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFCDCFD0)))),
+                decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: Color(0xFFCDCFD0)))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -579,11 +646,17 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           children: [
                             Text(
                               subtotal2,
-                              style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w700),
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700),
                             ),
                             Text(
                               subTotal.toString(),
-                              style: TextStyle(fontFamily: 'Rubik', fontSize: 16, fontWeight: FontWeight.w400),
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ],
                         ),
@@ -592,7 +665,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                     InkWell(
                       onTap: enableSave == true && widget.isFromUpdate == false
                           ? () {
-                              saveSparePart(qtyUsed.toString(), costRpController.text);
+                              saveSparePart(
+                                  qtyUsed.toString(), costRpController.text);
                             }
                           : enableSave == true && widget.isFromUpdate == true
                               ? () {
@@ -604,13 +678,18 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         width: MediaQuery.of(context).size.width,
                         height: 40,
                         decoration: BoxDecoration(
-                            color: enableSave == false ? Color(0xFF979C9E) : Color(0xFF00AEDB),
+                            color: enableSave == false
+                                ? Color(0xFF979C9E)
+                                : Color(0xFF00AEDB),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
                             save_sparepart,
                             style: TextStyle(
-                                fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
                       ),
