@@ -582,7 +582,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                // physics: NeverScrollableScrollPhysics(),
                                 itemCount:
                                     _listAll.isEmpty ? 0 : _listAll.length,
                                 itemBuilder: (context, i) {
@@ -801,7 +801,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                // physics: NeverScrollableScrollPhysics(),
                                 itemCount: _listMontly.isEmpty
                                     ? 0
                                     : _listMontly.length,
@@ -1091,7 +1091,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             )
                           : ListView.builder(
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              // physics: NeverScrollableScrollPhysics(),
                               itemCount:
                                   _listDaily.isEmpty ? 0 : _listDaily.length,
                               itemBuilder: (context, i) {
