@@ -199,188 +199,210 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
           physics: NeverScrollableScrollPhysics(),
           itemCount: _listApproved.length,
           itemBuilder: (context, i) {
-            return Container(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: const BoxDecoration(
-                        color: Color(0xFF00AEDB),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage("assets/images/ario.png"))),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
+            return Visibility(
+              visible: _listApproved[i].status != "null",
+              child: Container(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: const BoxDecoration(
+                          color: Color(0xFF00AEDB),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/ario.png"))),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                            ),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: 'E-CM Card from ',
+                                  style: TextStyle(color: Color(0xFF6C7072))),
+                              TextSpan(
+                                  text: _listApproved[i].nama.toString(),
+                                  style: TextStyle(
+                                      color: Color(0xFF00AEDB),
+                                      fontWeight: FontWeight.w700)),
+                            ],
                           ),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'E-CM Card from ',
-                                style: TextStyle(color: Color(0xFF6C7072))),
-                            TextSpan(
-                                text: _listApproved[i].nama.toString(),
-                                style: TextStyle(
-                                    color: Color(0xFF00AEDB),
-                                    fontWeight: FontWeight.w700)),
-                          ],
                         ),
-                      ),
-                      const Text(
-                        "1 hour ago",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 10,
-                            color: Color(0xFF979C9E)),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 22),
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DetailEcm(
-                                          notifId: _listApproved[i]
-                                              .notifEcmId
-                                              .toString(),
-                                        )));
-                              },
-                              child: Container(
-                                width: 70,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: const Color(0xFF00AEDB)),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(5))),
-                                child: const Center(
-                                  child: Text(
-                                    "Review",
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Visibility(
-                              visible: _listApproved[i].status != "2",
-                              child: Container(
-                                width: 70,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                    color: _listApproved[i].status != "1"
-                                        ? Color(0xFF00AEDB)
-                                        : Color(0xFF979C9E),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: _listApproved[i].status != "1"
-                                        ? () => showCustomDialog(
-                                              context: context,
-                                              assetPath:
-                                                  "assets/icons/Sign.png",
-                                              title: "Confirm",
-                                              message: "Yakin untuk menyetujui",
-                                              positiveButtonTitle: "Approved",
-                                              positiveCallback: () =>
-                                                  postUpdateStatus(
-                                                "1",
-                                                _listApproved[i]
-                                                    .notifEcmId
-                                                    .toString(),
-                                              ),
-                                            )
-                                        : () {},
+                        const Text(
+                          "1 hour ago",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 10,
+                              color: Color(0xFF979C9E)),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 22),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (_listApproved[i].status == "0") {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => DetailEcm(
+                                                  notifId: _listApproved[i]
+                                                      .notifEcmId
+                                                      .toString(),
+                                                  isShowButton: true,
+                                                )));
+                                  } else {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => DetailEcm(
+                                                  notifId: _listApproved[i]
+                                                      .notifEcmId
+                                                      .toString(),
+                                                  isShowButton: false,
+                                                )));
+                                  }
+                                },
+                                child: Container(
+                                  width: 70,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xFF00AEDB)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: const Center(
                                     child: Text(
-                                      _listApproved[i].status == "1"
-                                          ? "Approved"
-                                          : "Approve",
+                                      "Review",
                                       style: TextStyle(
                                           fontFamily: 'Rubik',
-                                          color: Colors.white,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Visibility(
-                              visible: _listApproved[i].status != "2",
-                              child: SizedBox(
+                              SizedBox(
                                 width: 8,
                               ),
-                            ),
-                            // Visibility(
-                            //   visible: _listApproved[i].status != "1",
-                            //   child: Container(
-                            //     width: 70,
-                            //     height: 32,
-                            //     decoration: BoxDecoration(
-                            //         color: _listApproved[i].status != "2"
-                            //             ? Color(0xFFFF0000)
-                            //             : Color(0xFF979C9E),
-                            //         borderRadius:
-                            //             BorderRadius.all(Radius.circular(5))),
-                            //     child: Center(
-                            //       child: TextButton(
-                            //         onPressed: _listApproved[i].status != "2"
-                            //             ? () => showCustomDialog(
-                            //                   context: context,
-                            //                   assetPath:
-                            //                       "assets/icons/Sign.png",
-                            //                   title: "Confirm",
-                            //                   message: "Yakin untuk menolak",
-                            //                   positiveButtonTitle: "Decline",
-                            //                   positiveCallback:
-                            //                       postUpdateStatus(
-                            //                     "2",
-                            //                     _listApproved[i]
-                            //                         .notifEcmId
-                            //                         .toString(),
-                            //                   ),
-                            //                 )
-                            //             : () {},
-                            //         child: Text(
-                            //           _listApproved[i].status == "2"
-                            //               ? "Declined"
-                            //               : "Decline",
-                            //           style: TextStyle(
-                            //               fontFamily: 'Rubik',
-                            //               color: Colors.white,
-                            //               fontSize: 12,
-                            //               fontWeight: FontWeight.w400),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                              Visibility(
+                                visible: _listApproved[i].status != "0",
+                                child: Container(
+                                  width: 70,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                      color: _listApproved[i].status == "1"
+                                          ? Colors.green
+                                          : _listApproved[i].status == "2"
+                                              ? Colors.redAccent
+                                              : Colors.transparent,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                  child: Center(
+                                    child: TextButton(
+                                      onPressed: () {},
+                                      // _listApproved[i].status != "1"
+                                      //     ? () => showCustomDialog(
+                                      //           context: context,
+                                      //           assetPath:
+                                      //               "assets/icons/Sign.png",
+                                      //           title: "Confirm",
+                                      //           message:
+                                      //               "Yakin untuk menyetujui",
+                                      //           positiveButtonTitle: "Approved",
+                                      //           positiveCallback: () =>
+                                      //               postUpdateStatus(
+                                      //             "1",
+                                      //             _listApproved[i]
+                                      //                 .notifEcmId
+                                      //                 .toString(),
+                                      //           ),
+                                      //         )
+                                      //     : () {},
+                                      child: Text(
+                                        _listApproved[i].status == "1"
+                                            ? "Approved"
+                                            : _listApproved[i].status == "2"
+                                                ? "Declined"
+                                                : " ",
+                                        style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: _listApproved[i].status != "2",
+                                child: SizedBox(
+                                  width: 8,
+                                ),
+                              ),
+                              // Visibility(
+                              //   visible: _listApproved[i].status != "1",
+                              //   child: Container(
+                              //     width: 70,
+                              //     height: 32,
+                              //     decoration: BoxDecoration(
+                              //         color: _listApproved[i].status != "2"
+                              //             ? Color(0xFFFF0000)
+                              //             : Color(0xFF979C9E),
+                              //         borderRadius:
+                              //             BorderRadius.all(Radius.circular(5))),
+                              //     child: Center(
+                              //       child: TextButton(
+                              //         onPressed: _listApproved[i].status != "2"
+                              //             ? () => showCustomDialog(
+                              //                   context: context,
+                              //                   assetPath:
+                              //                       "assets/icons/Sign.png",
+                              //                   title: "Confirm",
+                              //                   message: "Yakin untuk menolak",
+                              //                   positiveButtonTitle: "Decline",
+                              //                   positiveCallback:
+                              //                       postUpdateStatus(
+                              //                     "2",
+                              //                     _listApproved[i]
+                              //                         .notifEcmId
+                              //                         .toString(),
+                              //                   ),
+                              //                 )
+                              //             : () {},
+                              //         child: Text(
+                              //           _listApproved[i].status == "2"
+                              //               ? "Declined"
+                              //               : "Decline",
+                              //           style: TextStyle(
+                              //               fontFamily: 'Rubik',
+                              //               color: Colors.white,
+                              //               fontSize: 12,
+                              //               fontWeight: FontWeight.w400),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },
