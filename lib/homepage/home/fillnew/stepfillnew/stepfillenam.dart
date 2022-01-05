@@ -433,14 +433,17 @@ class _StepFillEnamState extends State<StepFillEnam> {
   Future<List<AllUserModel>> getAllUserData() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getUserAll(tokenUser);
+    String idUser = prefs.getString("idKeyUser") ?? "";
+
+    print("id user step 6: " + idUser);
+    var response = await getUserAll(tokenUser, idUser);
     if (response['response']['status'] == 200) {
       setState(() {
         var data = response['data'] as List;
         _listAllUser = data.map((e) => AllUserModel.fromJson(e)).toList();
         print("===== list username =====");
         for (int i = 0; i < _listAllUser.length; i++) {
-          print(_listAllUser[i].userName);
+          print(_listAllUser[i].userFullName);
         }
         print("===== || =====");
       });
@@ -556,7 +559,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
     if (namaImprovement != null &&
         idea != null &&
         outHouseMp != null &&
-        outHouseCost != null && breakHours != null && breakMinutes != null) {
+        outHouseCost != null &&
+        breakHours != null &&
+        breakMinutes != null) {
       setState(() {
         userNameController = TextEditingController(text: namaImprovement);
         ideaController = TextEditingController(text: idea);
@@ -672,12 +677,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
                               final SharedPreferences prefs = await _prefs;
                               prefs.setString("userName",
                                   _listAllUser[i].userId.toString());
-                              prefs.setString(
-                                  "namaImprovement", _listAllUser[i].userName!);
+                              prefs.setString("namaImprovement",
+                                  _listAllUser[i].userFullName!);
                               prefs.setString("userNameBool", "1");
                               setState(() {
                                 userNameController = TextEditingController(
-                                    text: _listAllUser[i].userName);
+                                    text: _listAllUser[i].userFullName);
                                 isTapedUserName = !isTapedUserName;
                               });
                               // getMachineNumberbyId(_listAllUser[i].idMesin);
@@ -686,7 +691,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             child: Container(
                                 margin: EdgeInsets.only(bottom: 8, top: 8),
                                 child: Text(
-                                  (_listAllUser[i].userName).toString(),
+                                  (_listAllUser[i].userFullName).toString(),
                                   style: TextStyle(
                                       fontFamily: 'Rubik',
                                       fontSize: 14,

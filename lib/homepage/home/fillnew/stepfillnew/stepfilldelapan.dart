@@ -107,6 +107,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
   void setLang() async {
     final prefs = await _prefs;
+    prefs.setString("copyToBool", "0");
     var langSetting = prefs.getString("bahasa") ?? "";
     print(langSetting);
 
