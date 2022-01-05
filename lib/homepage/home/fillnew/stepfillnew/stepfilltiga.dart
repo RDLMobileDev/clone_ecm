@@ -323,15 +323,6 @@ class _StepFillTigaState extends State<StepFillTiga> {
                       color: Color(0xFFFFFFFF),
                       fontSize: 14,
                       fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
                 ),
               ),
               children: <Widget>[
