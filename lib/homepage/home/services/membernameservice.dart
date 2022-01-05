@@ -6,11 +6,12 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/membername.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<MemberNameModel>> getDataMemberName(String token) async {
+Future<List<MemberNameModel>> getDataMemberName(
+    String token, String idUser) async {
   List<MemberNameModel> _listDataMember = [];
 
   String myUrl = MyUrl().getUrlDevice();
-  Uri url = Uri.parse("$myUrl/get_usersemua");
+  Uri url = Uri.parse("$myUrl/get_usersemua?id_user=$idUser");
 
   try {
     final response = await http.get(url, headers: {
