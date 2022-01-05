@@ -264,9 +264,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   void fetchAllUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? tokenUser = prefs.getString("tokenKey").toString();
-
+    String idUser = prefs.getString("idKeyUser").toString();
     try {
-      var result = await getUserAll(tokenUser);
+      var result = await getUserAll(tokenUser, idUser);
 
       print(result);
 

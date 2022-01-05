@@ -62,6 +62,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   String cancel = '';
   String next_two = '';
 
+  String filterTeamMember = "";
+
   void setBahasa() async {
     final prefs = await _prefs;
     String bahasaBool = prefs.getString("bahasa") ?? "";

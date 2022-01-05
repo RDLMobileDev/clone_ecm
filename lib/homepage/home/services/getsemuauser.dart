@@ -6,9 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future getUserAll(String token) async {
+Future getUserAll(String token, String idUser) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url = "$myUrl/get_usersemua";
+  String url = "$myUrl/get_usersemua?id_user=$idUser";
   try {
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',

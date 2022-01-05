@@ -219,7 +219,6 @@ class _FillNewState extends State<FillNew> {
             prefs.getString("timeBool")!.isNotEmpty &&
             prefs.getString("ketikProblemBool")!.isNotEmpty &&
             prefs.getString("typeProblemBool")!.isNotEmpty &&
-            prefs.getString("percentBool")!.isNotEmpty &&
             prefs.getString("imageUploadBool")!.isNotEmpty) {
           _stepFillDua.getSaveFillDua();
           setState(() {
@@ -239,7 +238,6 @@ class _FillNewState extends State<FillNew> {
       if (_currentStep == 2) {
         if (prefs.getString("whyBool1")!.isNotEmpty &&
             prefs.getString("whyBool2")!.isNotEmpty &&
-            prefs.getString("whyBool3")!.isNotEmpty &&
             prefs.getString("howBool")!.isNotEmpty) {
           _stepFillTiga.getSaveStepFillTiga();
           setState(() {
@@ -341,7 +339,8 @@ class _FillNewState extends State<FillNew> {
         setState(() {
           textNext = 'Finish';
         });
-        if (prefs.getString("copyToBool")!.isNotEmpty) {
+        if (prefs.getString("copyToBool")!.isNotEmpty &&
+            prefs.getString("copyToBool") == "0") {
           var res = _stepFillDelapan.getMethodPostStep();
 
           String idUser = prefs.getString("idKeyUser").toString();
