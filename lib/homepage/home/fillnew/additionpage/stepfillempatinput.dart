@@ -709,7 +709,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               margin: EdgeInsets.only(top: 10),
               child: RichText(
                 text: TextSpan(
-                  text: 'Note ',
+                  text: 'Judgement ',
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFF404446),
