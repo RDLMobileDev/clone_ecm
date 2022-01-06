@@ -770,6 +770,7 @@ class StepFillDuaState extends State<StepFillDua> {
               child: TextFormField(
                 controller: problemTypeController,
                 maxLines: 5,
+                maxLength: 500,
                 onChanged: (value) async {
                   final prefs = await _prefs;
                   prefs.setString("problemTypeState", value);
