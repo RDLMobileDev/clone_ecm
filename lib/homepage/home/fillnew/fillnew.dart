@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
 
@@ -521,14 +521,14 @@ class _FillNewState extends State<FillNew> {
       }
     } catch (e) {
       print("fill new error -> $e");
-      Fluttertoast.showToast(
-          msg: 'Anda berada di step ${_currentStep + 1}, form diisi semua',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+      // Fluttertoast.showToast(
+      //     msg: 'Anda berada di step ${_currentStep + 1}, form diisi semua',
+      //     toastLength: Toast.LENGTH_LONG,
+      //     gravity: ToastGravity.BOTTOM,
+      //     timeInSecForIosWeb: 2,
+      //     backgroundColor: Colors.greenAccent,
+      //     textColor: Colors.white,
+      //     fontSize: 16);
     }
   }
 
@@ -756,7 +756,11 @@ class _FillNewState extends State<FillNew> {
             )),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
               icon: Icon(
                 Icons.info_outline,
                 color: Colors.white,
@@ -841,4 +845,117 @@ class _FillNewState extends State<FillNew> {
       ),
     );
   }
+
+  void showCustomDialog(BuildContext context) => showDialog(
+        builder: (context) => Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            height: 250,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  // color: Colors.redAccent,
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Informasi",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Simbol",
+                            style: TextStyle(fontFamily: 'Rubik', fontSize: 12),
+                          ),
+                          Text(
+                            "*",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 14,
+                                color: Colors.redAccent),
+                          ),
+                          Text(
+                            "(wajib diisi)",
+                            style: TextStyle(fontFamily: 'Rubik', fontSize: 12),
+                          )
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        height: 1,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.grey,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Rule line stop",
+                          style: TextStyle(fontFamily: 'Rubik', fontSize: 12),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(left: 20),
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("1. > 10 menit = G/L wajib tanda tangan",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik', fontSize: 12)),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text("2.  > 15 menit = C/L wajib tanda tangan",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik', fontSize: 12)),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                  "3. > 20 menit = MGR wajib tanda tangan + cost > Juta",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik', fontSize: 12)),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text("4.  > 40 menit = GM wajib tanda tangan",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik', fontSize: 12)),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10, right: 10),
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  // color: Colors.greenAccent,
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Icon(Icons.clear_rounded)),
+                ),
+              ],
+            ),
+          ),
+        ),
+        context: context,
+        barrierDismissible: false,
+      );
 }
