@@ -213,7 +213,8 @@
       "validation_delete": "Are you sure want to delete item?",
       "cancel": "Cancel",
       "delete": "Delete",
-      "next_six": "Next 6/8"
+      "next_six": "Next 6/8",
+      "item_name": "Item Name"
     },
     "step_4": {
       "item_checking": "Item Checking",
@@ -234,7 +235,6 @@
       "hm": "HH:MM",
       "end_time": "End Time",
       "name": "Name",
-      "type_name": "Type Name",
       "save_checking": "Save Checking",
       "checking_time": "Checking Time :",
       "total_checking": "Total Checking Time :",
