@@ -198,12 +198,12 @@
       "ok": "OK",
       "limit": "Limit",
       "ng": "N/G",
-      "starttime": "Start Time",
+      "starttime": "Waktu Awal",
       "hm": "HH:MM",
-      "end_time": "End Time",
+      "end_time": "Waktu Akhir",
       "name": "Nama",
       "type_name": "Tulis Nama",
-      "repair_made": "Perbaikan yang dilakukan",
+      "repair_made": "Tindakan Perbaikan",
       "type_message": "Tulis pesan..",
       "save_repair": "Simpan Perbaikan",
       "repair_time": "Waktu Perbaikan :",
@@ -213,7 +213,8 @@
       "validation_delete": "Anda yakin ingin menghapus item?",
       "cancel": "Batal",
       "delete": "Hapus",
-      "next_six": "Lanjut 6/8"
+      "next_six": "Lanjut 6/8",
+      "item_name": "Nama Item"
     },
     "step_4": {
       "item_checking": "Pengecekan Item",
@@ -234,7 +235,6 @@
       "hm": "HH:MM",
       "end_time": "End Time",
       "name": "Nama",
-      "type_name": "Tulis Nama",
       "save_checking": "Simpan Pengecekan",
       "checking_time": "Waktu Pengecekan :",
       "total_checking": "Total Waktu Pengecekan :",

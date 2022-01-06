@@ -197,14 +197,14 @@ class _StepFillLimaState extends State<StepFillLima> {
         exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
       }
 
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+      // Fluttertoast.showToast(
+      //     msg: exceptionMessage,
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     timeInSecForIosWeb: 2,
+      //     backgroundColor: Colors.greenAccent,
+      //     textColor: Colors.white,
+      //     fontSize: 16);
     }
   }
 
