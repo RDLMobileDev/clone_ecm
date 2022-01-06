@@ -255,6 +255,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
       switch (result['response']['status']) {
         case 200:
+          prefs.setString("itemRepairBool", "1");
           Navigator.of(context).pop(true);
           break;
         default:
