@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/item_checking.dart';
@@ -9,6 +10,7 @@ import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -108,6 +110,148 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     }
   }
 
+  //set Bahasa
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String item_repairing = '';
+  String validation_repair = '';
+  String add_item = '';
+  String item_repair = '';
+  String item_name = '';
+  String type_name_item = '';
+  String note = '';
+  String ok = '';
+  String limit = '';
+
+  String ng = '';
+  String starttime = '';
+  String hm = '';
+  String end_time = '';
+  String name = '';
+  String type_name = '';
+
+  String repair_made = '';
+  String type_message = '';
+  String save_repair = '';
+  String repair_time = '';
+  String total_repair = '';
+  String back = '';
+  String confirm = '';
+  String delete = '';
+  String validation_delete = '';
+  String cancel = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        item_name = dataLang['step_5']['item_name'];
+        item_repair = dataLang['step_5']['item_repair'];
+        validation_repair = dataLang['step_5']['validation_repair'];
+        add_item = dataLang['step_5']['add_item'];
+        item_repairing = dataLang['step_5']['item_repairing'];
+        type_name_item = dataLang['step_5']['type_name_item'];
+
+        note = dataLang['step_5']['note'];
+        ok = dataLang['step_5']['ok'];
+        limit = dataLang['step_5']['limit'];
+        ng = dataLang['step_5']['ng'];
+        starttime = dataLang['step_5']['starttime'];
+        hm = dataLang['step_5']['hm'];
+        end_time = dataLang['step_5']['end_time'];
+        name = dataLang['step_5']['name'];
+        type_name = dataLang['step_5']['type_name'];
+
+        repair_made = dataLang['step_5']['repair_made'];
+        type_message = dataLang['step_5']['type_message'];
+        save_repair = dataLang['step_5']['save_repair'];
+        repair_time = dataLang['step_5']['repair_time'];
+        total_repair = dataLang['step_5']['total_repair'];
+
+        back = dataLang['step_5']['back'];
+        confirm = dataLang['step_5']['confirm'];
+        validation_delete = dataLang['step_5']['validation_delete'];
+        cancel = dataLang['step_5']['cancel'];
+        delete = dataLang['step_5']['delete'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      item_name = dataLang['step_5']['item_name'];
+      item_repair = dataLang['step_5']['item_repair'];
+      validation_repair = dataLang['step_5']['validation_repair'];
+      add_item = dataLang['step_5']['add_item'];
+      item_repairing = dataLang['step_5']['item_repairing'];
+      type_name_item = dataLang['step_5']['type_name_item'];
+
+      note = dataLang['step_5']['note'];
+      ok = dataLang['step_5']['ok'];
+      limit = dataLang['step_5']['limit'];
+      ng = dataLang['step_5']['ng'];
+      starttime = dataLang['step_5']['starttime'];
+      hm = dataLang['step_5']['hm'];
+      end_time = dataLang['step_5']['end_time'];
+      name = dataLang['step_5']['name'];
+      type_name = dataLang['step_5']['type_name'];
+
+      repair_made = dataLang['step_5']['repair_made'];
+      type_message = dataLang['step_5']['type_message'];
+      save_repair = dataLang['step_5']['save_repair'];
+      repair_time = dataLang['step_5']['repair_time'];
+      total_repair = dataLang['step_5']['total_repair'];
+
+      back = dataLang['step_5']['back'];
+      confirm = dataLang['step_5']['confirm'];
+      validation_delete = dataLang['step_5']['validation_delete'];
+      cancel = dataLang['step_5']['cancel'];
+      delete = dataLang['step_5']['delete'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   void getStep4Data() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
@@ -131,7 +275,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           break;
         default:
           Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checkings',
+              msg: 'Gagal mendapat daftar item checking',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -316,6 +460,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   @override
   void initState() {
     super.initState();
+    setBahasa();
+    setLang();
 
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
@@ -349,7 +495,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: Text(
-                'Item Name',
+                item_name,
                 textAlign: TextAlign.left,
                 style: const TextStyle(fontSize: 16, fontFamily: 'Rubik'),
               ),
@@ -568,7 +714,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                'Start Time',
+                starttime,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
               ),
@@ -618,7 +764,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                'End Time',
+                end_time,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
               ),
@@ -668,7 +814,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                'Name',
+                name,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
               ),
@@ -681,7 +827,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 keyboardType: TextInputType.text,
                 readOnly: true,
                 showCursor: false,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -692,7 +838,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                       color: Colors.grey,
                       size: 30,
                     ),
-                    hintText: 'Type Name'),
+                    hintText: type_name),
                 maxLines: 1,
                 controller: TextEditingController(text: _username),
                 onChanged: (value) {
@@ -708,7 +854,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                'Repair made',
+                repair_made,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
               ),
@@ -719,7 +865,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 controller: repairMadeController,
                 maxLines: 5,
                 decoration: InputDecoration(
-                  hintText: 'Type message...',
+                  hintText: type_message,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF979C9E)),
                     borderRadius: BorderRadius.all(
