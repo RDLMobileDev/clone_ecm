@@ -72,6 +72,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String endTimeStep5 = prefs.getString("endTimeStep5") ?? "";
     String repairMade = prefs.getString("repairMade") ?? "";
 
+    formValidations.updateAll((key, value) => true);
+
     if (itemNameStepLima.isNotEmpty && itemNameStepLima != "") {
       tecName = TextEditingController(text: itemNameStepLima);
     }
@@ -326,6 +328,20 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       },
     ).then((value) {
       setState(() {
+        if (_isEndTimeGreaterThanStart(
+            endTimePickerController!.text, value!.format(context))) {
+          Fluttertoast.showToast(
+            msg: "Start time harus lebih kecil dari end time",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+          return;
+        }
+
         formValidations["start"] = true;
         startTimePickerController =
             TextEditingController(text: value!.format(context));
@@ -920,7 +936,9 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     } else {}
                   },
                   child: Text(
-                    'Save Repairing',
+                    widget.isUpdate == true
+                        ? 'Edit Repairing'
+                        : 'Save Repairing',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Rubik',
