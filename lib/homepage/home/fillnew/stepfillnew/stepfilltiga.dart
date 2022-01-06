@@ -238,6 +238,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               ),
               children: <Widget>[
                 TextFormField(
+                  maxLength: 500,
                   controller: why1Controller,
                   onChanged: (value) async {
                     final prefs = await _prefs;
@@ -287,6 +288,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               ),
               children: <Widget>[
                 TextFormField(
+                  maxLength: 500,
                   onChanged: (value) async {
                     final prefs = await _prefs;
                     setState(() {
@@ -317,7 +319,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               collapsedTextColor: Colors.black,
               title: RichText(
                 text: TextSpan(
-                  text: 'Why 3',
+                  text: 'Why 3 (Optional)',
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Color(0xFFFFFFFF),
@@ -327,6 +329,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               ),
               children: <Widget>[
                 TextFormField(
+                  maxLength: 500,
                   controller: why3Controller,
                   onChanged: (value) async {
                     final prefs = await _prefs;
@@ -362,6 +365,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               ),
               children: <Widget>[
                 TextFormField(
+                  maxLength: 500,
                   controller: why4Controller,
                   onChanged: (value) async {
                     final prefs = await _prefs;
@@ -405,6 +409,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
               child: TextFormField(
+                maxLength: 500,
                 controller: howController,
                 onChanged: (value) async {
                   final prefs = await _prefs;
