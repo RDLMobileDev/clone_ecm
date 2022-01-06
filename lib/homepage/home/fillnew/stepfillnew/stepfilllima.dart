@@ -344,16 +344,10 @@ class _StepFillLimaState extends State<StepFillLima> {
     return result;
   }
 
-  void setBoolFinishStep5() async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString("itemRepairBool", "0");
-  }
-
   @override
   void initState() {
     super.initState();
     getDataItemRepairing();
-    setBoolFinishStep5();
     setLang();
     setBahasa();
   }
@@ -387,7 +381,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                       child: Column(
                         children: [
                           Image.asset(
-                            "assets/images/empty.png",
+                            "assets/images/checking.png",
                             width: 250,
                           ),
                           Center(

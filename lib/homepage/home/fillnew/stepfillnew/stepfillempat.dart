@@ -173,7 +173,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
   List<ItemChecking> _listItemChecking = [];
 
-  void getDataItemChecking() async {
+  Future<List> getDataItemChecking() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm") ?? "-";
@@ -192,6 +192,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                 .map((e) => ItemChecking.fromJson(e))
                 .toList();
           });
+
           break;
         default:
           setState(() {
@@ -199,6 +200,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           });
           break;
       }
+
+      return _listItemChecking;
     } catch (e) {
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -217,6 +220,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           fontSize: 16);
+      return [];
     }
   }
 
@@ -385,16 +389,10 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     );
   }
 
-  void setBoolItemStep4() async {
-    final prefs = await _prefs;
-    prefs.setString("itemStep4Bool", "0");
-  }
-
   @override
   void initState() {
     super.initState();
     getDataItemChecking();
-    setBoolItemStep4();
     setLang();
     setBahasa();
   }
@@ -438,7 +436,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       child: Column(
                         children: [
                           Image.asset(
-                            "assets/images/empty.png",
+                            "assets/images/repair.png",
                             width: 250,
                           ),
                           Center(
@@ -454,96 +452,106 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       ),
                     )
                   : Container(
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: _listItemChecking.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_listItemChecking[i].partNama ?? "-",
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    )),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                          "$checking_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
-                                          style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                    Container(
-                                      width: 60,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              bool isInputted = await Navigator
-                                                      .of(context)
-                                                  .push(MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          StepFillEmpatInput(
-                                                            ecmItemId:
-                                                                _listItemChecking[
-                                                                        i]
-                                                                    .ecmitemId
-                                                                    .toString(),
-                                                          )));
+                      child: FutureBuilder(
+                        future: getDataItemChecking(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(child: CircularProgressIndicator());
+                          }
 
-                                              if (isInputted) {
-                                                // setState(() => );
-                                                getDataItemChecking();
-                                              }
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/akar-icons_edit.png",
-                                              width: 20,
-                                            ),
+                          return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _listItemChecking.length,
+                            itemBuilder: (context, i) {
+                              return Container(
+                                padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Column(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_listItemChecking[i].partNama ?? "-",
+                                        style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 14,
+                                        )),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                              "$checking_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
+                                              style: TextStyle(
+                                                fontFamily: 'Rubik',
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14,
+                                              )),
+                                        ),
+                                        Container(
+                                          width: 60,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: () async {
+                                                  bool isInputted = await Navigator
+                                                          .of(context)
+                                                      .push(MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              StepFillEmpatInput(
+                                                                ecmItemId:
+                                                                    _listItemChecking[
+                                                                            i]
+                                                                        .ecmitemId
+                                                                        .toString(),
+                                                              )));
+
+                                                  if (isInputted) {
+                                                    // setState(() => );
+                                                    getDataItemChecking();
+                                                  }
+                                                },
+                                                child: Image.asset(
+                                                  "assets/icons/akar-icons_edit.png",
+                                                  width: 20,
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  confirmDelete(
+                                                      _listItemChecking[i]
+                                                          .ecmitemId
+                                                          .toString());
+                                                },
+                                                child: Image.asset(
+                                                  "assets/icons/trash.png",
+                                                  width: 20,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              confirmDelete(_listItemChecking[i]
-                                                  .ecmitemId
-                                                  .toString());
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/trash.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        )
+                                      ],
                                     )
                                   ],
-                                )
-                              ],
-                            ),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),
