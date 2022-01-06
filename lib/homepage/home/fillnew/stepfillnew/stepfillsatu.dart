@@ -489,15 +489,15 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       _listClassification[i].nama);
                                   prefs.setString("classBool", "1");
                                 });
-                                Fluttertoast.showToast(
-                                    msg:
-                                        'Anda memilih ${_listClassification[i].nama}',
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: Colors.greenAccent,
-                                    textColor: Colors.white,
-                                    fontSize: 16);
+                                // Fluttertoast.showToast(
+                                //     msg:
+                                //         'Anda memilih ${_listClassification[i].nama}',
+                                //     toastLength: Toast.LENGTH_LONG,
+                                //     gravity: ToastGravity.BOTTOM,
+                                //     timeInSecForIosWeb: 2,
+                                //     backgroundColor: Colors.greenAccent,
+                                //     textColor: Colors.white,
+                                //     fontSize: 16);
                                 // print(prefs.getString("idClassification"));
                               },
                               child: Container(
