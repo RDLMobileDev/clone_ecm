@@ -118,10 +118,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
     print(why1);
 
     try {
-      if (why1.isNotEmpty &&
-          why2.isNotEmpty &&
-          why3.isNotEmpty &&
-          how.isNotEmpty) {
+      if (why1.isNotEmpty && why2.isNotEmpty && how.isNotEmpty) {
         var result = await fillNewTiga(
             why1, why2, why3, why4, why5, how, ecmId, tokenUser);
         print(result);
@@ -162,7 +159,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
     String? why4 = prefs.getString("why4");
     String? howC = prefs.getString("howC");
 
-    if (why1 != null && why2 != null && why3 != null && howC != null) {
+    if (why1 != null && why2 != null && howC != null) {
       why1Controller = TextEditingController(text: why1);
       why2Controller = TextEditingController(text: why2);
       why3Controller = TextEditingController(text: why3);
