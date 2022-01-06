@@ -326,8 +326,11 @@ class StepFillSatuState extends State<StepFillSatu> {
     try {
       final SharedPreferences prefs = await _prefs;
       String? tokenUser = prefs.getString("tokenKey").toString();
-      _listGroupArea = await locationService.getAreaGroupList(tokenUser);
-      return await locationService.getAreaGroupList(tokenUser);
+      String idLokasi = prefs.getString("locationId") ?? "";
+      print(idLokasi);
+      _listGroupArea =
+          await locationService.getAreaGroupList(tokenUser, idLokasi);
+      return await locationService.getAreaGroupList(tokenUser, idLokasi);
     } catch (e) {
       print(e);
       return [];
@@ -338,10 +341,12 @@ class StepFillSatuState extends State<StepFillSatu> {
     try {
       final SharedPreferences prefs = await _prefs;
       String? tokenUser = prefs.getString("tokenKey").toString();
-      _listMachineName = await machineNameService.getMachineName(tokenUser);
+      String idGroupArea = prefs.getString("locationIdGroup") ?? "";
+      _listMachineName =
+          await machineNameService.getMachineName(tokenUser, idGroupArea);
       print("data nama mesin: ");
       print(_listMachineName.length);
-      return await machineNameService.getMachineName(tokenUser);
+      return await machineNameService.getMachineName(tokenUser, idGroupArea);
     } catch (e) {
       print(e);
       return [];
@@ -1045,17 +1050,6 @@ class StepFillSatuState extends State<StepFillSatu> {
                 setState(() {
                   isTappedMachineNumber = !isTappedMachineNumber;
                 });
-
-                if (_listMachineNumber.isEmpty) {
-                  Fluttertoast.showToast(
-                      msg: 'Pilih nama mesin dahulu',
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
-                      backgroundColor: Colors.greenAccent,
-                      textColor: Colors.white,
-                      fontSize: 16);
-                }
               },
               onChanged: (value) async {
                 final prefs = await _prefs;
@@ -1088,7 +1082,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            // physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _listMachineNumber.length,
                             itemBuilder: (context, i) {
@@ -1099,8 +1093,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                         _listMachineNumber[i].numberOfMachine);
                                     prefs.setString("machineDetailBool", "1");
                                     setState(() {
-                                      idMachineFromName =
-                                          _listMachineName[i].idMesin;
+                                      // idMachineFromName =
+                                      //     _listMachineName[i].idMesin;
                                       machineNumberController =
                                           TextEditingController(
                                               text: _listMachineNumber[i]

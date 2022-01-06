@@ -382,6 +382,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
           _mp = int.parse(stepEnamModel.mP.toString());
         });
 
+        print(stepEnamModel.checkH);
+
         String minuteCheck = stepEnamModel.checkM.toString().length == 1
             ? "0" + stepEnamModel.checkM.toString()
             : stepEnamModel.checkM.toString();
@@ -797,7 +799,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       child: Text(
                         stepEnamModel.checkH.toString() == "null"
                             ? "0 H"
-                            : stepEnamModel.checkM.toString() + " H",
+                            : stepEnamModel.checkH.toString() + " H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -944,21 +946,21 @@ class _StepFillEnamState extends State<StepFillEnam> {
                           fontWeight: FontWeight.w400),
                       children: const <TextSpan>[
                         TextSpan(
-                            text: '*',
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w400)),
-                        TextSpan(
-                            text: ' :',
+                            text: ' (H)',
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 fontSize: 16,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400)),
                         TextSpan(
-                            text: ' (H)',
+                            text: ' *',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                        TextSpan(
+                            text: ':',
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 fontSize: 16,

@@ -21,6 +21,7 @@ class HistoryEcmService {
 
       var dataHistory = json.decode(response.body);
 
+      print("Data history:");
       print(dataHistory);
 
       if (dataHistory['data'] != null) {

@@ -339,8 +339,10 @@ class _FillNewState extends State<FillNew> {
         setState(() {
           textNext = 'Finish';
         });
-        if (prefs.getString("copyToBool")!.isNotEmpty &&
-            prefs.getString("copyToBool") == "0") {
+        if ((prefs.getString("copyToBool")!.isNotEmpty &&
+                prefs.getString("copyToBool") == "0") ||
+            prefs.getString("copyToBool")!.isNotEmpty &&
+                prefs.getString("copyToBool") == "1") {
           var res = _stepFillDelapan.getMethodPostStep();
 
           String idUser = prefs.getString("idKeyUser").toString();
