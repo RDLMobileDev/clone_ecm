@@ -336,7 +336,7 @@ class _AccountMemberState extends State<AccountMember> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: AssetImage("assets/images/sudin.png"))),
+                              image: AssetImage("assets/images/sehun.jpg"))),
                     ),
                     SizedBox(width: 10),
                     Column(

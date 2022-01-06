@@ -245,7 +245,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               Navigator.pop(context);
             }),
         title: Text(
-          "Preventive Maintances",
+          "Preventive Maintenance",
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,

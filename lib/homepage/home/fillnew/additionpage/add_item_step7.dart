@@ -358,6 +358,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               const BorderRadius.all(Radius.circular(5))),
                       child: TextFormField(
                         controller: partNameController,
+                        maxLength: 50,
                         style: const TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF404446),
