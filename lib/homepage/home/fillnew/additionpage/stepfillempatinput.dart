@@ -536,6 +536,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   fieldViewBuilder: (context, textEditingController, focusNode,
                       onFieldSubmitted) {
                     return TextFormField(
+                      maxLength: 50,
                       controller: textEditingController,
                       focusNode: focusNode,
                       decoration: InputDecoration(
@@ -641,6 +642,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               height: 40,
               margin: const EdgeInsets.only(top: 10),
               child: TextField(
+                maxLength: 50,
                 controller: tecStandard,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
@@ -688,6 +690,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               height: 40,
               margin: EdgeInsets.only(top: 10),
               child: TextField(
+                maxLength: 50,
                 controller: tecActual,
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
