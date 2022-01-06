@@ -448,6 +448,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _username = prefs.getString("usernameKey") ?? "";
+      usernameStepLima = TextEditingController(text: _username);
       formValidations["name"] = true;
       formValue["name"] = _username;
     });
@@ -472,7 +473,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
       Future.delayed(Duration(seconds: 3), () => getStep4Data());
-      getUsernameSession();
+      // getUsernameSession();
     } else {
       Future.delayed(Duration(seconds: 3), () => getStep4Data());
     }
