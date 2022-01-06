@@ -1048,7 +1048,7 @@ class StepFillDuaState extends State<StepFillDua> {
             ),
 
             // percentage mistake
-            checkKlasifikasiType == "Breakdown Maintenance"
+            checkKlasifikasiType != "Breakdown Maintenance"
                 ? Container()
                 : Container(
                     child: Column(
