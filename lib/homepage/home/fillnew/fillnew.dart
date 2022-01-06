@@ -261,28 +261,12 @@ class _FillNewState extends State<FillNew> {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-        } else if (itemStep4Bool.isNotEmpty && itemStep4Bool == "0") {
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-          // Fluttertoast.showToast(
-          //     msg: 'Tambahkan item dahulu',
-          //     toastLength: Toast.LENGTH_SHORT,
-          //     gravity: ToastGravity.BOTTOM,
-          //     timeInSecForIosWeb: 2,
-          //     fontSize: 16);
         }
       }
 
       if (_currentStep == 4) {
         String? itemRepairBool = prefs.getString("itemRepairBool");
         if (itemRepairBool!.isNotEmpty && itemRepairBool == "1") {
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        } else if (itemRepairBool.isNotEmpty && itemRepairBool == "0") {
           setState(() {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
