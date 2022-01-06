@@ -52,6 +52,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   String selectmember = '';
   String factory = '';
   String select_factory = '';
+  String select_factory_group = '';
   String group_area = '';
   String select_group_area = '';
 
@@ -101,6 +102,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         selectmember = dataLang['step_1']['selectmember'];
         factory = dataLang['step_1']['factory'];
         select_factory = dataLang['step_1']['select_factory'];
+        select_factory_group = dataLang['step_1']['select_factory_group'];
 
         group_area = dataLang['step_1']['group_area'];
         select_group_area = dataLang['step_1']['select_group_area'];
@@ -130,6 +132,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         selectmember = dataLang['step_1']['selectmember'];
         factory = dataLang['step_1']['factory'];
         select_factory = dataLang['step_1']['select_factory'];
+        select_factory_group = dataLang['step_1']['select_factory_group'];
 
         group_area = dataLang['step_1']['group_area'];
         select_group_area = dataLang['step_1']['select_group_area'];
@@ -874,7 +877,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: select_factory,
+                  hintText: select_factory_group,
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
