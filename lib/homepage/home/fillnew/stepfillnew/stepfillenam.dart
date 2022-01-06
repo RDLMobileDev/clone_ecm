@@ -380,6 +380,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
           _limitIncreamentH = int.parse(stepEnamModel.hasilRepairH.toString());
           _limitIncreamentM = int.parse(stepEnamModel.hasilRepairM.toString());
           _mp = int.parse(stepEnamModel.mP.toString());
+          costOutHouseController =
+              TextEditingController(text: stepEnamModel.outHouseRp);
         });
 
         print(stepEnamModel.checkH);
@@ -1640,6 +1642,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   prefs.setString("outHouseCostBool", "1");
                                 },
                                 controller: costOutHouseController,
+                                readOnly: true,
                                 maxLength: 9,
                                 inputFormatters: <TextInputFormatter>[
                                   CurrencyTextInputFormatter(

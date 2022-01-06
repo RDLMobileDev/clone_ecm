@@ -31,6 +31,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   TextEditingController repairMadeController = TextEditingController();
   final TextEditingController tecItem = TextEditingController();
   TextEditingController tecName = TextEditingController();
+  TextEditingController usernameStepLima = TextEditingController();
   List<ItemChecking> _listData = [];
   String _username = "";
 
@@ -108,6 +109,11 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     if (repairMade.isNotEmpty && repairMade != "") {
       repairMadeController = TextEditingController(text: repairMade);
     }
+
+    setState(() {
+      _username = prefs.getString("usernameKey") ?? "";
+      usernameStepLima = TextEditingController(text: _username);
+    });
   }
 
   //set Bahasa
@@ -207,7 +213,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
     if (mounted) {
       setState(() {});
-      item_name = dataLang['step_5']['item_name'];
+      item_name = dataLang['step_5']['item_name'] ?? "Item Name";
       item_repair = dataLang['step_5']['item_repair'];
       validation_repair = dataLang['step_5']['validation_repair'];
       add_item = dataLang['step_5']['add_item'];
@@ -465,6 +471,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
+      Future.delayed(Duration(seconds: 3), () => getStep4Data());
+      getUsernameSession();
     } else {
       Future.delayed(Duration(seconds: 3), () => getStep4Data());
     }
@@ -825,8 +833,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               height: 40,
               child: TextFormField(
                 keyboardType: TextInputType.text,
-                readOnly: true,
-                showCursor: false,
+                // readOnly: true,
+                // showCursor: false,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 18),
                     fillColor: Colors.white,
@@ -840,7 +848,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                     ),
                     hintText: type_name),
                 maxLines: 1,
-                controller: TextEditingController(text: _username),
+                controller: usernameStepLima,
                 onChanged: (value) {
                   setState(() {
                     formValidations["name"] = value.isNotEmpty;
@@ -898,11 +906,19 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ))),
-                  onPressed: formValidations.containsValue(false)
-                      ? null
-                      : () {
-                          saveStepInputRepairing();
-                        },
+                  // onPressed: () {
+                  //   if (!formValidations.containsValue(false)) {
+                  //     saveStepInputRepairing();
+                  //   } else {}
+                  // },
+                  onPressed: () {
+                    if (!formValidations.containsValue(false) &&
+                        widget.isUpdate == true) {
+                      saveStepInputRepairing();
+                    } else if (!formValidations.containsValue(false)) {
+                      saveStepInputRepairing();
+                    } else {}
+                  },
                   child: Text(
                     'Save Repairing',
                     textAlign: TextAlign.center,
