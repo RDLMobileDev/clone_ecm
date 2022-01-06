@@ -46,15 +46,18 @@ class LocationService {
     }
   }
 
-  Future<List<GroupAreaModel>> getAreaGroupList(String token) async {
+  Future<List<GroupAreaModel>> getAreaGroupList(
+      String token, String idFactory) async {
     List<GroupAreaModel> _listAreaGroup = [];
     var url = MyUrl().getUrlDevice();
 
     try {
-      final response = await http.get(Uri.parse("$url/get_factorygroup"), headers: {
-        "Accept": "Application/json",
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+          Uri.parse("$url/get_factorygroup?id_location=$idFactory"),
+          headers: {
+            "Accept": "Application/json",
+            'Authorization': 'Bearer $token',
+          });
 
       var dataLocationGroup = json.decode(response.body)['data'];
 

@@ -1051,6 +1051,7 @@ class StepFillDuaState extends State<StepFillDua> {
                 ? Container()
                 : Container(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           margin: EdgeInsets.only(top: 16),

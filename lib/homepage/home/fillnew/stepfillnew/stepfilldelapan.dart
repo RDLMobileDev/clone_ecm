@@ -134,13 +134,13 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm").toString();
 
-    String? engineerToKey = prefs.getString("engineerTo");
-    String? productToKey = prefs.getString("productTo");
-    String? othersToKey = prefs.getString("othersTo");
+    String engineerToKey = prefs.getString("engineerTo") ?? "0";
+    String productToKey = prefs.getString("productTo") ?? "0";
+    String othersToKey = prefs.getString("othersTo") ?? "0";
 
     try {
       var response = await fillNewDelapan(
-          ecmId, engineerToKey!, productToKey!, othersToKey!, tokenUser);
+          ecmId, engineerToKey, productToKey, othersToKey, tokenUser);
 
       print("response step 8:");
       print(response);
