@@ -337,6 +337,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           print(result['data']['t_ecmitem_id'].toString());
           prefs.setString(
               "idEcmItem", result['data']['t_ecmitem_id'].toString());
+
+          prefs.setString("itemStep4Bool", "1");
           print(result['data']['t_ecmitem_id'].toString());
           Navigator.of(context).pop(true);
           break;
