@@ -362,12 +362,24 @@ class _StepFillLimaState extends State<StepFillLima> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                item_repairing,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              child: RichText(
+                text: TextSpan(
+                  text: item_repairing,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             SizedBox(

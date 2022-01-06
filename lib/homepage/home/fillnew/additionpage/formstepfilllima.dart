@@ -502,10 +502,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                item_name,
-                textAlign: TextAlign.left,
-                style: const TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: item_name,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -557,10 +571,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                'Judgement',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: "Judgement",
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -721,10 +749,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                starttime,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: starttime,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -771,10 +813,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                end_time,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: end_time,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -821,10 +877,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                name,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: name,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -861,10 +931,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                repair_made,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: repair_made,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
