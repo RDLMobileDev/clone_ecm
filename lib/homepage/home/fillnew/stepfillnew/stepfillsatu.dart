@@ -305,6 +305,11 @@ class StepFillSatuState extends State<StepFillSatu> {
     for (int i = 0; i < _listClassification.length; i++) {
       warnaClassifications.add(false);
       mapClass[i] = false;
+
+      if (namaKlasifikasiFromSession == _listClassification[i].nama) {
+        print(_listClassification[i].nama);
+        mapClass[i] = true;
+      }
     }
 
     return await classificationService.getClassificationData();
@@ -468,10 +473,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                           scrollDirection: Axis.horizontal,
                           itemCount: _listClassification.length,
                           itemBuilder: (context, i) {
-                            if (namaKlasifikasiFromSession ==
-                                _listClassification[i].nama) {
-                              mapClass[i] = true;
-                            }
+                            // if (namaKlasifikasiFromSession ==
+                            //     _listClassification[i].nama) {
+                            //   print(_listClassification[i].nama);
+                            //   mapClass[i] = true;
+                            // }
 
                             return InkWell(
                               onTap: () async {
