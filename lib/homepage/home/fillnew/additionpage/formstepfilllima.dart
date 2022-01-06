@@ -328,8 +328,9 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       },
     ).then((value) {
       setState(() {
-        if (_isEndTimeGreaterThanStart(
-            endTimePickerController!.text, value!.format(context))) {
+        if (endTimePickerController?.text != null &&
+            _isEndTimeGreaterThanStart(
+                endTimePickerController!.text, value!.format(context))) {
           Fluttertoast.showToast(
             msg: "Start time harus lebih kecil dari end time",
             toastLength: Toast.LENGTH_SHORT,
@@ -369,8 +370,9 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             child: child!);
       },
     ).then((value) {
-      if (!_isEndTimeGreaterThanStart(
-          startTimePickerController!.text, value!.format(context))) {
+      if (startTimePickerController?.text != null &&
+          !_isEndTimeGreaterThanStart(
+              startTimePickerController!.text, value!.format(context))) {
         Fluttertoast.showToast(
           msg: "End time harus lebih besar dari start time",
           toastLength: Toast.LENGTH_SHORT,
@@ -385,8 +387,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       setState(() {
         formValidations["end"] = true;
         endTimePickerController =
-            TextEditingController(text: value.format(context));
-        prefs.setString("endTimeStep5", value.format(context));
+            TextEditingController(text: value?.format(context));
+        prefs.setString("endTimeStep5", value!.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
