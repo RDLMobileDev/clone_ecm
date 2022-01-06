@@ -140,6 +140,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
       },
     ).then((value) {
       setState(() {
+        if (endTimePickController?.text != null &&
+            _isEndTimeGreaterThanStart(
+                endTimePickController!.text, value!.format(context))) {
+          showToast("Start time harus lebih kecil dari end time");
+          return;
+        }
+
         formValidations["start"] = true;
         startTimePickController =
             TextEditingController(text: value!.format(context));
