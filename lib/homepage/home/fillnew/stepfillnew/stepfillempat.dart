@@ -172,6 +172,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   String data = "Item deleted successfully";
 
   List<ItemChecking> _listItemChecking = [];
+  StreamController step4getController = StreamController();
 
   Future<List> getDataItemChecking() async {
     final prefs = await SharedPreferences.getInstance();
@@ -226,7 +227,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void deleteItemChecking(String ecmItemId) async {
+  void deleteItemChecking() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     var idEcmItem = prefs.getString("idEcmItem");
@@ -363,7 +364,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                   ),
                   InkWell(
                     onTap: () async {
-                      deleteItemChecking(ecmItemId);
+                      deleteItemChecking();
                     },
                     child: Container(
                         width: 115,

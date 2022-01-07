@@ -293,6 +293,7 @@
       "selectmember": "Select Member",
       "factory": "Factory",
       "select_factory": "Select Factory",
+      "select_factory_group": "Select factory group",
       "group_area": "Group Area",
       "select_group_area": "Select Group Area",
       "machine_name": "Machine Name",

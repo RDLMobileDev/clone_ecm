@@ -182,10 +182,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
     try {
       var resultUpdate = await partItemMachineService.saveUpdateFroEcm(
-          tokenUser,
-          widget.partIdEcm!,
-          qtyUsed.toString(),
-          costRpController.text);
+          tokenUser, widget.partIdEcm!, qtyUsed.toString(), "0");
       if (resultUpdate['response']['status'] == 200) {
         Fluttertoast.showToast(
           msg: 'Item berhasil diperbarui',
@@ -217,14 +214,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
     try {
       if (int.parse(qtyUsed) <= qtyStock) {
-        var result = await saveDataPartMachine(
-            tokenUser,
-            idEcmKey!,
-            idMesin!,
-            partNameController.text,
-            qtyStock.toString(),
-            qtyUsed,
-            costRpController.text);
+        var result = await saveDataPartMachine(tokenUser, idEcmKey!, idMesin!,
+            partNameController.text, qtyStock.toString(), qtyUsed, "0");
         if (result['response']['status'] == 200) {
           prefs.setString("sparePartBool", "1");
           Fluttertoast.showToast(
@@ -351,7 +342,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 4),
-                      height: 40,
+                      height: 60,
                       decoration: BoxDecoration(
                           border: Border.all(color: const Color(0xFF979C9E)),
                           borderRadius:
@@ -550,82 +541,79 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         ],
                       ),
                     ),
-                    Visibility(
-                      visible: false,
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 16),
-                            child: RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: cost,
-                                      style:
-                                          TextStyle(color: Color(0xFF404446))),
-                                  TextSpan(
-                                      text: ' * ',
-                                      style: TextStyle(color: Colors.red)),
-                                  TextSpan(
-                                      text: ':',
-                                      style:
-                                          TextStyle(color: Color(0xFF404446))),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(4),
-                            margin: const EdgeInsets.only(top: 5),
-                            height: 50,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: const Color(0xFF979C9E)),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(5))),
-                            child: TextFormField(
-                              controller: costRpController,
-                              maxLength: 7,
-                              onChanged: (value) {
-                                if (value.length <= 7) {
-                                  int costRp =
-                                      value.isEmpty ? 0 : int.parse(value);
+                    // Container(
+                    //   margin: const EdgeInsets.only(top: 16),
+                    //   child: RichText(
+                    //     text: TextSpan(
+                    //       style: TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         fontSize: 16,
+                    //       ),
+                    //       children: <TextSpan>[
+                    //         TextSpan(
+                    //             text: cost,
+                    //             style: TextStyle(color: Color(0xFF404446))),
+                    //         TextSpan(
+                    //             text: ' * ',
+                    //             style: TextStyle(color: Colors.red)),
+                    //         TextSpan(
+                    //             text: ':',
+                    //             style: TextStyle(color: Color(0xFF404446))),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    // Container(
+                    //   padding: EdgeInsets.all(4),
+                    //   margin: const EdgeInsets.only(top: 5),
+                    //   height: 50,
+                    //   decoration: BoxDecoration(
+                    //       border: Border.all(color: const Color(0xFF979C9E)),
+                    //       borderRadius:
+                    //           const BorderRadius.all(Radius.circular(5))),
+                    //   child: TextFormField(
+                    //     controller: costRpController,
+                    //     maxLength: 7,
+                    //     onChanged: (value) {
+                    //       if (value.length <= 7) {
+                    //         int costRp = value.isEmpty ? 0 : int.parse(value);
 
-                                  setState(() {
-                                    subTotal = qtyUsed * costRp;
-                                  });
-                                } else {
-                                  Fluttertoast.showToast(
-                                    msg: 'Cost tidak boleh melebihi 7 angka',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: Colors.greenAccent,
-                                  );
-                                }
-                              },
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF404446),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  fontStyle: FontStyle.normal),
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(
-                                    top: 10,
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none),
-                                  hintText: type_cost),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    //         setState(() {
+                    //           subTotal = qtyUsed * costRp;
+                    //         });
+                    //       } else {
+                    //         Fluttertoast.showToast(
+                    //           msg: 'Cost tidak boleh melebihi 7 angka',
+                    //           toastLength: Toast.LENGTH_SHORT,
+                    //           gravity: ToastGravity.BOTTOM,
+                    //           backgroundColor: Colors.greenAccent,
+                    //         );
+                    //       }
+                    //     },
+                    //     keyboardType: TextInputType.number,
+                    //     style: const TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         color: Color(0xFF404446),
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w400,
+                    //         fontStyle: FontStyle.normal),
+                    //     decoration: InputDecoration(
+                    //         contentPadding: EdgeInsets.only(
+                    //           top: 10,
+                    //         ),
+                    //         border:
+                    //             OutlineInputBorder(borderSide: BorderSide.none),
+                    //         hintText: type_cost),
+                    //   ),
+                    // ),
+                    // Visibility(
+                    //   visible: false,
+                    //   child: Column(
+                    //     children: [
+
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
