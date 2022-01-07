@@ -796,7 +796,13 @@ class StepFillDuaState extends State<StepFillDua> {
                       final prefs = await _prefs;
                       setState(() {
                         isSafety = !isSafety;
-                        safetyOpt = '1';
+                        if (isSafety == true) {
+                          safetyOpt = '1';
+                          print(true);
+                        } else {
+                          print(false);
+                          safetyOpt = '0';
+                        }
                         // qualityOpt = '0';
                         // deliveryOpt = '0';
                         // costOpt = '0';
@@ -828,7 +834,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                     if (value != null) {
                                       setState(() {
                                         isSafety = !isSafety;
-                                        safetyOpt = '1';
+                                        if (isSafety == true) {
+                                          safetyOpt = '1';
+                                          print(true);
+                                        } else {
+                                          print(false);
+                                          safetyOpt = '0';
+                                        }
                                         // qualityOpt = '0';
                                         // deliveryOpt = '0';
                                         // costOpt = '0';
@@ -858,7 +870,13 @@ class StepFillDuaState extends State<StepFillDua> {
                       setState(() {
                         isQuality = !isQuality;
                         // safetyOpt = '0';
-                        qualityOpt = '1';
+                        if (isQuality == true) {
+                          qualityOpt = '1';
+                          print(true);
+                        } else {
+                          print(false);
+                          qualityOpt = '0';
+                        }
                         // deliveryOpt = '0';
                         // costOpt = '0';
                       });
@@ -890,7 +908,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                       setState(() {
                                         isQuality = !isQuality;
                                         safetyOpt = '0';
-                                        qualityOpt = '1';
+                                        if (isQuality == true) {
+                                          qualityOpt = '1';
+                                          print(true);
+                                        } else {
+                                          print(false);
+                                          qualityOpt = '0';
+                                        }
                                         deliveryOpt = '0';
                                         costOpt = '0';
                                       });
@@ -922,7 +946,13 @@ class StepFillDuaState extends State<StepFillDua> {
                   isDelivery = !isDelivery;
                   // safetyOpt = '0';
                   // qualityOpt = '0';
-                  deliveryOpt = '1';
+                  if (isDelivery == true) {
+                    deliveryOpt = '1';
+                    print(true);
+                  } else {
+                    print(false);
+                    deliveryOpt = '0';
+                  }
                   // costOpt = '0';
                 });
                 // prefs.setString("safetyOpt", safetyOpt);
@@ -959,7 +989,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                         isDelivery = !isDelivery;
                                         // safetyOpt = '0';
                                         // qualityOpt = '0';
-                                        deliveryOpt = '1';
+                                        if (isDelivery == true) {
+                                          deliveryOpt = '1';
+                                          print(true);
+                                        } else {
+                                          print(false);
+                                          deliveryOpt = '0';
+                                        }
                                         // costOpt = '0';
                                       });
                                       // prefs.setString("safetyOpt", safetyOpt);
@@ -988,7 +1024,13 @@ class StepFillDuaState extends State<StepFillDua> {
                           // safetyOpt = '0';
                           // qualityOpt = '0';
                           // deliveryOpt = '0';
-                          costOpt = '1';
+                          if (isCost == true) {
+                            costOpt = '1';
+                            print(true);
+                          } else {
+                            print(false);
+                            costOpt = '0';
+                          }
                         });
                         // prefs.setString("safetyOpt", safetyOpt);
                         // prefs.setString("qualityOpt", qualityOpt);
@@ -1020,7 +1062,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                           // safetyOpt = '0';
                                           // qualityOpt = '0';
                                           // deliveryOpt = '0';
-                                          costOpt = '1';
+                                          if (isCost == true) {
+                                            costOpt = '1';
+                                            print(true);
+                                          } else {
+                                            print(false);
+                                            costOpt = '0';
+                                          }
                                         });
                                         // prefs.setString("safetyOpt", safetyOpt);
                                         // prefs.setString(
@@ -1086,7 +1134,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                   final prefs = await _prefs;
                                   setState(() {
                                     isMolding = !isMolding;
-                                    moldingOpt = '1';
+                                    if (isMolding == true) {
+                                      moldingOpt = '1';
+                                      print(true);
+                                    } else {
+                                      print(false);
+                                      moldingOpt = '0';
+                                    }
                                     // utilityOpt = '0';
                                     // productionOpt = '0';
                                     // engineerOpt = '0';
@@ -1122,7 +1176,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                                 if (value != null) {
                                                   setState(() {
                                                     isMolding = !isMolding;
-                                                    moldingOpt = '1';
+                                                    if (isMolding == true) {
+                                                      moldingOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      moldingOpt = '0';
+                                                    }
                                                     // utilityOpt = '0';
                                                     // productionOpt = '0';
                                                     // engineerOpt = '0';
@@ -1157,7 +1217,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                   setState(() {
                                     isUtility = !isUtility;
                                     // moldingOpt = '0';
-                                    utilityOpt = '1';
+                                    if (isUtility == true) {
+                                      utilityOpt = '1';
+                                      print(true);
+                                    } else {
+                                      print(false);
+                                      utilityOpt = '0';
+                                    }
                                     // productionOpt = '0';
                                     // engineerOpt = '0';
                                     // otherOpt = '0';
@@ -1193,7 +1259,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                                   setState(() {
                                                     isUtility = !isUtility;
                                                     // moldingOpt = '0';
-                                                    utilityOpt = '1';
+                                                    if (isUtility == true) {
+                                                      utilityOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      utilityOpt = '0';
+                                                    }
                                                     // productionOpt = '0';
                                                     // engineerOpt = '0';
                                                     // otherOpt = '0';
@@ -1231,7 +1303,13 @@ class StepFillDuaState extends State<StepFillDua> {
                               isProduction = !isProduction;
                               // moldingOpt = '0';
                               // utilityOpt = '0';
-                              productionOpt = '1';
+                              if (isProduction == true) {
+                                productionOpt = '1';
+                                print(true);
+                              } else {
+                                print(false);
+                                productionOpt = '0';
+                              }
                               // engineerOpt = '0';
                               // otherOpt = '0';
                             });
@@ -1273,7 +1351,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                                         !isProduction;
                                                     // moldingOpt = '0';
                                                     // utilityOpt = '0';
-                                                    productionOpt = '1';
+                                                    if (isProduction == true) {
+                                                      productionOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      productionOpt = '0';
+                                                    }
                                                     // engineerOpt = '0';
                                                     // otherOpt = '0';
                                                   });
@@ -1307,7 +1391,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                       // moldingOpt = '0';
                                       // utilityOpt = '0';
                                       // productionOpt = '0';
-                                      engineerOpt = '1';
+                                      if (isEngineering == true) {
+                                        engineerOpt = '1';
+                                        print(true);
+                                      } else {
+                                        print(false);
+                                        engineerOpt = '0';
+                                      }
                                       otherOpt = '0';
                                     });
                                     // prefs.setString("moldingOpt", moldingOpt);
@@ -1345,7 +1435,15 @@ class StepFillDuaState extends State<StepFillDua> {
                                                       // moldingOpt = '0';
                                                       // utilityOpt = '0';
                                                       // productionOpt = '0';
-                                                      engineerOpt = '1';
+                                                      print(value);
+                                                      if (isEngineering ==
+                                                          true) {
+                                                        engineerOpt = '1';
+                                                        print(true);
+                                                      } else {
+                                                        print(false);
+                                                        engineerOpt = '0';
+                                                      }
                                                       // otherOpt = '0';
                                                     });
                                                     // prefs.setString(
@@ -1386,7 +1484,13 @@ class StepFillDuaState extends State<StepFillDua> {
                               // utilityOpt = '0';
                               // productionOpt = '0';
                               // engineerOpt = '0';
-                              otherOpt = '1';
+                              if (isOther == true) {
+                                otherOpt = '1';
+                                print(true);
+                              } else {
+                                print(false);
+                                otherOpt = '0';
+                              }
                             });
                             // prefs.setString("moldingOpt", moldingOpt);
                             // prefs.setString("utilityOpt", utilityOpt);
@@ -1427,7 +1531,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                                     // utilityOpt = '0';
                                                     // productionOpt = '0';
                                                     // engineerOpt = '0';
-                                                    otherOpt = '1';
+                                                    if (isOther == true) {
+                                                      otherOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      otherOpt = '0';
+                                                    }
                                                   });
                                                   // prefs.setString("moldingOpt", moldingOpt);
                                                   // prefs.setString("utilityOpt", utilityOpt);
