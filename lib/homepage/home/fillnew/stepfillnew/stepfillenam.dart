@@ -382,6 +382,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
           _mp = int.parse(stepEnamModel.mP.toString());
           costOutHouseController =
               TextEditingController(text: stepEnamModel.outHouseRp);
+
+          prefs.setString("outHouseCost", costOutHouseController.text);
         });
 
         print(stepEnamModel.checkH);
