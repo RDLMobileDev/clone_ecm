@@ -592,6 +592,134 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
               margin: EdgeInsets.only(top: 10),
               child: RichText(
                 text: TextSpan(
+                  text: starttime,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(0),
+              margin: EdgeInsets.only(top: 10),
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(Icons.access_time, color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      onTap: () => getStartTime(),
+                      readOnly: true,
+                      controller: startTimePickerController,
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(0),
+                          fillColor: Colors.white,
+                          border:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          filled: true,
+                          hintText: 'HH:MM'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(top: 10),
+              child: RichText(
+                text: TextSpan(
+                  text: end_time,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(0),
+              margin: EdgeInsets.only(top: 10),
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(Icons.access_time, color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      onTap: () => getEndTime(),
+                      readOnly: true,
+                      controller: endTimePickerController,
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(0),
+                          fillColor: Colors.white,
+                          border:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          filled: true,
+                          hintText: 'HH:MM'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(top: 10),
+              child: RichText(
+                text: TextSpan(
                   text: "Judgement",
                   style: TextStyle(
                       fontFamily: 'Rubik',
@@ -762,134 +890,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: starttime,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(0),
-              margin: EdgeInsets.only(top: 10),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(Icons.access_time, color: Colors.grey),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      onTap: () => getStartTime(),
-                      readOnly: true,
-                      controller: startTimePickerController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(0),
-                          fillColor: Colors.white,
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: 'HH:MM'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: end_time,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(0),
-              margin: EdgeInsets.only(top: 10),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(Icons.access_time, color: Colors.grey),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      onTap: () => getEndTime(),
-                      readOnly: true,
-                      controller: endTimePickerController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(0),
-                          fillColor: Colors.white,
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: 'HH:MM'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey,
-                    ),
-                  )
                 ],
               ),
             ),

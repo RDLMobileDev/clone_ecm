@@ -439,7 +439,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       child: Column(
                         children: [
                           Image.asset(
-                            "assets/images/repair.png",
+                            "assets/images/checking.png",
                             width: 250,
                           ),
                           Center(

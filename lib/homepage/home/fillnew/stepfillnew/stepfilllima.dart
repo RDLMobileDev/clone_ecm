@@ -393,7 +393,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                       child: Column(
                         children: [
                           Image.asset(
-                            "assets/images/checking.png",
+                            "assets/images/repair.png",
                             width: 250,
                           ),
                           Center(
