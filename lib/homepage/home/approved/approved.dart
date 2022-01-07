@@ -241,8 +241,8 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                             ],
                           ),
                         ),
-                        const Text(
-                          "1 hour ago",
+                        Text(
+                          _listApproved[i].waktu.toString(),
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 10,
