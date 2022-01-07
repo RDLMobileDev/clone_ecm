@@ -455,25 +455,25 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AddItemFillTujuh(
-                                                                isFromUpdate:
-                                                                    true,
-                                                                partIdEcm:
-                                                                    _listDataPartSaved[
-                                                                            i]
-                                                                        .ecmPartId,
-                                                              )));
-                                                },
-                                                child: Image.asset(
-                                                  "assets/icons/akar-icons_edit.png",
-                                                  width: 20,
-                                                ),
-                                              ),
+                                              // InkWell(
+                                              //   onTap: () {
+                                              //     Navigator.of(context).push(
+                                              //         MaterialPageRoute(
+                                              //             builder: (context) =>
+                                              //                 AddItemFillTujuh(
+                                              //                   isFromUpdate:
+                                              //                       true,
+                                              //                   partIdEcm:
+                                              //                       _listDataPartSaved[
+                                              //                               i]
+                                              //                           .ecmPartId,
+                                              //                 )));
+                                              //   },
+                                              //   child: Image.asset(
+                                              //     "assets/icons/akar-icons_edit.png",
+                                              //     width: 20,
+                                              //   ),
+                                              // ),
                                               InkWell(
                                                 onTap: () {
                                                   confirmDelete(i);

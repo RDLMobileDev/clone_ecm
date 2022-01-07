@@ -1007,7 +1007,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             },
                             icon: Icon(
                               Icons.remove,
-                              color: Color(0xFF979C9E),
+                              color: _counter == 0
+                                  ? Color(0xFF979C9E)
+                                  : Color(0xFF20519F),
                             ),
                           ),
                         ),
@@ -1110,7 +1112,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             },
                             icon: Icon(
                               Icons.remove,
-                              color: Color(0xFF979C9E),
+                              color: _counterMinutes == 0
+                                  ? Color(0xFF979C9E)
+                                  : Color(0xFF20519F),
                             ),
                           ),
                         ),

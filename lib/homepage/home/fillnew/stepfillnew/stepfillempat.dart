@@ -510,30 +510,30 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              InkWell(
-                                                onTap: () async {
-                                                  bool isInputted = await Navigator
-                                                          .of(context)
-                                                      .push(MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              StepFillEmpatInput(
-                                                                ecmItemId:
-                                                                    _listItemChecking[
-                                                                            i]
-                                                                        .ecmitemId
-                                                                        .toString(),
-                                                              )));
+                                              // InkWell(
+                                              //   onTap: () async {
+                                              //     bool isInputted = await Navigator
+                                              //             .of(context)
+                                              //         .push(MaterialPageRoute(
+                                              //             builder: (context) =>
+                                              //                 StepFillEmpatInput(
+                                              //                   ecmItemId:
+                                              //                       _listItemChecking[
+                                              //                               i]
+                                              //                           .ecmitemId
+                                              //                           .toString(),
+                                              //                 )));
 
-                                                  if (isInputted) {
-                                                    // setState(() => );
-                                                    getDataItemChecking();
-                                                  }
-                                                },
-                                                child: Image.asset(
-                                                  "assets/icons/akar-icons_edit.png",
-                                                  width: 20,
-                                                ),
-                                              ),
+                                              //     if (isInputted) {
+                                              //       // setState(() => );
+                                              //       getDataItemChecking();
+                                              //     }
+                                              //   },
+                                              //   child: Image.asset(
+                                              //     "assets/icons/akar-icons_edit.png",
+                                              //     width: 20,
+                                              //   ),
+                                              // ),
                                               InkWell(
                                                 onTap: () {
                                                   confirmDelete(
