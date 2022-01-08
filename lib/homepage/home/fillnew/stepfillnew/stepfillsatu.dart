@@ -350,11 +350,13 @@ class StepFillSatuState extends State<StepFillSatu> {
       final SharedPreferences prefs = await _prefs;
       String? tokenUser = prefs.getString("tokenKey").toString();
       String idGroupArea = prefs.getString("locationIdGroup") ?? "";
-      _listMachineName =
-          await machineNameService.getMachineName(tokenUser, idGroupArea);
+      String idLokasi = prefs.getString("locationId") ?? "";
+      _listMachineName = await machineNameService.getMachineName(
+          tokenUser, idLokasi, idGroupArea);
       print("data nama mesin: ");
       print(_listMachineName.length);
-      return await machineNameService.getMachineName(tokenUser, idGroupArea);
+      return await machineNameService.getMachineName(
+          tokenUser, idLokasi, idGroupArea);
     } catch (e) {
       print(e);
       return [];
@@ -364,10 +366,12 @@ class StepFillSatuState extends State<StepFillSatu> {
   Future<List<MachineNumberModel>> getMachineNumberbyId() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
+    String idGroupArea = prefs.getString("locationIdGroup") ?? "";
+    String idLokasi = prefs.getString("locationId") ?? "";
     _listMachineNumber = await machineNumberService.getMachineNumber(
-        idMachineFromName, tokenUser);
+        idMachineFromName, idLokasi, idGroupArea, tokenUser);
     return await machineNumberService.getMachineNumber(
-        idMachineFromName, tokenUser);
+        idMachineFromName, idLokasi, idGroupArea, tokenUser);
     // print(_listMachineNumber);
   }
 
