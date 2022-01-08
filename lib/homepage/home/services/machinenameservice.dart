@@ -10,16 +10,18 @@ import 'package:http/http.dart' as http;
 
 class MachineNameService {
   Future<List<MachineNameModel>> getMachineName(
-      String token, String idGroupArea) async {
+      String token, String idLocation, String idGroupArea) async {
     List<MachineNameModel> _listMachineNameData = [];
     var url = MyUrl().getUrlDevice();
 
     try {
-      final response = await http
-          .get(Uri.parse("$url/get_machine?id_grup=$idGroupArea"), headers: {
-        "Accept": "Application/json",
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+          Uri.parse(
+              "$url/get_machine?id_grup=$idGroupArea&id_location=$idLocation"),
+          headers: {
+            "Accept": "Application/json",
+            'Authorization': 'Bearer $token',
+          });
 
       var dataMachineName = json.decode(response.body)['data'];
 

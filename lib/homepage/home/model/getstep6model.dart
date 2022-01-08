@@ -5,6 +5,8 @@ class StepEnamModel {
   String? repairM;
   String? hasilRepairH;
   String? hasilRepairM;
+  String? inHouseCost;
+  String? adminCost;
   String? mP;
   String? outHouseRp;
 
@@ -15,6 +17,8 @@ class StepEnamModel {
       this.repairM,
       this.hasilRepairH,
       this.hasilRepairM,
+      this.inHouseCost,
+      this.adminCost,
       this.mP,
       this.outHouseRp});
 
@@ -26,6 +30,8 @@ class StepEnamModel {
         repairM: json['repair_m'].toString(),
         hasilRepairH: json['hasil_checkrepair_h'].toString(),
         hasilRepairM: json['hasil_checkrepair_m'].toString(),
+        inHouseCost: json['inhousecost'].toString(),
+        adminCost: json['admincost'].toString(),
         mP: json['m/p'].toString(),
         outHouseRp: json['outhouse'].toString());
   }
