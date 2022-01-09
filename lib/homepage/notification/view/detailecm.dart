@@ -1354,7 +1354,18 @@ class _DetailEcmState extends State<DetailEcm> {
                 )),
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
-            onPressed: () {
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: null,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  });
+              await _loadingAction();
               postUpdateStatus('1');
             },
             child: Text(
@@ -1390,7 +1401,18 @@ class _DetailEcmState extends State<DetailEcm> {
                         side: BorderSide(color: Colors.redAccent))),
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
-            onPressed: () {
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: null,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  });
+              await _loadingAction();
               postUpdateStatus('2');
             },
             child: Text(
