@@ -5,12 +5,14 @@ import 'dart:convert';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/getstep6model.dart';
+import 'package:e_cm/homepage/home/model/vendorstep6model.dart';
 import 'package:e_cm/homepage/home/services/apifillnewenam.dart';
 import 'package:e_cm/homepage/home/services/apifillnewenamget.dart';
 import 'package:e_cm/homepage/home/services/getsemuauser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,9 +29,11 @@ class StepFillEnam extends StatefulWidget {
 
 class _StepFillEnamState extends State<StepFillEnam> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  TextEditingController vendorPriceController = TextEditingController();
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
+  bool isTapVendor = false;
 
   String improvement = '';
   String name = '';
@@ -139,6 +143,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
   bool isTapedUserName = false;
   StepEnamModel stepEnamModel = StepEnamModel();
 
+  List<VendorStep6Model> listVendor = [];
+
   int _counter = 0;
   int _counterMinutes = 45;
   int _limitIncreamentH = 0;
@@ -164,19 +170,45 @@ class _StepFillEnamState extends State<StepFillEnam> {
   //   }
   // }
 
-  void _incrementCounter() async {
+  void _incrementCounter(String value) async {
     final SharedPreferences prefs = await _prefs;
-    setState(() {
-      if (_counter <= _limitIncreamentH - 1) {
-        _counter++;
-      } else {
-        _counter = _counter;
-      }
-      resultLineStop();
-      resultCostInHouse();
-    });
-    prefs.setString("breaks", _counter.toString());
-    prefs.setString("breakHours", _counter.toString());
+    if (value.isNotEmpty) {
+      setState(() {
+        // if (_counter <= _limitIncreamentH - 1) {
+        _counter = int.parse(value);
+        if (_counter > _limitIncreamentH) {
+          Fluttertoast.showToast(
+              msg: "Tidak bisa melebihi limit",
+              backgroundColor: Colors.redAccent,
+              textColor: Colors.white);
+        } else {
+          _lineStopH = _limitIncreamentH - _counter;
+          resultCostInHouse();
+        }
+
+        // } else {
+        //   _counter = _counter;
+        // }
+        // resultLineStop();
+      });
+      prefs.setString("breaks", _counter.toString());
+      prefs.setString("breakHours", _counter.toString());
+    } else {
+      setState(() {
+        _counter = 0;
+        _lineStopH = _limitIncreamentH;
+        resultCostInHouse();
+        // if (_counter <= _limitIncreamentH - 1) {
+        //   _counter = 0;
+        // } else {
+        //   _counter = _counter;
+        // }
+        // resultLineStop();
+        // resultCostInHouse();
+      });
+      prefs.setString("breaks", _counter.toString());
+      prefs.setString("breakHours", _counter.toString());
+    }
   }
 
   void _decreamentCounter() async {
@@ -194,42 +226,69 @@ class _StepFillEnamState extends State<StepFillEnam> {
     prefs.setString("breakHours", _counter.toString());
   }
 
-  void _incrementCounterMinutes() async {
+  void _incrementCounterMinutes(String value) async {
     final SharedPreferences prefs = await _prefs;
-    setState(() {
-      // if (_counterMinutes < _limitIncreamentM - 1) {
-      //   _counterMinutes++;
-      // } else {
-      //   _counterMinutes = _counterMinutes;
-      // }
-      if (_limitIncreamentM == 0) {
-        if (_counterMinutes < 60 && _counter <= _limitIncreamentH - 1) {
-          _counterMinutes++;
-          if (_counterMinutes == 60) {
-            _counter = _counter + 1;
-            _counterMinutes = 0;
+    if (value.isNotEmpty) {
+      setState(() {
+        _counterMinutes = int.parse(value);
+        if (_counterMinutes < 60) {
+          if (_counterMinutes > _limitIncreamentM) {
+            _lineStopH = _lineStopH - 1;
+            _lineStopM = (_limitIncreamentM + 60) - _counterMinutes;
+            resultCostInHouse();
+          } else {
+            _lineStopM = _limitIncreamentM - _counterMinutes;
+            resultCostInHouse();
           }
         } else {
-          _counterMinutes = _counterMinutes;
+          Fluttertoast.showToast(
+              msg: "Tidak bisa melebihi 59 menit",
+              backgroundColor: Colors.redAccent,
+              textColor: Colors.white);
         }
-      } else if (_limitIncreamentM != 0) {
-        if (_counter < _limitIncreamentH ||
-            _counterMinutes < _limitIncreamentM) {
-          if (_counterMinutes == 60) {
-            _counterMinutes = 0;
-            _counter++;
-          }
 
-          _counterMinutes++;
-        } else {
-          _counterMinutes = _counterMinutes;
-        }
-      }
-      resultLineStop();
-      resultCostInHouse();
-    });
-    prefs.setString("breaks", _counter.toString());
-    prefs.setString("breakMinutes", _counterMinutes.toString());
+        // if (_counterMinutes < _limitIncreamentM - 1) {
+        //   _counterMinutes++;
+        // } else {
+        //   _counterMinutes = _counterMinutes;
+        // }
+        // if (_limitIncreamentM == 0) {
+        //   if (_counterMinutes < 60 && _counter <= _limitIncreamentH - 1) {
+        //     _counterMinutes = int.parse(value);
+        //     if (_counterMinutes == 60) {
+        //       _counter = _counter + int.parse(value);
+        //       _counterMinutes = 0;
+        //     }
+        //   } else {
+        //     _counterMinutes = _counterMinutes;
+        //   }
+        // } else if (_limitIncreamentM != 0) {
+        //   if (_counter < _limitIncreamentH ||
+        //       _counterMinutes < _limitIncreamentM) {
+        //     if (_counterMinutes == 60) {
+        //       _counterMinutes = 0;
+        //       _counter += int.parse(value);
+        //     }
+
+        //     _counterMinutes += int.parse(value);
+        //   } else {
+        //     _counterMinutes = _counterMinutes;
+        //   }
+        // }
+        // resultLineStop();
+        // resultCostInHouse();
+      });
+      prefs.setString("breaks", _counter.toString());
+      prefs.setString("breakMinutes", _counterMinutes.toString());
+    } else {
+      setState(() {
+        _counterMinutes = 0;
+        _lineStopM = _limitIncreamentM;
+        resultCostInHouse();
+      });
+      prefs.setString("breaks", _counter.toString());
+      prefs.setString("breakMinutes", _counterMinutes.toString());
+    }
   }
 
   void _decreamentCounterMinutes() async {
@@ -277,7 +336,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
       //   _costInHouse = (_newLineStopH * _mp * 60000) + 30000;
       // }
       _newLineStopH = _lineStopH * 60;
-      _costInHouse = ((_newLineStopH + _lineStopM) * 1000) + 30000;
+      _costInHouse = ((_newLineStopH + _lineStopM) * 1000) +
+          int.parse(stepEnamModel.adminCost ?? "0");
       print("===_newLineStopH ===");
       print(_newLineStopH);
     });
@@ -369,6 +429,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String ecmId = prefs.getString("idEcm").toString();
     String ecmitemId = prefs.getString("idEcmItem").toString();
     String userId = prefs.getString("idKeyUser").toString();
+
+    List<VendorStep6Model> listVendorTemp = [];
     try {
       var response = await getFillNewEnam(ecmId, userId, ecmitemId, tokenUser);
       print("======= getData step 6 =======");
@@ -380,13 +442,23 @@ class _StepFillEnamState extends State<StepFillEnam> {
           _limitIncreamentH = int.parse(stepEnamModel.hasilRepairH.toString());
           _limitIncreamentM = int.parse(stepEnamModel.hasilRepairM.toString());
           _mp = int.parse(stepEnamModel.mP.toString());
-          costOutHouseController =
-              TextEditingController(text: stepEnamModel.outHouseRp);
+          // costOutHouseController =
+          //     TextEditingController(text: stepEnamModel.outHouseRp);
 
-          prefs.setString("outHouseCost", costOutHouseController.text);
+          // prefs.setString("outHouseCost", costOutHouseController.text);
         });
 
-        print(stepEnamModel.checkH);
+        for (int i = 0; i < response['data']['outhouse'].length; i++) {
+          var dataVendor = VendorStep6Model(
+              vendorName: response['data']['outhouse'][i]['m_vendor_name'],
+              vendorPrice:
+                  response['data']['outhouse'][i]['m_vendor_harga'].toString());
+          listVendorTemp.add(dataVendor);
+        }
+
+        setState(() {
+          listVendor = listVendorTemp;
+        });
 
         String minuteCheck = stepEnamModel.checkM.toString().length == 1
             ? "0" + stepEnamModel.checkM.toString()
@@ -976,77 +1048,109 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   Container(
                     width: 150,
                     height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: () async {
-                              _decreamentCounter();
-                              String minuteLineStop =
-                                  _lineStopM.toString().length == 1
-                                      ? "0" + _lineStopM.toString()
-                                      : _lineStopM.toString();
-                              final SharedPreferences prefs = await _prefs;
-                              prefs.setString(
-                                  "lineStop", _counter.toString() + ":00");
-                              prefs.setString("ttlLineStop",
-                                  _lineStopH.toString() + ":" + minuteLineStop);
-                              prefs.setString(
-                                  "costH", _newLineStopH.toString());
-                              prefs.setString(
-                                  "costMp", stepEnamModel.mP.toString());
-                              prefs.setString(
-                                  "costTotal", _costInHouse.toString());
-                              prefs.setString("breakTimeBool", "1");
-                            },
-                            icon: Icon(
-                              Icons.remove,
-                              color: _counter == 0
-                                  ? Color(0xFF979C9E)
-                                  : Color(0xFF20519F),
-                            ),
-                          ),
-                        ),
-                        Text("$_counter"),
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: () async {
-                              _incrementCounter();
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) async {
+                        _incrementCounter(value);
 
-                              String minuteLineStop =
-                                  _lineStopM.toString().length == 1
-                                      ? "0" + _lineStopM.toString()
-                                      : _lineStopM.toString();
-                              final SharedPreferences prefs = await _prefs;
-                              prefs.setString(
-                                  "lineStop", _counter.toString() + ":00");
-                              prefs.setString("ttlLineStop",
-                                  _lineStopH.toString() + ":" + minuteLineStop);
-                              prefs.setString(
-                                  "costH", _newLineStopH.toString());
-                              prefs.setString(
-                                  "costMp", stepEnamModel.mP.toString());
-                              prefs.setString(
-                                  "costTotal", _costInHouse.toString());
-                              prefs.setString("breakTimeBool", "1");
-                            },
-                            icon: Icon(
-                              Icons.add,
-                              color: Color(0xFF20519F),
-                            ),
-                          ),
-                        ),
-                      ],
+                        String minuteLineStop =
+                            _lineStopM.toString().length == 1
+                                ? "0" + _lineStopM.toString()
+                                : _lineStopM.toString();
+                        final SharedPreferences prefs = await _prefs;
+                        prefs.setString(
+                            "lineStop", _counter.toString() + ":00");
+                        prefs.setString("ttlLineStop",
+                            _lineStopH.toString() + ":" + minuteLineStop);
+                        prefs.setString("costH", _newLineStopH.toString());
+                        prefs.setString("costMp", stepEnamModel.mP.toString());
+                        prefs.setString("costTotal", _costInHouse.toString());
+                        prefs.setString("breakTimeBool", "1");
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                      ),
                     ),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
                   )
+                  // Container(
+                  //   width: 150,
+                  //   height: 40,
+                  //   decoration: BoxDecoration(
+                  //       border: Border.all(color: Color(0xFF979C9E)),
+                  //       borderRadius: BorderRadius.all(Radius.circular(40))),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       SizedBox(
+                  //         width: 40,
+                  //         height: 40,
+                  //         child: IconButton(
+                  //           onPressed: () async {
+                  //             _decreamentCounter();
+                  //             String minuteLineStop =
+                  //                 _lineStopM.toString().length == 1
+                  //                     ? "0" + _lineStopM.toString()
+                  //                     : _lineStopM.toString();
+                  //             final SharedPreferences prefs = await _prefs;
+                  //             prefs.setString(
+                  //                 "lineStop", _counter.toString() + ":00");
+                  //             prefs.setString("ttlLineStop",
+                  //                 _lineStopH.toString() + ":" + minuteLineStop);
+                  //             prefs.setString(
+                  //                 "costH", _newLineStopH.toString());
+                  //             prefs.setString(
+                  //                 "costMp", stepEnamModel.mP.toString());
+                  //             prefs.setString(
+                  //                 "costTotal", _costInHouse.toString());
+                  //             prefs.setString("breakTimeBool", "1");
+                  //           },
+                  //           icon: Icon(
+                  //             Icons.remove,
+                  //             color: _counter == 0
+                  //                 ? Color(0xFF979C9E)
+                  //                 : Color(0xFF20519F),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Text("$_counter"),
+                  //       SizedBox(
+                  //         width: 40,
+                  //         height: 40,
+                  //         child: IconButton(
+                  //           onPressed: () async {
+                  //             _incrementCounter();
+
+                  //             String minuteLineStop =
+                  //                 _lineStopM.toString().length == 1
+                  //                     ? "0" + _lineStopM.toString()
+                  //                     : _lineStopM.toString();
+                  //             final SharedPreferences prefs = await _prefs;
+                  //             prefs.setString(
+                  //                 "lineStop", _counter.toString() + ":00");
+                  //             prefs.setString("ttlLineStop",
+                  //                 _lineStopH.toString() + ":" + minuteLineStop);
+                  //             prefs.setString(
+                  //                 "costH", _newLineStopH.toString());
+                  //             prefs.setString(
+                  //                 "costMp", stepEnamModel.mP.toString());
+                  //             prefs.setString(
+                  //                 "costTotal", _costInHouse.toString());
+                  //             prefs.setString("breakTimeBool", "1");
+                  //           },
+                  //           icon: Icon(
+                  //             Icons.add,
+                  //             color: Color(0xFF20519F),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -1081,77 +1185,108 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   Container(
                     width: 150,
                     height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: () async {
-                              _decreamentCounterMinutes();
-                              String minuteLineStop =
-                                  _lineStopM.toString().length == 1
-                                      ? "0" + _lineStopM.toString()
-                                      : _lineStopM.toString();
-                              final SharedPreferences prefs = await _prefs;
-                              prefs.setString(
-                                  "lineStop", _counter.toString() + ":00");
-                              prefs.setString("ttlLineStop",
-                                  _lineStopH.toString() + ":" + minuteLineStop);
-                              prefs.setString(
-                                  "costH", _newLineStopH.toString());
-                              prefs.setString(
-                                  "costMp", stepEnamModel.mP.toString());
-                              prefs.setString(
-                                  "costTotal", _costInHouse.toString());
-                              prefs.setString("breakTimeBool", "1");
-                            },
-                            icon: Icon(
-                              Icons.remove,
-                              color: _counterMinutes == 0
-                                  ? Color(0xFF979C9E)
-                                  : Color(0xFF20519F),
-                            ),
-                          ),
-                        ),
-                        Text("$_counterMinutes"),
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: () async {
-                              _incrementCounterMinutes();
-
-                              String minuteLineStop =
-                                  _lineStopM.toString().length == 1
-                                      ? "0" + _lineStopM.toString()
-                                      : _lineStopM.toString();
-                              final SharedPreferences prefs = await _prefs;
-                              prefs.setString(
-                                  "lineStop", _counter.toString() + ":00");
-                              prefs.setString("ttlLineStop",
-                                  _lineStopH.toString() + ":" + minuteLineStop);
-                              prefs.setString(
-                                  "costH", _newLineStopH.toString());
-                              prefs.setString(
-                                  "costMp", stepEnamModel.mP.toString());
-                              prefs.setString(
-                                  "costTotal", _costInHouse.toString());
-                              prefs.setString("breakTimeBool", "1");
-                            },
-                            icon: Icon(
-                              Icons.add,
-                              color: Color(0xFF20519F),
-                            ),
-                          ),
-                        ),
-                      ],
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) async {
+                        _incrementCounterMinutes(value);
+                        String minuteLineStop =
+                            _lineStopM.toString().length == 1
+                                ? "0" + _lineStopM.toString()
+                                : _lineStopM.toString();
+                        final SharedPreferences prefs = await _prefs;
+                        prefs.setString(
+                            "lineStop", _counter.toString() + ":00");
+                        prefs.setString("ttlLineStop",
+                            _lineStopH.toString() + ":" + minuteLineStop);
+                        prefs.setString("costH", _newLineStopH.toString());
+                        prefs.setString("costMp", stepEnamModel.mP.toString());
+                        prefs.setString("costTotal", _costInHouse.toString());
+                        prefs.setString("breakTimeBool", "1");
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                      ),
                     ),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
                   )
+                  // Container(
+                  //   width: 150,
+                  //   height: 40,
+                  //   decoration: BoxDecoration(
+                  //       border: Border.all(color: Color(0xFF979C9E)),
+                  //       borderRadius: BorderRadius.all(Radius.circular(40))),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       SizedBox(
+                  //         width: 40,
+                  //         height: 40,
+                  //         child: IconButton(
+                  //           onPressed: () async {
+                  //             _decreamentCounterMinutes();
+                  //             String minuteLineStop =
+                  //                 _lineStopM.toString().length == 1
+                  //                     ? "0" + _lineStopM.toString()
+                  //                     : _lineStopM.toString();
+                  //             final SharedPreferences prefs = await _prefs;
+                  //             prefs.setString(
+                  //                 "lineStop", _counter.toString() + ":00");
+                  //             prefs.setString("ttlLineStop",
+                  //                 _lineStopH.toString() + ":" + minuteLineStop);
+                  //             prefs.setString(
+                  //                 "costH", _newLineStopH.toString());
+                  //             prefs.setString(
+                  //                 "costMp", stepEnamModel.mP.toString());
+                  //             prefs.setString(
+                  //                 "costTotal", _costInHouse.toString());
+                  //             prefs.setString("breakTimeBool", "1");
+                  //           },
+                  //           icon: Icon(
+                  //             Icons.remove,
+                  //             color: _counterMinutes == 0
+                  //                 ? Color(0xFF979C9E)
+                  //                 : Color(0xFF20519F),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Text("$_counterMinutes"),
+                  //       SizedBox(
+                  //         width: 40,
+                  //         height: 40,
+                  //         child: IconButton(
+                  //           onPressed: () async {
+                  //             _incrementCounterMinutes();
+
+                  //             String minuteLineStop =
+                  //                 _lineStopM.toString().length == 1
+                  //                     ? "0" + _lineStopM.toString()
+                  //                     : _lineStopM.toString();
+                  //             final SharedPreferences prefs = await _prefs;
+                  //             prefs.setString(
+                  //                 "lineStop", _counter.toString() + ":00");
+                  //             prefs.setString("ttlLineStop",
+                  //                 _lineStopH.toString() + ":" + minuteLineStop);
+                  //             prefs.setString(
+                  //                 "costH", _newLineStopH.toString());
+                  //             prefs.setString(
+                  //                 "costMp", stepEnamModel.mP.toString());
+                  //             prefs.setString(
+                  //                 "costTotal", _costInHouse.toString());
+                  //             prefs.setString("breakTimeBool", "1");
+                  //           },
+                  //           icon: Icon(
+                  //             Icons.add,
+                  //             color: Color(0xFF20519F),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -1414,7 +1549,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "60.000",
+                        stepEnamModel.inHouseCost ?? "0",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
@@ -1443,7 +1578,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "30.000",
+                        stepEnamModel.adminCost ?? "0",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
@@ -1489,6 +1624,48 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontWeight: FontWeight.w400),
               ),
             ),
+            Container(
+                margin: const EdgeInsets.only(top: 16),
+                height: 40,
+                child: TextFormField(
+                  controller: vendorPriceController,
+                  readOnly: true,
+                  showCursor: true,
+                  onTap: () {
+                    setState(() {
+                      isTapVendor = !isTapVendor;
+                    });
+                  },
+                  decoration: InputDecoration(
+                      hintText: "Pilih vendor",
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                      suffixIcon: Icon(Icons.arrow_drop_down),
+                      border: OutlineInputBorder()),
+                )),
+            isTapVendor == false
+                ? Container()
+                : Container(
+                    height: 150,
+                    padding: EdgeInsets.all(8),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: listVendor.map((e) {
+                        return InkWell(
+                            onTap: () async {
+                              final prefs = await _prefs;
+                              setState(() {
+                                vendorPriceController =
+                                    TextEditingController(text: e.vendorName);
+                                costOutHouseController =
+                                    TextEditingController(text: e.vendorPrice);
+                                prefs.setString("outHouseCost", e.vendorPrice!);
+                                isTapVendor = !isTapVendor;
+                              });
+                            },
+                            child: Text(e.vendorName!));
+                      }).toList(),
+                    ),
+                  ),
             Container(
               margin: const EdgeInsets.only(top: 4),
               width: MediaQuery.of(context).size.width,
