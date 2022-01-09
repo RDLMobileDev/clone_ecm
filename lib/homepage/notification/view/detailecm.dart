@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
+import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -207,6 +210,13 @@ class _DetailEcmState extends State<DetailEcm> {
   String incidentEffect = "-";
   String incidentMistake = "-";
 
+  //loading modal
+  Future<bool> _loadingAction() async {
+    //replace the below line of code with your login request
+    await new Future.delayed(const Duration(seconds: 0));
+    return true;
+  }
+
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
@@ -380,16 +390,39 @@ class _DetailEcmState extends State<DetailEcm> {
             fontSize: 16);
         return;
       }
-
-      Fluttertoast.showToast(
-          msg: 'Pembaruan status sukses',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-      Navigator.of(context).pop();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Center(
+              child: CircularProgressIndicator(
+                value: null,
+                strokeWidth: 2,
+              ),
+            );
+          });
+      await _loadingAction();
+      if (statusUser == '1') {
+        Fluttertoast.showToast(
+            msg: 'ECM Card diterima',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Pembaruan status ditolak',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.redAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+      // Navigator.of(context).pop();
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Dashboard()));
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -1321,7 +1354,18 @@ class _DetailEcmState extends State<DetailEcm> {
                 )),
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
-            onPressed: () {
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: null,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  });
+              await _loadingAction();
               postUpdateStatus('1');
             },
             child: Text(
@@ -1357,7 +1401,18 @@ class _DetailEcmState extends State<DetailEcm> {
                         side: BorderSide(color: Colors.redAccent))),
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
-            onPressed: () {
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: null,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  });
+              await _loadingAction();
               postUpdateStatus('2');
             },
             child: Text(
