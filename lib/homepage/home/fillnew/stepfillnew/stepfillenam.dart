@@ -1677,7 +1677,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
+                        border: Border.all(color: Colors.blueAccent),
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Row(
@@ -1739,7 +1739,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
+                        border: Border.all(color: Colors.blueAccent),
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Row(
@@ -1800,6 +1800,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
+                        color: Colors.grey[300],
                         border: Border.all(color: Color(0xFF979C9E)),
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(

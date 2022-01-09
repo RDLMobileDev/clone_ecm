@@ -235,7 +235,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
         }
       } else {
         Fluttertoast.showToast(
-          msg: 'Quantity used jangan melebihi stock',
+          msg: 'Quantity used tidak boleh melebihi stock',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.greenAccent,
