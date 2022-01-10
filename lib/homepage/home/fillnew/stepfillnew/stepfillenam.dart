@@ -30,6 +30,8 @@ class StepFillEnam extends StatefulWidget {
 class _StepFillEnamState extends State<StepFillEnam> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController vendorPriceController = TextEditingController();
+  TextEditingController breakHoursController = TextEditingController();
+  TextEditingController breakMinutesController = TextEditingController();
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -634,15 +636,15 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String? outHouseMp = prefs.getString("outHouseMp");
     String? outHouseCost = prefs.getString("outHouseCost");
 
-    if (namaImprovement != null &&
-        idea != null &&
-        outHouseMp != null &&
-        outHouseCost != null &&
+    if (outHouseCost != null &&
         breakHours != null &&
-        breakMinutes != null) {
+        breakMinutes != null &&
+        outHouseH != null) {
       setState(() {
         userNameController = TextEditingController(text: namaImprovement);
         ideaController = TextEditingController(text: idea);
+        breakHoursController = TextEditingController(text: breakHours);
+        breakMinutesController = TextEditingController(text: breakMinutes);
         _counter = int.parse(breakHours);
         _counterMinutes = int.parse(breakMinutes);
         outHouseHController = TextEditingController(text: outHouseH);
@@ -1050,6 +1052,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
+                      controller: breakHoursController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) async {
                         _incrementCounter(value);
@@ -1066,6 +1069,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         prefs.setString("costH", _newLineStopH.toString());
                         prefs.setString("costMp", stepEnamModel.mP.toString());
                         prefs.setString("costTotal", _costInHouse.toString());
+                        prefs.setString("breakHours", value);
                         prefs.setString("breakTimeBool", "1");
                       },
                       decoration: InputDecoration(
@@ -1187,6 +1191,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
+                      controller: breakMinutesController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) async {
                         _incrementCounterMinutes(value);
@@ -1202,6 +1207,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         prefs.setString("costH", _newLineStopH.toString());
                         prefs.setString("costMp", stepEnamModel.mP.toString());
                         prefs.setString("costTotal", _costInHouse.toString());
+                        prefs.setString("breakMinutes", value);
                         prefs.setString("breakTimeBool", "1");
                       },
                       decoration: InputDecoration(
@@ -1455,16 +1461,26 @@ class _StepFillEnamState extends State<StepFillEnam> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 24),
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                cost,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
+                margin: const EdgeInsets.only(top: 24),
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: cost,
+                          style: TextStyle(color: Color(0xFF404446))),
+                      TextSpan(
+                          text: ' * ', style: TextStyle(color: Colors.red)),
+                      TextSpan(
+                          text: ':',
+                          style: TextStyle(color: Color(0xFF404446))),
+                    ],
+                  ),
+                )),
             Container(
               margin: const EdgeInsets.only(top: 16),
               child: Text(
@@ -1616,12 +1632,21 @@ class _StepFillEnamState extends State<StepFillEnam> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 16),
-              child: Text(
-                out_house,
-                style: TextStyle(
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 16,
-                    fontWeight: FontWeight.w400),
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: out_house,
+                        style: TextStyle(color: Color(0xFF404446))),
+                    TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
+                    TextSpan(
+                        text: ':', style: TextStyle(color: Color(0xFF404446))),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -1690,7 +1715,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             child: TextFormField(
                                 onChanged: (text) async {
                                   resultHOutHouse(text);
-                                  final SharedPreferences prefs = await _prefs;
+                                  final prefs = await _prefs;
                                   prefs.setString("outHouseH", text);
                                   prefs.setString("outHouseHBool", "1");
                                 },
