@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
     try {
       _listHistoryEcmUser =
           await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
-      historyStreamController.add(_listHistoryEcmUser);
+      // historyStreamController.add(_listHistoryEcmUser);
       return await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
     } on SocketException catch (e) {
       print(e);
@@ -234,8 +234,8 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     getHistoryEcmByUser();
-    _timer =
-        Timer.periodic(Duration(seconds: 10), (timer) => getHistoryEcmByUser());
+    // _timer =
+    //     Timer.periodic(Duration(seconds: 10), (timer) => getHistoryEcmByUser());
     getNameUser();
     getRoleUser();
     setBahasa();
@@ -338,8 +338,8 @@ class _HomeState extends State<Home> {
                 right: 16,
               ),
               width: MediaQuery.of(context).size.width,
-              child: StreamBuilder(
-                stream: historyStreamController.stream,
+              child: FutureBuilder(
+                future: getHistoryEcmByUser(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Container(

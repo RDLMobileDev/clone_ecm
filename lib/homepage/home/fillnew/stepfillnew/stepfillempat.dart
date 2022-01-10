@@ -227,12 +227,15 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void deleteItemChecking() async {
+  void deleteItemChecking(String idEcmItem) async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idEcmItem = prefs.getString("idEcmItem");
+    // String? idEcmItem = prefs.getString("idEcmItem");
 
-    var result = await fillNewEmpatDelete(idEcmItem ?? "-", tokenUser);
+    var result = await fillNewEmpatDelete(idEcmItem, tokenUser);
+
+    print("response delete:");
+    print(result);
 
     try {
       String resultMessage = "Item berhasil dihapus";
@@ -253,7 +256,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           fontSize: 16);
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } catch (e) {
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -364,7 +367,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                   ),
                   InkWell(
                     onTap: () async {
-                      deleteItemChecking();
+                      deleteItemChecking(ecmItemId);
                     },
                     child: Container(
                         width: 115,
@@ -395,7 +398,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   @override
   void initState() {
     super.initState();
-    getDataItemChecking();
+    // getDataItemChecking();
+
+    Future.delayed(Duration(seconds: 3), () => getDataItemChecking());
     setLang();
     setBahasa();
   }
@@ -433,36 +438,36 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: _listItemChecking.isEmpty
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/images/checking.png",
-                            width: 250,
-                          ),
-                          Center(
-                            child: Text(validation_checked,
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF00AEDB),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      child: FutureBuilder(
-                        future: getDataItemChecking(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(child: CircularProgressIndicator());
-                          }
+              child: Container(
+                child: FutureBuilder(
+                  future: getDataItemChecking(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-                          return ListView.builder(
+                    return _listItemChecking.isEmpty
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/checking.png",
+                                  width: 250,
+                                ),
+                                Center(
+                                  child: Text(validation_checked,
+                                      style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF00AEDB),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _listItemChecking.length,
@@ -556,9 +561,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                               );
                             },
                           );
-                        },
-                      ),
-                    ),
+                  },
+                ),
+              ),
             ),
             InkWell(
               onTap: _listItemChecking.length == 6
@@ -580,7 +585,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
                       if (isInputted) {
                         // setState(() => getDataItemChecking());
-                        prefs.setString("itemStep4Bool", "1");
+                        // prefs.setString("itemStep4Bool", "1");
                         getDataItemChecking();
                       }
                     },
