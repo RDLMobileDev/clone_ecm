@@ -456,21 +456,26 @@ class _StepFillLimaState extends State<StepFillLima> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          // InkWell(
-                                          //   onTap: () async {
-                                          //     final result =
-                                          //         await Navigator.of(context)
-                                          //             .push(MaterialPageRoute(
-                                          //                 builder: (context) =>
-                                          //                     FormStepFilllima(
-                                          //                       isUpdate: true,
-                                          //                     )));
-                                          //   },
-                                          //   child: Image.asset(
-                                          //     "assets/icons/akar-icons_edit.png",
-                                          //     width: 20,
-                                          //   ),
-                                          // ),
+                                          InkWell(
+                                            onTap: () async {
+                                              final result =
+                                                  await Navigator.of(context)
+                                                      .push(MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FormStepFilllima(
+                                                                idEcmItem:
+                                                                    _listItemChecking[
+                                                                            i]
+                                                                        .ecmitemId
+                                                                        .toString(),
+                                                                isUpdate: true,
+                                                              )));
+                                            },
+                                            child: Image.asset(
+                                              "assets/icons/akar-icons_edit.png",
+                                              width: 20,
+                                            ),
+                                          ),
                                           InkWell(
                                             onTap: () {
                                               confirmDelete(_listItemChecking[i]
