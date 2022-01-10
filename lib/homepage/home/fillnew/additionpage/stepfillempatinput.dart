@@ -339,7 +339,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           idUser,
           formValue["name"]!);
 
-      print(resultMessage);
+      print(result);
 
       switch (result['response']['status']) {
         case 200:
@@ -481,7 +481,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).pop(false);
+            Navigator.of(context).pop(true);
           },
         ),
       ),
