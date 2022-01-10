@@ -235,7 +235,10 @@ class _HomeState extends State<Home> {
     super.initState();
     getHistoryEcmByUser();
 
-    Future.delayed(Duration(seconds: 3), () => getHistoryEcmByUser());
+    // Future.delayed(Duration(seconds: 3), () => getHistoryEcmByUser());
+
+    _timer =
+        Timer.periodic(Duration(seconds: 10), (e) => getHistoryEcmByUser());
 
     getNameUser();
     getRoleUser();
