@@ -234,8 +234,9 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     getHistoryEcmByUser();
-    // _timer =
-    //     Timer.periodic(Duration(seconds: 10), (timer) => getHistoryEcmByUser());
+
+    Future.delayed(Duration(seconds: 3), () => getHistoryEcmByUser());
+
     getNameUser();
     getRoleUser();
     setBahasa();
