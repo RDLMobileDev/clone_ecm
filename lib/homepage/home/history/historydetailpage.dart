@@ -168,6 +168,25 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
         print(response['data']);
         detailEcmModel = DetailEcmModel.fromJson(response['data']);
 
+        // detailEcmModel.kaizenCheckH.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenCheckH.toString();
+        // detailEcmModel.kaizenCheckM.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenCheckM.toString();
+        // detailEcmModel.kaizenRepairH.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenRepairH.toString();
+        // detailEcmModel.kaizenRepairM.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenRepairM.toString();
+        // detailEcmModel.kaizenTotalH.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenTotalH.toString();
+        // detailEcmModel.kaizenTotalM.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenTotalM.toString();
+
         incidentEffect =
             IncidentEffect.fromJson(response['data']['incident_effect'])
                 .toString();
@@ -849,7 +868,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             Text(" : "),
             Expanded(
               flex: 4,
-              child: Text(detailEcmModel.kaizenIdea.toString()),
+              child: Text(detailEcmModel.kaizenIdea.toString() == "null"
+                  ? "-"
+                  : detailEcmModel.kaizenIdea.toString()),
             )
           ],
         ),
@@ -967,7 +988,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               flex: 4,
               child: Text("In-House M/P Cost (Rp)"),
             ),
-            Text(detailEcmModel.kaizenCosthouse.toString()),
+            Text(detailEcmModel.kaizenCosthouse.toString() == "null"
+                ? "-"
+                : detailEcmModel.kaizenCosthouse.toString()),
           ],
         ),
         Row(
@@ -977,7 +1000,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               flex: 4,
               child: Text("Out-House (Rp) : "),
             ),
-            Text(detailEcmModel.kaizenOutcosthouse.toString()),
+            Text(detailEcmModel.kaizenOutcosthouse.toString() == "null"
+                ? "-"
+                : detailEcmModel.kaizenOutcosthouse.toString()),
           ],
         ),
       ],
