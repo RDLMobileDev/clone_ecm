@@ -12,6 +12,7 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltiga.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
 import 'package:e_cm/homepage/home/model/summaryapprovemodel.dart';
 import 'package:e_cm/homepage/home/services/summaryapproveservice.dart';
+import 'package:e_cm/homepage/home/view/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -643,10 +644,8 @@ class _FillNewState extends State<FillNew> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context)
-                    ..pop()
-                    ..pop()
-                    ..pop();
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Container(
                     margin: EdgeInsets.only(top: 20, left: 16, right: 16),
