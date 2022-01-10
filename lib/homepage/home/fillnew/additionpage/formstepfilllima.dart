@@ -428,7 +428,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       String resultMessage = "Data disimpan";
       var result = await fillNewLimaInsert(
         token: tokenUser,
-        ecmItemId: ecmItemId,
+        ecmItemId: widget.isUpdate == true ? widget.idEcmItem : ecmItemId,
         userId: idUser,
         repairMessage: formValue["repair"],
         note: formValue["note"],
@@ -597,6 +597,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                               });
                               prefs.setString("itemNameStepLima",
                                   _listData[i].partNama.toString());
+                              prefs.setString("idEcmItem",
+                                  _listData[i].ecmitemId.toString());
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),

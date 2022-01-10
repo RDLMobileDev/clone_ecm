@@ -323,11 +323,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void saveStepInputChecking() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _prefs;
     var ecmId = prefs.getString("idEcm");
     var idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey") ?? "";
     var idMachineRes = prefs.getString("id_machine_res");
+
+    print(tokenUser);
 
     try {
       String resultMessage = "Data disimpan";
@@ -340,7 +342,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           formValue["actual"]!,
           formValue["note"]!,
           startTimePickController!.text,
-          startTimePickController!.text,
+          endTimePickController!.text,
           idUser,
           formValue["name"]!);
 

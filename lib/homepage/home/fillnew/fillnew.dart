@@ -644,8 +644,10 @@ class _FillNewState extends State<FillNew> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => Home()));
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop()
+                    ..pop();
                 },
                 child: Container(
                     margin: EdgeInsets.only(top: 20, left: 16, right: 16),
