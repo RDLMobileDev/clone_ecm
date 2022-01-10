@@ -182,7 +182,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
               backgroundColor: Colors.redAccent,
               textColor: Colors.white);
         } else {
-          _incrementCounter("0");
           _lineStopH = _limitIncreamentH - _counter;
           resultCostInHouse();
         }
@@ -238,7 +237,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
             _lineStopM = (_limitIncreamentM + 60) - _counterMinutes;
             resultCostInHouse();
           } else {
-            _incrementCounterMinutes("0");
             _lineStopM = _limitIncreamentM - _counterMinutes;
             resultCostInHouse();
           }
