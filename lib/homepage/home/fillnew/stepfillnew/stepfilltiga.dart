@@ -108,8 +108,8 @@ class _StepFillTigaState extends State<StepFillTiga> {
     final prefs = await _prefs;
     var why1 = prefs.getString("why1") ?? "";
     var why2 = prefs.getString("why2") ?? "";
-    var why3 = prefs.getString("why3") ?? "";
-    var why4 = prefs.getString("why4") ?? "";
+    var why3 = prefs.getString("why3") ?? "-";
+    var why4 = prefs.getString("why4") ?? "-";
     var why5 = "";
     var how = prefs.getString("howC") ?? "";
     var ecmId = prefs.getString("idEcm") ?? "";
