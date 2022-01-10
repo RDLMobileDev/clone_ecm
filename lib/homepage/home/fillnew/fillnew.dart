@@ -281,9 +281,7 @@ class _FillNewState extends State<FillNew> {
         //     prefs.getString("outHouseHBool")!.isNotEmpty &&
         //     prefs.getString("outHouseMpBool")!.isNotEmpty &&
         //     prefs.getString("outHouseCostBool")!.isNotEmpty
-        if (prefs.getString("userNameBool")!.isNotEmpty &&
-            prefs.getString("ideaBool")!.isNotEmpty &&
-            prefs.getString("breakTimeBool")!.isNotEmpty) {
+        if (prefs.getString("breakTimeBool")!.isNotEmpty) {
           _stepFillEnam.getSaveFillEnam();
           setState(() {
             _currentStep++;
