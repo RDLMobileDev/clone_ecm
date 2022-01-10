@@ -182,7 +182,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
               backgroundColor: Colors.redAccent,
               textColor: Colors.white);
         } else {
-          _incrementCounter("0");
           _lineStopH = _limitIncreamentH - _counter;
           resultCostInHouse();
         }
@@ -238,7 +237,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
             _lineStopM = (_limitIncreamentM + 60) - _counterMinutes;
             resultCostInHouse();
           } else {
-            _incrementCounterMinutes("0");
             _lineStopM = _limitIncreamentM - _counterMinutes;
             resultCostInHouse();
           }
@@ -695,13 +693,13 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       fontSize: 16,
                       fontWeight: FontWeight.w400),
                   children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
+                    // TextSpan(
+                    //     text: '*',
+                    //     style: TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         fontSize: 16,
+                    //         color: Colors.red,
+                    //         fontWeight: FontWeight.w400)),
                   ],
                 ),
               ),
@@ -793,13 +791,13 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       fontSize: 16,
                       fontWeight: FontWeight.w400),
                   children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
+                    // TextSpan(
+                    //     text: '*',
+                    //     style: TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         fontSize: 16,
+                    //         color: Colors.red,
+                    //         fontWeight: FontWeight.w400)),
                   ],
                 ),
               ),
