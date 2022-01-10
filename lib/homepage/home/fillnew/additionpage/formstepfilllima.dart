@@ -17,8 +17,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FormStepFilllima extends StatefulWidget {
   final bool? isUpdate;
+  String? idEcmItem;
 
-  const FormStepFilllima({Key? key, this.isUpdate}) : super(key: key);
+  FormStepFilllima({Key? key, this.isUpdate, this.idEcmItem}) : super(key: key);
 
   @override
   _FormStepFilllimaState createState() => _FormStepFilllimaState();
@@ -66,6 +67,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   void getItemStepLimaforUpdate() async {
     final prefs = await _prefs;
 
+    print(widget.idEcmItem);
+
+    var idUser = prefs.getString("idKeyUser").toString();
+
     String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
     String noteStep5 = prefs.getString("noteStep5") ?? "";
     String startTimeStep5 = prefs.getString("startTimeStep5") ?? "";
@@ -83,6 +88,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
         noteOptions["ok"] = true;
         noteOptions["limit"] = false;
         noteOptions["ng"] = false;
+
+        formValue["note"] = noteStep5;
       });
     } else if (noteStep5.isNotEmpty &&
         noteStep5 != "" &&
@@ -91,25 +98,36 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
         noteOptions["ok"] = false;
         noteOptions["limit"] = true;
         noteOptions["ng"] = false;
+        formValue["note"] = noteStep5;
       });
     } else if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ng") {
       setState(() {
         noteOptions["ok"] = false;
         noteOptions["limit"] = false;
         noteOptions["ng"] = true;
+        formValue["note"] = noteStep5;
       });
     }
 
     if (startTimeStep5.isNotEmpty && startTimeStep5 != "") {
-      startTimePickerController = TextEditingController(text: startTimeStep5);
+      setState(() {
+        startTimePickerController = TextEditingController(text: startTimeStep5);
+        formValue["start"] = startTimeStep5;
+      });
     }
 
     if (endTimeStep5.isNotEmpty && endTimeStep5 != "") {
-      endTimePickerController = TextEditingController(text: endTimeStep5);
+      setState(() {
+        endTimePickerController = TextEditingController(text: endTimeStep5);
+        formValue["end"] = endTimeStep5;
+      });
     }
 
     if (repairMade.isNotEmpty && repairMade != "") {
-      repairMadeController = TextEditingController(text: repairMade);
+      setState(() {
+        repairMadeController = TextEditingController(text: repairMade);
+        formValue["repair"] = repairMade;
+      });
     }
 
     setState(() {

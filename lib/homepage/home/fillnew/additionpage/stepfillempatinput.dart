@@ -31,13 +31,15 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   _StepFillEmpatInputState({this.ecmItemId});
 
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   TextEditingController? endTimePickController;
   TextEditingController? startTimePickController;
   TextEditingController tecItem = TextEditingController();
   TextEditingController tecStandard = TextEditingController();
   TextEditingController tecActual = TextEditingController();
   TextEditingController tecName = TextEditingController();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   List<PartModel> parts = <PartModel>[];
   var selectedPart;
   List<AllUserModel> _users = <AllUserModel>[];
@@ -160,20 +162,23 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void getStepEmpatData() async {
-    final prefs = await SharedPreferences.getInstance();
-    var idUser = prefs.getString("idKeyUser").toString();
+    final prefs = await _prefs;
+    String idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey") ?? "";
-    var result = await getIdFillNewEmpat(ecmItemId ?? "0", idUser, tokenUser);
-
-    print(result['data']);
 
     try {
+      var result =
+          await getIdFillNewEmpat(widget.ecmItemId!, idUser, tokenUser);
+      print("Data step 4 for update");
+      print(result);
+
       switch (result['response']['status']) {
         case 200:
           var data = (result['data'] as List)
               .map((e) => ItemCheckingDetail.fromJson(e))
               .toList();
           setState(() {
+            tecName = TextEditingController(text: data[0].partNama);
             formValue = {
               "item": data[0].partNama ?? "-",
               "standard": data[0].partStandard ?? "-",
@@ -334,8 +339,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           formValue["standard"]!,
           formValue["actual"]!,
           formValue["note"]!,
-          formValue["start"]!,
-          formValue["end"]!,
+          startTimePickController!.text,
+          startTimePickController!.text,
           idUser,
           formValue["name"]!);
 
@@ -392,7 +397,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     var ecmId = prefs.getString("idEcm");
     var idUser = prefs.getString("idKeyUser").toString();
     var idMachineRes = prefs.getString("id_machine_res");
-    var idEcmItem = prefs.getString("idEcmItem");
+    // var idEcmItem = prefs.getString("idEcmItem");
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     try {
@@ -400,18 +405,21 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
       var result = await fillNewEmpatUpdate(
           ecmId!,
           idMachineRes!,
-          formValue["item"]!,
-          formValue["standard"]!,
-          formValue["actual"]!,
-          formValue["note"]!,
-          formValue["start"]!,
-          formValue["end"]!,
+          tecName.text,
+          tecStandard.text,
+          tecActual.text,
+          formValue["note"] ?? "-",
+          formValue["start"] ?? "00:00",
+          formValue["end"] ?? "00:00",
           idUser,
-          formValue["name"]!,
-          idEcmItem!,
+          formValue["name"] ?? "-",
+          ecmItemId!,
           tokenUser);
 
-      print("response update -> $result");
+      print("hasil update step 4");
+      print(result);
+
+      // print("response update -> $result");
 
       switch (result['response']['status']) {
         case 200:
@@ -463,6 +471,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     super.initState();
     fetchLocationPartData();
     fetchAllUser();
+
+    print(widget.ecmItemId);
 
     if (ecmItemId != null) {
       getStepEmpatData();
