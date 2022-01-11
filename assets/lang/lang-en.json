@@ -99,7 +99,9 @@
       "confirm": "Confirm",
       "valid_download": "You want to download this document?",
       "cancel": "Cancel",
-      "download": "Download"
+      "download": "Download",
+      "approved_esign": "ECM Card has been approved",
+      "declined_esign":  "ECM Card has been declined"
     },
     "setuju_e_sign": {
       "ecm_card_from": "E-CM Card from",
@@ -127,6 +129,7 @@
       "loading": "Loading Notification...",
       "notification_all": "All Notification",
       "mark_all": "Mark all as read",
+      "mark_as_read": "All notification mark as read",
       "send_ecm": "Sent you a E-CM Card",
       "a_hour": "a hour ago",
       "review": "Review",
@@ -138,6 +141,7 @@
     "notifikasi_staff": {
       "notification_all": "All Notification",
       "mark_all": "Mark all as read",
+      "mark_as_read": "All notification mark as read",
       "was_approve": "Was Approve your E-CM Card",
       "a_hour": "a hour ago",
       "one_day": "1 Day ago"

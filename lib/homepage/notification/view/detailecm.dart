@@ -71,6 +71,8 @@ class _DetailEcmState extends State<DetailEcm> {
   String validasi_unduh = '';
   String batal = '';
   String unduh = '';
+  String approvedSign = '';
+  String declinedSign = '';
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -136,6 +138,8 @@ class _DetailEcmState extends State<DetailEcm> {
         validasi_unduh = dataLang['detail']['valid_download'];
         batal = dataLang['detail']['cancel'];
         unduh = dataLang['detail']['download'];
+        approvedSign = dataLang['detail']['approved_esign'];
+        declinedSign = dataLang['detail']['declined_esign'];
       });
     }
   }
@@ -183,6 +187,8 @@ class _DetailEcmState extends State<DetailEcm> {
         validasi_unduh = dataLang['detail']['valid_download'];
         batal = dataLang['detail']['cancel'];
         unduh = dataLang['detail']['download'];
+        approvedSign = dataLang['detail']['approved_esign'];
+        declinedSign = dataLang['detail']['declined_esign'];
       });
     }
   }
@@ -403,7 +409,7 @@ class _DetailEcmState extends State<DetailEcm> {
       await _loadingAction();
       if (statusUser == '1') {
         Fluttertoast.showToast(
-            msg: 'ECM Card diterima',
+            msg: approvedSign,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -412,7 +418,7 @@ class _DetailEcmState extends State<DetailEcm> {
             fontSize: 16);
       } else {
         Fluttertoast.showToast(
-            msg: 'Pembaruan status ditolak',
+            msg: declinedSign,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
