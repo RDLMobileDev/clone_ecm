@@ -235,10 +235,8 @@ class _HomeState extends State<Home> {
     super.initState();
     getHistoryEcmByUser();
 
-
     _timer =
         Timer.periodic(Duration(seconds: 10), (e) => getHistoryEcmByUser());
-
 
     getNameUser();
     getRoleUser();
