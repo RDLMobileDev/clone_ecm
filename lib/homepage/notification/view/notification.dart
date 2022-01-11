@@ -7,6 +7,7 @@ import 'package:e_cm/homepage/notification/services/apinotif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationMember extends StatefulWidget {
@@ -24,6 +25,7 @@ class _NotificationMemberState extends State<NotificationMember> {
 
   String all_notification = '';
   String mark_as_read = '';
+  String mark_read = '';
   String approve_ecm = '';
   String one_hour = '';
   String one_day_ago = '';
@@ -64,7 +66,7 @@ class _NotificationMemberState extends State<NotificationMember> {
     if (mounted) {
       setState(() {
         all_notification = dataLang['notifikasi_tl']['notification_all'];
-        mark_as_read = dataLang['notifikasi_tl']['mark_all'];
+        mark_read = dataLang['notifikasi_tl']['mark_all'];
         approve_ecm = dataLang['notifikasi_staff']['was_approve'];
         one_hour = dataLang['notifikasi_tl']['a_hour'];
         one_day_ago = dataLang['notifikasi_staff']['one_day'];
@@ -75,6 +77,7 @@ class _NotificationMemberState extends State<NotificationMember> {
         declined = dataLang['notifikasi_tl']['declined'];
         approved = dataLang['notifikasi_tl']['approved'];
         loading = dataLang['notifikasi_tl']['loading'];
+        mark_as_read = dataLang['notifikasi_tl']['mark_as_read'];
       });
     }
   }
@@ -86,7 +89,7 @@ class _NotificationMemberState extends State<NotificationMember> {
     if (mounted) {
       setState(() {
         all_notification = dataLang['notifikasi_tl']['notification_all'];
-        mark_as_read = dataLang['notifikasi_tl']['mark_all'];
+        mark_read = dataLang['notifikasi_tl']['mark_all'];
         approve_ecm = dataLang['notifikasi_staff']['was_approve'];
         one_hour = dataLang['notifikasi_tl']['a_hour'];
         one_day_ago = dataLang['notifikasi_staff']['one_day'];
@@ -97,6 +100,7 @@ class _NotificationMemberState extends State<NotificationMember> {
         declined = dataLang['notifikasi_tl']['declined'];
         approved = dataLang['notifikasi_tl']['approved'];
         loading = dataLang['notifikasi_tl']['loading'];
+        mark_as_read = dataLang['notifikasi_tl']['mark_as_read'];
       });
     }
   }
@@ -196,6 +200,19 @@ class _NotificationMemberState extends State<NotificationMember> {
   //   }
   // }
 
+  void markAsRead() {
+    setState(() {
+      Fluttertoast.showToast(
+          msg: mark_as_read,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    });
+  }
+
   @override
   void initState() {
     getListNotif();
@@ -221,11 +238,16 @@ class _NotificationMemberState extends State<NotificationMember> {
                         fontSize: 16,
                         color: Color(0xff404446),
                         fontWeight: FontWeight.w700)),
-                Text(mark_as_read,
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 12,
-                        color: Color(0xff00AEDB))),
+                InkWell(
+                  onTap: () {
+                    markAsRead();
+                  },
+                  child: Text(mark_read,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 12,
+                          color: Color(0xff00AEDB))),
+                ),
               ],
             ),
           ),
