@@ -139,8 +139,8 @@ class _HistoryPageState extends State<HistoryPage> {
   String choseDate = '';
   final monthFormater = new DateFormat('MMMM');
 
-  bool tabAll = false;
-  bool tabDaily = true;
+  bool tabAll = true;
+  bool tabDaily = false;
   bool tabMontly = false;
 
   int idMonth = 0;
@@ -388,6 +388,7 @@ class _HistoryPageState extends State<HistoryPage> {
     final String dateTime = _fromDate.format("m Y");
     // getListDaily(dateTime);
     // getListAll();
+    getListAll();
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
     final monthFormatNow = new DateFormat('MMMM yyyy');
