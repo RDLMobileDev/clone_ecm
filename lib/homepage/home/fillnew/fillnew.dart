@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
@@ -91,6 +92,22 @@ class _FillNewState extends State<FillNew> {
     } else {
       getLanguageId();
     }
+  }
+
+  bool _loading = false;
+  void _loadingAction() {
+    setState(() {
+      _loading = true;
+      //replace the below line of code with your login request
+      new Future.delayed(new Duration(seconds: 3), _isLoading);
+    });
+    // return true;
+  }
+
+  Future _isLoading() async {
+    setState(() {
+      _loading = false;
+    });
   }
 
   final StepFillSatu _stepFillSatu = StepFillSatu();
@@ -408,92 +425,112 @@ class _FillNewState extends State<FillNew> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return SimpleDialog(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 16, right: 16),
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.topRight,
-                        child: Image.asset(
-                          "assets/icons/X.png",
-                          width: 20,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Center(
-                          child: Image.asset(
-                        "assets/icons/done.png",
-                        width: 150,
-                      )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Terimakasih",
-                          style: TextStyle(
-                              color: Color(0xFF404446),
-                              fontFamily: 'Rubik',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8, left: 16, right: 16),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Formulir Anda telah disimpan dan menunggu untuk disetujui",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xFF404446),
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        // Navigator.of(context).pop();
-                        // final prefs = await _prefs;
-
-                        if (_listSummaryApproval.isNotEmpty) {
-                          print("data approve");
-                          print(_listSummaryApproval);
-                          summaryPopup();
-                        } else {
-                          print(_listSummaryApproval);
-                        }
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(top: 20, left: 16, right: 16),
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          child: Center(
-                            child: Text(
-                              "Lihat Ringkasan",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          )),
-                    )
-                  ],
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 2,
+                  ),
                 );
+              });
+          _isLoading();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return _listSummaryApproval.isEmpty
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          value: null,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : SimpleDialog(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(left: 16, right: 16),
+                              width: MediaQuery.of(context).size.width,
+                              alignment: Alignment.topRight,
+                              child: Image.asset(
+                                "assets/icons/X.png",
+                                width: 20,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Center(
+                                child: Image.asset(
+                              "assets/icons/done.png",
+                              width: 150,
+                            )),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 8),
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Text(
+                                "Terimakasih",
+                                style: TextStyle(
+                                    color: Color(0xFF404446),
+                                    fontFamily: 'Rubik',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin:
+                                EdgeInsets.only(top: 8, left: 16, right: 16),
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Text(
+                                "Formulir Anda telah disimpan dan menunggu untuk disetujui",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Color(0xFF404446),
+                                    fontFamily: 'Rubik',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              // Navigator.of(context).pop();
+                              // final prefs = await _prefs;
+
+                              if (_listSummaryApproval.isNotEmpty) {
+                                print("data approve");
+                                print(_listSummaryApproval);
+                                summaryPopup();
+                              } else {
+                                print(_listSummaryApproval);
+                              }
+                            },
+                            child: Container(
+                                margin: EdgeInsets.only(
+                                    top: 20, left: 16, right: 16),
+                                width: MediaQuery.of(context).size.width,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFF00AEDB),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: Center(
+                                  child: Text(
+                                    "Lihat Ringkasan",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                )),
+                          )
+                        ],
+                      );
               });
         } else {
           Fluttertoast.showToast(
@@ -642,10 +679,14 @@ class _FillNewState extends State<FillNew> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context)
-                    ..pop()
-                    ..pop()
-                    ..pop();
+                  // Navigator.of(context)
+                  //   ..pop()
+                  //   ..pop()
+                  //   ..pop();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
+                      ModalRoute.withName("/"));
                 },
                 child: Container(
                     margin: EdgeInsets.only(top: 20, left: 16, right: 16),
