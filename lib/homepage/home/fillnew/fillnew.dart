@@ -94,20 +94,104 @@ class _FillNewState extends State<FillNew> {
     }
   }
 
-  bool _loading = false;
-  void _loadingAction() {
-    setState(() {
-      _loading = true;
-      //replace the below line of code with your login request
-      new Future.delayed(new Duration(seconds: 3), _isLoading);
-    });
-    // return true;
-  }
-
   Future _isLoading() async {
-    setState(() {
-      _loading = false;
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _listSummaryApproval.isEmpty
+              ? Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 2,
+                  ),
+                )
+              : SimpleDialog(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.topRight,
+                        child: Image.asset(
+                          "assets/icons/X.png",
+                          width: 20,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                          child: Image.asset(
+                        "assets/icons/done.png",
+                        width: 150,
+                      )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8),
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Text(
+                          "Terimakasih",
+                          style: TextStyle(
+                              color: Color(0xFF404446),
+                              fontFamily: 'Rubik',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Text(
+                          "Formulir Anda telah disimpan dan menunggu untuk disetujui",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color(0xFF404446),
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        // Navigator.of(context).pop();
+                        // final prefs = await _prefs;
+
+                        if (_listSummaryApproval.isNotEmpty) {
+                          print("data approve");
+                          print(_listSummaryApproval);
+                          summaryPopup();
+                        } else {
+                          print(_listSummaryApproval);
+                        }
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                          width: MediaQuery.of(context).size.width,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Color(0xFF00AEDB),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          child: Center(
+                            child: Text(
+                              "Lihat Ringkasan",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )),
+                    )
+                  ],
+                );
+        });
   }
 
   final StepFillSatu _stepFillSatu = StepFillSatu();
@@ -343,195 +427,18 @@ class _FillNewState extends State<FillNew> {
                 prefs.getString("copyToBool") == "0") ||
             prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "1") {
-          var res = _stepFillDelapan.getMethodPostStep();
+          // var res = _stepFillDelapan.getMethodPostStep();
 
-          String idUser = prefs.getString("idKeyUser").toString();
-          String tokenUser = prefs.getString("tokenKey").toString();
-          String idEcm = prefs.getString("idEcm").toString();
+          FutureBuilder(
+            future: _stepFillDelapan.getMethodPostStep(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                successStep8();
+              }
 
-          _listSummaryApproval = await summaryApproveService
-              .getSummaryApproveName(tokenUser, idEcm, idUser);
-
-          print(_listSummaryApproval[0].lineStopJam);
-
-          prefs.remove("classBool");
-          prefs.remove("dateBool");
-          prefs.remove("teamMemberBool");
-          prefs.remove("locationBool");
-          prefs.remove("machineNameBool");
-          prefs.remove("machineDetailBool");
-          prefs.remove("shiftBool");
-          prefs.remove("timeBool");
-          prefs.remove("ketikProblemBool");
-          prefs.remove("percentBool");
-          prefs.remove("imageUploadBool");
-          prefs.remove("whyBool1");
-          prefs.remove("whyBool2");
-          prefs.remove("whyBool3");
-          prefs.remove("howBool");
-          prefs.remove("itemStep4Bool");
-          prefs.remove("itemRepairBool");
-          prefs.remove("userNameBool");
-          prefs.remove("ideaBool");
-          prefs.remove("breakTimeBool");
-          prefs.remove("outHouseHBool");
-          prefs.remove("outHouseMpBool");
-          prefs.remove("outHouseCostBool");
-          prefs.remove("sparePartBool");
-          prefs.remove("copyToBool");
-
-          // remove session step 1
-          prefs.remove("namaKlasifikasi");
-          prefs.remove("tglStepSatu");
-          prefs.remove("namaMember");
-          prefs.remove("namaLokasi");
-          prefs.remove("namaGroupLokasi");
-          prefs.remove("machineId");
-          prefs.remove("machineDetailId");
-
-          // remove session step 2
-          prefs.remove("shiftA");
-          prefs.remove("shiftB");
-          prefs.remove("shiftC");
-          prefs.remove("timePickState");
-          prefs.remove("problemTypeState");
-          prefs.remove("safetyOpt");
-          prefs.remove("qualityOpt");
-          prefs.remove("deliveryOpt");
-          prefs.remove("costOpt");
-          prefs.remove("moldingOpt");
-          prefs.remove("utilityOpt");
-          prefs.remove("productionOpt");
-          prefs.remove("engineerOpt");
-          prefs.remove("otherOpt");
-          prefs.remove("imagesKetPath");
-
-          // remove session step 3
-          prefs.remove("why1");
-          prefs.remove("why2");
-          prefs.remove("why3");
-          prefs.remove("why4");
-          prefs.remove("howC");
-
-          // remove session step 6
-          prefs.remove("namaImprovement");
-          prefs.remove("idea");
-          prefs.remove("breakHours");
-          prefs.remove("breakMinutes");
-          prefs.remove("outHouseH");
-          prefs.remove("outHouseMp");
-          prefs.remove("outHouseCost");
-
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: null,
-                    strokeWidth: 2,
-                  ),
-                );
-              });
-          _isLoading();
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return _listSummaryApproval.isEmpty
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          value: null,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : SimpleDialog(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(left: 16, right: 16),
-                              width: MediaQuery.of(context).size.width,
-                              alignment: Alignment.topRight,
-                              child: Image.asset(
-                                "assets/icons/X.png",
-                                width: 20,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Center(
-                                child: Image.asset(
-                              "assets/icons/done.png",
-                              width: 150,
-                            )),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 8),
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                              child: Text(
-                                "Terimakasih",
-                                style: TextStyle(
-                                    color: Color(0xFF404446),
-                                    fontFamily: 'Rubik',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin:
-                                EdgeInsets.only(top: 8, left: 16, right: 16),
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                              child: Text(
-                                "Formulir Anda telah disimpan dan menunggu untuk disetujui",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Color(0xFF404446),
-                                    fontFamily: 'Rubik',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              // Navigator.of(context).pop();
-                              // final prefs = await _prefs;
-
-                              if (_listSummaryApproval.isNotEmpty) {
-                                print("data approve");
-                                print(_listSummaryApproval);
-                                summaryPopup();
-                              } else {
-                                print(_listSummaryApproval);
-                              }
-                            },
-                            child: Container(
-                                margin: EdgeInsets.only(
-                                    top: 20, left: 16, right: 16),
-                                width: MediaQuery.of(context).size.width,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFF00AEDB),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Lihat Ringkasan",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Rubik',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                )),
-                          )
-                        ],
-                      );
-              });
+              return CircularProgressIndicator();
+            },
+          );
         } else {
           Fluttertoast.showToast(
               msg: 'Pilih satu field Copy to',
@@ -554,6 +461,98 @@ class _FillNewState extends State<FillNew> {
             fontSize: 16);
       }
     }
+  }
+
+  void successStep8() async {
+    final prefs = await _prefs;
+    String idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idEcm = prefs.getString("idEcm").toString();
+
+    _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
+        tokenUser, idEcm, idUser);
+
+    print(_listSummaryApproval[0].lineStopJam);
+
+    prefs.remove("classBool");
+    prefs.remove("dateBool");
+    prefs.remove("teamMemberBool");
+    prefs.remove("locationBool");
+    prefs.remove("machineNameBool");
+    prefs.remove("machineDetailBool");
+    prefs.remove("shiftBool");
+    prefs.remove("timeBool");
+    prefs.remove("ketikProblemBool");
+    prefs.remove("percentBool");
+    prefs.remove("imageUploadBool");
+    prefs.remove("whyBool1");
+    prefs.remove("whyBool2");
+    prefs.remove("whyBool3");
+    prefs.remove("howBool");
+    prefs.remove("itemStep4Bool");
+    prefs.remove("itemRepairBool");
+    prefs.remove("userNameBool");
+    prefs.remove("ideaBool");
+    prefs.remove("breakTimeBool");
+    prefs.remove("outHouseHBool");
+    prefs.remove("outHouseMpBool");
+    prefs.remove("outHouseCostBool");
+    prefs.remove("sparePartBool");
+    prefs.remove("copyToBool");
+
+    // remove session step 1
+    prefs.remove("namaKlasifikasi");
+    prefs.remove("tglStepSatu");
+    prefs.remove("namaMember");
+    prefs.remove("namaLokasi");
+    prefs.remove("namaGroupLokasi");
+    prefs.remove("machineId");
+    prefs.remove("machineDetailId");
+
+    // remove session step 2
+    prefs.remove("shiftA");
+    prefs.remove("shiftB");
+    prefs.remove("shiftC");
+    prefs.remove("timePickState");
+    prefs.remove("problemTypeState");
+    prefs.remove("safetyOpt");
+    prefs.remove("qualityOpt");
+    prefs.remove("deliveryOpt");
+    prefs.remove("costOpt");
+    prefs.remove("moldingOpt");
+    prefs.remove("utilityOpt");
+    prefs.remove("productionOpt");
+    prefs.remove("engineerOpt");
+    prefs.remove("otherOpt");
+    prefs.remove("imagesKetPath");
+
+    // remove session step 3
+    prefs.remove("why1");
+    prefs.remove("why2");
+    prefs.remove("why3");
+    prefs.remove("why4");
+    prefs.remove("howC");
+
+    // remove session step 6
+    prefs.remove("namaImprovement");
+    prefs.remove("idea");
+    prefs.remove("breakHours");
+    prefs.remove("breakMinutes");
+    prefs.remove("outHouseH");
+    prefs.remove("outHouseMp");
+    prefs.remove("outHouseCost");
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(
+              value: null,
+              strokeWidth: 2,
+            ),
+          );
+        });
+    _isLoading();
   }
 
   void summaryPopup() async {

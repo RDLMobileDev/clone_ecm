@@ -23,6 +23,11 @@ class StepFillEmpat extends StatefulWidget {
 
 class _StepFillEmpatState extends State<StepFillEmpat> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  String data = "Item deleted successfully";
+
+  List<ItemChecking> _listItemChecking = [];
+  StreamController step4getController = StreamController();
+  late Timer _timer;
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -169,11 +174,6 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  String data = "Item deleted successfully";
-
-  List<ItemChecking> _listItemChecking = [];
-  StreamController step4getController = StreamController();
-
   Future<List> getDataItemChecking() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
@@ -195,6 +195,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                 .map((e) => ItemChecking.fromJson(e))
                 .toList();
           });
+
+          step4getController.add(_listItemChecking);
 
           break;
         default:
@@ -399,10 +401,17 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   void initState() {
     super.initState();
     // getDataItemChecking();
-
-    Future.delayed(Duration(seconds: 3), () => getDataItemChecking());
+    _timer =
+        Timer.periodic(Duration(seconds: 10), (e) => getDataItemChecking());
+    // Future.delayed(Duration(seconds: 3), () => getDataItemChecking());
     setLang();
     setBahasa();
+  }
+
+  @override
+  void dispose() {
+    if (_timer.isActive) _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -439,8 +448,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: Container(
-                child: FutureBuilder(
-                  future: getDataItemChecking(),
+                child: StreamBuilder(
+                  stream: step4getController.stream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(child: CircularProgressIndicator());
