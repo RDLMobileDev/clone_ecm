@@ -1654,7 +1654,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
               ),
             ),
             Container(
-                margin: const EdgeInsets.only(top: 16),
+                margin: const EdgeInsets.only(top: 16, bottom: 10),
                 height: 40,
                 child: TextFormField(
                   controller: vendorPriceController,
