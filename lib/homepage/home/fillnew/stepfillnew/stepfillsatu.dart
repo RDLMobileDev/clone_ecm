@@ -941,6 +941,16 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       _listGroupArea[i].valueGroup);
                                   prefs.setString("locationGroupBool", "1");
                                   print("id lokasi: $locationIdGroupSelected");
+
+                                  prefs.remove("machineId");
+                                  prefs.remove("machineDetailId");
+                                  prefs.remove("machineNameBool");
+                                  prefs.remove("machineDetailBool");
+                                  prefs.remove("namaMesin");
+                                  prefs.remove("nomorMesinDetail");
+
+                                  machineNameController.clear();
+                                  machineNumberController.clear();
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -1033,6 +1043,13 @@ class StepFillSatuState extends State<StepFillSatu> {
                                               text: _listMachineName[i].nama);
                                       isTapedMachineName = !isTapedMachineName;
                                     });
+
+                                    prefs.remove("machineId");
+                                    prefs.remove("machineDetailId");
+                                    prefs.remove("machineDetailBool");
+                                    prefs.remove("nomorMesinDetail");
+
+                                    machineNumberController.clear();
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 15),
