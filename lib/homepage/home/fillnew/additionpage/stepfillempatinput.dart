@@ -433,7 +433,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
       switch (result['response']['status']) {
         case 200:
-          Navigator.of(context).pop(true);
+          Navigator.of(context)
+            ..pop()
+            ..pop(true);
           break;
         default:
           resultMessage = "Data item checking gagal diperbarui";
@@ -1157,23 +1159,34 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     onPressed: formValidations.containsValue(false)
                         ? null
                         : () async {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value: null,
-                                      strokeWidth: 2,
-                                    ),
-                                  );
-                                });
-                            await _loadingAction();
                             if (ecmItemId != null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: null,
+                                        strokeWidth: 2,
+                                      ),
+                                    );
+                                  });
+                              await _loadingAction();
                               updateStepInputChecking();
                               return;
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: null,
+                                        strokeWidth: 2,
+                                      ),
+                                    );
+                                  });
+                              await _loadingAction();
+                              saveStepInputChecking();
                             }
-
-                            saveStepInputChecking();
 
                             // Navigator.pop(context, true);
                             // Navigator.of(context).pop();
