@@ -309,12 +309,12 @@ class _FillNewState extends State<FillNew> {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-          Fluttertoast.showToast(
-              msg: 'Tambahkan item dahulu',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
+          // Fluttertoast.showToast(
+          //     msg: 'Tambahkan item dahulu',
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     fontSize: 16);
         }
       }
 
@@ -506,14 +506,16 @@ class _FillNewState extends State<FillNew> {
       }
     } catch (e) {
       print("fill new error -> $e");
-      Fluttertoast.showToast(
-          msg: 'Harap isi semua form di step ${_currentStep + 1}',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.orangeAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+      if (_currentStep + 1 <= 6) {
+        Fluttertoast.showToast(
+            msg: 'Harap isi semua form di step ${_currentStep + 1}',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.orangeAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
     }
   }
 
