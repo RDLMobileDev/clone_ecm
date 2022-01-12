@@ -1052,7 +1052,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
-                      maxLength: 2,
                       controller: breakHoursController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) async {
@@ -1074,7 +1073,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         prefs.setString("breakTimeBool", "1");
                       },
                       decoration: InputDecoration(
-                        counter: Offstage(),
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),
@@ -1193,7 +1191,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     height: 40,
                     padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
-                      maxLength: 2,
                       controller: breakMinutesController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) async {
@@ -1214,7 +1211,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         prefs.setString("breakTimeBool", "1");
                       },
                       decoration: InputDecoration(
-                        counter: Offstage(),
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),
@@ -1691,7 +1687,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                 isTapVendor = !isTapVendor;
                               });
                             },
-                            child: Text(e.vendorName!));
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(e.vendorName!),
+                            ));
                       }).toList(),
                     ),
                   ),
@@ -1717,7 +1716,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 20,
                             // height: 20,
                             child: TextFormField(
-                                maxLength: 2,
                                 onChanged: (text) async {
                                   resultHOutHouse(text);
                                   final prefs = await _prefs;
@@ -1731,7 +1729,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400),
                                 decoration: const InputDecoration(
-                                    counter: Offstage(),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -1768,9 +1765,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   Container(
                     width: 80,
                     height: 40,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
                         borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -1782,7 +1777,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 20,
                             // height: 20,
                             child: TextFormField(
-                                maxLength: 2,
                                 onChanged: (text) async {
                                   resultMpOutHouse(text);
                                   final SharedPreferences prefs = await _prefs;
@@ -1796,7 +1790,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400),
                                 decoration: const InputDecoration(
-                                    counter: Offstage(),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
