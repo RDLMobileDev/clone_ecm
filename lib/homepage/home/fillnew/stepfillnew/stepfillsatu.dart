@@ -160,7 +160,7 @@ class StepFillSatuState extends State<StepFillSatu> {
     }
   }
 
-  TextEditingController? machineNameController;
+  TextEditingController machineNameController = TextEditingController();
   TextEditingController machineNumberController = TextEditingController();
   TextEditingController teamMemberController = TextEditingController();
   TextEditingController factoryNameController = TextEditingController();
@@ -391,16 +391,16 @@ class StepFillSatuState extends State<StepFillSatu> {
     String? namaMember = prefs.getString("namaMember");
     String? namaLokasi = prefs.getString("namaLokasi");
     String? namaGroupLokasi = prefs.getString("namaGroupLokasi");
-    String? machineId = prefs.getString("machineId");
-    String? machineDetailId = prefs.getString("machineDetailId");
+    String? namaMesin = prefs.getString("namaMesin");
+    String? nomorMesin = prefs.getString("nomorMesinDetail");
 
     if (namaKlasifikasi != null &&
         tglStepSatu != null &&
         namaMember != null &&
         namaLokasi != null &&
         namaGroupLokasi != null &&
-        machineId != null &&
-        machineDetailId != null) {
+        namaMesin != null &&
+        nomorMesin != null) {
       setState(() {
         namaKlasifikasiFromSession = namaKlasifikasi;
         dateSelected = tglStepSatu;
@@ -408,8 +408,8 @@ class StepFillSatuState extends State<StepFillSatu> {
         factoryNameController = TextEditingController(text: namaLokasi);
         factoryNameGroupController =
             TextEditingController(text: namaGroupLokasi);
-        machineNameController = TextEditingController(text: machineId);
-        machineNumberController = TextEditingController(text: machineDetailId);
+        machineNameController = TextEditingController(text: namaMesin);
+        machineNumberController = TextEditingController(text: nomorMesin);
       });
     }
   }
@@ -833,6 +833,19 @@ class StepFillSatuState extends State<StepFillSatu> {
                                       _listLocation[i].valueFactory);
                                   prefs.setString("locationBool", "1");
                                   print("id lokasi: $locationIdSelected");
+
+                                  prefs.remove("locationIdGroup");
+                                  prefs.remove("machineId");
+                                  prefs.remove("machineDetailId");
+                                  prefs.remove("machineNameBool");
+                                  prefs.remove("machineDetailBool");
+                                  prefs.remove("namaGroupLokasi");
+                                  prefs.remove("namaMesin");
+                                  prefs.remove("nomorMesinDetail");
+
+                                  factoryNameGroupController.clear();
+                                  machineNameController.clear();
+                                  machineNumberController.clear();
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -971,7 +984,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               },
               onChanged: (value) async {
                 final prefs = await _prefs;
-                prefs.setString("machineId", value);
+                // prefs.setString("machineId", value);
                 prefs.setString("machineNameBool", "1");
               },
               style: const TextStyle(
@@ -1007,8 +1020,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                               return InkWell(
                                   onTap: () async {
                                     final prefs = await _prefs;
+                                    prefs.setString("machineId",
+                                        _listMachineName[i].idMesin);
                                     prefs.setString(
-                                        "machineId", _listMachineName[i].nama);
+                                        "namaMesin", _listMachineName[i].nama);
                                     prefs.setString("machineNameBool", "1");
                                     setState(() {
                                       idMachineFromName =
@@ -1066,7 +1081,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               },
               onChanged: (value) async {
                 final prefs = await _prefs;
-                prefs.setString("machineDetailId", value);
+                // prefs.setString("machineDetailId", value);
                 prefs.setString("machineDetailBool", "1");
               },
               style: const TextStyle(
@@ -1103,6 +1118,8 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   onTap: () async {
                                     final prefs = await _prefs;
                                     prefs.setString("machineDetailId",
+                                        _listMachineNumber[i].id);
+                                    prefs.setString("nomorMesinDetail",
                                         _listMachineNumber[i].numberOfMachine);
                                     prefs.setString("machineDetailBool", "1");
                                     setState(() {
