@@ -144,6 +144,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
       print("response step 8:");
       print(response);
+
+      if (response['response']['status'] == 200) {
+        print("sukses");
+      }
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
