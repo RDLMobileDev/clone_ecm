@@ -109,7 +109,9 @@ class _FillNewState extends State<FillNew> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                          ..pop()
+                          ..pop();
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 16, right: 16),
@@ -420,6 +422,7 @@ class _FillNewState extends State<FillNew> {
       }
 
       if (_currentStep == 7) {
+        print("step in: " + _stepClicked.toString());
         setState(() {
           textNext = 'Finish';
         });
@@ -427,18 +430,18 @@ class _FillNewState extends State<FillNew> {
                 prefs.getString("copyToBool") == "0") ||
             prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "1") {
-          // var res = _stepFillDelapan.getMethodPostStep();
-
-          FutureBuilder(
-            future: _stepFillDelapan.getMethodPostStep(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                successStep8();
-              }
-
-              return CircularProgressIndicator();
-            },
-          );
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 2,
+                  ),
+                );
+              });
+          var res = _stepFillDelapan.getMethodPostStep();
+          successStep8();
         } else {
           Fluttertoast.showToast(
               msg: 'Pilih satu field Copy to',
@@ -542,16 +545,6 @@ class _FillNewState extends State<FillNew> {
     prefs.remove("outHouseMp");
     prefs.remove("outHouseCost");
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: CircularProgressIndicator(
-              value: null,
-              strokeWidth: 2,
-            ),
-          );
-        });
     _isLoading();
   }
 
@@ -836,7 +829,7 @@ class _FillNewState extends State<FillNew> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => continued(),
+                          onTap: _stepClicked == 9 ? null : () => continued(),
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.4,
                             height: 40,
