@@ -215,6 +215,11 @@ class StepFillSatuState extends State<StepFillSatu> {
     String tokenUser = prefs.getString("tokenKey").toString();
     String idUser = prefs.getString("idKeyUser").toString();
 
+    print(locationId);
+    print(locationIdGroup);
+    print(machineId);
+    print(machineDetailId);
+
     try {
       if (tokenUser != "" &&
           idClass != "" &&
@@ -233,6 +238,9 @@ class StepFillSatuState extends State<StepFillSatu> {
         prefs.setString("idEcm", result['data']['id_ecm'].toString());
         prefs.setString(
             "id_machine_res", result['data']['id_machine'].toString());
+
+        print(
+            "ecm id from step 1: ..... " + prefs.getString("idEcm").toString());
 
         if (result['response']['status'] == 200) {
           Fluttertoast.showToast(
@@ -1043,8 +1051,6 @@ class StepFillSatuState extends State<StepFillSatu> {
                                               text: _listMachineName[i].nama);
                                       isTapedMachineName = !isTapedMachineName;
                                     });
-
-                                    prefs.remove("machineId");
                                     prefs.remove("machineDetailId");
                                     prefs.remove("machineDetailBool");
                                     prefs.remove("nomorMesinDetail");
