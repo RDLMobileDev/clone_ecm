@@ -81,6 +81,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     return parsedStart.isBefore(parsedEnd);
   }
 
+  Future<bool> _loadingAction() async {
+    //replace the below line of code with your login request
+    Future.delayed(const Duration(seconds: 3));
+
+    return true;
+  }
+
   void showToast(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -326,15 +333,15 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     final prefs = await _prefs;
     var ecmId = prefs.getString("idEcm");
     var idUser = prefs.getString("idKeyUser").toString();
-    String tokenUser = prefs.getString("tokenKey") ?? "";
+    // String tokenUser = prefs.getString("tokenKey") ?? "";
     var idMachineRes = prefs.getString("id_machine_res");
 
-    print(tokenUser);
+    // print(tokenUser);
 
     try {
       String resultMessage = "Data disimpan";
       var result = await fillNewEmpatInsert(
-          tokenUser,
+          // tokenUser,
           ecmId!,
           idMachineRes!,
           tecName.text,
@@ -356,7 +363,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
           prefs.setString("itemStep4Bool", "1");
           print(result['data']['t_ecmitem_id'].toString());
-          Navigator.of(context).pop(true);
+          Navigator.of(context)
+            ..pop()
+            ..pop(true);
           break;
         default:
           resultMessage = "Data gagal disimpan";
@@ -1133,13 +1142,27 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         ))),
                     onPressed: formValidations.containsValue(false)
                         ? null
-                        : () {
+                        : () async {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: null,
+                                      strokeWidth: 2,
+                                    ),
+                                  );
+                                });
+                            await _loadingAction();
                             if (ecmItemId != null) {
                               updateStepInputChecking();
                               return;
                             }
 
                             saveStepInputChecking();
+
+                            // Navigator.pop(context, true);
+                            // Navigator.of(context).pop();
                           },
                     child: Text(
                       ecmItemId == null ? 'Save Checking' : "Update Checking",
