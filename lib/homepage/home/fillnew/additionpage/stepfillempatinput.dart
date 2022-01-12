@@ -336,52 +336,51 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     // String tokenUser = prefs.getString("tokenKey") ?? "";
     var idMachineRes = prefs.getString("id_machine_res");
 
-    // print(tokenUser);
+    print(ecmId);
 
-    try {
-      String resultMessage = "Data disimpan";
-      var result = await fillNewEmpatInsert(
-          // tokenUser,
-          ecmId!,
-          idMachineRes!,
-          tecName.text,
-          formValue["standard"]!,
-          formValue["actual"]!,
-          formValue["note"]!,
-          startTimePickController!.text,
-          endTimePickController!.text,
-          idUser,
-          formValue["name"]!);
+    String resultMessage = "Data disimpan";
+    var result = await fillNewEmpatInsert(
+        // tokenUser,
+        ecmId!,
+        idMachineRes!,
+        tecName.text,
+        formValue["standard"]!,
+        formValue["actual"]!,
+        formValue["note"]!,
+        startTimePickController!.text,
+        endTimePickController!.text,
+        idUser,
+        formValue["name"]!);
 
-      print(result);
+    print(result);
 
-      switch (result['response']['status']) {
-        case 200:
-          print(result['data']['t_ecmitem_id'].toString());
-          prefs.setString(
-              "idEcmItem", result['data']['t_ecmitem_id'].toString());
+    switch (result['response']['status']) {
+      case 200:
+        print(result['data']['t_ecmitem_id'].toString());
+        prefs.setString("idEcmItem", result['data']['t_ecmitem_id'].toString());
 
-          prefs.setString("itemStep4Bool", "1");
-          print(result['data']['t_ecmitem_id'].toString());
-          Navigator.of(context)
-            ..pop()
-            ..pop(true);
-          break;
-        default:
-          resultMessage = "Data gagal disimpan";
-          break;
-      }
+        prefs.setString("itemStep4Bool", "1");
+        print(result['data']['t_ecmitem_id'].toString());
+        Navigator.of(context)
+          ..pop()
+          ..pop(true);
+        break;
+      default:
+        resultMessage = "Data gagal disimpan";
+        break;
+    }
 
-      Fluttertoast.showToast(
-        msg: resultMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16,
-      );
-    } catch (e) {
+    Fluttertoast.showToast(
+      msg: resultMessage,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 2,
+      backgroundColor: Colors.greenAccent,
+      textColor: Colors.white,
+      fontSize: 16,
+    );
+
+    try {} catch (e) {
       print("exception occured -> $e");
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
