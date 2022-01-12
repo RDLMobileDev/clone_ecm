@@ -175,14 +175,14 @@ class _HistoryPageState extends State<HistoryPage> {
           print("===== || =====");
         });
         setState(() {
-          Fluttertoast.showToast(
-              msg: show + dateSelected,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16);
+          // Fluttertoast.showToast(
+          //     msg: show + dateSelected + "ss",
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     backgroundColor: Colors.green,
+          //     textColor: Colors.white,
+          //     fontSize: 16);
         });
       } else {
         setState(() {
@@ -1083,206 +1083,225 @@ class _HistoryPageState extends State<HistoryPage> {
                       height: MediaQuery.of(context).size.height * 0.7,
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                      child: _listDaily.isEmpty
-                          ? const Center(
-                              child: Text(
-                                "No data here",
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              // physics: NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  _listDaily.isEmpty ? 0 : _listDaily.length,
-                              itemBuilder: (context, i) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                HistoryDetailPage(
-                                                  notifId: _listDaily[i]
-                                                      .tEcmId
-                                                      .toString(),
-                                                  isShowButton: true,
-                                                )));
-                                  },
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    elevation: 2,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  decoration: const BoxDecoration(
-                                                      color: Color(0xFF00AEDB),
-                                                      shape: BoxShape.circle,
-                                                      image: DecorationImage(
-                                                          image: AssetImage(
-                                                              "assets/images/ario.png"))),
-                                                ),
-                                                const SizedBox(
-                                                  width: 16,
-                                                ),
-                                                Container(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      RichText(
-                                                        text: TextSpan(
-                                                          style:
-                                                              const TextStyle(
-                                                            fontFamily: 'Rubik',
-                                                            fontSize: 16,
-                                                          ),
-                                                          // ignore: prefer_const_literals_to_create_immutables
-                                                          children: <TextSpan>[
-                                                            TextSpan(
-                                                                text: _listDaily[
-                                                                        i]
-                                                                    .nama
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    color: Color(
-                                                                        0xFF00AEDB),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700)),
-                                                            const TextSpan(
-                                                                text:
-                                                                    ' Making E-CM Card',
-                                                                style: TextStyle(
-                                                                    color: Color(
-                                                                        0xFF6C7072))),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 8,
-                                                      ),
-                                                      Text(
-                                                        _listDaily[i]
-                                                            .waktu
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontFamily: 'Rubik',
-                                                            fontSize: 10,
-                                                            color: Color(
-                                                                0xFF979C9E)),
-                                                      ),
-                                                      // Container(
-                                                      //   margin: const EdgeInsets.only(top: 22),
-                                                      //   child: Row(
-                                                      //     children: [
-                                                      //       InkWell(
-                                                      //         onTap: () {
-                                                      //           // Navigator.of(context).push(MaterialPageRoute(
-                                                      //           //     builder: (context) => DetailEcm(
-                                                      //           //           notifId: _listDaily[i]
-                                                      //           //               .notifEcmId
-                                                      //           //               .toString(),
-                                                      //           //         )));
-                                                      //           // print("ok");
-                                                      //         },
-                                                      //         child: Container(
-                                                      //           width: 63,
-                                                      //           height: 24,
-                                                      //           decoration: BoxDecoration(
-                                                      //               border: Border.all(
-                                                      //                   color: const Color(0xFF00AEDB)),
-                                                      //               borderRadius: const BorderRadius.all(
-                                                      //                   Radius.circular(5))),
-                                                      //           child: const Center(
-                                                      //             child: Text(
-                                                      //               "Review",
-                                                      //               style: TextStyle(
-                                                      //                   fontFamily: 'Rubik',
-                                                      //                   fontSize: 12,
-                                                      //                   fontWeight: FontWeight.w400),
-                                                      //             ),
-                                                      //           ),
-                                                      //         ),
-                                                      //       ),
-                                                      //       SizedBox(
-                                                      //         width: 8,
-                                                      //       ),
-                                                      //       Container(
-                                                      //         width: 63,
-                                                      //         height: 24,
-                                                      //         decoration: BoxDecoration(
-                                                      //             color: Color(0xFF00AEDB),
-                                                      //             borderRadius:
-                                                      //                 BorderRadius.all(Radius.circular(5))),
-                                                      //         child: Center(
-                                                      //           child: Text(
-                                                      //             "Approve",
-                                                      //             style: TextStyle(
-                                                      //                 fontFamily: 'Rubik',
-                                                      //                 color: Colors.white,
-                                                      //                 fontSize: 12,
-                                                      //                 fontWeight: FontWeight.w400),
-                                                      //           ),
-                                                      //         ),
-                                                      //       ),
-                                                      //       SizedBox(
-                                                      //         width: 8,
-                                                      //       ),
-                                                      //       Container(
-                                                      //         width: 63,
-                                                      //         height: 24,
-                                                      //         decoration: BoxDecoration(
-                                                      //             color: Color(0xFFFF0000),
-                                                      //             borderRadius:
-                                                      //                 BorderRadius.all(Radius.circular(5))),
-                                                      //         child: Center(
-                                                      //           child: Text(
-                                                      //             "Decline",
-                                                      //             style: TextStyle(
-                                                      //                 fontFamily: 'Rubik',
-                                                      //                 color: Colors.white,
-                                                      //                 fontSize: 12,
-                                                      //                 fontWeight: FontWeight.w400),
-                                                      //           ),
-                                                      //         ),
-                                                      //       ),
-                                                      //     ],
-                                                      //   ),
-                                                      // )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Icon(
-                                              Icons.arrow_forward_ios_rounded,
-                                              color: Colors.black54,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                      child: FutureBuilder(
+                        future: getListDaily(_fromDate.format("Y-m-d")),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Container(
+                                height: 200,
+                                child: Center(child: Text("Memuat data")));
+                          }
+
+                          return _listDaily.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    "No data here",
+                                    style: TextStyle(fontSize: 14),
                                   ),
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  // physics: NeverScrollableScrollPhysics(),
+                                  itemCount: _listDaily.isEmpty
+                                      ? 0
+                                      : _listDaily.length,
+                                  itemBuilder: (context, i) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HistoryDetailPage(
+                                                      notifId: _listDaily[i]
+                                                          .tEcmId
+                                                          .toString(),
+                                                      isShowButton: true,
+                                                    )));
+                                      },
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        elevation: 2,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 48,
+                                                      height: 48,
+                                                      decoration: const BoxDecoration(
+                                                          color:
+                                                              Color(0xFF00AEDB),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                  "assets/images/ario.png"))),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 16,
+                                                    ),
+                                                    Container(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          RichText(
+                                                            text: TextSpan(
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Rubik',
+                                                                fontSize: 16,
+                                                              ),
+                                                              // ignore: prefer_const_literals_to_create_immutables
+                                                              children: <
+                                                                  TextSpan>[
+                                                                TextSpan(
+                                                                    text: _listDaily[
+                                                                            i]
+                                                                        .nama
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        color: Color(
+                                                                            0xFF00AEDB),
+                                                                        fontWeight:
+                                                                            FontWeight.w700)),
+                                                                const TextSpan(
+                                                                    text:
+                                                                        ' Making E-CM Card',
+                                                                    style: TextStyle(
+                                                                        color: Color(
+                                                                            0xFF6C7072))),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          Text(
+                                                            _listDaily[i]
+                                                                .waktu
+                                                                .toString(),
+                                                            style: const TextStyle(
+                                                                fontFamily:
+                                                                    'Rubik',
+                                                                fontSize: 10,
+                                                                color: Color(
+                                                                    0xFF979C9E)),
+                                                          ),
+                                                          // Container(
+                                                          //   margin: const EdgeInsets.only(top: 22),
+                                                          //   child: Row(
+                                                          //     children: [
+                                                          //       InkWell(
+                                                          //         onTap: () {
+                                                          //           // Navigator.of(context).push(MaterialPageRoute(
+                                                          //           //     builder: (context) => DetailEcm(
+                                                          //           //           notifId: _listDaily[i]
+                                                          //           //               .notifEcmId
+                                                          //           //               .toString(),
+                                                          //           //         )));
+                                                          //           // print("ok");
+                                                          //         },
+                                                          //         child: Container(
+                                                          //           width: 63,
+                                                          //           height: 24,
+                                                          //           decoration: BoxDecoration(
+                                                          //               border: Border.all(
+                                                          //                   color: const Color(0xFF00AEDB)),
+                                                          //               borderRadius: const BorderRadius.all(
+                                                          //                   Radius.circular(5))),
+                                                          //           child: const Center(
+                                                          //             child: Text(
+                                                          //               "Review",
+                                                          //               style: TextStyle(
+                                                          //                   fontFamily: 'Rubik',
+                                                          //                   fontSize: 12,
+                                                          //                   fontWeight: FontWeight.w400),
+                                                          //             ),
+                                                          //           ),
+                                                          //         ),
+                                                          //       ),
+                                                          //       SizedBox(
+                                                          //         width: 8,
+                                                          //       ),
+                                                          //       Container(
+                                                          //         width: 63,
+                                                          //         height: 24,
+                                                          //         decoration: BoxDecoration(
+                                                          //             color: Color(0xFF00AEDB),
+                                                          //             borderRadius:
+                                                          //                 BorderRadius.all(Radius.circular(5))),
+                                                          //         child: Center(
+                                                          //           child: Text(
+                                                          //             "Approve",
+                                                          //             style: TextStyle(
+                                                          //                 fontFamily: 'Rubik',
+                                                          //                 color: Colors.white,
+                                                          //                 fontSize: 12,
+                                                          //                 fontWeight: FontWeight.w400),
+                                                          //           ),
+                                                          //         ),
+                                                          //       ),
+                                                          //       SizedBox(
+                                                          //         width: 8,
+                                                          //       ),
+                                                          //       Container(
+                                                          //         width: 63,
+                                                          //         height: 24,
+                                                          //         decoration: BoxDecoration(
+                                                          //             color: Color(0xFFFF0000),
+                                                          //             borderRadius:
+                                                          //                 BorderRadius.all(Radius.circular(5))),
+                                                          //         child: Center(
+                                                          //           child: Text(
+                                                          //             "Decline",
+                                                          //             style: TextStyle(
+                                                          //                 fontFamily: 'Rubik',
+                                                          //                 color: Colors.white,
+                                                          //                 fontSize: 12,
+                                                          //                 fontWeight: FontWeight.w400),
+                                                          //           ),
+                                                          //         ),
+                                                          //       ),
+                                                          //     ],
+                                                          //   ),
+                                                          // )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Colors.black54,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
-                              },
-                            ),
+                        },
+                      ),
                     ),
                   ),
                   InkWell(
