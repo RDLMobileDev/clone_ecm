@@ -580,33 +580,51 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             ),
             itemNameTapped == false
                 ? Container()
-                : Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _listData.length,
-                      itemBuilder: (context, i) {
-                        return InkWell(
-                            onTap: () async {
-                              final prefs = await _prefs;
-                              setState(() {
-                                tecName = TextEditingController(
-                                    text: _listData[i].partNama);
-                                formValidations["item"] =
-                                    _listData[i].partNama.toString().isNotEmpty;
-                                itemNameTapped = !itemNameTapped;
-                              });
-                              prefs.setString("itemNameStepLima",
-                                  _listData[i].partNama.toString());
-                              prefs.setString("idEcmItem",
-                                  _listData[i].ecmitemId.toString());
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Text(_listData[i].partNama!),
-                            ));
-                      },
-                    ),
-                  ),
+                : _listData.isEmpty
+                    ? Container(
+                        margin: EdgeInsets.only(top: 5),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text("Memuat nama item")
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _listData.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    tecName = TextEditingController(
+                                        text: _listData[i].partNama);
+                                    formValidations["item"] = _listData[i]
+                                        .partNama
+                                        .toString()
+                                        .isNotEmpty;
+                                    itemNameTapped = !itemNameTapped;
+                                  });
+                                  prefs.setString("itemNameStepLima",
+                                      _listData[i].partNama.toString());
+                                  prefs.setString("idEcmItem",
+                                      _listData[i].ecmitemId.toString());
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Text(_listData[i].partNama!),
+                                ));
+                          },
+                        ),
+                      ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),

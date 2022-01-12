@@ -566,29 +566,44 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               ),
               isTappedNameItem == false
                   ? Container()
-                  : Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 150,
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: parts.map((e) {
-                          return InkWell(
-                            onTap: () {
-                              print(e.mPartNama);
-                              setState(() {
-                                tecName =
-                                    TextEditingController(text: e.mPartNama);
-                                formValidations["item"] =
-                                    e.mPartNama!.isNotEmpty;
-                                isTappedNameItem = !isTappedNameItem;
-                              });
-                            },
-                            child: Container(
-                                height: 30, child: Text(e.mPartNama!)),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                  : parts.isEmpty
+                      ? Container(
+                          margin: EdgeInsets.only(top: 5),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(
+                                  height: 4,
+                                ),
+                                Text("Memuat nama item")
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 150,
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: parts.map((e) {
+                              return InkWell(
+                                onTap: () {
+                                  print(e.mPartNama);
+                                  setState(() {
+                                    tecName = TextEditingController(
+                                        text: e.mPartNama);
+                                    formValidations["item"] =
+                                        e.mPartNama!.isNotEmpty;
+                                    isTappedNameItem = !isTappedNameItem;
+                                  });
+                                },
+                                child: Container(
+                                    height: 30, child: Text(e.mPartNama!)),
+                              );
+                            }).toList(),
+                          ),
+                        ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.only(top: 10),
