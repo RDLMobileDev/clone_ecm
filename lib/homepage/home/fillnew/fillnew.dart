@@ -12,6 +12,8 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltiga.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
 import 'package:e_cm/homepage/home/model/summaryapprovemodel.dart';
+import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
+import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:e_cm/homepage/home/services/summaryapproveservice.dart';
 import 'package:e_cm/homepage/home/view/home.dart';
 import 'package:flutter/material.dart';
@@ -109,9 +111,11 @@ class _FillNewState extends State<FillNew> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Dashboard()),
+                            ModalRoute.withName("/"));
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 16, right: 16),
@@ -476,74 +480,8 @@ class _FillNewState extends State<FillNew> {
         tokenUser, idEcm, idUser);
 
     print(_listSummaryApproval[0].lineStopJam);
-
-    prefs.remove("classBool");
-    prefs.remove("dateBool");
-    prefs.remove("teamMemberBool");
-    prefs.remove("locationBool");
-    prefs.remove("machineNameBool");
-    prefs.remove("machineDetailBool");
-    prefs.remove("shiftBool");
-    prefs.remove("timeBool");
-    prefs.remove("ketikProblemBool");
-    prefs.remove("percentBool");
-    prefs.remove("imageUploadBool");
-    prefs.remove("whyBool1");
-    prefs.remove("whyBool2");
-    prefs.remove("whyBool3");
-    prefs.remove("howBool");
-    prefs.remove("itemStep4Bool");
-    prefs.remove("itemRepairBool");
-    prefs.remove("userNameBool");
-    prefs.remove("ideaBool");
-    prefs.remove("breakTimeBool");
-    prefs.remove("outHouseHBool");
-    prefs.remove("outHouseMpBool");
-    prefs.remove("outHouseCostBool");
-    prefs.remove("sparePartBool");
-    prefs.remove("copyToBool");
-
-    // remove session step 1
-    prefs.remove("namaKlasifikasi");
-    prefs.remove("tglStepSatu");
-    prefs.remove("namaMember");
-    prefs.remove("namaLokasi");
-    prefs.remove("namaGroupLokasi");
-    prefs.remove("machineId");
-    prefs.remove("machineDetailId");
-
-    // remove session step 2
-    prefs.remove("shiftA");
-    prefs.remove("shiftB");
-    prefs.remove("shiftC");
-    prefs.remove("timePickState");
-    prefs.remove("problemTypeState");
-    prefs.remove("safetyOpt");
-    prefs.remove("qualityOpt");
-    prefs.remove("deliveryOpt");
-    prefs.remove("costOpt");
-    prefs.remove("moldingOpt");
-    prefs.remove("utilityOpt");
-    prefs.remove("productionOpt");
-    prefs.remove("engineerOpt");
-    prefs.remove("otherOpt");
-    prefs.remove("imagesKetPath");
-
-    // remove session step 3
-    prefs.remove("why1");
-    prefs.remove("why2");
-    prefs.remove("why3");
-    prefs.remove("why4");
-    prefs.remove("howC");
-
-    // remove session step 6
-    prefs.remove("namaImprovement");
-    prefs.remove("idea");
-    prefs.remove("breakHours");
-    prefs.remove("breakMinutes");
-    prefs.remove("outHouseH");
-    prefs.remove("outHouseMp");
-    prefs.remove("outHouseCost");
+    removeStepCacheFillEcm();
+    removeCacheFillEcm();
 
     _isLoading();
   }
@@ -556,7 +494,10 @@ class _FillNewState extends State<FillNew> {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
+                      ModalRoute.withName("/"));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 16, right: 16),
@@ -705,7 +646,8 @@ class _FillNewState extends State<FillNew> {
         });
   }
 
-  cancel() {
+  cancel() async {
+    final prefs = await _prefs;
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
     if (_stepClicked == 10) {
       setState(() => _stepClicked -= 2);
@@ -721,22 +663,141 @@ class _FillNewState extends State<FillNew> {
       });
     }
 
+    if (_currentStep == 6) {
+      prefs.remove("copyToBool");
+    }
+
     print("di: $_currentStep");
     print(_stepClicked);
   }
 
-  Future _resetDialogBox() async {
-    setStateIfMounted(() {
-      return showDialog<String>(
+  void cancelEcmRemoveData() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+    String idEcm = prefs.getString("idEcm") ?? "";
+
+    var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+
+    if (response['response']['status'] == 200) {
+      removeStepCacheFillEcm();
+      removeCacheFillEcm();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+          ModalRoute.withName("/"));
+    }
+  }
+
+  Future confirmBackToHome() async {
+    showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
-          return Container(
-            child: const Text("data"),
+          return SimpleDialog(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    "assets/icons/X.png",
+                    width: 20,
+                  ),
+                ),
+              ),
+              Container(
+                child: Center(
+                    child: Image.asset(
+                  "assets/images/img_attendance_logout.png",
+                  width: 150,
+                )),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    "Konfirmasi",
+                    style: TextStyle(
+                        color: Color(0xFF404446),
+                        fontFamily: 'Rubik',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    "Anda yakin ingin membatalkan pengisian Form E-CM?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Color(0xFF404446),
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(top: 20, right: 5),
+                        width: 130,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Color(0xFF00AEDB)),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Tidak",
+                            style: TextStyle(
+                                color: Color(0xFF00AEDB),
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      cancelEcmRemoveData();
+                    },
+                    child: Container(
+                        margin: EdgeInsets.only(top: 20),
+                        width: 130,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xffcf0000),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Ya",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )),
+                  ),
+                ],
+              )
+            ],
           );
-        },
-      );
-    });
+        });
   }
 
   void setStateIfMounted(f) {
@@ -754,113 +815,121 @@ class _FillNewState extends State<FillNew> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF00AEDB),
-        elevation: 1,
-        title: Text(
-          "E-CM Card",
-          style: TextStyle(
-              fontFamily: 'Rubik',
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w700),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            )),
-        actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  showCustomDialog(context);
-                });
+    return WillPopScope(
+      onWillPop: () async {
+        await confirmBackToHome();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF00AEDB),
+          elevation: 1,
+          title: Text(
+            "E-CM Card",
+            style: TextStyle(
+                fontFamily: 'Rubik',
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w700),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () async {
+                await confirmBackToHome();
               },
               icon: Icon(
-                Icons.info_outline,
+                Icons.arrow_back_ios,
                 color: Colors.white,
-              ))
-        ],
-      ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            Expanded(
-              child: Stepper(
-                type: StepperType.horizontal,
-                physics: ScrollPhysics(),
-                currentStep: _currentStep,
-                // onStepTapped: (step) => tapped(step),
-                onStepContinue: continued,
-                onStepCancel: cancel,
-                controlsBuilder: (context, {onStepCancel, onStepContinue}) {
-                  print(onStepContinue);
-                  return Container(
-                    margin: const EdgeInsets.only(top: 50),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () => cancel(),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Color(0xFF00AEDB)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: Center(
-                              child: Text(
-                                back,
-                                style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xFF00AEDB)),
-                              ),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: _stepClicked == 9 ? null : () => continued(),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: Color(0xFF00AEDB),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: Center(
-                              child: Text(
-                                next == next
-                                    ? "$next $_stepClicked/$_stepTotal"
-                                    : next,
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
+              )),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    showCustomDialog(context);
+                  });
+                },
+                icon: Icon(
+                  Icons.info_outline,
+                  color: Colors.white,
+                ))
+          ],
+        ),
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              Expanded(
+                child: Stepper(
+                  type: StepperType.horizontal,
+                  physics: ScrollPhysics(),
+                  currentStep: _currentStep,
+                  // onStepTapped: (step) => tapped(step),
+                  onStepContinue: continued,
+                  onStepCancel: cancel,
+                  controlsBuilder: (context, {onStepCancel, onStepContinue}) {
+                    print(onStepContinue);
+                    return Container(
+                      margin: const EdgeInsets.only(top: 50),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () => cancel(),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: 40,
+                              decoration: BoxDecoration(
                                   color: Colors.white,
+                                  border: Border.all(color: Color(0xFF00AEDB)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Center(
+                                child: Text(
+                                  back,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF00AEDB)),
                                 ),
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-                // ignore: prefer_const_literals_to_create_immutables
-                steps: _steps,
+                          InkWell(
+                            onTap: _stepClicked == 9 ? null : () => continued(),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF00AEDB),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Center(
+                                child: Text(
+                                  next == next
+                                      ? "$next $_stepClicked/$_stepTotal"
+                                      : next,
+                                  style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  // ignore: prefer_const_literals_to_create_immutables
+                  steps: _steps,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
