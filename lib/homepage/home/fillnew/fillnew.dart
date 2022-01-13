@@ -436,12 +436,15 @@ class _FillNewState extends State<FillNew> {
             prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "1") {
           showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (BuildContext context) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: null,
-                    strokeWidth: 2,
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      value: null,
+                      strokeWidth: 2,
+                    ),
                   ),
                 );
               });
