@@ -497,6 +497,26 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     return parsedStart.isBefore(parsedEnd);
   }
 
+  void timerGetDataStep4() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (timer.tick == 10 && _listData.isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Data item gagal dimuat",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        Navigator.of(context).pop();
+        timer.cancel();
+      } else {
+        timer.cancel();
+      }
+      getStep4Data();
+    });
+  }
+
   static String _displayPartOption(ItemChecking option) =>
       option.partNama ?? "-";
 
@@ -508,10 +528,12 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
-      Future.delayed(Duration(seconds: 3), () => getStep4Data());
+      timerGetDataStep4();
+      // Future.delayed(Duration(seconds: 3), () => getStep4Data());
       // getUsernameSession();
     } else {
-      Future.delayed(Duration(seconds: 3), () => getStep4Data());
+      // Future.delayed(Duration(seconds: 3), () => getStep4Data());
+      timerGetDataStep4();
     }
     getUsernameSession();
   }

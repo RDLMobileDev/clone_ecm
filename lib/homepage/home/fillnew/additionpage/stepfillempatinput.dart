@@ -39,13 +39,14 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   TextEditingController tecStandard = TextEditingController();
   TextEditingController tecActual = TextEditingController();
   TextEditingController tecName = TextEditingController();
+  TextEditingController tecMemberName = TextEditingController();
 
   List<PartModel> parts = <PartModel>[];
   var selectedPart;
   List<AllUserModel> _users = <AllUserModel>[];
   var selectedUser;
 
-  bool isTappedNameItem = false;
+  bool isTappedNameItem = false, tapMemberName = false;
 
   String _initialPartName = "Type Item Name";
   String _initialUser = "Type Name";
@@ -1034,113 +1035,47 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 10),
                 height: 40,
-                child: InputDecorator(
+                child: TextFormField(
+                  controller: tecMemberName,
+                  readOnly: true,
+                  onTap: () {
+                    setState(() {
+                      tapMemberName = !tapMemberName;
+                    });
+                  },
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    focusedBorder: InputBorder.none,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    filled: true,
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                  ),
-                  child: RawAutocomplete<AllUserModel>(
-                    displayStringForOption: _displayUserOption,
-                    optionsBuilder: (TextEditingValue tev) {
-                      return _users.where((element) => element
-                          .toString()
-                          .contains(tev.text.toString().toLowerCase()));
-                    },
-                    onSelected: (item) {
-                      setState(() {
-                        formValidations["name"] =
-                            item.userId?.isNotEmpty ?? false;
-                        formValue["name"] = item.userId!;
-                      });
-                    },
-                    fieldViewBuilder: (context, textEditingController,
-                        focusNode, onFieldSubmitted) {
-                      return TextFormField(
-                        controller: textEditingController,
-                        focusNode: focusNode,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          hintStyle: TextStyle(
-                            color:
-                                ecmItemId != null ? Colors.black : Colors.grey,
-                          ),
-                          hintText:
-                              ecmItemId != null ? _initialUser : "Type Name",
-                        ),
-                        onFieldSubmitted: (String value) {
-                          onFieldSubmitted();
-                          setState(() {
-                            formValidations["name"] = value.isNotEmpty;
-                            formValue["name"] = _users
-                                    .firstWhere((element) => value
-                                        .contains(element.userFullName ?? "-"))
-                                    .userId ??
-                                "-";
-                          });
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            textEditingController =
-                                TextEditingController(text: value);
-                            formValidations["name"] = value.isNotEmpty;
-                            formValue["name"] = _users
-                                    .firstWhere(
-                                        (element) => value.contains(
-                                            element.userFullName ?? "-"),
-                                        orElse: () => AllUserModel())
-                                    .userId ??
-                                "-";
-                          });
-                        },
-                      );
-                    },
-                    optionsViewBuilder: (context, onSelected, options) {
-                      return Align(
-                        alignment: Alignment.topLeft,
-                        child: Material(
-                          elevation: 4.0,
-                          child: SizedBox(
-                            height: 200.0,
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(8.0),
-                              itemCount: options.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final String option =
-                                    options.elementAt(index).userFullName ??
-                                        "-";
-                                return GestureDetector(
-                                  onTap: () {
-                                    onSelected(options.elementAt(index));
-                                    formValue["name"] =
-                                        options.elementAt(index).userId ?? "-";
-                                  },
-                                  child: ListTile(
-                                    title: Text(option),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)))),
                 ),
               ),
+              tapMemberName == false
+                  ? Container()
+                  : Container(
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _users.length,
+                        itemBuilder: (context, i) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                tecMemberName = TextEditingController(
+                                    text: _users[i].userFullName);
+                                formValidations["name"] =
+                                    _users[i].userFullName!.isNotEmpty;
+                                formValue["name"] = _users[i].userId!;
+                                tapMemberName = !tapMemberName;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(_users[i].userFullName!),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 50),
