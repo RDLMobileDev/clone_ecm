@@ -98,6 +98,7 @@ class _FillNewState extends State<FillNew> {
 
   Future _isLoading() async {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return _listSummaryApproval.isEmpty

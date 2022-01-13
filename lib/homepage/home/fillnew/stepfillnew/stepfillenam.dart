@@ -1049,11 +1049,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                   Container(
                     width: 150,
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    height: 50,
+                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
                     child: TextFormField(
                       controller: breakHoursController,
                       keyboardType: TextInputType.number,
+                      maxLength: 2,
                       onChanged: (value) async {
                         _incrementCounter(value);
 
@@ -1188,11 +1189,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                   Container(
                     width: 150,
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    height: 50,
+                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
                     child: TextFormField(
                       controller: breakMinutesController,
                       keyboardType: TextInputType.number,
+                      maxLength: 2,
                       onChanged: (value) async {
                         _incrementCounterMinutes(value);
                         String minuteLineStop =
