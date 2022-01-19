@@ -1,9 +1,13 @@
 // ignore_for_file: sized_box_for_whitespace, unnecessary_const, avoid_unnecessary_containers
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
+import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/apifillnewdelapan.dart';
+import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -137,6 +141,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     String engineerToKey = prefs.getString("engineerTo") ?? "0";
     String productToKey = prefs.getString("productTo") ?? "0";
     String othersToKey = prefs.getString("othersTo") ?? "0";
+    String idEcm = prefs.getString("idEcm") ?? "";
 
     try {
       var response = await fillNewDelapan(
@@ -147,15 +152,34 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
       if (response['response']['status'] == 200) {
         print("sukses");
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Koneksi bermasalah, E-CM Anda gagal disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            fontSize: 16);
+
+        var response =
+            await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
       }
     } catch (e) {
       print(e);
+      var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
       Fluttertoast.showToast(
         msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.greenAccent,
       );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+          ModalRoute.withName("/"));
       print(e);
     }
   }

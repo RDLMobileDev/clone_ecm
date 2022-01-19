@@ -1074,6 +1074,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         prefs.setString("breakTimeBool", "1");
                       },
                       decoration: InputDecoration(
+                        counter: Offstage(),
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),
@@ -1213,6 +1214,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         prefs.setString("breakTimeBool", "1");
                       },
                       decoration: InputDecoration(
+                        counter: Offstage(),
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),

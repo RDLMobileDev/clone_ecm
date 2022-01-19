@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
@@ -435,21 +437,44 @@ class _FillNewState extends State<FillNew> {
                 prefs.getString("copyToBool") == "0") ||
             prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "1") {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: null,
-                      strokeWidth: 2,
-                    ),
-                  ),
-                );
-              });
-          var res = _stepFillDelapan.getMethodPostStep();
-          successStep8();
+          try {
+            String urlLookup = MyUrl().getUrlDevice();
+            final result = await InternetAddress.lookup(urlLookup);
+            if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+              print('connected');
+              showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: null,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  });
+              var res = _stepFillDelapan.getMethodPostStep();
+              successStep8();
+            }
+          } on SocketException catch (_) {
+            print('not connected');
+            Fluttertoast.showToast(
+              msg: 'Koneksi Anda terganggu, ECM Card tidak tersimpan',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.greenAccent,
+            );
+
+            removeStepCacheFillEcm();
+            removeCacheFillEcm();
+
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => Dashboard()),
+                ModalRoute.withName("/"));
+          }
         } else {
           Fluttertoast.showToast(
               msg: 'Pilih satu field Copy to',
