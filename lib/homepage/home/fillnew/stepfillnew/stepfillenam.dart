@@ -304,18 +304,26 @@ class _StepFillEnamState extends State<StepFillEnam> {
           // if (_counter <= _limitIncreamentH - 1) {
           _counter = int.parse(breakHoursController.text);
           if (_counter > _limitIncreamentH) {
+            _lineStopH = 1;
+
             Fluttertoast.showToast(
-                msg: "Tidak bisa melebihi limit",
+                msg: "Tidak bisa melebihi Work Time",
                 backgroundColor: Colors.redAccent,
                 textColor: Colors.white);
           } else {
             _lineStopH = _limitIncreamentH - _counter;
             resultCostInHouse();
           }
-          _counterMinutes = int.parse(breakMinutesController.text);
+
+          if (breakMinutesController.text.isEmpty) {
+            _counterMinutes = 0;
+          } else {
+            _counterMinutes = int.parse(breakMinutesController.text);
+          }
           if (_counterMinutes < 60) {
             if (_counterMinutes > _limitIncreamentM) {
-              if (_lineStopH == _limitIncreamentH) {
+              if (_counter == _limitIncreamentH &&
+                  _counterMinutes > _limitIncreamentM) {
                 _lineStopH = _lineStopH;
               } else {
                 _lineStopH = _lineStopH - 1;
@@ -1848,7 +1856,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 children: [
                   Container(
                     width: 60,
-                    height: 40,
+                    height: 50,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
@@ -1862,6 +1870,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 20,
                             // height: 20,
                             child: TextFormField(
+                                maxLength: 2,
                                 onChanged: (text) async {
                                   resultHOutHouse(text);
                                   final prefs = await _prefs;
@@ -1875,6 +1884,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400),
                                 decoration: const InputDecoration(
+                                    counter: Offstage(),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -1910,7 +1920,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                   Container(
                     width: 80,
-                    height: 40,
+                    height: 50,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
@@ -1923,6 +1933,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                             width: 20,
                             // height: 20,
                             child: TextFormField(
+                                maxLength: 2,
                                 onChanged: (text) async {
                                   resultMpOutHouse(text);
                                   final SharedPreferences prefs = await _prefs;
@@ -1936,6 +1947,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400),
                                 decoration: const InputDecoration(
+                                    counter: Offstage(),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -1971,7 +1983,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                   Container(
                     width: 140,
-                    height: 40,
+                    height: 50,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                         color: Colors.grey[300],
