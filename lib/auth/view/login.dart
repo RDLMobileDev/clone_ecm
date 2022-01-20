@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:e_cm/util/local_notification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,25 @@ class _LogInState extends State<LogIn> {
     return deviceKey;
   }
 
+  void removeEcmNotCompleted() async {
+    // idKeyUser
+    // hapus data ecm card jika session kosong
+    final prefs = await _prefs;
+    String idUser = prefs.getString("idKeyUser") ?? "";
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    print(idUser);
+    print(tokenUser);
+
+    if (idUser.isNotEmpty || idUser != "") {
+      var result =
+          await removeEcmCancelUser.removeEcmNotCompleted(tokenUser, idUser);
+      print("hapussss");
+
+      print(result);
+    }
+  }
+
   postLogin() async {
     String emailUser = _emailController.text;
     String passwordUser = _passwordController.text;
@@ -100,6 +120,8 @@ class _LogInState extends State<LogIn> {
         print("USERNAME user = " + rspLogin['data']['user']['username']);
         print("TOKEN user = " + rspLogin['data']['token']);
         print("JABATAN user = " + rspLogin['data']['user']['namajabatan']);
+
+        removeEcmNotCompleted();
 
         setState(() {
           Fluttertoast.showToast(

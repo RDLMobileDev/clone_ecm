@@ -23,6 +23,23 @@ class RemoveEcmCancelUser {
       print(e);
     }
   }
+
+  Future removeEcmNotCompleted(String token, String idUser) async {
+    // ketika cache storage device di remove
+    String url = MyUrl().getUrlDevice();
+    try {
+      var response = await http
+          .get(Uri.parse("$url/firstrunning?user_id=$idUser"), headers: {
+        "Accept": "Application/json",
+        'Authorization': 'Bearer $token',
+      });
+
+      var result = json.decode(response.body);
+      return result;
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 final removeEcmCancelUser = RemoveEcmCancelUser();
