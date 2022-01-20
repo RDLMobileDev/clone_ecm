@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, avoid_print, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -482,14 +483,22 @@ class _FillNewState extends State<FillNew> {
     String tokenUser = prefs.getString("tokenKey").toString();
     String idEcm = prefs.getString("idEcm").toString();
 
-    _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
-        tokenUser, idEcm, idUser);
+    try {
+      _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
+          tokenUser, idEcm, idUser);
 
-    print(_listSummaryApproval[0].lineStopJam);
-    removeStepCacheFillEcm();
-    removeCacheFillEcm();
+      print(_listSummaryApproval[0].lineStopJam);
+      removeStepCacheFillEcm();
+      removeCacheFillEcm();
 
-    _isLoading();
+      _isLoading();
+    } catch (e) {
+      print(e);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+          ModalRoute.withName("/"));
+    }
   }
 
   void summaryPopup() async {

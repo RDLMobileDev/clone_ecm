@@ -22,9 +22,11 @@ Future fillNewDelapan(String ecmId, String copyEngineer, String copyProduct,
   //   return convertData;
   // }
 
-  if (response.body.isNotEmpty) {
+  if (response.statusCode == 200) {
     var convertDatatoJson = jsonDecode(response.body);
     json.decode(response.body);
     return convertDatatoJson;
+  } else {
+    print("gagal total timeout");
   }
 }
