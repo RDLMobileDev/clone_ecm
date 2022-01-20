@@ -451,8 +451,28 @@ class _FillNewState extends State<FillNew> {
                   ),
                 );
               });
-          var res = _stepFillDelapan.getMethodPostStep();
-          successStep8();
+          Timer.periodic(Duration(seconds: 10), (timer) async {
+            if (timer.tick == 5) {
+              removeStepCacheFillEcm();
+              removeCacheFillEcm();
+              Fluttertoast.showToast(
+                  msg: 'Terjadi masalah jaringan, E-CM Card tidak disimpan',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  fontSize: 16);
+
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Dashboard()),
+                  ModalRoute.withName("/"));
+              timer.cancel();
+            }
+
+            await _stepFillDelapan.getMethodPostStep();
+            successStep8();
+            timer.cancel();
+          });
         } else {
           Fluttertoast.showToast(
               msg: 'Pilih satu field Copy to',
@@ -494,10 +514,14 @@ class _FillNewState extends State<FillNew> {
       _isLoading();
     } catch (e) {
       print(e);
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
-          ModalRoute.withName("/"));
+      removeStepCacheFillEcm();
+      removeCacheFillEcm();
+      setStateIfMounted(() {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
+      });
     }
   }
 
