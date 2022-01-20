@@ -154,7 +154,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
         print("sukses");
       } else {
         Fluttertoast.showToast(
-            msg: 'Koneksi bermasalah, E-CM Anda gagal disimpan',
+            msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -162,6 +162,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
         var response =
             await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+        removeStepCacheFillEcm();
+        removeCacheFillEcm();
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Dashboard()),
@@ -169,13 +171,15 @@ class StepFillDelapanState extends State<StepFillDelapan> {
       }
     } catch (e) {
       print(e);
-      var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+      // var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
       Fluttertoast.showToast(
         msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.greenAccent,
       );
+      removeStepCacheFillEcm();
+      removeCacheFillEcm();
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Dashboard()),

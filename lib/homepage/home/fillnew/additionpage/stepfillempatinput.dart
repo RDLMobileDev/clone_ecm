@@ -173,6 +173,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     final prefs = await _prefs;
     String idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey") ?? "";
+    String userName = prefs.getString("userStep4") ?? "";
 
     try {
       var result =
@@ -224,6 +225,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 TextEditingController(text: formValue["start"]);
             endTimePickController =
                 TextEditingController(text: formValue["end"]);
+            tecMemberName = TextEditingController(text: userName);
 
             switch (formValue["note"]) {
               case "ok":
@@ -1058,13 +1060,16 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         itemCount: _users.length,
                         itemBuilder: (context, i) {
                           return InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              final prefs = await _prefs;
                               setState(() {
                                 tecMemberName = TextEditingController(
                                     text: _users[i].userFullName);
                                 formValidations["name"] =
                                     _users[i].userFullName!.isNotEmpty;
                                 formValue["name"] = _users[i].userId!;
+                                prefs.setString(
+                                    "userStep4", _users[i].userFullName!);
                                 tapMemberName = !tapMemberName;
                               });
                             },
