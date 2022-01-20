@@ -741,6 +741,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String ttlCostOutHouse = prefs.getString("ttlCostOutHouse") ?? "";
     String vendorName = prefs.getString("vendorName") ?? "";
 
+    print("asdkjghfbwui");
+    print(adminCost);
+    print(ttlCostOutHouse);
+
     if ((breakHours.isNotEmpty || breakHours != "") &&
         (breakMinutes.isNotEmpty || breakMinutes != "")) {
       setState(() {
@@ -1423,6 +1427,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 prefs.setString("breakHours", breakHoursController.text);
                 prefs.setString("breakMinutes", breakMinutesController.text);
                 prefs.setString("breakTimeBool", "1");
+
+                setFormValueStep6AfterChoosing();
               },
               child: Container(
                 margin: EdgeInsets.only(top: 10),
@@ -1799,12 +1805,15 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Center(
                 child: Text(
-                  adminCost == ""
+                  adminCost == "" || adminCost.isEmpty || adminCost == "0"
                       ? "Total = Rp. " +
                           NumberFormat.currency(
                                   locale: 'id', decimalDigits: 0, symbol: '')
                               .format(_costInHouse)
-                      : adminCost,
+                      : "Total = Rp. " +
+                          NumberFormat.currency(
+                                  locale: 'id', decimalDigits: 0, symbol: '')
+                              .format(int.parse(adminCost)),
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       fontSize: 16,
@@ -1906,6 +1915,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   final prefs = await _prefs;
                                   prefs.setString("outHouseH", text);
                                   prefs.setString("outHouseHBool", "1");
+                                  setFormValueStep6AfterChoosing();
                                 },
                                 controller: outHouseHController,
                                 keyboardType: TextInputType.number,
@@ -1969,6 +1979,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                   final SharedPreferences prefs = await _prefs;
                                   prefs.setString("outHouseMp", text);
                                   prefs.setString("outHouseMpBool", "1");
+                                  setFormValueStep6AfterChoosing();
                                 },
                                 controller: outHouseMpController,
                                 keyboardType: TextInputType.number,
@@ -2094,12 +2105,17 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Center(
                 child: Text(
-                  prefOutHouse == ""
+                  prefOutHouse == "" ||
+                          prefOutHouse.isEmpty ||
+                          prefOutHouse == "0"
                       ? "Total = Rp. " +
                           NumberFormat.currency(
                                   locale: 'id', decimalDigits: 0, symbol: '')
                               .format(_costOutHouse)
-                      : prefOutHouse,
+                      : "Total = Rp. " +
+                          NumberFormat.currency(
+                                  locale: 'id', decimalDigits: 0, symbol: '')
+                              .format(int.parse(prefOutHouse)),
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       fontSize: 16,
