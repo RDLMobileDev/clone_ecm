@@ -168,8 +168,8 @@ class _FillNewState extends State<FillNew> {
                     ),
                     InkWell(
                       onTap: () async {
-                        // Navigator.of(context).pop();
-                        // final prefs = await _prefs;
+                        final prefs = await _prefs;
+                        prefs.remove("idEcm");
 
                         if (_listSummaryApproval.isNotEmpty) {
                           print("data approve");
@@ -522,7 +522,9 @@ class _FillNewState extends State<FillNew> {
           return SimpleDialog(
             children: [
               InkWell(
-                onTap: () {
+                onTap: () async {
+                  final prefs = await _prefs;
+                  prefs.remove("idEcm");
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => Dashboard()),
@@ -642,11 +644,10 @@ class _FillNewState extends State<FillNew> {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  // Navigator.of(context)
-                  //   ..pop()
-                  //   ..pop()
-                  //   ..pop();
+                onTap: () async {
+                  final prefs = await _prefs;
+                  prefs.remove("idEcm");
+
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => Dashboard()),
@@ -705,15 +706,44 @@ class _FillNewState extends State<FillNew> {
     String tokenUser = prefs.getString("tokenKey") ?? "";
     String idEcm = prefs.getString("idEcm") ?? "";
 
-    var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+    if ((tokenUser.isNotEmpty || tokenUser != "") &&
+        (idEcm.isNotEmpty || idEcm != "")) {
+      var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
 
-    if (response['response']['status'] == 200) {
-      removeStepCacheFillEcm();
-      removeCacheFillEcm();
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
-          ModalRoute.withName("/"));
+      if (response['response']['status'] == 200) {
+        removeStepCacheFillEcm();
+        removeCacheFillEcm();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
+      } else {
+        removeStepCacheFillEcm();
+        removeCacheFillEcm();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
+      }
+    }
+  }
+
+  void removeDataGagalEcm() async {
+    final prefs = await _prefs;
+
+    try {
+      String urlLookup = MyUrl().getUrlDevice();
+      final result = await InternetAddress.lookup(urlLookup);
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        String tokenUser = prefs.getString("tokenKey") ?? "";
+        String idEcm = prefs.getString("idEcm") ?? "";
+        await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+        removeStepCacheFillEcm();
+        removeCacheFillEcm();
+      }
+    } on SocketException catch (_) {
+      print('not connected');
     }
   }
 
@@ -840,6 +870,8 @@ class _FillNewState extends State<FillNew> {
     super.initState();
     setBahasa();
     setLang();
+
+    removeDataGagalEcm();
   }
 
   @override
