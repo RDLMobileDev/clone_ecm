@@ -6,7 +6,7 @@ Future fillNewDelapan(String ecmId, String copyEngineer, String copyProduct,
     String copyOthers, String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecm_step8_insert";
-  final response = await http.post(Uri.parse(url), headers: {
+  http.Response response = await http.post(Uri.parse(url), headers: {
     "Accept": "Application/json",
     'Authorization': 'Bearer $token',
   }, body: {
@@ -14,7 +14,7 @@ Future fillNewDelapan(String ecmId, String copyEngineer, String copyProduct,
     'ecm_copyengineer': copyEngineer,
     'ecm_copyproduct': copyProduct,
     'ecm_copyothers': copyProduct
-  });
+  }).timeout(const Duration(seconds: 5));
 
   // print(response.body);
   // if (response.body != null) {

@@ -52,6 +52,15 @@ class _StepFillEnamState extends State<StepFillEnam> {
   String cost = 'Cost';
   String out_house = '';
 
+  String prefLineStopH = '0',
+      prefLineStopM = '0',
+      prefNewLineStop = '0',
+      prefInhouseM = '',
+      prefInHouse = '',
+      prefVendor = '',
+      prefOutHouse = '0',
+      adminCost = '0';
+
   String back = '';
 
   void setBahasa() async {
@@ -349,6 +358,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
         prefs.setString("breakHours", _counter.toString());
         prefs.setString("breaks", _counter.toString());
         prefs.setString("breakMinutes", _counterMinutes.toString());
+        prefs.setString("lineStopH", _lineStopH.toString());
+        prefs.setString("lineStopM", _lineStopM.toString());
       } else {
         setState(() {
           _counter = 0;
@@ -369,6 +380,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
         prefs.setString("breakHours", _counter.toString());
         prefs.setString("breaks", _counter.toString());
         prefs.setString("breakMinutes", _counterMinutes.toString());
+
+        prefs.setString("lineStopH", _newLineStopH.toString());
+        prefs.setString("lineStopM", _lineStopM.toString());
       }
       print(_lineStopH);
       print(_lineStopM);
@@ -410,7 +424,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     });
   }
 
-  void resultCostInHouse() {
+  void resultCostInHouse() async {
+    final SharedPreferences prefs = await _prefs;
     setState(() {
       // if (_lineStopM < 30) {
       //   _newLineStopH = _lineStopH;
@@ -422,6 +437,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
       _newLineStopH = _lineStopH * 60;
       _costInHouse = ((_newLineStopH + _lineStopM) * 1000) +
           int.parse(stepEnamModel.adminCost ?? "0");
+      prefs.setString("costInHouse", _costInHouse.toString());
+      prefs.setString("newLineStopH", (_newLineStopH + _lineStopM).toString());
       print("===_newLineStopH ===");
       print(_newLineStopH);
     });
@@ -710,28 +727,36 @@ class _StepFillEnamState extends State<StepFillEnam> {
   void setFormValueStep6AfterChoosing() async {
     final prefs = await _prefs;
 
-    String? namaImprovement = prefs.getString("namaImprovement");
-    String? idea = prefs.getString("idea");
-    String? breakHours = prefs.getString("breakHours");
-    String? breakMinutes = prefs.getString("breakMinutes");
-    String? outHouseH = prefs.getString("outHouseH");
-    String? outHouseMp = prefs.getString("outHouseMp");
-    String? outHouseCost = prefs.getString("outHouseCost");
+    String namaImprovement = prefs.getString("namaImprovement") ?? "";
+    String idea = prefs.getString("idea") ?? "";
+    String breakHours = prefs.getString("breakHours") ?? "";
+    String breakMinutes = prefs.getString("breakMinutes") ?? "";
+    String lineStopH = prefs.getString("lineStopH") ?? "";
+    String lineStopM = prefs.getString("lineStopM") ?? "";
+    String newLineStopH = prefs.getString("newLineStopH") ?? "";
+    String costInHouse = prefs.getString("costInHouse") ?? "";
+    String outHouseH = prefs.getString("outHouseH") ?? "";
+    String outHouseMp = prefs.getString("outHouseMp") ?? "";
+    String outHouseCost = prefs.getString("outHouseCost") ?? "";
+    String ttlCostOutHouse = prefs.getString("ttlCostOutHouse") ?? "";
+    String vendorName = prefs.getString("vendorName") ?? "";
 
-    if (outHouseCost != null &&
-        breakHours != null &&
-        breakMinutes != null &&
-        outHouseH != null) {
+    if ((breakHours.isNotEmpty || breakHours != "") &&
+        (breakMinutes.isNotEmpty || breakMinutes != "")) {
       setState(() {
         userNameController = TextEditingController(text: namaImprovement);
         ideaController = TextEditingController(text: idea);
         breakHoursController = TextEditingController(text: breakHours);
         breakMinutesController = TextEditingController(text: breakMinutes);
-        _counter = int.parse(breakHours);
-        _counterMinutes = int.parse(breakMinutes);
+        prefLineStopH = lineStopH;
+        prefLineStopM = lineStopM;
+        prefNewLineStop = newLineStopH;
+        adminCost = costInHouse;
+        vendorPriceController = TextEditingController(text: vendorName);
+        costOutHouseController = TextEditingController(text: outHouseCost);
         outHouseHController = TextEditingController(text: outHouseH);
         outHouseMpController = TextEditingController(text: outHouseMp);
-        costOutHouseController = TextEditingController(text: outHouseCost);
+        prefOutHouse = ttlCostOutHouse;
       });
     }
   }
@@ -1585,7 +1610,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "$_lineStopH H",
+                        _lineStopH == 0 ? "$prefLineStopH H" : "$_lineStopH H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -1602,7 +1627,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "$_lineStopM M",
+                        _lineStopM == 0 ? "$prefLineStopM M" : "$_lineStopM M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -1659,7 +1684,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        "${_newLineStopH + _lineStopM} M",
+                        _newLineStopH == 0
+                            ? "$prefNewLineStop  H"
+                            : "${_newLineStopH + _lineStopM} M",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
@@ -1772,10 +1799,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Center(
                 child: Text(
-                  "Total = Rp. " +
-                      NumberFormat.currency(
-                              locale: 'id', decimalDigits: 0, symbol: '')
-                          .format(_costInHouse),
+                  adminCost == ""
+                      ? "Total = Rp. " +
+                          NumberFormat.currency(
+                                  locale: 'id', decimalDigits: 0, symbol: '')
+                              .format(_costInHouse)
+                      : adminCost,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       fontSize: 16,
@@ -1838,6 +1867,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                 costOutHouseController =
                                     TextEditingController(text: e.vendorPrice);
                                 prefs.setString("outHouseCost", e.vendorPrice!);
+                                prefs.setString("vendorName", e.vendorName!);
                                 isTapVendor = !isTapVendor;
                               });
                             },
@@ -2064,10 +2094,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Center(
                 child: Text(
-                  "Total = Rp. " +
-                      NumberFormat.currency(
-                              locale: 'id', decimalDigits: 0, symbol: '')
-                          .format(_costOutHouse),
+                  prefOutHouse == ""
+                      ? "Total = Rp. " +
+                          NumberFormat.currency(
+                                  locale: 'id', decimalDigits: 0, symbol: '')
+                              .format(_costOutHouse)
+                      : prefOutHouse,
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       fontSize: 16,
