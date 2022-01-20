@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
+import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
@@ -246,6 +248,20 @@ class _HomeState extends State<Home> {
     if (mounted) setState(f);
   }
 
+  void removeCacheEcmFromDb() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+    String idEcm = prefs.getString("idEcm") ?? "";
+
+    if ((tokenUser.isNotEmpty || tokenUser != "") &&
+        (idEcm.isNotEmpty || idEcm != "")) {
+      var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+
+      removeStepCacheFillEcm();
+      removeCacheFillEcm();
+    }
+  }
+
   @override
   void dispose() {
     if (_timer.isActive) _timer.cancel();
@@ -266,6 +282,7 @@ class _HomeState extends State<Home> {
     setBahasa();
     setLang();
     getCardStatus();
+    removeCacheEcmFromDb();
   }
 
   @override
