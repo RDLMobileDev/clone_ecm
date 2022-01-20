@@ -315,7 +315,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
           _counterMinutes = int.parse(breakMinutesController.text);
           if (_counterMinutes < 60) {
             if (_counterMinutes > _limitIncreamentM) {
-              _lineStopH = _lineStopH - 1;
+              if (_lineStopH == _limitIncreamentH) {
+                _lineStopH = _lineStopH;
+              } else {
+                _lineStopH = _lineStopH - 1;
+              }
               _lineStopM = (_limitIncreamentM + 60) - _counterMinutes;
               resultCostInHouse();
             } else {
@@ -1784,7 +1788,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     TextSpan(
                         text: out_house,
                         style: TextStyle(color: Color(0xFF404446))),
-                    TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
+                    // TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
                     TextSpan(
                         text: ':', style: TextStyle(color: Color(0xFF404446))),
                   ],
