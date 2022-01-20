@@ -133,6 +133,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     print(othersTo);
   }
 
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
+  }
+
   postStepDelapan() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
@@ -172,19 +176,20 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     } catch (e) {
       print(e);
       // var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
-      Fluttertoast.showToast(
-        msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.greenAccent,
-      );
       removeStepCacheFillEcm();
       removeCacheFillEcm();
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
-          ModalRoute.withName("/"));
-      print(e);
+      setStateIfMounted(() {
+        Fluttertoast.showToast(
+          msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
+      });
     }
   }
 
