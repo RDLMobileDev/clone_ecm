@@ -72,4 +72,45 @@ void removeCacheFillEcm() async {
   prefs.remove("outHouseH");
   prefs.remove("outHouseMp");
   prefs.remove("outHouseCost");
+  prefs.remove("vendorName");
+  prefs.remove("ttlCostOutHouse");
 }
+
+// Future<bool> checkDataTemporaryStep6() async {
+//   final prefs = await SharedPreferences.getInstance();
+//   String check = prefs.getString("check").toString();
+//   String repair = prefs.getString("repair").toString();
+//   String totalcr = prefs.getString("totalcr").toString();
+//   String breaks = prefs.getString("breaks").toString();
+//   String lineStart = prefs.getString("lineStart").toString();
+//   String lineStop = prefs.getString("lineStop").toString();
+//   String ttlLineStop = prefs.getString("ttlLineStop").toString();
+//   String costH = prefs.getString("costH").toString();
+//   String costMp = prefs.getString("costMp").toString();
+//   String costInHouse = prefs.getString("costInHouse").toString();
+//   String outHouseH = prefs.getString("outHouseH").toString();
+//   String outHouseMp = prefs.getString("outHouseMp").toString();
+//   String outHouseCost = prefs.getString("outHouseCost").toString();
+//   String ttlCostOutHouse = prefs.getString("ttlCostOutHouse").toString();
+
+//   if ((check.isEmpty || check == "") &&
+//           (repair.isEmpty || repair == "") &&
+//           (totalcr.isEmpty || totalcr == "") &&
+//           (lineStart.isEmpty || lineStart == "" || lineStart == "0") &&
+//           (breaks.isEmpty || breaks == "") &&
+//           (lineStop.isEmpty || lineStop == "") ||
+//       (ttlLineStop.isEmpty || ttlLineStop == "") &&
+//           (costH.isEmpty || costH == "" || costH == "0") &&
+//           (costMp.isEmpty || costMp == "" || costMp == "0") &&
+//           (costInHouse.isEmpty || costInHouse == "" || costInHouse == "0") &&
+//           (outHouseH.isEmpty || outHouseH == "") &&
+//           (outHouseMp.isEmpty || outHouseMp == "") &&
+//           (outHouseCost.isEmpty || outHouseCost == "") &&
+//           (ttlCostOutHouse.isEmpty ||
+//               ttlCostOutHouse == "" ||
+//               ttlCostOutHouse == "0")) {
+//     return false;
+//   } else {
+//     return true;
+//   }
+// }

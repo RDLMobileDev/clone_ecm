@@ -307,7 +307,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
     // _incrementCounter(value);
     // decre
     setState(() {
-      if (breakHoursController.text.isNotEmpty ||
+      if (breakHoursController.text.isNotEmpty &&
           breakMinutesController.text.isNotEmpty) {
         setState(() {
           // if (_counter <= _limitIncreamentH - 1) {
@@ -360,7 +360,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
         prefs.setString("breakMinutes", _counterMinutes.toString());
         prefs.setString("lineStopH", _lineStopH.toString());
         prefs.setString("lineStopM", _lineStopM.toString());
-      } else {
+        prefs.setString("breakTimeBool", "1");
+      } else if (breakHoursController.text == "0" &&
+          breakMinutesController.text == "0") {
         setState(() {
           _counter = 0;
           _lineStopH = _limitIncreamentH;
@@ -383,6 +385,17 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
         prefs.setString("lineStopH", _newLineStopH.toString());
         prefs.setString("lineStopM", _lineStopM.toString());
+        prefs.setString("breakTimeBool", "1");
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Waktu istirahat masih kosong',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        prefs.remove("breakTimeBool");
       }
       print(_lineStopH);
       print(_lineStopM);
@@ -643,53 +656,54 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
   postFillEnam() async {
     final SharedPreferences prefs = await _prefs;
-    String newOutHouseCost = costOutHouseController.text.replaceAll(".", "");
+    // String newOutHouseCost = costOutHouseController.text.replaceAll(".", "");
 
     String? tokenUser = prefs.getString("tokenKey").toString();
-    String ecmId = prefs.getString("idEcm").toString();
-    String userId = prefs.getString("idKeyUser").toString();
-    // String userName = userNameController.text;
-    // String idea = ideaController.text;
-    String check =
-        stepEnamModel.checkH.toString() + ":" + stepEnamModel.checkM.toString();
-    String repair = stepEnamModel.repairH.toString() +
-        ":" +
-        stepEnamModel.repairM.toString();
-    String totalcr = stepEnamModel.hasilRepairH.toString() +
-        ":" +
-        stepEnamModel.hasilRepairM.toString();
-    String breaks = _counter.toString();
-    String lineStart = stepEnamModel.hasilRepairH.toString() +
-        ":" +
-        stepEnamModel.hasilRepairM.toString();
-    String lineStop = _counter.toString() + ":00";
-    String ttlLineStop = _lineStopH.toString() + ":" + _lineStopM.toString();
-    String costH = _newLineStopH.toString();
-    String costMp = stepEnamModel.mP.toString();
-    String costTotal = _costInHouse.toString();
-    // String outHouseH = outHouseHController.text;
-    // String outHouseMp = outHouseMpController.text;
-    // String outHouseCost = newOutHouseCost.toString();
-    String ttlOutHouse = _costOutHouse.toString();
+    String idEcm = prefs.getString("idEcm").toString();
+    String idKeyUser = prefs.getString("idKeyUser").toString();
+    String userName = prefs.getString("userName").toString();
+    String idea = prefs.getString("idea").toString();
+    String check = prefs.getString("check").toString();
+    String repair = prefs.getString("repair").toString();
+    String totalcr = prefs.getString("totalcr").toString();
+    String breaks = prefs.getString("breaks").toString();
+    String lineStart = prefs.getString("lineStart").toString();
+    String lineStop = prefs.getString("lineStop").toString();
+    String ttlLineStop = prefs.getString("ttlLineStop").toString();
+    String costH = prefs.getString("costH").toString();
+    String costMp = prefs.getString("costMp").toString();
+    String costInHouse = prefs.getString("costInHouse").toString();
+    String outHouseH = prefs.getString("outHouseH").toString() == "null"
+        ? "0"
+        : prefs.getString("outHouseH").toString();
+    String outHouseMp = prefs.getString("outHouseMp").toString() == "null"
+        ? "0"
+        : prefs.getString("outHouseMp").toString();
+    String outHouseCost = prefs.getString("outHouseCost").toString() == "null"
+        ? "0"
+        : prefs.getString("outHouseCost").toString();
+    String ttlCostOutHouse =
+        prefs.getString("ttlCostOutHouse").toString() == "null"
+            ? "0"
+            : prefs.getString("ttlCostOutHouse").toString();
+
     try {
-      // print(prefs.getString("idEcm").toString());
-      // print(prefs.getString("idKeyUser").toString());
-      // print(prefs.getString("userName").toString());
-      // print(prefs.getString("idea").toString());
-      // print(prefs.getString("check").toString());
-      // print(prefs.getString("repair").toString());
-      // print(prefs.getString("totalcr").toString());
-      // print(prefs.getString("breaks").toString());
-      // print(prefs.getString("lineStart").toString());
-      // print(prefs.getString("lineStop").toString());
-      // print(prefs.getString("ttlLineStop").toString());
-      // print(prefs.getString("costH").toString());
-      // print(prefs.getString("costMp").toString());
-      // print(prefs.getString("costTotal").toString());
-      // print(prefs.getString("outHouseH").toString());
-      // print(prefs.getString("outHouseMp").toString());
-      // print(prefs.getString("outHouseCost").toString());
-      // print(prefs.getString("ttlCostOutHouse").toString());
+      // print("kirim data step 6");
+      print(check);
+      print(repair);
+      print(totalcr);
+      print(breaks);
+      print(lineStart);
+      print(lineStop);
+      print(ttlLineStop);
+      print(costH);
+      print(costMp);
+      print(costInHouse);
+      print(outHouseH);
+      print(outHouseMp);
+      print(outHouseCost);
+      print(ttlCostOutHouse);
+
       var response = await fillNewEnam(
           prefs.getString("idEcm").toString(),
           prefs.getString("idKeyUser").toString(),
@@ -705,10 +719,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
           prefs.getString("costH").toString(),
           prefs.getString("costMp").toString(),
           prefs.getString("costInHouse").toString(),
-          prefs.getString("outHouseH").toString(),
-          prefs.getString("outHouseMp").toString(),
-          prefs.getString("outHouseCost").toString(),
-          prefs.getString("ttlCostOutHouse").toString(),
+          outHouseH,
+          outHouseMp,
+          outHouseCost,
+          ttlCostOutHouse,
           tokenUser);
 
       var data = response['data'];
@@ -1427,7 +1441,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 // prefs.setString("costTotal", _costInHouse.toString());
                 prefs.setString("breakHours", breakHoursController.text);
                 prefs.setString("breakMinutes", breakMinutesController.text);
-                prefs.setString("breakTimeBool", "1");
 
                 setFormValueStep6AfterChoosing();
               },
