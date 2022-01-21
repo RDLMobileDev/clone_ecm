@@ -24,6 +24,9 @@ Future fillNewEnam(
     String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecm_step6";
+
+  print("cost total: -> $costTotal");
+
   final response = await http.post(Uri.parse(url), headers: {
     "Accept": "Application/json",
     'Authorization': 'Bearer $token',
@@ -47,12 +50,6 @@ Future fillNewEnam(
     'outhouseh2': outHouseH2,
     'ttlouthouse': ttlOutHouse
   });
-
-  // print(response.body);
-  // if (response.body != null) {
-  //   var convertData = jsonDecode(response.body);
-  //   return convertData;
-  // }
 
   if (response.body.isNotEmpty) {
     var convertDatatoJson = jsonDecode(response.body);

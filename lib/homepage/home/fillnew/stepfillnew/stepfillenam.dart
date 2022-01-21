@@ -704,7 +704,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
           prefs.getString("ttlLineStop").toString(),
           prefs.getString("costH").toString(),
           prefs.getString("costMp").toString(),
-          prefs.getString("costTotal").toString(),
+          prefs.getString("costInHouse").toString(),
           prefs.getString("outHouseH").toString(),
           prefs.getString("outHouseMp").toString(),
           prefs.getString("outHouseCost").toString(),
@@ -720,6 +720,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
         backgroundColor: Colors.greenAccent,
       );
     } catch (e) {
+      print(e);
       print("Something error");
     }
   }
@@ -1423,7 +1424,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     _lineStopH.toString() + ":" + minuteLineStop);
                 prefs.setString("costH", _newLineStopH.toString());
                 prefs.setString("costMp", stepEnamModel.mP.toString());
-                prefs.setString("costTotal", _costInHouse.toString());
+                // prefs.setString("costTotal", _costInHouse.toString());
                 prefs.setString("breakHours", breakHoursController.text);
                 prefs.setString("breakMinutes", breakMinutesController.text);
                 prefs.setString("breakTimeBool", "1");
