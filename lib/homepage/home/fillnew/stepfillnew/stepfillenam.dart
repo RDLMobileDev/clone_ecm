@@ -60,7 +60,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       prefVendor = '',
       prefOutHouse = '0',
       adminCost = '0';
-
+  bool btnCheck = false;
   String back = '';
 
   void setBahasa() async {
@@ -141,6 +141,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
     } else {
       getLanguageId();
     }
+  }
+
+  void clearText() async {
+    final prefs = await _prefs;
+    userNameController.clear();
+
+    // setState(() {
+    //   members = "";
+    //   listTeamMember.clear();
+    //   prefs.remove("teamMember");
+    //   prefs.remove("namaMember");
+    // });
   }
 
   List<AllUserModel> _listAllUser = [];
@@ -789,6 +801,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
     setBahasa();
     setLang();
     setFormValueStep6AfterChoosing();
+    if (isTapedUserName.toString().isNotEmpty) {
+      btnCheck = true;
+    } else {
+      btnCheck = false;
+    }
   }
 
   @override
@@ -809,44 +826,73 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontWeight: FontWeight.w700),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              width: MediaQuery.of(context).size.width,
-              child: RichText(
-                text: TextSpan(
-                  text: name,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    // TextSpan(
-                    //     text: '*',
-                    //     style: TextStyle(
-                    //         fontFamily: 'Rubik',
-                    //         fontSize: 16,
-                    //         color: Colors.red,
-                    //         fontWeight: FontWeight.w400)),
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: RichText(
+                    text: TextSpan(
+                      text: name,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        // TextSpan(
+                        //     text: '*',
+                        //     style: TextStyle(
+                        //         fontFamily: 'Rubik',
+                        //         fontSize: 16,
+                        //         color: Colors.red,
+                        //         fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                Visibility(
+                  visible: btnCheck,
+                  child: InkWell(
+                      onTap: () {
+                        clearText();
+                      },
+                      child: Container(
+                        alignment: Alignment.bottomRight,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF979C9E)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          "Hapus Team Member",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Colors.red,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      )),
+                ),
+              ],
             ),
             Container(
               margin: const EdgeInsets.only(top: 4),
               padding: const EdgeInsets.all(5),
               height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
                 showCursor: true,
                 readOnly: true,
                 controller: userNameController,
+                onChanged: (value) {},
                 onTap: () {
                   setState(() {
                     // print(prefs.getString("userName"));
                     isTapedUserName = !isTapedUserName;
+                    if (isTapedUserName.toString().isNotEmpty) {
+                      btnCheck = true;
+                    } else {
+                      btnCheck = false;
+                    }
                   });
                 },
                 style: const TextStyle(
