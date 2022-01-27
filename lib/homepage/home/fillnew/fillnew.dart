@@ -349,8 +349,7 @@ class _FillNewState extends State<FillNew> {
 
       if (_currentStep == 2) {
         if (prefs.getString("whyBool1")!.isNotEmpty &&
-            prefs.getString("whyBool2")!.isNotEmpty &&
-            prefs.getString("howBool")!.isNotEmpty) {
+            prefs.getString("whyBool2")!.isNotEmpty ) {
           _stepFillTiga.getSaveStepFillTiga();
           setState(() {
             _currentStep++;

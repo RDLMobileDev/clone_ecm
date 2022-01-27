@@ -376,6 +376,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                   });
                 },
                 decoration: InputDecoration(
+                  fillColor: Colors.white,
                     border: OutlineInputBorder(),
                     filled: true,
                     hintText: type_message),
