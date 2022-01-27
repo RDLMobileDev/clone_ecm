@@ -346,6 +346,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.58,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -516,7 +517,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                               )));
                     },
               child: Container(
-                margin: EdgeInsets.only(top: 50),
+                margin: EdgeInsets.only(top: 10),
                 width: MediaQuery.of(context).size.width,
                 height: 40,
                 decoration: BoxDecoration(
