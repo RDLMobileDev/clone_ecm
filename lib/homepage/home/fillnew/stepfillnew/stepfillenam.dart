@@ -801,11 +801,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
     setBahasa();
     setLang();
     setFormValueStep6AfterChoosing();
-    if (isTapedUserName.toString().isNotEmpty) {
-      btnCheck = true;
-    } else {
-      btnCheck = false;
-    }
   }
 
   @override
@@ -851,48 +846,44 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     ),
                   ),
                 ),
-                Visibility(
-                  visible: btnCheck,
-                  child: InkWell(
-                      onTap: () {
-                        clearText();
-                      },
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFF979C9E)),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Text(
-                          "Hapus Team Member",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Colors.red,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      )),
-                ),
+                InkWell(
+                    onTap: () {
+                      clearText();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "Hapus Team Member",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.red,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
               ],
             ),
             Container(
               margin: const EdgeInsets.only(top: 4),
               padding: const EdgeInsets.all(5),
               height: 40,
+              decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF979C9E)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
                 showCursor: true,
                 readOnly: true,
                 controller: userNameController,
-                onChanged: (value) {},
                 onTap: () {
                   setState(() {
                     // print(prefs.getString("userName"));
                     isTapedUserName = !isTapedUserName;
-                    if (isTapedUserName.toString().isNotEmpty) {
-                      btnCheck = true;
-                    } else {
-                      btnCheck = false;
-                    }
                   });
                 },
                 style: const TextStyle(

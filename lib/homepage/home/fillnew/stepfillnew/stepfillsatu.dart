@@ -665,6 +665,12 @@ class StepFillSatuState extends State<StepFillSatu> {
                       clearText();
                     },
                     child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
                       alignment: Alignment.bottomRight,
                       child: Text(
                         "Hapus Team Member",
