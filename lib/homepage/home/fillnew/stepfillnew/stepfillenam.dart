@@ -859,7 +859,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                               const BorderRadius.all(Radius.circular(5))),
                       alignment: Alignment.bottomRight,
                       child: Text(
-                        "Hapus Team Member",
+                        "Hapus Nama",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Colors.red,
