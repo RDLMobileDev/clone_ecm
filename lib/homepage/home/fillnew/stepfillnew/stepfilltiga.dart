@@ -192,193 +192,145 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     color: Color(0xFF404446),
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                children: const <TextSpan>[
-                  TextSpan(
-                      text: ' *',
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 14,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w400)),
-                ],
+                children: const <TextSpan>[],
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey),
-            child: ExpansionTile(
-              tilePadding: EdgeInsets.only(left: 10, right: 5),
-              collapsedIconColor: Colors.white,
-              collapsedTextColor: Colors.black,
-              title: RichText(
-                text: TextSpan(
-                  text: why,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFFFFFFFF),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: RichText(
+                  text: TextSpan(
+                    text: why,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[],
+                  ),
                 ),
               ),
-              children: <Widget>[
-                TextFormField(
-                  maxLength: 500,
-                  controller: why1Controller,
-                  onChanged: (value) async {
-                    final prefs = await _prefs;
-                    setState(() {
-                      prefs.setString("why1", value);
-                      prefs.setString("whyBool1", "1");
-                    });
-                  },
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      hintText: type_message),
-                  maxLines: 5,
-                )
-              ],
-            ),
+              TextFormField(
+                maxLength: 500,
+                controller: why1Controller,
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  setState(() {
+                    prefs.setString("why1", value);
+                    prefs.setString("whyBool1", "1");
+                  });
+                },
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: type_message),
+                maxLines: 5,
+              )
+            ],
           ),
-          Container(
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey),
-            child: ExpansionTile(
-              tilePadding: EdgeInsets.only(left: 10, right: 5),
-              collapsedIconColor: Colors.white,
-              collapsedTextColor: Colors.black,
-              title: RichText(
-                text: TextSpan(
-                  text: 'Why 2',
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFFFFFFFF),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Why 2',
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[],
+                  ),
                 ),
               ),
-              children: <Widget>[
-                TextFormField(
-                  maxLength: 500,
-                  onChanged: (value) async {
-                    final prefs = await _prefs;
-                    setState(() {
-                      prefs.setString("why2", value);
-                      prefs.setString("whyBool2", "1");
-                    });
-                  },
-                  controller: why2Controller,
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      hintText: type_message),
-                  maxLines: 5,
-                )
-              ],
-            ),
+              TextFormField(
+                maxLength: 500,
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  setState(() {
+                    prefs.setString("why2", value);
+                    prefs.setString("whyBool2", "1");
+                  });
+                },
+                controller: why2Controller,
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: type_message),
+                maxLines: 5,
+              )
+            ],
           ),
-          Container(
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey),
-            child: ExpansionTile(
-              tilePadding: EdgeInsets.only(left: 10, right: 5),
-              collapsedIconColor: Colors.white,
-              collapsedTextColor: Colors.black,
-              title: RichText(
-                text: TextSpan(
-                  text: 'Why 3 (Optional)',
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFFFFFFFF),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Why 3 ',
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
                 ),
               ),
-              children: <Widget>[
-                TextFormField(
-                  maxLength: 500,
-                  controller: why3Controller,
-                  onChanged: (value) async {
-                    final prefs = await _prefs;
-                    setState(() {
-                      prefs.setString("why3", value);
-                      // prefs.setString("whyBool3", "1");
-                    });
-                  },
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      hintText: type_message),
-                  maxLines: 5,
-                )
-              ],
-            ),
+              TextFormField(
+                maxLength: 500,
+                controller: why3Controller,
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  setState(() {
+                    prefs.setString("why3", value);
+                    prefs.setString("whyBool3", "0");
+                  });
+                },
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: type_message),
+                maxLines: 5,
+              )
+            ],
           ),
-          Container(
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.only(top: 10, bottom: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey),
-            child: ExpansionTile(
-              tilePadding: EdgeInsets.only(left: 10, right: 5),
-              collapsedIconColor: Colors.white,
-              collapsedTextColor: Colors.black,
-              title: Text(
-                'Why 4 (Optional)',
-                style: TextStyle(
-                    color: Colors.white, fontFamily: 'Rubik', fontSize: 14),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: Text(
+                  'Why 4',
+                  style: TextStyle(
+                      color: Colors.black, fontFamily: 'Rubik', fontSize: 14),
+                ),
               ),
-              children: <Widget>[
-                TextFormField(
-                  maxLength: 500,
-                  controller: why4Controller,
-                  onChanged: (value) async {
-                    final prefs = await _prefs;
-                    setState(() {
-                      prefs.setString("why4", value);
-                    });
-                  },
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      hintText: type_message),
-                  maxLines: 5,
-                )
-              ],
-            ),
+              TextFormField(
+                maxLength: 500,
+                controller: why4Controller,
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  setState(() {
+                    prefs.setString("why4", value);
+                  });
+                },
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: type_message),
+                maxLines: 5,
+              )
+            ],
           ),
           Container(
             width: MediaQuery.of(context).size.width,
@@ -411,7 +363,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     border: OutlineInputBorder(),
                     filled: true,
                     hintText: type_message),
-                maxLines: 3,
+                maxLines: 5,
               ))
         ],
       ),
