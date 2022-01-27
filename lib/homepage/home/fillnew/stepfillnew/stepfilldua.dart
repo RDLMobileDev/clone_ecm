@@ -1569,25 +1569,49 @@ class StepFillDuaState extends State<StepFillDua> {
                     ),
                   ),
             Container(
-              margin: EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: picture_analis,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
+              margin: EdgeInsets.only(top: 16, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: picture_analis,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                      onTap: () async {
+                        final prefs = await _prefs;
+                        setState(() {
+                          imageProblemPath.clear();
+                          imageFileList!.clear();
+                          prefs.setStringList(
+                              "imagesKetPath", imageProblemPath);
+                        });
+                      },
+                      child: Text(
+                        "Hapus Foto",
                         style: TextStyle(
+                            decoration: TextDecoration.underline,
                             fontFamily: 'Rubik',
                             fontSize: 16,
                             color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
+                            fontWeight: FontWeight.w400),
+                      ))
+                ],
               ),
             ),
             imageProblemPath.isNotEmpty
@@ -1628,6 +1652,10 @@ class StepFillDuaState extends State<StepFillDua> {
                                         textColor: Colors.white,
                                         fontSize: 16.0);
                                   };
+                            print("panjang = " +
+                                imageFileList!.length.toString());
+                            print("gambar = " +
+                                imageProblemPath.length.toString());
                           },
                           child: Container(
                             width: 120,
