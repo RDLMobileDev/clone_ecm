@@ -556,10 +556,14 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       ),
       backgroundColor: Colors.white,
       body: Container(
+        height: MediaQuery.of(context).size.height,
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             Container(
+              child: Column(
+                children: <Widget>[
+                   Container(
               width: MediaQuery.of(context).size.width,
               child: RichText(
                 text: TextSpan(
@@ -775,325 +779,342 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 ],
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: "Judgement",
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              height: 40,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 10, right: 10),
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: (noteOptions["ok"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Colors.transparent),
-                    child: InkWell(
-                      onTap: () async {
-                        final prefs = await _prefs;
-                        setState(() {
-                          noteOptions["ok"] = !(noteOptions["ok"] ?? false);
-                          noteOptions["limit"] = false;
-                          noteOptions["ng"] = false;
-
-                          formValidations["note"] =
-                              noteOptions.containsValue(true);
-                          formValue["note"] = "ok";
-                        });
-                        prefs.setString("noteStep5", "ok");
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.circle_outlined,
-                              color: (noteOptions["ok"] ?? false)
-                                  ? Color(0xFF00AEDB)
-                                  : Colors.grey,
-                              size: 20,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'OK',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'Rubik',
-                                color: (noteOptions["ok"] ?? false)
-                                    ? Color(0xFF00AEDB)
-                                    : Colors.grey,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        noteOptions["limit"] = !(noteOptions["limit"] ?? false);
-                        noteOptions["ok"] = false;
-                        noteOptions["ng"] = false;
-
-                        formValidations["note"] =
-                            noteOptions.containsValue(true);
-                        formValue["note"] = "limit";
-                      });
-                      prefs.setString("noteStep5", "limit");
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10, right: 10),
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: (noteOptions["limit"] ?? false)
-                                  ? Color(0xFF00AEDB)
-                                  : Colors.grey),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Colors.transparent),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.change_history_outlined,
-                            color: (noteOptions["limit"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey,
-                            size: 20,
-                          ),
-                          Text(
-                            'Limit',
-                            style: TextStyle(
-                                color: (noteOptions["limit"] ?? false)
-                                    ? Color(0xFF00AEDB)
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontFamily: 'Rubik'),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        noteOptions["ng"] = !(noteOptions["ng"] ?? false);
-                        noteOptions["limit"] = false;
-                        noteOptions["ok"] = false;
-
-                        formValidations["note"] =
-                            noteOptions.containsValue(true);
-                        formValue["note"] = "ng";
-                      });
-                      prefs.setString("noteStep5", "ng");
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: (noteOptions["ng"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Colors.transparent),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.close,
-                            color: (noteOptions["ng"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey,
-                            size: 20,
-                          ),
-                          Text(
-                            'N / G',
-                            style: TextStyle(
-                                color: (noteOptions["ng"] ?? false)
-                                    ? Color(0xFF00AEDB)
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontFamily: 'Rubik'),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: name,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
+              child: Column(
+                children: <Widget>[
+                 
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: name,
                         style: TextStyle(
                             fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
                             fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              height: 40,
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                // readOnly: true,
-                // showCursor: false,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    filled: true,
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                    hintText: type_name),
-                maxLines: 1,
-                controller: usernameStepLima,
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["name"] = value.isNotEmpty;
-
-                    formValue["name"] = value;
-                  });
-                },
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: repair_made,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              child: TextFormField(
-                controller: repairMadeController,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: type_message,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF979C9E)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                onChanged: (value) async {
-                  final prefs = await _prefs;
-                  setState(() {
-                    formValidations["repair"] = value.isNotEmpty;
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    height: 40,
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      // readOnly: true,
+                      // showCursor: false,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 18),
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          filled: true,
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          hintText: type_name),
+                      maxLines: 1,
+                      controller: usernameStepLima,
+                      onChanged: (value) {
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
 
-                    formValue["repair"] = value;
-                  });
-                  prefs.setString("repairMade", value);
-                },
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 50),
-              height: 40,
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          formValidations.containsValue(false)
-                              ? Colors.grey
-                              : Color(0xFF00AEDB)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ))),
-                  // onPressed: () {
-                  //   if (!formValidations.containsValue(false)) {
-                  //     saveStepInputRepairing();
-                  //   } else {}
-                  // },
-                  onPressed: () {
-                    if (!formValidations.containsValue(false) &&
-                        widget.isUpdate == true) {
-                      saveStepInputRepairing();
-                    } else if (!formValidations.containsValue(false)) {
-                      saveStepInputRepairing();
-                    } else {}
-                  },
-                  child: Text(
-                    widget.isUpdate == true
-                        ? 'Edit Repairing'
-                        : 'Save Repairing',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Colors.white,
-                      fontSize: 16,
+                          formValue["name"] = value;
+                        });
+                      },
                     ),
-                  )),
-            ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: repair_made,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: TextFormField(
+                      controller: repairMadeController,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        hintText: type_message,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      onChanged: (value) async {
+                        final prefs = await _prefs;
+                        setState(() {
+                          formValidations["repair"] = value.isNotEmpty;
+
+                          formValue["repair"] = value;
+                        });
+                        prefs.setString("repairMade", value);
+                      },
+                    ),
+                  ),
+
+                   Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Judgement",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(top: 10, right: 10),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: (noteOptions["ok"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              color: Colors.transparent),
+                          child: InkWell(
+                            onTap: () async {
+                              final prefs = await _prefs;
+                              setState(() {
+                                noteOptions["ok"] =
+                                    !(noteOptions["ok"] ?? false);
+                                noteOptions["limit"] = false;
+                                noteOptions["ng"] = false;
+
+                                formValidations["note"] =
+                                    noteOptions.containsValue(true);
+                                formValue["note"] = "ok";
+                              });
+                              prefs.setString("noteStep5", "ok");
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle_outlined,
+                                    color: (noteOptions["ok"] ?? false)
+                                        ? Color(0xFF00AEDB)
+                                        : Colors.grey,
+                                    size: 20,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'OK',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik',
+                                      color: (noteOptions["ok"] ?? false)
+                                          ? Color(0xFF00AEDB)
+                                          : Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              noteOptions["limit"] =
+                                  !(noteOptions["limit"] ?? false);
+                              noteOptions["ok"] = false;
+                              noteOptions["ng"] = false;
+
+                              formValidations["note"] =
+                                  noteOptions.containsValue(true);
+                              formValue["note"] = "limit";
+                            });
+                            prefs.setString("noteStep5", "limit");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10, right: 10),
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: (noteOptions["limit"] ?? false)
+                                        ? Color(0xFF00AEDB)
+                                        : Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                                color: Colors.transparent),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.change_history_outlined,
+                                  color: (noteOptions["limit"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey,
+                                  size: 20,
+                                ),
+                                Text(
+                                  'Limit',
+                                  style: TextStyle(
+                                      color: (noteOptions["limit"] ?? false)
+                                          ? Color(0xFF00AEDB)
+                                          : Colors.grey,
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik'),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              noteOptions["ng"] = !(noteOptions["ng"] ?? false);
+                              noteOptions["limit"] = false;
+                              noteOptions["ok"] = false;
+
+                              formValidations["note"] =
+                                  noteOptions.containsValue(true);
+                              formValue["note"] = "ng";
+                            });
+                            prefs.setString("noteStep5", "ng");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: (noteOptions["ng"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                                color: Colors.transparent),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.close,
+                                  color: (noteOptions["ng"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey,
+                                  size: 20,
+                                ),
+                                Text(
+                                  'N / G',
+                                  style: TextStyle(
+                                      color: (noteOptions["ng"] ?? false)
+                                          ? Color(0xFF00AEDB)
+                                          : Colors.grey,
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik'),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 50),
+                    height: 40,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                formValidations.containsValue(false)
+                                    ? Colors.grey
+                                    : Color(0xFF00AEDB)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ))),
+                        // onPressed: () {
+                        //   if (!formValidations.containsValue(false)) {
+                        //     saveStepInputRepairing();
+                        //   } else {}
+                        // },
+                        onPressed: () {
+                          if (!formValidations.containsValue(false) &&
+                              widget.isUpdate == true) {
+                            saveStepInputRepairing();
+                          } else if (!formValidations.containsValue(false)) {
+                            saveStepInputRepairing();
+                          } else {}
+                        },
+                        child: Text(
+                          widget.isUpdate == true
+                              ? 'Edit Repairing'
+                              : 'Save Repairing',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

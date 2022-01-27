@@ -532,7 +532,7 @@ class _HomeState extends State<Home> {
                                     children: [
                                       Text(ecm_approved,
                                           style: TextStyle(
-                                              color: Color(0xff72C885),
+                                              color: Colors.black,
                                               fontFamily: 'Rubik',
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400)),
@@ -562,9 +562,7 @@ class _HomeState extends State<Home> {
                                       Text(
                                         ecm_declined,
                                         style: TextStyle(
-                                            color: Color(
-                                              0xffFB4949,
-                                            ),
+                                            color: Colors.black,
                                             fontFamily: 'Rubik',
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),

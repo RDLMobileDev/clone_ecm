@@ -332,7 +332,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     final prefs = await _prefs;
                     setState(() {
                       prefs.setString("why3", value);
-                      prefs.setString("whyBool3", "1");
+                      // prefs.setString("whyBool3", "1");
                     });
                   },
                   decoration: InputDecoration(
@@ -384,21 +384,13 @@ class _StepFillTigaState extends State<StepFillTiga> {
             width: MediaQuery.of(context).size.width,
             child: RichText(
               text: TextSpan(
-                text: how,
+                text: "Why 5 (Optional)",
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     color: Color(0xFF404446),
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                children: const <TextSpan>[
-                  TextSpan(
-                      text: ' *',
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 14,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w400)),
-                ],
+                
               ),
             ),
           ),
@@ -412,7 +404,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                   final prefs = await _prefs;
                   setState(() {
                     prefs.setString("howC", value);
-                    prefs.setString("howBool", "1");
+                    // prefs.setString("howBool", "0");
                   });
                 },
                 decoration: InputDecoration(

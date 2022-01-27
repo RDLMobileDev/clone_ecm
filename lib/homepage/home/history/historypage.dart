@@ -4,6 +4,7 @@ import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/model/historyall.dart';
 import 'package:e_cm/homepage/home/history/model/historydailymodel.dart';
 import 'package:e_cm/homepage/home/history/model/historymonthly.dart';
+import 'package:e_cm/homepage/home/history/service/get_data_history_byname.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_all.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_daily.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_monthly.dart';
@@ -150,6 +151,28 @@ class _HistoryPageState extends State<HistoryPage> {
   String idUser = '';
   List bulan = [];
 
+  //   Future<void> cariDokterUmum(String cariDokter) async {
+  //   Map<String, dynamic> params = {
+  //     "idservice": widget.idService,
+  //     "idcategory": idCategory,
+  //     "search": cariDokter
+  //   };
+
+  //   var result = await ApiServices.post("okechat/doktercaribycat", params);
+
+  //   var user = await SharedPrefUtil.getUser();
+
+  //   setState(() {
+  //     if (result['response']['status'] == 200) {
+  //       _listDokter = (result['data'] as List)
+  //           .map((e) => DokterFavoritModel.fromJson(e))
+  //           .toList();
+  //     } else {
+  //       _listDokter = [];
+  //     }
+  //   });
+  // }
+
   Future<List> getMonth() async {
     var response = await rootBundle.loadString("assets/month/month.json");
     var dataLang = json.decode(response)['data'];
@@ -276,6 +299,50 @@ class _HistoryPageState extends State<HistoryPage> {
         setState(() {
           Fluttertoast.showToast(
               msg: 'E-CM Card history is empty',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.orangeAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+    return _listAll;
+  }
+
+
+
+   Future<List<HistoryAll>> getListAllByName(String byName) async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    try {
+      var response = await getHistoryAllByName(tokenUser, byName);
+      if (response['response']['status'] == 200) {
+        setStateIfMounted(() {
+          var data = response['data'] as List;
+          _listAll = data.map((e) => HistoryAll.fromJson(e)).toList();
+          print("===== list data all =====");
+          print(data.length);
+          // print(response['data']);
+          print("===== || =====");
+        });
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Showing all of history E-CM Card',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'E-CM Card history not found',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -423,6 +490,7 @@ class _HistoryPageState extends State<HistoryPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+           
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.center,
@@ -562,6 +630,47 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                   ),
                 ],
+              ),
+            ),
+
+                Container(
+              margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+              width: MediaQuery.of(context).size.width,
+              height: 45,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                    )
+                  ],
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: TextField(
+                onChanged: (value) async {
+                  setState(() {
+                    print(value);
+                  });
+                  if (value.isNotEmpty) {
+                    await getListAllByName(value);
+                  } else {
+                    getListAll();
+                  }
+                },
+                textAlign: TextAlign.left,
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    prefixIcon: Icon(Icons.search_outlined),
+                    hintText: "Cari Riwayat E-CM",
+                    hintStyle: TextStyle(
+                        color: Colors.black38,
+                        fontFamily: 'Poppins',
+                        fontSize: 14)),
               ),
             ),
             Visibility(
