@@ -355,7 +355,7 @@ class _StepFillLimaState extends State<StepFillLima> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.58,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,6 +410,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                     )
                   : Container(
                       child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: _listItemChecking.length,
                         itemBuilder: (context, i) {

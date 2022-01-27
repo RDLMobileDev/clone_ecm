@@ -204,6 +204,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.58,
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(
