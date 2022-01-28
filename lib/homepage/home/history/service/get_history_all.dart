@@ -10,7 +10,7 @@ Future getHistoryAll(String token) async {
     'Accept': 'application/json',
     'Authorization': 'Bearer $token'
   });
-  print('Token : ${token}');
+  // print('Token : ${token}');
   print(response.body);
 
   if (response.body.isNotEmpty) {

@@ -191,7 +191,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     fontFamily: 'Rubik',
                     color: Colors.black,
                     fontSize: 16,
-                    fontWeight: FontWeight.w400),
+                    fontWeight: FontWeight.w600),
                 children: const <TextSpan>[],
               ),
             ),
