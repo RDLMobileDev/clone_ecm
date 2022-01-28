@@ -647,16 +647,18 @@ class _HistoryPageState extends State<HistoryPage> {
                     )
                   ],
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: TextField(
-                onChanged: (value) async {
-                  setState(() {
-                    print(value);
-                  });
-                  if (value.isNotEmpty) {
-                    await getListAllByName(value);
+              child: TextFormField(
+                onFieldSubmitted: (value) {
+                   if (value.isNotEmpty) {
+                    getListAllByName(value);
                   } else {
                     getListAll();
                   }
+                  // setState(() {
+                  //   print(value);
+                    
+                  // });
+                 
                 },
                 textAlign: TextAlign.left,
                 decoration: InputDecoration(
