@@ -60,7 +60,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       prefVendor = '',
       prefOutHouse = '0',
       adminCost = '0';
-
+  bool btnCheck = false;
   String back = '';
 
   void setBahasa() async {
@@ -141,6 +141,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
     } else {
       getLanguageId();
     }
+  }
+
+  void clearText() async {
+    final prefs = await _prefs;
+    userNameController.clear();
+
+    // setState(() {
+    //   members = "";
+    //   listTeamMember.clear();
+    //   prefs.remove("teamMember");
+    //   prefs.remove("namaMember");
+    // });
   }
 
   List<AllUserModel> _listAllUser = [];
@@ -809,28 +821,53 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     fontWeight: FontWeight.w700),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              width: MediaQuery.of(context).size.width,
-              child: RichText(
-                text: TextSpan(
-                  text: name,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    // TextSpan(
-                    //     text: '*',
-                    //     style: TextStyle(
-                    //         fontFamily: 'Rubik',
-                    //         fontSize: 16,
-                    //         color: Colors.red,
-                    //         fontWeight: FontWeight.w400)),
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: RichText(
+                    text: TextSpan(
+                      text: name,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        // TextSpan(
+                        //     text: '*',
+                        //     style: TextStyle(
+                        //         fontFamily: 'Rubik',
+                        //         fontSize: 16,
+                        //         color: Colors.red,
+                        //         fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                InkWell(
+                    onTap: () {
+                      clearText();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "Hapus Nama",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.red,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              ],
             ),
             Container(
               margin: const EdgeInsets.only(top: 4),

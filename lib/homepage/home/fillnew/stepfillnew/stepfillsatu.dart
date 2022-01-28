@@ -16,6 +16,7 @@ import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
 import 'package:e_cm/homepage/home/services/membernameservice.dart';
+import 'package:e_cm/homepage/notification/model/response_review_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -144,6 +145,18 @@ class StepFillSatuState extends State<StepFillSatu> {
         next_two = dataLang['step_1']['next_two'];
       });
     }
+  }
+
+  void clearText() async {
+    final prefs = await _prefs;
+    teamMemberController.clear();
+
+    setState(() {
+      members = "";
+      listTeamMember.clear();
+      prefs.remove("teamMember");
+      prefs.remove("namaMember");
+    });
   }
 
   void setLang() async {
@@ -622,27 +635,53 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: t_m,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: RichText(
+                    text: TextSpan(
+                      text: t_m,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                    onTap: () {
+                      clearText();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "Hapus Team Member",
                         style: TextStyle(
                             fontFamily: 'Rubik',
-                            fontSize: 16,
                             color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              ],
             ),
             TextFormField(
               controller: teamMemberController,
@@ -651,6 +690,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               onTap: () {
                 setState(() {
                   isTappedTeamMember = !isTappedTeamMember;
+                  print(teamMemberController);
                 });
               },
               onEditingComplete: () async {},
