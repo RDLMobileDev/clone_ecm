@@ -532,7 +532,7 @@ class _HomeState extends State<Home> {
                                     children: [
                                       Text(ecm_approved,
                                           style: TextStyle(
-                                              color: Color(0xff72C885),
+                                              color: Colors.black,
                                               fontFamily: 'Rubik',
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400)),
@@ -542,7 +542,7 @@ class _HomeState extends State<Home> {
                                             : cardStatus['ecm_approved']
                                                 .toString(),
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.green,
                                             fontFamily: 'Rubik',
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),
@@ -562,9 +562,7 @@ class _HomeState extends State<Home> {
                                       Text(
                                         ecm_declined,
                                         style: TextStyle(
-                                            color: Color(
-                                              0xffFB4949,
-                                            ),
+                                            color: Colors.black,
                                             fontFamily: 'Rubik',
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),
@@ -575,7 +573,7 @@ class _HomeState extends State<Home> {
                                             : cardStatus['ecm_reject']
                                                 .toString(),
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.red,
                                             fontFamily: 'Rubik',
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),
@@ -606,7 +604,7 @@ class _HomeState extends State<Home> {
                                             : cardStatus['ecm_masuk']
                                                 .toString(),
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: Color(0xff979C9E),
                                             fontFamily: 'Rubik',
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),
