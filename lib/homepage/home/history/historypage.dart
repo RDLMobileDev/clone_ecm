@@ -297,6 +297,10 @@ class _HistoryPageState extends State<HistoryPage> {
               textColor: Colors.white,
               fontSize: 16);
         });
+        tabAll = true;
+        tabDaily = false;
+        tabMontly = false;
+        noDataLayout = false;
       } else {
         setState(() {
           Fluttertoast.showToast(
@@ -339,10 +343,10 @@ class _HistoryPageState extends State<HistoryPage> {
               textColor: Colors.white,
               fontSize: 16);
         });
-         tabAll = true;
-          tabDaily = true;
-          tabMontly = true;
-          noDataLayout = false;
+        tabAll = true;
+        tabDaily = true;
+        tabMontly = true;
+        noDataLayout = false;
       } else {
         setState(() {
           tabAll = false;
@@ -660,7 +664,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   if (value.isNotEmpty) {
                     getListAllByName(value);
                   } else {
-                    
                     getListAll();
                   }
                   // setState(() {
