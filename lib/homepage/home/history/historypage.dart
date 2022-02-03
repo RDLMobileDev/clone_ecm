@@ -27,6 +27,7 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
+  bool noDataLayout = false;
 
   String history = '';
   String all = 'Semua';
@@ -338,16 +339,25 @@ class _HistoryPageState extends State<HistoryPage> {
               textColor: Colors.white,
               fontSize: 16);
         });
+         tabAll = true;
+          tabDaily = true;
+          tabMontly = true;
+          noDataLayout = false;
       } else {
         setState(() {
-          Fluttertoast.showToast(
-              msg: 'E-CM Card history not found',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.orangeAccent,
-              textColor: Colors.white,
-              fontSize: 16);
+          tabAll = false;
+          tabDaily = false;
+          tabMontly = false;
+          noDataLayout = true;
+
+          // Fluttertoast.showToast(
+          //     msg: 'E-CM Card history not found',
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     backgroundColor: Colors.orangeAccent,
+          //     textColor: Colors.white,
+          //     fontSize: 16);
         });
       }
     } catch (e) {
@@ -502,6 +512,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         tabAll = true;
                         tabDaily = false;
                         tabMontly = false;
+                        noDataLayout = false;
                       });
                     },
                     child: Container(
@@ -545,6 +556,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           tabAll = false;
                           tabDaily = true;
                           tabMontly = false;
+                          noDataLayout = false;
                         },
                       );
                     },
@@ -591,6 +603,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         tabAll = false;
                         tabDaily = false;
                         tabMontly = true;
+                        noDataLayout = false;
                       });
                     },
                     child: Container(
@@ -647,6 +660,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   if (value.isNotEmpty) {
                     getListAllByName(value);
                   } else {
+                    
                     getListAll();
                   }
                   // setState(() {
@@ -667,6 +681,16 @@ class _HistoryPageState extends State<HistoryPage> {
                         color: Colors.black38,
                         fontFamily: 'Poppins',
                         fontSize: 14)),
+              ),
+            ),
+            Visibility(
+              visible: noDataLayout,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: Text("Data not found"),
+                ),
               ),
             ),
             Visibility(
