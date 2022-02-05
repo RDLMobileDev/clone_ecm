@@ -292,7 +292,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                       height: 100,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage('assets/images/img_ava.png')),
+                            image: NetworkImage(detailEcmModel.foto ?? "-")),
                       ),
                     ),
                     Text(

@@ -752,13 +752,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   Container(
                                                     width: 48,
                                                     height: 48,
-                                                    decoration: const BoxDecoration(
+                                                    decoration: BoxDecoration(
                                                         color:
                                                             Color(0xFF00AEDB),
                                                         shape: BoxShape.circle,
                                                         image: DecorationImage(
-                                                            image: AssetImage(
-                                                                "assets/images/ario.png"))),
+                                                            image: NetworkImage(_listAll[i].foto ?? "-" ))),
                                                   ),
                                                   const SizedBox(
                                                     width: 16,
@@ -972,13 +971,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   Container(
                                                     width: 48,
                                                     height: 48,
-                                                    decoration: const BoxDecoration(
+                                                    decoration: BoxDecoration(
                                                         color:
                                                             Color(0xFF00AEDB),
                                                         shape: BoxShape.circle,
                                                         image: DecorationImage(
-                                                            image: AssetImage(
-                                                                "assets/images/ario.png"))),
+                                                            image: NetworkImage(_listMontly[i].foto ?? "-"))),
                                                   ),
                                                   const SizedBox(
                                                     width: 16,
@@ -1260,12 +1258,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 Container(
                                                   width: 48,
                                                   height: 48,
-                                                  decoration: const BoxDecoration(
+                                                  decoration: BoxDecoration(
                                                       color: Color(0xFF00AEDB),
                                                       shape: BoxShape.circle,
                                                       image: DecorationImage(
-                                                          image: AssetImage(
-                                                              "assets/images/ario.png"))),
+                                                          image: NetworkImage(_listDaily[i].foto ?? "-"))),
                                                 ),
                                                 const SizedBox(
                                                   width: 16,
