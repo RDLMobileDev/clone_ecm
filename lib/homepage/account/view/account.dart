@@ -44,6 +44,7 @@ class _AccountMemberState extends State<AccountMember> {
   String userName = "";
   String emailName = "";
   String roleName = "";
+  String photoUserLink = "";
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -288,11 +289,14 @@ class _AccountMemberState extends State<AccountMember> {
     String? tokenUser = prefs.getString("tokenKey").toString();
     String nameUser = prefs.getString("usernameKey").toString();
     String roleUser = prefs.getString("namaJabatanKey").toString();
+    String photoUser = prefs.getString("photoUser") ?? "-";
+
     print(emailUser);
     setState(() {
       userName = nameUser;
       emailName = emailUser;
       roleName = roleUser;
+      photoUserLink = photoUser;
     });
 
     var rspGetUser = await getUser(emailUser, tokenUser);
@@ -336,7 +340,7 @@ class _AccountMemberState extends State<AccountMember> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: AssetImage("assets/images/sehun.jpg"))),
+                              image: NetworkImage(photoUserLink))),
                     ),
                     SizedBox(width: 10),
                     Column(

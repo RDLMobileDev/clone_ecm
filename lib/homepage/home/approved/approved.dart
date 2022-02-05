@@ -185,11 +185,11 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                     Container(
                       width: 48,
                       height: 48,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           color: Color(0xFF00AEDB),
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: AssetImage("assets/images/ario.png"))),
+                              image: NetworkImage(_listApproved[i].foto ?? "-"))),
                     ),
                     const SizedBox(
                       width: 16,

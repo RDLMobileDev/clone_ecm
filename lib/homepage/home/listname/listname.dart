@@ -95,6 +95,7 @@ class _ListTmNameState extends State<ListTmName> {
 
     listTmName = await listTmService.getListTmName(tokenUser, idUser);
 
+
     return await listTmService.getListTmName(tokenUser, idUser);
   }
 
@@ -160,7 +161,7 @@ class _ListTmNameState extends State<ListTmName> {
                         color: Color(0xFF00AEDB),
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: AssetImage("assets/images/ario.png"))),
+                            image: NetworkImage(listTmName[i]['photo']))),
                   ),
                   SizedBox(
                     width: 16,

@@ -114,6 +114,7 @@ class _LogInState extends State<LogIn> {
         prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
         prefs.setString(
             "namaJabatanKey", rspLogin['data']['user']['namajabatan']);
+        prefs.setString("photoUser", rspLogin['data']['user']['photo'].toString());
 
         print("ID user = " + (rspLogin['data']['user']['id']).toString());
         print("EMAIL user = " + rspLogin['data']['user']['email']);

@@ -635,7 +635,7 @@ class _FillNewState extends State<FillNew> {
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
                                       image:
-                                          AssetImage("assets/images/ario.png"),
+                                          NetworkImage(_listSummaryApproval[i].foto),
                                       fit: BoxFit.fill)),
                             ),
                             SizedBox(

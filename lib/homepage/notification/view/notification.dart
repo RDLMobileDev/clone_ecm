@@ -271,7 +271,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                       children: [
                         CircleAvatar(
                           backgroundImage:
-                              AssetImage("assets/images/sudin.png"),
+                              NetworkImage(listNotificationEcm[i].foto),
                         ),
                         SizedBox(width: 10),
                         Column(
