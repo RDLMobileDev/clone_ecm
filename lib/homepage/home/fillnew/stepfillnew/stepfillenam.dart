@@ -373,6 +373,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
         prefs.setString("lineStopH", _lineStopH.toString());
         prefs.setString("lineStopM", _lineStopM.toString());
         prefs.setString("breakTimeBool", "1");
+        prefs.setString(
+            "ttlLineStop", _lineStopH.toString() + ":" + _lineStopM.toString());
       } else if (breakHoursController.text == "0" &&
           breakMinutesController.text == "0") {
         setState(() {
@@ -398,6 +400,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
         prefs.setString("lineStopH", _newLineStopH.toString());
         prefs.setString("lineStopM", _lineStopM.toString());
         prefs.setString("breakTimeBool", "1");
+        prefs.setString(
+            "ttlLineStop", _lineStopH.toString() + ":" + _lineStopM.toString());
       } else {
         Fluttertoast.showToast(
             msg: 'Waktu istirahat masih kosong',
@@ -1471,8 +1475,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     : _lineStopM.toString();
                 final SharedPreferences prefs = await _prefs;
                 prefs.setString("lineStop", _counter.toString() + ":00");
-                prefs.setString("ttlLineStop",
-                    _lineStopH.toString() + ":" + minuteLineStop);
+
                 prefs.setString("costH", _newLineStopH.toString());
                 prefs.setString("costMp", stepEnamModel.mP.toString());
                 // prefs.setString("costTotal", _costInHouse.toString());
