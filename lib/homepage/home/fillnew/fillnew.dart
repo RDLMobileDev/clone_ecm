@@ -349,7 +349,7 @@ class _FillNewState extends State<FillNew> {
 
       if (_currentStep == 2) {
         if (prefs.getString("whyBool1")!.isNotEmpty &&
-            prefs.getString("whyBool2")!.isNotEmpty ) {
+            prefs.getString("whyBool2")!.isNotEmpty) {
           _stepFillTiga.getSaveStepFillTiga();
           setState(() {
             _currentStep++;
@@ -431,7 +431,7 @@ class _FillNewState extends State<FillNew> {
       if (_currentStep == 7) {
         print("step in: " + _stepClicked.toString());
         setState(() {
-          textNext = 'Finish';
+          next = 'Finish';
         });
         if ((prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "0") ||
@@ -445,33 +445,55 @@ class _FillNewState extends State<FillNew> {
                   child: Center(
                     child: CircularProgressIndicator(
                       value: null,
-                      strokeWidth: 2,
+                      strokeWidth: 4,
                     ),
                   ),
                 );
               });
-          Timer.periodic(Duration(seconds: 10), (timer) async {
-            if (timer.tick == 5) {
-              removeStepCacheFillEcm();
-              removeCacheFillEcm();
-              Fluttertoast.showToast(
-                  msg: 'Terjadi masalah jaringan, E-CM Card tidak disimpan',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 2,
-                  fontSize: 16);
-
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => Dashboard()),
-                  ModalRoute.withName("/"));
-              timer.cancel();
-            }
-
-            await _stepFillDelapan.getMethodPostStep();
+          try {
             successStep8();
-            timer.cancel();
-          });
+            await _stepFillDelapan.getMethodPostStep();
+            Timer.periodic(Duration(seconds: 10), (timer) async {
+              if (timer.tick == 5) {
+                removeStepCacheFillEcm();
+                removeCacheFillEcm();
+                Fluttertoast.showToast(
+                    msg: 'Terjadi masalah jaringan, E-CM Card tidak disimpan',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 2,
+                    fontSize: 16);
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Dashboard()),
+                    ModalRoute.withName("/"));
+                timer.cancel();
+              }
+
+              timer.cancel();
+            });
+          } catch (e) {
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Timeout'),
+                content: const Text(
+                    'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context)
+                      ..pop()
+                      ..pop(true),
+                    child: const Text('Kembali'),
+                  ),
+                  TextButton(
+                    onPressed: () => continued(),
+                    child: const Text('Kirim Ulang'),
+                  ),
+                ],
+              ),
+            );
+          }
         } else {
           Fluttertoast.showToast(
               msg: 'Pilih satu field Copy to',
@@ -634,8 +656,8 @@ class _FillNewState extends State<FillNew> {
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
-                                      image:
-                                          NetworkImage(_listSummaryApproval[i].foto),
+                                      image: NetworkImage(
+                                          _listSummaryApproval[i].foto),
                                       fit: BoxFit.fill)),
                             ),
                             SizedBox(
@@ -975,9 +997,9 @@ class _FillNewState extends State<FillNew> {
                                       BorderRadius.all(Radius.circular(5))),
                               child: Center(
                                 child: Text(
-                                  next == next
-                                      ? "$next $_stepClicked/$_stepTotal"
-                                      : next,
+                                  next == "Finish"
+                                      ? next
+                                      : "$next $_stepClicked/$_stepTotal",
                                   style: TextStyle(
                                     fontFamily: 'Rubik',
                                     fontSize: 16,
