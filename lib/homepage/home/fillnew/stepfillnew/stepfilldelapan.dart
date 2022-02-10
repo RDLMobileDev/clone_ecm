@@ -1,5 +1,6 @@
 // ignore_for_file: sized_box_for_whitespace, unnecessary_const, avoid_unnecessary_containers
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -149,7 +150,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
     try {
       var response = await fillNewDelapan(
-          ecmId, engineerToKey, productToKey, othersToKey, tokenUser);
+              ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+          .timeout(const Duration(seconds: 15));
 
       print("response step 8:");
       print(response);
@@ -173,8 +175,30 @@ class StepFillDelapanState extends State<StepFillDelapan> {
             MaterialPageRoute(builder: (context) => Dashboard()),
             ModalRoute.withName("/"));
       }
-    } catch (e) {
-      print(e);
+    } on TimeoutException catch (_) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Timeout'),
+          content: const Text(
+              'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context)
+                ..pop()
+                ..pop(true),
+              child: const Text('Kembali'),
+            ),
+            TextButton(
+              onPressed: () => postStepDelapan(),
+              child: const Text('Kirim Ulang'),
+            ),
+          ],
+        ),
+      );
+      // A timeout occurred.
+    } on SocketException catch (_) {
+      // print(e);
       // var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
       removeStepCacheFillEcm();
       removeCacheFillEcm();
