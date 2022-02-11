@@ -96,7 +96,7 @@ class _LogInState extends State<LogIn> {
   postLogin() async {
     String emailUser = _emailController.text;
     String passwordUser = _passwordController.text;
-    String versionUser = "1.0.0";
+    String versionUser = "1.0.1";
 
     try {
       var rspLogin = await loginUser(
@@ -114,7 +114,8 @@ class _LogInState extends State<LogIn> {
         prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
         prefs.setString(
             "namaJabatanKey", rspLogin['data']['user']['namajabatan']);
-        prefs.setString("photoUser", rspLogin['data']['user']['photo'].toString());
+        prefs.setString(
+            "photoUser", rspLogin['data']['user']['photo'].toString());
 
         print("ID user = " + (rspLogin['data']['user']['id']).toString());
         print("EMAIL user = " + rspLogin['data']['user']['email']);
@@ -165,16 +166,29 @@ class _LogInState extends State<LogIn> {
               fontSize: 16);
         });
       } else if (rspLogin['response']['status'] == 203) {
-        setState(() {
-          Fluttertoast.showToast(
-              msg: _localizedValues[locale]!['update']!,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        // setState(() {
+        //   Fluttertoast.showToast(
+        //       msg: _localizedValues[locale]!['update']!,
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.greenAccent,
+        //       textColor: Colors.white,
+        //       fontSize: 16);
+        // });
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Update ECM'),
+            content: const Text('Silahkan update ECM versi terbaru'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Exit'),
+              ),
+            ],
+          ),
+        );
       } else {
         setState(() {
           Fluttertoast.showToast(

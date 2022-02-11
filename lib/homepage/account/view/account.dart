@@ -162,7 +162,7 @@ class _AccountMemberState extends State<AccountMember> {
                         )),
                   ),
                 ],
-              )
+              ),
             ],
           );
         });
@@ -506,6 +506,20 @@ class _AccountMemberState extends State<AccountMember> {
                   ),
                 ),
               ),
+              Spacer(),
+              Container(
+                margin: EdgeInsets.only(top: 16),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                child: Text(
+                  "App Version 1.0.1",
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Colors.black54,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400),
+                ),
+              )
             ],
           ),
         ),
