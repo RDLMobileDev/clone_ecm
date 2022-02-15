@@ -65,7 +65,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
         decline = dataLang['setuju_e_sign']['decline'];
         approved = dataLang['setuju_e_sign']['approved'];
         yesterday = dataLang['setuju_e_sign']['yesterday'];
-       
       });
     }
   }
@@ -73,17 +72,16 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
-       ecm_from = dataLang['setuju_e_sign']['ecm_card_from'];
+        ecm_from = dataLang['setuju_e_sign']['ecm_card_from'];
         one_hour = dataLang['setuju_e_sign']['one_hour'];
         review = dataLang['setuju_e_sign']['review'];
         approve = dataLang['setuju_e_sign']['approve'];
         decline = dataLang['setuju_e_sign']['decline'];
         approved = dataLang['setuju_e_sign']['approved'];
         yesterday = dataLang['setuju_e_sign']['yesterday'];
-       
       });
     }
   }
@@ -113,13 +111,14 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
     try {
       var response = await getApproved(idUser, tokenUser);
       if (response['response']['status'] == 200) {
-        var data = response['data'] as List;
-        _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
-        print("===== list approved =====");
-        print(data.length);
-        // print(response['data']);
-        print("===== || =====");
-
+        setStateIfMounted(() {
+          var data = response['data'] as List;
+          _listApproved = data.map((e) => ApprovedModel.fromJson(e)).toList();
+          print("===== list approved =====");
+          print(data.length);
+          // print(response['data']);
+          print("===== || =====");
+        });
       } else {
         Fluttertoast.showToast(
             msg: 'Periksa jaringan internet anda',
@@ -189,7 +188,8 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                           color: Color(0xFF00AEDB),
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: NetworkImage(_listApproved[i].foto ?? "-"))),
+                              image:
+                                  NetworkImage(_listApproved[i].foto ?? "-"))),
                     ),
                     const SizedBox(
                       width: 16,
@@ -244,7 +244,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) => DetailEcm(
-                                                  isShowButton: true,
+                                                      isShowButton: true,
                                                       notifId: _listApproved[i]
                                                           .notifEcmId
                                                           .toString(),
