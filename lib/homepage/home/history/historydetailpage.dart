@@ -303,7 +303,11 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           color: const Color(0xff00AEDB)),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 4,
+                    ),
+                    Text(detailEcmModel.klasifikasi.toString()),
+                    SizedBox(
+                      height: 4,
                     ),
                     Container(
                       // color: Colors.amberAccent,
@@ -601,7 +605,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("How"),
+              child: Text("Why 5"),
             ),
             Text(" : "),
             Expanded(

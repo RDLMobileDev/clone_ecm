@@ -96,7 +96,7 @@ class _LogInState extends State<LogIn> {
   postLogin() async {
     String emailUser = _emailController.text;
     String passwordUser = _passwordController.text;
-    String versionUser = "1.0.2";
+    String versionUser = "1.0.3";
 
     try {
       var rspLogin = await loginUser(

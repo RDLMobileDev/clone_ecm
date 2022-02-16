@@ -228,7 +228,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                           // ],
                         ),
                         Text(
-                          one_hour,
+                          _listApproved[i].waktu.toString(),
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 10,
