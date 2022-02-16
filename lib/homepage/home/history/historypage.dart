@@ -4,6 +4,7 @@ import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/model/historyall.dart';
 import 'package:e_cm/homepage/home/history/model/historydailymodel.dart';
 import 'package:e_cm/homepage/home/history/model/historymonthly.dart';
+import 'package:e_cm/homepage/home/history/service/get_data_history_byname.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_all.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_daily.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_monthly.dart';
@@ -26,6 +27,7 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
+  bool noDataLayout = false;
 
   String history = '';
   String all = 'Semua';
@@ -38,6 +40,9 @@ class _HistoryPageState extends State<HistoryPage> {
   String one_month = '';
   String no_data = '';
   String no_riwayat = '';
+  String show = 'Menampilkan riwayat';
+  String his_empty = 'Riwayat ';
+  String empty = ' kosong';
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -77,6 +82,9 @@ class _HistoryPageState extends State<HistoryPage> {
         one_month = dataLang['riwayat']['one_month'];
         no_data = dataLang['riwayat']['no_data'];
         no_riwayat = dataLang['riwayat']['no_riwayat'];
+        show = dataLang['riwayat']['show'];
+        his_empty = dataLang['riwayat']['his_empty'];
+        empty = dataLang['riwayat']['empty'];
       });
     }
   }
@@ -98,6 +106,9 @@ class _HistoryPageState extends State<HistoryPage> {
         one_month = dataLang['riwayat']['one_month'];
         no_data = dataLang['riwayat']['no_data'];
         no_riwayat = dataLang['riwayat']['no_riwayat'];
+        show = dataLang['riwayat']['show'];
+        his_empty = dataLang['riwayat']['his_empty'];
+        empty = dataLang['riwayat']['empty'];
       });
     }
   }
@@ -130,8 +141,8 @@ class _HistoryPageState extends State<HistoryPage> {
   String choseDate = '';
   final monthFormater = new DateFormat('MMMM');
 
-  bool tabAll = false;
-  bool tabDaily = true;
+  bool tabAll = true;
+  bool tabDaily = false;
   bool tabMontly = false;
 
   int idMonth = 0;
@@ -141,6 +152,28 @@ class _HistoryPageState extends State<HistoryPage> {
   String idUser = '';
   List bulan = [];
 
+  //   Future<void> cariDokterUmum(String cariDokter) async {
+  //   Map<String, dynamic> params = {
+  //     "idservice": widget.idService,
+  //     "idcategory": idCategory,
+  //     "search": cariDokter
+  //   };
+
+  //   var result = await ApiServices.post("okechat/doktercaribycat", params);
+
+  //   var user = await SharedPrefUtil.getUser();
+
+  //   setState(() {
+  //     if (result['response']['status'] == 200) {
+  //       _listDokter = (result['data'] as List)
+  //           .map((e) => DokterFavoritModel.fromJson(e))
+  //           .toList();
+  //     } else {
+  //       _listDokter = [];
+  //     }
+  //   });
+  // }
+
   Future<List> getMonth() async {
     var response = await rootBundle.loadString("assets/month/month.json");
     var dataLang = json.decode(response)['data'];
@@ -149,6 +182,7 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Future<List<HistoryDaily>> getListDaily(String dateTarget) async {
+    print("cek daily");
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     final String dateTime = _fromDate.format("Y-m-d");
@@ -166,19 +200,19 @@ class _HistoryPageState extends State<HistoryPage> {
           print("===== || =====");
         });
         setState(() {
-          Fluttertoast.showToast(
-              msg: 'Show history ' + dateSelected,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16);
+          // Fluttertoast.showToast(
+          //     msg: show + dateSelected + "ss",
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     backgroundColor: Colors.green,
+          //     textColor: Colors.white,
+          //     fontSize: 16);
         });
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'History ' + dateSelected + ' is empty',
+              msg: "Tidak ada data histori E-CM hari ini",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -213,7 +247,7 @@ class _HistoryPageState extends State<HistoryPage> {
         });
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Show history ' + monthSelected,
+              msg: show + monthSelected,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -224,7 +258,7 @@ class _HistoryPageState extends State<HistoryPage> {
       } else {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'History ' + monthSelected + ' is empty',
+              msg: his_empty + " " + monthSelected,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -263,6 +297,10 @@ class _HistoryPageState extends State<HistoryPage> {
               textColor: Colors.white,
               fontSize: 16);
         });
+        tabAll = true;
+        tabDaily = false;
+        tabMontly = false;
+        noDataLayout = false;
       } else {
         setState(() {
           Fluttertoast.showToast(
@@ -273,6 +311,57 @@ class _HistoryPageState extends State<HistoryPage> {
               backgroundColor: Colors.orangeAccent,
               textColor: Colors.white,
               fontSize: 16);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+    return _listAll;
+  }
+
+  Future<List<HistoryAll>> getListAllByName(String byName) async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    try {
+      var response = await getHistoryAllByName(tokenUser, byName);
+      if (response['response']['status'] == 200) {
+        setStateIfMounted(() {
+          var data = response['data'] as List;
+          _listAll = data.map((e) => HistoryAll.fromJson(e)).toList();
+          print("===== list data all =====");
+          print(data.length);
+          // print(response['data']);
+          print("===== || =====");
+        });
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Showing all of history E-CM Card',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+        tabAll = true;
+        tabDaily = true;
+        tabMontly = true;
+        noDataLayout = false;
+      } else {
+        setState(() {
+          tabAll = false;
+          tabDaily = false;
+          tabMontly = false;
+          noDataLayout = true;
+
+          // Fluttertoast.showToast(
+          //     msg: 'E-CM Card history not found',
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 2,
+          //     backgroundColor: Colors.orangeAccent,
+          //     textColor: Colors.white,
+          //     fontSize: 16);
         });
       }
     } catch (e) {
@@ -375,10 +464,9 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    setLang();
     final String dateTime = _fromDate.format("m Y");
-    // getListDaily(dateTime);
-    // getListAll();
+    getListAll();
     DateTime _fromDateNow = DateTime.now();
     final dateFormatNow = new DateFormat('dd MMMM yyyy');
     final monthFormatNow = new DateFormat('MMMM yyyy');
@@ -428,6 +516,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         tabAll = true;
                         tabDaily = false;
                         tabMontly = false;
+                        noDataLayout = false;
                       });
                     },
                     child: Container(
@@ -471,6 +560,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           tabAll = false;
                           tabDaily = true;
                           tabMontly = false;
+                          noDataLayout = false;
                         },
                       );
                     },
@@ -517,6 +607,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         tabAll = false;
                         tabDaily = false;
                         tabMontly = true;
+                        noDataLayout = false;
                       });
                     },
                     child: Container(
@@ -554,6 +645,57 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+              width: MediaQuery.of(context).size.width,
+              height: 45,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                    )
+                  ],
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: TextFormField(
+                onFieldSubmitted: (value) {
+                  if (value.isNotEmpty) {
+                    getListAllByName(value);
+                  } else {
+                    getListAll();
+                  }
+                  // setState(() {
+                  //   print(value);
+
+                  // });
+                },
+                textAlign: TextAlign.left,
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    prefixIcon: Icon(Icons.search_outlined),
+                    hintText: "Cari Riwayat E-CM",
+                    hintStyle: TextStyle(
+                        color: Colors.black38,
+                        fontFamily: 'Poppins',
+                        fontSize: 14)),
+              ),
+            ),
+            Visibility(
+              visible: noDataLayout,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: Text("Data not found"),
+                ),
+              ),
+            ),
             Visibility(
                 visible: tabAll,
                 child: Column(
@@ -567,191 +709,207 @@ class _HistoryPageState extends State<HistoryPage> {
                         width: MediaQuery.of(context).size.width,
                         padding:
                             EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: _listAll.isEmpty ? 0 : _listAll.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => HistoryDetailPage(
-                                          notifId:
-                                              _listAll[i].tEcmId.toString(),
-                                        )));
-                              },
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 2,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
+                        child: _listAll.isEmpty
+                            ? const Center(
+                                child: Text("No data here"),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                // physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    _listAll.isEmpty ? 0 : _listAll.length,
+                                itemBuilder: (context, i) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HistoryDetailPage(
+                                                    notifId: _listAll[i]
+                                                        .tEcmId
+                                                        .toString(),
+                                                    isShowButton: true,
+                                                  )));
+                                    },
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      elevation: 2,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        width:
+                                            MediaQuery.of(context).size.width,
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Container(
-                                              width: 48,
-                                              height: 48,
-                                              decoration: const BoxDecoration(
-                                                  color: Color(0xFF00AEDB),
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/ario.png"))),
-                                            ),
-                                            const SizedBox(
-                                              width: 16,
-                                            ),
-                                            Container(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              child: Row(
                                                 children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      style: const TextStyle(
-                                                        fontFamily: 'Rubik',
-                                                        fontSize: 16,
-                                                      ),
-                                                      // ignore: prefer_const_literals_to_create_immutables
-                                                      children: <TextSpan>[
-                                                        TextSpan(
-                                                            text: _listAll[i]
-                                                                .nama
-                                                                .toString(),
-                                                            style: const TextStyle(
-                                                                color: Color(
-                                                                    0xFF00AEDB),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        const TextSpan(
-                                                            text:
-                                                                ' Making E-CM Card',
-                                                            style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF6C7072))),
+                                                  Container(
+                                                    width: 48,
+                                                    height: 48,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFF00AEDB),
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                            image: NetworkImage(_listAll[i].foto ?? "-" ))),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 16,
+                                                  ),
+                                                  Container(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        RichText(
+                                                          text: TextSpan(
+                                                            style:
+                                                                const TextStyle(
+                                                              fontFamily:
+                                                                  'Rubik',
+                                                              fontSize: 16,
+                                                            ),
+                                                            // ignore: prefer_const_literals_to_create_immutables
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                  text: _listAll[
+                                                                          i]
+                                                                      .nama
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      color: Color(
+                                                                          0xFF00AEDB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                              const TextSpan(
+                                                                  text:
+                                                                      ' Making E-CM Card',
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFF6C7072))),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 8,
+                                                        ),
+                                                        Text(
+                                                          _listAll[i]
+                                                              .waktu
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontFamily:
+                                                                  'Rubik',
+                                                              fontSize: 10,
+                                                              color: Color(
+                                                                  0xFF979C9E)),
+                                                        ),
+                                                        // Container(
+                                                        //   margin: const EdgeInsets.only(top: 22),
+                                                        //   child: Row(
+                                                        //     children: [
+                                                        //       InkWell(
+                                                        //         onTap: () {
+                                                        //           // Navigator.of(context).push(MaterialPageRoute(
+                                                        //           //     builder: (context) => DetailEcm(
+                                                        //           //           notifId: _listDaily[i]
+                                                        //           //               .notifEcmId
+                                                        //           //               .toString(),
+                                                        //           //         )));
+                                                        //           // print("ok");
+                                                        //         },
+                                                        //         child: Container(
+                                                        //           width: 63,
+                                                        //           height: 24,
+                                                        //           decoration: BoxDecoration(
+                                                        //               border: Border.all(
+                                                        //                   color: const Color(0xFF00AEDB)),
+                                                        //               borderRadius: const BorderRadius.all(
+                                                        //                   Radius.circular(5))),
+                                                        //           child: const Center(
+                                                        //             child: Text(
+                                                        //               "Review",
+                                                        //               style: TextStyle(
+                                                        //                   fontFamily: 'Rubik',
+                                                        //                   fontSize: 12,
+                                                        //                   fontWeight: FontWeight.w400),
+                                                        //             ),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ),
+                                                        //       SizedBox(
+                                                        //         width: 8,
+                                                        //       ),
+                                                        //       Container(
+                                                        //         width: 63,
+                                                        //         height: 24,
+                                                        //         decoration: BoxDecoration(
+                                                        //             color: Color(0xFF00AEDB),
+                                                        //             borderRadius:
+                                                        //                 BorderRadius.all(Radius.circular(5))),
+                                                        //         child: Center(
+                                                        //           child: Text(
+                                                        //             "Approve",
+                                                        //             style: TextStyle(
+                                                        //                 fontFamily: 'Rubik',
+                                                        //                 color: Colors.white,
+                                                        //                 fontSize: 12,
+                                                        //                 fontWeight: FontWeight.w400),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ),
+                                                        //       SizedBox(
+                                                        //         width: 8,
+                                                        //       ),
+                                                        //       Container(
+                                                        //         width: 63,
+                                                        //         height: 24,
+                                                        //         decoration: BoxDecoration(
+                                                        //             color: Color(0xFFFF0000),
+                                                        //             borderRadius:
+                                                        //                 BorderRadius.all(Radius.circular(5))),
+                                                        //         child: Center(
+                                                        //           child: Text(
+                                                        //             "Decline",
+                                                        //             style: TextStyle(
+                                                        //                 fontFamily: 'Rubik',
+                                                        //                 color: Colors.white,
+                                                        //                 fontSize: 12,
+                                                        //                 fontWeight: FontWeight.w400),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ),
+                                                        //     ],
+                                                        //   ),
+                                                        // )
                                                       ],
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Text(
-                                                    _listAll[i]
-                                                        .waktu
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Rubik',
-                                                        fontSize: 10,
-                                                        color:
-                                                            Color(0xFF979C9E)),
-                                                  ),
-                                                  // Container(
-                                                  //   margin: const EdgeInsets.only(top: 22),
-                                                  //   child: Row(
-                                                  //     children: [
-                                                  //       InkWell(
-                                                  //         onTap: () {
-                                                  //           // Navigator.of(context).push(MaterialPageRoute(
-                                                  //           //     builder: (context) => DetailEcm(
-                                                  //           //           notifId: _listDaily[i]
-                                                  //           //               .notifEcmId
-                                                  //           //               .toString(),
-                                                  //           //         )));
-                                                  //           // print("ok");
-                                                  //         },
-                                                  //         child: Container(
-                                                  //           width: 63,
-                                                  //           height: 24,
-                                                  //           decoration: BoxDecoration(
-                                                  //               border: Border.all(
-                                                  //                   color: const Color(0xFF00AEDB)),
-                                                  //               borderRadius: const BorderRadius.all(
-                                                  //                   Radius.circular(5))),
-                                                  //           child: const Center(
-                                                  //             child: Text(
-                                                  //               "Review",
-                                                  //               style: TextStyle(
-                                                  //                   fontFamily: 'Rubik',
-                                                  //                   fontSize: 12,
-                                                  //                   fontWeight: FontWeight.w400),
-                                                  //             ),
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       SizedBox(
-                                                  //         width: 8,
-                                                  //       ),
-                                                  //       Container(
-                                                  //         width: 63,
-                                                  //         height: 24,
-                                                  //         decoration: BoxDecoration(
-                                                  //             color: Color(0xFF00AEDB),
-                                                  //             borderRadius:
-                                                  //                 BorderRadius.all(Radius.circular(5))),
-                                                  //         child: Center(
-                                                  //           child: Text(
-                                                  //             "Approve",
-                                                  //             style: TextStyle(
-                                                  //                 fontFamily: 'Rubik',
-                                                  //                 color: Colors.white,
-                                                  //                 fontSize: 12,
-                                                  //                 fontWeight: FontWeight.w400),
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       SizedBox(
-                                                  //         width: 8,
-                                                  //       ),
-                                                  //       Container(
-                                                  //         width: 63,
-                                                  //         height: 24,
-                                                  //         decoration: BoxDecoration(
-                                                  //             color: Color(0xFFFF0000),
-                                                  //             borderRadius:
-                                                  //                 BorderRadius.all(Radius.circular(5))),
-                                                  //         child: Center(
-                                                  //           child: Text(
-                                                  //             "Decline",
-                                                  //             style: TextStyle(
-                                                  //                 fontFamily: 'Rubik',
-                                                  //                 color: Colors.white,
-                                                  //                 fontSize: 12,
-                                                  //                 fontWeight: FontWeight.w400),
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ],
-                                                  //   ),
-                                                  // )
                                                 ],
                                               ),
                                             ),
+                                            Container(
+                                              child: Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black54,
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ),
-                                      Container(
-                                        child: Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.black54,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     )
                   ],
@@ -769,192 +927,208 @@ class _HistoryPageState extends State<HistoryPage> {
                         width: MediaQuery.of(context).size.width,
                         padding:
                             EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount:
-                              _listMontly.isEmpty ? 0 : _listMontly.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => HistoryDetailPage(
-                                          notifId:
-                                              _listMontly[i].tEcmId.toString(),
-                                        )));
-                              },
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 2,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
+                        child: _listMontly.isEmpty
+                            ? const Center(
+                                child: Text("No data here"),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                // physics: NeverScrollableScrollPhysics(),
+                                itemCount: _listMontly.isEmpty
+                                    ? 0
+                                    : _listMontly.length,
+                                itemBuilder: (context, i) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HistoryDetailPage(
+                                                    notifId: _listMontly[i]
+                                                        .tEcmId
+                                                        .toString(),
+                                                    isShowButton: true,
+                                                  )));
+                                    },
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      elevation: 2,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        width:
+                                            MediaQuery.of(context).size.width,
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Container(
-                                              width: 48,
-                                              height: 48,
-                                              decoration: const BoxDecoration(
-                                                  color: Color(0xFF00AEDB),
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/ario.png"))),
-                                            ),
-                                            const SizedBox(
-                                              width: 16,
-                                            ),
-                                            Container(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              child: Row(
                                                 children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      style: const TextStyle(
-                                                        fontFamily: 'Rubik',
-                                                        fontSize: 16,
-                                                      ),
-                                                      // ignore: prefer_const_literals_to_create_immutables
-                                                      children: <TextSpan>[
-                                                        TextSpan(
-                                                            text: _listMontly[i]
-                                                                .nama
-                                                                .toString(),
-                                                            style: const TextStyle(
-                                                                color: Color(
-                                                                    0xFF00AEDB),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        const TextSpan(
-                                                            text:
-                                                                ' Making E-CM Card',
-                                                            style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF6C7072))),
+                                                  Container(
+                                                    width: 48,
+                                                    height: 48,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFF00AEDB),
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                            image: NetworkImage(_listMontly[i].foto ?? "-"))),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 16,
+                                                  ),
+                                                  Container(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        RichText(
+                                                          text: TextSpan(
+                                                            style:
+                                                                const TextStyle(
+                                                              fontFamily:
+                                                                  'Rubik',
+                                                              fontSize: 16,
+                                                            ),
+                                                            // ignore: prefer_const_literals_to_create_immutables
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                  text: _listMontly[
+                                                                          i]
+                                                                      .nama
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      color: Color(
+                                                                          0xFF00AEDB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                              const TextSpan(
+                                                                  text:
+                                                                      ' Making E-CM Card',
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFF6C7072))),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 8,
+                                                        ),
+                                                        Text(
+                                                          _listMontly[i]
+                                                              .waktu
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontFamily:
+                                                                  'Rubik',
+                                                              fontSize: 10,
+                                                              color: Color(
+                                                                  0xFF979C9E)),
+                                                        ),
+                                                        // Container(
+                                                        //   margin: const EdgeInsets.only(top: 22),
+                                                        //   child: Row(
+                                                        //     children: [
+                                                        //       InkWell(
+                                                        //         onTap: () {
+                                                        //           // Navigator.of(context).push(MaterialPageRoute(
+                                                        //           //     builder: (context) => DetailEcm(
+                                                        //           //           notifId: _listDaily[i]
+                                                        //           //               .notifEcmId
+                                                        //           //               .toString(),
+                                                        //           //         )));
+                                                        //           // print("ok");
+                                                        //         },
+                                                        //         child: Container(
+                                                        //           width: 63,
+                                                        //           height: 24,
+                                                        //           decoration: BoxDecoration(
+                                                        //               border: Border.all(
+                                                        //                   color: const Color(0xFF00AEDB)),
+                                                        //               borderRadius: const BorderRadius.all(
+                                                        //                   Radius.circular(5))),
+                                                        //           child: const Center(
+                                                        //             child: Text(
+                                                        //               "Review",
+                                                        //               style: TextStyle(
+                                                        //                   fontFamily: 'Rubik',
+                                                        //                   fontSize: 12,
+                                                        //                   fontWeight: FontWeight.w400),
+                                                        //             ),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ),
+                                                        //       SizedBox(
+                                                        //         width: 8,
+                                                        //       ),
+                                                        //       Container(
+                                                        //         width: 63,
+                                                        //         height: 24,
+                                                        //         decoration: BoxDecoration(
+                                                        //             color: Color(0xFF00AEDB),
+                                                        //             borderRadius:
+                                                        //                 BorderRadius.all(Radius.circular(5))),
+                                                        //         child: Center(
+                                                        //           child: Text(
+                                                        //             "Approve",
+                                                        //             style: TextStyle(
+                                                        //                 fontFamily: 'Rubik',
+                                                        //                 color: Colors.white,
+                                                        //                 fontSize: 12,
+                                                        //                 fontWeight: FontWeight.w400),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ),
+                                                        //       SizedBox(
+                                                        //         width: 8,
+                                                        //       ),
+                                                        //       Container(
+                                                        //         width: 63,
+                                                        //         height: 24,
+                                                        //         decoration: BoxDecoration(
+                                                        //             color: Color(0xFFFF0000),
+                                                        //             borderRadius:
+                                                        //                 BorderRadius.all(Radius.circular(5))),
+                                                        //         child: Center(
+                                                        //           child: Text(
+                                                        //             "Decline",
+                                                        //             style: TextStyle(
+                                                        //                 fontFamily: 'Rubik',
+                                                        //                 color: Colors.white,
+                                                        //                 fontSize: 12,
+                                                        //                 fontWeight: FontWeight.w400),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ),
+                                                        //     ],
+                                                        //   ),
+                                                        // )
                                                       ],
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Text(
-                                                    _listMontly[i]
-                                                        .waktu
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Rubik',
-                                                        fontSize: 10,
-                                                        color:
-                                                            Color(0xFF979C9E)),
-                                                  ),
-                                                  // Container(
-                                                  //   margin: const EdgeInsets.only(top: 22),
-                                                  //   child: Row(
-                                                  //     children: [
-                                                  //       InkWell(
-                                                  //         onTap: () {
-                                                  //           // Navigator.of(context).push(MaterialPageRoute(
-                                                  //           //     builder: (context) => DetailEcm(
-                                                  //           //           notifId: _listDaily[i]
-                                                  //           //               .notifEcmId
-                                                  //           //               .toString(),
-                                                  //           //         )));
-                                                  //           // print("ok");
-                                                  //         },
-                                                  //         child: Container(
-                                                  //           width: 63,
-                                                  //           height: 24,
-                                                  //           decoration: BoxDecoration(
-                                                  //               border: Border.all(
-                                                  //                   color: const Color(0xFF00AEDB)),
-                                                  //               borderRadius: const BorderRadius.all(
-                                                  //                   Radius.circular(5))),
-                                                  //           child: const Center(
-                                                  //             child: Text(
-                                                  //               "Review",
-                                                  //               style: TextStyle(
-                                                  //                   fontFamily: 'Rubik',
-                                                  //                   fontSize: 12,
-                                                  //                   fontWeight: FontWeight.w400),
-                                                  //             ),
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       SizedBox(
-                                                  //         width: 8,
-                                                  //       ),
-                                                  //       Container(
-                                                  //         width: 63,
-                                                  //         height: 24,
-                                                  //         decoration: BoxDecoration(
-                                                  //             color: Color(0xFF00AEDB),
-                                                  //             borderRadius:
-                                                  //                 BorderRadius.all(Radius.circular(5))),
-                                                  //         child: Center(
-                                                  //           child: Text(
-                                                  //             "Approve",
-                                                  //             style: TextStyle(
-                                                  //                 fontFamily: 'Rubik',
-                                                  //                 color: Colors.white,
-                                                  //                 fontSize: 12,
-                                                  //                 fontWeight: FontWeight.w400),
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       SizedBox(
-                                                  //         width: 8,
-                                                  //       ),
-                                                  //       Container(
-                                                  //         width: 63,
-                                                  //         height: 24,
-                                                  //         decoration: BoxDecoration(
-                                                  //             color: Color(0xFFFF0000),
-                                                  //             borderRadius:
-                                                  //                 BorderRadius.all(Radius.circular(5))),
-                                                  //         child: Center(
-                                                  //           child: Text(
-                                                  //             "Decline",
-                                                  //             style: TextStyle(
-                                                  //                 fontFamily: 'Rubik',
-                                                  //                 color: Colors.white,
-                                                  //                 fontSize: 12,
-                                                  //                 fontWeight: FontWeight.w400),
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ],
-                                                  //   ),
-                                                  // )
                                                 ],
                                               ),
                                             ),
+                                            Container(
+                                              child: Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black54,
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ),
-                                      Container(
-                                        child: Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.black54,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ),
                     Container(
@@ -1039,189 +1213,205 @@ class _HistoryPageState extends State<HistoryPage> {
                       height: MediaQuery.of(context).size.height * 0.7,
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _listDaily.isEmpty ? 0 : _listDaily.length,
-                        itemBuilder: (context, i) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => HistoryDetailPage(
-                                        notifId:
-                                            _listDaily[i].tEcmId.toString(),
-                                      )));
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                      child: _listDaily.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "No data here",
+                                style: TextStyle(fontSize: 14),
                               ),
-                              elevation: 2,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                width: MediaQuery.of(context).size.width,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              // physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  _listDaily.isEmpty ? 0 : _listDaily.length,
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                HistoryDetailPage(
+                                                  notifId: _listDaily[i]
+                                                      .tEcmId
+                                                      .toString(),
+                                                  isShowButton: true,
+                                                )));
+                                  },
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    elevation: 2,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      width: MediaQuery.of(context).size.width,
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Container(
-                                            width: 48,
-                                            height: 48,
-                                            decoration: const BoxDecoration(
-                                                color: Color(0xFF00AEDB),
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                    image: AssetImage(
-                                                        "assets/images/ario.png"))),
-                                          ),
-                                          const SizedBox(
-                                            width: 16,
-                                          ),
-                                          Container(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                            child: Row(
                                               children: [
-                                                RichText(
-                                                  text: TextSpan(
-                                                    style: const TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      fontSize: 16,
-                                                    ),
-                                                    // ignore: prefer_const_literals_to_create_immutables
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                          text: _listDaily[i]
-                                                              .nama
-                                                              .toString(),
-                                                          style: const TextStyle(
-                                                              color: Color(
-                                                                  0xFF00AEDB),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700)),
-                                                      const TextSpan(
-                                                          text:
-                                                              ' Making E-CM Card',
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xFF6C7072))),
+                                                Container(
+                                                  width: 48,
+                                                  height: 48,
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0xFF00AEDB),
+                                                      shape: BoxShape.circle,
+                                                      image: DecorationImage(
+                                                          image: NetworkImage(_listDaily[i].foto ?? "-"))),
+                                                ),
+                                                const SizedBox(
+                                                  width: 16,
+                                                ),
+                                                Container(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      RichText(
+                                                        text: TextSpan(
+                                                          style:
+                                                              const TextStyle(
+                                                            fontFamily: 'Rubik',
+                                                            fontSize: 16,
+                                                          ),
+                                                          // ignore: prefer_const_literals_to_create_immutables
+                                                          children: <TextSpan>[
+                                                            TextSpan(
+                                                                text: _listDaily[
+                                                                        i]
+                                                                    .nama
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    color: Color(
+                                                                        0xFF00AEDB),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700)),
+                                                            const TextSpan(
+                                                                text:
+                                                                    ' Making E-CM Card',
+                                                                style: TextStyle(
+                                                                    color: Color(
+                                                                        0xFF6C7072))),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      Text(
+                                                        _listDaily[i]
+                                                            .waktu
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontFamily: 'Rubik',
+                                                            fontSize: 10,
+                                                            color: Color(
+                                                                0xFF979C9E)),
+                                                      ),
+                                                      // Container(
+                                                      //   margin: const EdgeInsets.only(top: 22),
+                                                      //   child: Row(
+                                                      //     children: [
+                                                      //       InkWell(
+                                                      //         onTap: () {
+                                                      //           // Navigator.of(context).push(MaterialPageRoute(
+                                                      //           //     builder: (context) => DetailEcm(
+                                                      //           //           notifId: _listDaily[i]
+                                                      //           //               .notifEcmId
+                                                      //           //               .toString(),
+                                                      //           //         )));
+                                                      //           // print("ok");
+                                                      //         },
+                                                      //         child: Container(
+                                                      //           width: 63,
+                                                      //           height: 24,
+                                                      //           decoration: BoxDecoration(
+                                                      //               border: Border.all(
+                                                      //                   color: const Color(0xFF00AEDB)),
+                                                      //               borderRadius: const BorderRadius.all(
+                                                      //                   Radius.circular(5))),
+                                                      //           child: const Center(
+                                                      //             child: Text(
+                                                      //               "Review",
+                                                      //               style: TextStyle(
+                                                      //                   fontFamily: 'Rubik',
+                                                      //                   fontSize: 12,
+                                                      //                   fontWeight: FontWeight.w400),
+                                                      //             ),
+                                                      //           ),
+                                                      //         ),
+                                                      //       ),
+                                                      //       SizedBox(
+                                                      //         width: 8,
+                                                      //       ),
+                                                      //       Container(
+                                                      //         width: 63,
+                                                      //         height: 24,
+                                                      //         decoration: BoxDecoration(
+                                                      //             color: Color(0xFF00AEDB),
+                                                      //             borderRadius:
+                                                      //                 BorderRadius.all(Radius.circular(5))),
+                                                      //         child: Center(
+                                                      //           child: Text(
+                                                      //             "Approve",
+                                                      //             style: TextStyle(
+                                                      //                 fontFamily: 'Rubik',
+                                                      //                 color: Colors.white,
+                                                      //                 fontSize: 12,
+                                                      //                 fontWeight: FontWeight.w400),
+                                                      //           ),
+                                                      //         ),
+                                                      //       ),
+                                                      //       SizedBox(
+                                                      //         width: 8,
+                                                      //       ),
+                                                      //       Container(
+                                                      //         width: 63,
+                                                      //         height: 24,
+                                                      //         decoration: BoxDecoration(
+                                                      //             color: Color(0xFFFF0000),
+                                                      //             borderRadius:
+                                                      //                 BorderRadius.all(Radius.circular(5))),
+                                                      //         child: Center(
+                                                      //           child: Text(
+                                                      //             "Decline",
+                                                      //             style: TextStyle(
+                                                      //                 fontFamily: 'Rubik',
+                                                      //                 color: Colors.white,
+                                                      //                 fontSize: 12,
+                                                      //                 fontWeight: FontWeight.w400),
+                                                      //           ),
+                                                      //         ),
+                                                      //       ),
+                                                      //     ],
+                                                      //   ),
+                                                      // )
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                  _listDaily[i]
-                                                      .waktu
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      fontSize: 10,
-                                                      color: Color(0xFF979C9E)),
-                                                ),
-                                                // Container(
-                                                //   margin: const EdgeInsets.only(top: 22),
-                                                //   child: Row(
-                                                //     children: [
-                                                //       InkWell(
-                                                //         onTap: () {
-                                                //           // Navigator.of(context).push(MaterialPageRoute(
-                                                //           //     builder: (context) => DetailEcm(
-                                                //           //           notifId: _listDaily[i]
-                                                //           //               .notifEcmId
-                                                //           //               .toString(),
-                                                //           //         )));
-                                                //           // print("ok");
-                                                //         },
-                                                //         child: Container(
-                                                //           width: 63,
-                                                //           height: 24,
-                                                //           decoration: BoxDecoration(
-                                                //               border: Border.all(
-                                                //                   color: const Color(0xFF00AEDB)),
-                                                //               borderRadius: const BorderRadius.all(
-                                                //                   Radius.circular(5))),
-                                                //           child: const Center(
-                                                //             child: Text(
-                                                //               "Review",
-                                                //               style: TextStyle(
-                                                //                   fontFamily: 'Rubik',
-                                                //                   fontSize: 12,
-                                                //                   fontWeight: FontWeight.w400),
-                                                //             ),
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       SizedBox(
-                                                //         width: 8,
-                                                //       ),
-                                                //       Container(
-                                                //         width: 63,
-                                                //         height: 24,
-                                                //         decoration: BoxDecoration(
-                                                //             color: Color(0xFF00AEDB),
-                                                //             borderRadius:
-                                                //                 BorderRadius.all(Radius.circular(5))),
-                                                //         child: Center(
-                                                //           child: Text(
-                                                //             "Approve",
-                                                //             style: TextStyle(
-                                                //                 fontFamily: 'Rubik',
-                                                //                 color: Colors.white,
-                                                //                 fontSize: 12,
-                                                //                 fontWeight: FontWeight.w400),
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       SizedBox(
-                                                //         width: 8,
-                                                //       ),
-                                                //       Container(
-                                                //         width: 63,
-                                                //         height: 24,
-                                                //         decoration: BoxDecoration(
-                                                //             color: Color(0xFFFF0000),
-                                                //             borderRadius:
-                                                //                 BorderRadius.all(Radius.circular(5))),
-                                                //         child: Center(
-                                                //           child: Text(
-                                                //             "Decline",
-                                                //             style: TextStyle(
-                                                //                 fontFamily: 'Rubik',
-                                                //                 color: Colors.white,
-                                                //                 fontSize: 12,
-                                                //                 fontWeight: FontWeight.w400),
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //     ],
-                                                //   ),
-                                                // )
                                               ],
                                             ),
                                           ),
+                                          Container(
+                                            child: Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              color: Colors.black54,
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
-                                    Container(
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: Colors.black54,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ),
                   ),
                   InkWell(
@@ -1306,75 +1496,75 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  // Container _showCardMonth(BuildContext context) {
-  //   return Container(
-  //     height: 250,
-  //     width: 100,
-  //     padding: const EdgeInsets.all(8.0),
-  //     decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.only(
-  //       topLeft: Radius.circular(10),
-  //       topRight: Radius.circular(10),
-  //     )),
-  //     child: FutureBuilder(
-  //       future: getMonth(),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.hasData) {
-  //           return ListView.builder(
-  //               itemCount: bulan.length,
-  //               itemBuilder: (context, i) {
-  //                 return InkWell(
-  //                     onTap: () async {
-  //                       setState(() {
-  //                         monthName = bulan[i]["name"];
-  //                         getHistoryMonthly(tokenKeyUser, year, bulan[i]["id"]);
+// Container _showCardMonth(BuildContext context) {
+//   return Container(
+//     height: 250,
+//     width: 100,
+//     padding: const EdgeInsets.all(8.0),
+//     decoration: BoxDecoration(
+//         borderRadius: BorderRadius.only(
+//       topLeft: Radius.circular(10),
+//       topRight: Radius.circular(10),
+//     )),
+//     child: FutureBuilder(
+//       future: getMonth(),
+//       builder: (context, snapshot) {
+//         if (snapshot.hasData) {
+//           return ListView.builder(
+//               itemCount: bulan.length,
+//               itemBuilder: (context, i) {
+//                 return InkWell(
+//                     onTap: () async {
+//                       setState(() {
+//                         monthName = bulan[i]["name"];
+//                         getHistoryMonthly(tokenKeyUser, year, bulan[i]["id"]);
 
-  //                         idMonth = bulan[i]["id"];
-  //                       });
-  //                       var result = await getHistoryMonthly(
-  //                           tokenKeyUser, year, bulan[i]["id"]);
+//                         idMonth = bulan[i]["id"];
+//                       });
+//                       var result = await getHistoryMonthly(
+//                           tokenKeyUser, year, bulan[i]["id"]);
 
-  //                       print("hasil monthly");
-  //                       print(result['response']['status']);
+//                       print("hasil monthly");
+//                       print(result['response']['status']);
 
-  //                       if (result['response']['status'] == 201) {
-  //                         Fluttertoast.showToast(
-  //                             msg: 'Data tidak ada',
-  //                             toastLength: Toast.LENGTH_SHORT,
-  //                             gravity: ToastGravity.BOTTOM,
-  //                             timeInSecForIosWeb: 2,
-  //                             backgroundColor: Colors.greenAccent,
-  //                             textColor: Colors.white,
-  //                             fontSize: 16);
-  //                       }
+//                       if (result['response']['status'] == 201) {
+//                         Fluttertoast.showToast(
+//                             msg: 'Data tidak ada',
+//                             toastLength: Toast.LENGTH_SHORT,
+//                             gravity: ToastGravity.BOTTOM,
+//                             timeInSecForIosWeb: 2,
+//                             backgroundColor: Colors.greenAccent,
+//                             textColor: Colors.white,
+//                             fontSize: 16);
+//                       }
 
-  //                       Navigator.of(context).pop();
-  //                       tabAll = false;
-  //                       tabDaily = false;
-  //                       tabMontly = true;
-  //                     },
-  //                     child: Container(
-  //                         margin: EdgeInsets.only(left: 20, right: 20),
-  //                         padding: EdgeInsets.all(10),
-  //                         decoration: BoxDecoration(
-  //                             border: Border(
-  //                                 bottom: BorderSide(
-  //                                     color: Colors.grey, width: 2))),
-  //                         child: Center(
-  //                           child: Text(
-  //                             bulan[i]["name"],
-  //                             style: TextStyle(
-  //                               color: Colors.black,
-  //                               fontSize: 16,
-  //                             ),
-  //                           ),
-  //                         )));
-  //               });
-  //         }
+//                       Navigator.of(context).pop();
+//                       tabAll = false;
+//                       tabDaily = false;
+//                       tabMontly = true;
+//                     },
+//                     child: Container(
+//                         margin: EdgeInsets.only(left: 20, right: 20),
+//                         padding: EdgeInsets.all(10),
+//                         decoration: BoxDecoration(
+//                             border: Border(
+//                                 bottom: BorderSide(
+//                                     color: Colors.grey, width: 2))),
+//                         child: Center(
+//                           child: Text(
+//                             bulan[i]["name"],
+//                             style: TextStyle(
+//                               color: Colors.black,
+//                               fontSize: 16,
+//                             ),
+//                           ),
+//                         )));
+//               });
+//         }
 
-  //         return CircularProgressIndicator();
-  //       },
-  //     ),
-  //   );
-  // }
+//         return CircularProgressIndicator();
+//       },
+//     ),
+//   );
+// }
 }

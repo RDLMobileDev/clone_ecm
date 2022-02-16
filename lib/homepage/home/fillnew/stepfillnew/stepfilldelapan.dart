@@ -1,8 +1,16 @@
 // ignore_for_file: sized_box_for_whitespace, unnecessary_const, avoid_unnecessary_containers
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
+import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/apifillnewdelapan.dart';
+import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +32,99 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   String? copyToGroup;
   String engineerTo = '', productTo = '', othersTo = '';
 
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String copy_to = "";
+  String engineer = "";
+  String product = "";
+  String others = "";
+  String thankyou = "";
+  String validation = "";
+  String view_summary = "";
+  String summary = "";
+  String bm = "";
+  String ecm_approved = "";
+  String done = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        copy_to = dataLang['step_8']['copy_to'];
+        engineer = dataLang['step_8']['engineer'];
+        product = dataLang['step_8']['product'];
+        others = dataLang['step_8']['others'];
+        thankyou = dataLang['step_8']['thankyou'];
+        validation = dataLang['step_8']['validation'];
+        view_summary = dataLang['step_8']['view_summary'];
+        summary = dataLang['step_8']['summary'];
+        bm = dataLang['step_8']['bm'];
+        ecm_approved = dataLang['step_8']['ecm_approved'];
+        done = dataLang['step_8']['done'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        copy_to = dataLang['step_8']['copy_to'];
+        engineer = dataLang['step_8']['engineer'];
+        product = dataLang['step_8']['product'];
+        others = dataLang['step_8']['others'];
+        thankyou = dataLang['step_8']['thankyou'];
+        validation = dataLang['step_8']['validation'];
+        view_summary = dataLang['step_8']['view_summary'];
+        summary = dataLang['step_8']['summary'];
+        bm = dataLang['step_8']['bm'];
+        ecm_approved = dataLang['step_8']['ecm_approved'];
+        done = dataLang['step_8']['done'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    prefs.setString("copyToBool", "0");
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   setCopyTo() {
     print("Engineer");
     print(engineerTo);
@@ -33,42 +134,101 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     print(othersTo);
   }
 
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
+  }
+
   postStepDelapan() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm").toString();
 
-    String? engineerToKey = prefs.getString("engineerTo");
-    String? productToKey = prefs.getString("productTo");
-    String? othersToKey = prefs.getString("othersTo");
+    String engineerToKey = prefs.getString("engineerTo") ?? "0";
+    String productToKey = prefs.getString("productTo") ?? "0";
+    String othersToKey = prefs.getString("othersTo") ?? "0";
+    String idEcm = prefs.getString("idEcm") ?? "";
 
     try {
       var response = await fillNewDelapan(
-          ecmId, engineerToKey!, productToKey!, othersToKey!, tokenUser);
+              ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+          .timeout(const Duration(seconds: 15));
 
       print("response step 8:");
       print(response);
-    } catch (e) {
-      print(e);
-      Fluttertoast.showToast(
-        msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.greenAccent,
+
+      if (response['response']['status'] == 200) {
+        print("sukses");
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            fontSize: 16);
+
+        var response =
+            await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+        removeStepCacheFillEcm();
+        removeCacheFillEcm();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
+      }
+    } on TimeoutException catch (_) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Timeout'),
+          content: const Text(
+              'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context)
+                ..pop()
+                ..pop(true),
+              child: const Text('Kembali'),
+            ),
+            TextButton(
+              onPressed: () => postStepDelapan(),
+              child: const Text('Kirim Ulang'),
+            ),
+          ],
+        ),
       );
-      print(e);
+      // A timeout occurred.
+    } on SocketException catch (_) {
+      // print(e);
+      // var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+      removeStepCacheFillEcm();
+      removeCacheFillEcm();
+      setStateIfMounted(() {
+        Fluttertoast.showToast(
+          msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            ModalRoute.withName("/"));
+      });
     }
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    setBahasa();
+    setLang();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.58,
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(
@@ -105,8 +265,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
             //   ),
             // ),
             Container(
-              child: const Text(
-                "Copy to",
+              child: Text(
+                copy_to,
                 style: TextStyle(
                     fontFamily: 'Rubik',
                     color: Color(0xFF404446),
@@ -168,7 +328,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("copyToBool", "1");
                                     }
                                   })),
-                          const Text("Engineer")
+                          Text(engineer)
                         ],
                       ),
                     ),
@@ -222,7 +382,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("copyToBool", "1");
                                     }
                                   })),
-                          const Text("Product")
+                          Text(product)
                         ],
                       ),
                     ),
@@ -275,7 +435,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                       prefs.setString("copyToBool", "1");
                                     }
                                   })),
-                          const Text("Others")
+                          Text(others)
                         ],
                       ),
                     ),

@@ -56,6 +56,8 @@ class StepFillDuaState extends State<StepFillDua> {
   String addmore = '';
   String picture_analis = '';
 
+  String checkKlasifikasiType = "";
+
   void setBahasa() async {
     final prefs = await _prefs;
     String bahasaBool = prefs.getString("bahasa") ?? "";
@@ -100,14 +102,14 @@ class StepFillDuaState extends State<StepFillDua> {
         production = dataLang['step_2']['production'];
         engineering = dataLang['step_2']['engineering'];
         other = dataLang['step_2']['other'];
-        picture = dataLang['step_2']['picture'];
+        picture_analis = dataLang['step_2']['picture'];
         addmax = dataLang['step_2']['addmax'];
         select_image = dataLang['step_2']['select_image'];
         gallery = dataLang['step_2']['gallery'];
         camera = dataLang['step_2']['camera'];
         crop = dataLang['step_2']['crop'];
         addmore = dataLang['step_2']['add_more'];
-        picture = dataLang['step_2']['picture_analysis'];
+        // picture = dataLang['step_2']['picture'];
       });
     }
   }
@@ -118,31 +120,31 @@ class StepFillDuaState extends State<StepFillDua> {
 
     if (mounted) {
       setState(() {});
-        incident = dataLang['step_2']['incident'];
-        shift_a = dataLang['step_2']['shift_a'];
-        shift_b = dataLang['step_2']['shift_b'];
-        shift_ns = dataLang['step_2']['shift_ns'];
-        hm = dataLang['step_2']['hm'];
-        type_problem = dataLang['step_2']['type_problem'];
-        safety = dataLang['step_2']['safety'];
-        quality = dataLang['step_2']['quality'];
-        delivery = dataLang['step_2']['delivery'];
-        cost = dataLang['step_2']['cost'];
+      incident = dataLang['step_2']['incident'];
+      shift_a = dataLang['step_2']['shift_a'];
+      shift_b = dataLang['step_2']['shift_b'];
+      shift_ns = dataLang['step_2']['shift_ns'];
+      hm = dataLang['step_2']['hm'];
+      type_problem = dataLang['step_2']['type_problem'];
+      safety = dataLang['step_2']['safety'];
+      quality = dataLang['step_2']['quality'];
+      delivery = dataLang['step_2']['delivery'];
+      cost = dataLang['step_2']['cost'];
 
-        percentage = dataLang['step_2']['percentage'];
-        utility = dataLang['step_2']['utility'];
-        molding = dataLang['step_2']['molding'];
-        production = dataLang['step_2']['production'];
-        engineering = dataLang['step_2']['engineering'];
-        other = dataLang['step_2']['other'];
-        picture = dataLang['step_2']['picture'];
-        addmax = dataLang['step_2']['addmax'];
-        select_image = dataLang['step_2']['select_image'];
-        gallery = dataLang['step_2']['gallery'];
-        camera = dataLang['step_2']['camera'];
-        crop = dataLang['step_2']['crop'];
-        addmore = dataLang['step_2']['add_more'];
-        picture = dataLang['step_2']['picture_analysis'];
+      percentage = dataLang['step_2']['percentage'];
+      utility = dataLang['step_2']['utility'];
+      molding = dataLang['step_2']['molding'];
+      production = dataLang['step_2']['production'];
+      engineering = dataLang['step_2']['engineering'];
+      other = dataLang['step_2']['other'];
+      picture_analis = dataLang['step_2']['picture'];
+      addmax = dataLang['step_2']['addmax'];
+      select_image = dataLang['step_2']['select_image'];
+      gallery = dataLang['step_2']['gallery'];
+      camera = dataLang['step_2']['camera'];
+      crop = dataLang['step_2']['crop'];
+      addmore = dataLang['step_2']['add_more'];
+      // picture = dataLang['step_2']['picture'];
     }
   }
 
@@ -162,6 +164,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
   final ImagePicker imagePicker = ImagePicker();
   TextEditingController? timePickController;
+  TextEditingController problemTypeController = TextEditingController();
 
   List<XFile>? imageFileList = [];
   List<File>? imageFileListCamera = [];
@@ -200,9 +203,17 @@ class StepFillDuaState extends State<StepFillDua> {
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       String formattedTime =
           localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
       setState(() {
@@ -290,9 +301,9 @@ class StepFillDuaState extends State<StepFillDua> {
           prefs.setStringList("imagesKetPath", imageProblemPath);
           prefs.setString("imageUploadBool", "1");
         } else {
-          imageFileList!.clear();
+          // imageFileList!.clear();
           Fluttertoast.showToast(
-              msg: "Tidak boleh melebihi 4 foto",
+              msg: "Foto tidak dipilih",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -400,12 +411,136 @@ class StepFillDuaState extends State<StepFillDua> {
         fontSize: 16);
   }
 
+  void setFormStep2AfterChoosing() async {
+    final prefs = await _prefs;
+
+    String shiftA = prefs.getString("shiftA") ?? "";
+    String shiftB = prefs.getString("shiftB") ?? "";
+    String shiftC = prefs.getString("shiftC") ?? "";
+
+    String? timePickState = prefs.getString("timePickState");
+    String? problemTypeState = prefs.getString("problemTypeState");
+
+    String safetyOpt = prefs.getString("safetyOpt") ?? "";
+    String qualityOpt = prefs.getString("qualityOpt") ?? "";
+    String deliveryOpt = prefs.getString("deliveryOpt") ?? "";
+    String costOpt = prefs.getString("costOpt") ?? "";
+
+    String moldingOpt = prefs.getString("moldingOpt") ?? "";
+    String utilityOpt = prefs.getString("utilityOpt") ?? "";
+    String productionOpt = prefs.getString("productionOpt") ?? "";
+    String engineerOpt = prefs.getString("engineerOpt") ?? "";
+    String otherOpt = prefs.getString("otherOpt") ?? "";
+    List<String> imagesKetPath = prefs.getStringList("imagesKetPath") ?? [];
+
+    // PERCENTAGE MISTAKE
+    if (moldingOpt.isNotEmpty && moldingOpt != "" && moldingOpt == "1") {
+      setState(() {
+        isMolding = !isMolding;
+      });
+    }
+
+    if (utilityOpt.isNotEmpty && utilityOpt != "" && utilityOpt == "1") {
+      setState(() {
+        isUtility = !isUtility;
+      });
+    }
+
+    if (productionOpt.isNotEmpty &&
+        productionOpt != "" &&
+        productionOpt == "1") {
+      setState(() {
+        isProduction = !isProduction;
+      });
+    }
+
+    if (engineerOpt.isNotEmpty && engineerOpt != "" && engineerOpt == "1") {
+      setState(() {
+        isEngineering = !isEngineering;
+      });
+    }
+
+    if (otherOpt.isNotEmpty && otherOpt != "" && otherOpt == "1") {
+      setState(() {
+        isOther = !isOther;
+      });
+    }
+
+    // PROBLEM TYPE
+    if (safetyOpt.isNotEmpty && safetyOpt != "" && safetyOpt == "1") {
+      setState(() {
+        isSafety = !isSafety;
+      });
+    }
+
+    if (qualityOpt.isNotEmpty && qualityOpt != "" && qualityOpt == "1") {
+      setState(() {
+        isQuality = !isQuality;
+      });
+    }
+
+    if (deliveryOpt.isNotEmpty && deliveryOpt != "" && deliveryOpt == "1") {
+      setState(() {
+        isDelivery = !isDelivery;
+      });
+    }
+
+    if (costOpt.isNotEmpty && costOpt != "" && costOpt == "1") {
+      setState(() {
+        isCost = !isCost;
+      });
+    }
+
+    // SHIFT
+    if (shiftA.isNotEmpty && shiftA != "" && shiftA == "1") {
+      setState(() {
+        incidentGroup = '1';
+      });
+    } else if (shiftB.isNotEmpty && shiftB != "" && shiftB == "1") {
+      setState(() {
+        incidentGroup = '2';
+      });
+    } else if (shiftC.isNotEmpty && shiftC != "" && shiftC == "1") {
+      setState(() {
+        incidentGroup = '3';
+      });
+    }
+
+    if (imagesKetPath.isNotEmpty) {
+      imageProblemPath.addAll(imagesKetPath);
+    } else {
+      print("asdjfghasdjk");
+    }
+
+    // TIME AND DESC PROBLEM
+    if (timePickState != null && problemTypeState != null) {
+      setState(() {
+        timePickController = TextEditingController(text: timePickState);
+        problemTypeController = TextEditingController(text: problemTypeState);
+      });
+    }
+  }
+
+  void checkKlasifikasiTypeValue() async {
+    final prefs = await _prefs;
+
+    String klasifikasiType = prefs.getString("namaKlasifikasi") ?? "";
+
+    if (klasifikasiType != "" && klasifikasiType.isNotEmpty) {
+      setState(() {
+        checkKlasifikasiType = klasifikasiType;
+      });
+    }
+  }
+
   @override
   void initState() {
     print("step 2 init");
     super.initState();
     setLang();
     setBahasa();
+    setFormStep2AfterChoosing();
+    checkKlasifikasiTypeValue();
   }
 
   @override
@@ -456,7 +591,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -487,7 +622,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                           Text(shift_a)
+                          Text(shift_a)
                         ],
                       ),
                     ),
@@ -507,7 +642,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -535,10 +670,12 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("shiftA", shiftA);
                                       prefs.setString("shiftB", shiftB);
                                       prefs.setString("shiftC", shiftC);
+                                      prefs.setString(
+                                          "insidenShift", incidentGroup!);
                                       prefs.setString("shiftBool", "1");
                                     }
                                   })),
-                           Text(shift_b)
+                          Text(shift_b)
                         ],
                       ),
                     ),
@@ -558,7 +695,7 @@ class StepFillDuaState extends State<StepFillDua> {
                       prefs.setString("shiftBool", "1");
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.28,
                       height: 40,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -611,7 +748,7 @@ class StepFillDuaState extends State<StepFillDua> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     prefixIcon: Icon(Icons.access_time),
                     suffixIcon: Icon(Icons.arrow_drop_down),
@@ -631,7 +768,9 @@ class StepFillDuaState extends State<StepFillDua> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
+                controller: problemTypeController,
                 maxLines: 5,
+                maxLength: 500,
                 onChanged: (value) async {
                   final prefs = await _prefs;
                   prefs.setString("problemTypeState", value);
@@ -641,7 +780,7 @@ class StepFillDuaState extends State<StepFillDua> {
                     fontFamily: 'Rubik',
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: type_problem),
@@ -657,7 +796,13 @@ class StepFillDuaState extends State<StepFillDua> {
                       final prefs = await _prefs;
                       setState(() {
                         isSafety = !isSafety;
-                        safetyOpt = '1';
+                        if (isSafety == true) {
+                          safetyOpt = '1';
+                          print(true);
+                        } else {
+                          print(false);
+                          safetyOpt = '0';
+                        }
                         // qualityOpt = '0';
                         // deliveryOpt = '0';
                         // costOpt = '0';
@@ -689,7 +834,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                     if (value != null) {
                                       setState(() {
                                         isSafety = !isSafety;
-                                        safetyOpt = '1';
+                                        if (isSafety == true) {
+                                          safetyOpt = '1';
+                                          print(true);
+                                        } else {
+                                          print(false);
+                                          safetyOpt = '0';
+                                        }
                                         // qualityOpt = '0';
                                         // deliveryOpt = '0';
                                         // costOpt = '0';
@@ -702,7 +853,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             safety,
                             style: TextStyle(
                                 fontSize: 16,
@@ -719,7 +870,13 @@ class StepFillDuaState extends State<StepFillDua> {
                       setState(() {
                         isQuality = !isQuality;
                         // safetyOpt = '0';
-                        qualityOpt = '1';
+                        if (isQuality == true) {
+                          qualityOpt = '1';
+                          print(true);
+                        } else {
+                          print(false);
+                          qualityOpt = '0';
+                        }
                         // deliveryOpt = '0';
                         // costOpt = '0';
                       });
@@ -751,7 +908,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                       setState(() {
                                         isQuality = !isQuality;
                                         safetyOpt = '0';
-                                        qualityOpt = '1';
+                                        if (isQuality == true) {
+                                          qualityOpt = '1';
+                                          print(true);
+                                        } else {
+                                          print(false);
+                                          qualityOpt = '0';
+                                        }
                                         deliveryOpt = '0';
                                         costOpt = '0';
                                       });
@@ -762,7 +925,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                           Text(
+                          Text(
                             quality,
                             style: TextStyle(
                                 fontSize: 16,
@@ -783,7 +946,13 @@ class StepFillDuaState extends State<StepFillDua> {
                   isDelivery = !isDelivery;
                   // safetyOpt = '0';
                   // qualityOpt = '0';
-                  deliveryOpt = '1';
+                  if (isDelivery == true) {
+                    deliveryOpt = '1';
+                    print(true);
+                  } else {
+                    print(false);
+                    deliveryOpt = '0';
+                  }
                   // costOpt = '0';
                 });
                 // prefs.setString("safetyOpt", safetyOpt);
@@ -820,7 +989,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                         isDelivery = !isDelivery;
                                         // safetyOpt = '0';
                                         // qualityOpt = '0';
-                                        deliveryOpt = '1';
+                                        if (isDelivery == true) {
+                                          deliveryOpt = '1';
+                                          print(true);
+                                        } else {
+                                          print(false);
+                                          deliveryOpt = '0';
+                                        }
                                         // costOpt = '0';
                                       });
                                       // prefs.setString("safetyOpt", safetyOpt);
@@ -831,7 +1006,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                       prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
-                         Text(
+                          Text(
                             delivery,
                             style: TextStyle(
                                 fontSize: 16,
@@ -849,7 +1024,13 @@ class StepFillDuaState extends State<StepFillDua> {
                           // safetyOpt = '0';
                           // qualityOpt = '0';
                           // deliveryOpt = '0';
-                          costOpt = '1';
+                          if (isCost == true) {
+                            costOpt = '1';
+                            print(true);
+                          } else {
+                            print(false);
+                            costOpt = '0';
+                          }
                         });
                         // prefs.setString("safetyOpt", safetyOpt);
                         // prefs.setString("qualityOpt", qualityOpt);
@@ -881,7 +1062,13 @@ class StepFillDuaState extends State<StepFillDua> {
                                           // safetyOpt = '0';
                                           // qualityOpt = '0';
                                           // deliveryOpt = '0';
-                                          costOpt = '1';
+                                          if (isCost == true) {
+                                            costOpt = '1';
+                                            print(true);
+                                          } else {
+                                            print(false);
+                                            costOpt = '0';
+                                          }
                                         });
                                         // prefs.setString("safetyOpt", safetyOpt);
                                         // prefs.setString(
@@ -892,7 +1079,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                         prefs.setString("typeProblemBool", "1");
                                       }
                                     })),
-                             Text(
+                            Text(
                               cost,
                               style: TextStyle(
                                   fontSize: 16,
@@ -907,408 +1094,601 @@ class StepFillDuaState extends State<StepFillDua> {
                 ),
               ),
             ),
+
+            // percentage mistake
+            checkKlasifikasiType != "Breakdown Maintenance"
+                ? Container()
+                : Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 16),
+                          child: RichText(
+                            text: TextSpan(
+                              text: percentage,
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Color(0xFF404446),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
+                              children: const <TextSpan>[
+                                TextSpan(
+                                    text: '*',
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w400)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    isMolding = !isMolding;
+                                    if (isMolding == true) {
+                                      moldingOpt = '1';
+                                      print(true);
+                                    } else {
+                                      print(false);
+                                      moldingOpt = '0';
+                                    }
+                                    // utilityOpt = '0';
+                                    // productionOpt = '0';
+                                    // engineerOpt = '0';
+                                    // otherOpt = '0';
+                                  });
+                                  prefs.setString("moldingOpt", moldingOpt);
+                                  // prefs.setString("utilityOpt", utilityOpt);
+                                  // prefs.setString("productionOpt", productionOpt);
+                                  // prefs.setString("engineerOpt", engineerOpt);
+                                  // prefs.setString("otherOpt", otherOpt);
+                                  prefs.setString("percentBool", "1");
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.40,
+                                  height: 40,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xFF979C9E)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Checkbox(
+                                              value: isMolding,
+                                              onChanged: (value) async {
+                                                final prefs = await _prefs;
+                                                if (value != null) {
+                                                  setState(() {
+                                                    isMolding = !isMolding;
+                                                    if (isMolding == true) {
+                                                      moldingOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      moldingOpt = '0';
+                                                    }
+                                                    // utilityOpt = '0';
+                                                    // productionOpt = '0';
+                                                    // engineerOpt = '0';
+                                                    // otherOpt = '0';
+                                                  });
+                                                  prefs.setString(
+                                                      "moldingOpt", moldingOpt);
+                                                  // prefs.setString("utilityOpt", utilityOpt);
+                                                  // prefs.setString(
+                                                  //     "productionOpt", productionOpt);
+                                                  // prefs.setString(
+                                                  //     "engineerOpt", engineerOpt);
+                                                  // prefs.setString("otherOpt", otherOpt);
+                                                  prefs.setString(
+                                                      "percentBool", "1");
+                                                }
+                                              })),
+                                      Text(
+                                        molding,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xFF72777A),
+                                            fontStyle: FontStyle.normal),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    isUtility = !isUtility;
+                                    // moldingOpt = '0';
+                                    if (isUtility == true) {
+                                      utilityOpt = '1';
+                                      print(true);
+                                    } else {
+                                      print(false);
+                                      utilityOpt = '0';
+                                    }
+                                    // productionOpt = '0';
+                                    // engineerOpt = '0';
+                                    // otherOpt = '0';
+                                  });
+                                  // prefs.setString("moldingOpt", moldingOpt);
+                                  prefs.setString("utilityOpt", utilityOpt);
+                                  // prefs.setString("productionOpt", productionOpt);
+                                  // prefs.setString("engineerOpt", engineerOpt);
+                                  // prefs.setString("otherOpt", otherOpt);
+                                  prefs.setString("percentBool", "1");
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.40,
+                                  height: 40,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xFF979C9E)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Checkbox(
+                                              value: isUtility,
+                                              onChanged: (value) async {
+                                                final prefs = await _prefs;
+                                                if (value != null) {
+                                                  setState(() {
+                                                    isUtility = !isUtility;
+                                                    // moldingOpt = '0';
+                                                    if (isUtility == true) {
+                                                      utilityOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      utilityOpt = '0';
+                                                    }
+                                                    // productionOpt = '0';
+                                                    // engineerOpt = '0';
+                                                    // otherOpt = '0';
+                                                  });
+                                                  // prefs.setString("moldingOpt", moldingOpt);
+                                                  prefs.setString(
+                                                      "utilityOpt", utilityOpt);
+                                                  // prefs.setString(
+                                                  //     "productionOpt", productionOpt);
+                                                  // prefs.setString(
+                                                  //     "engineerOpt", engineerOpt);
+                                                  // prefs.setString("otherOpt", otherOpt);
+                                                  prefs.setString(
+                                                      "percentBool", "1");
+                                                }
+                                              })),
+                                      Text(
+                                        utility,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xFF72777A),
+                                            fontStyle: FontStyle.normal),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              isProduction = !isProduction;
+                              // moldingOpt = '0';
+                              // utilityOpt = '0';
+                              if (isProduction == true) {
+                                productionOpt = '1';
+                                print(true);
+                              } else {
+                                print(false);
+                                productionOpt = '0';
+                              }
+                              // engineerOpt = '0';
+                              // otherOpt = '0';
+                            });
+                            // prefs.setString("moldingOpt", moldingOpt);
+                            // prefs.setString("utilityOpt", utilityOpt);
+                            prefs.setString("productionOpt", productionOpt);
+                            // prefs.setString("engineerOpt", engineerOpt);
+                            // prefs.setString("otherOpt", otherOpt);
+                            prefs.setString("percentBool", "1");
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.40,
+                                  height: 40,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xFF979C9E)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Checkbox(
+                                              value: isProduction,
+                                              onChanged: (value) async {
+                                                final prefs = await _prefs;
+                                                if (value != null) {
+                                                  setState(() {
+                                                    isProduction =
+                                                        !isProduction;
+                                                    // moldingOpt = '0';
+                                                    // utilityOpt = '0';
+                                                    if (isProduction == true) {
+                                                      productionOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      productionOpt = '0';
+                                                    }
+                                                    // engineerOpt = '0';
+                                                    // otherOpt = '0';
+                                                  });
+                                                  // prefs.setString("moldingOpt", moldingOpt);
+                                                  // prefs.setString("utilityOpt", utilityOpt);
+                                                  prefs.setString(
+                                                      "productionOpt",
+                                                      productionOpt);
+                                                  // prefs.setString(
+                                                  //     "engineerOpt", engineerOpt);
+                                                  // prefs.setString("otherOpt", otherOpt);
+                                                  prefs.setString(
+                                                      "percentBool", "1");
+                                                }
+                                              })),
+                                      Text(
+                                        production,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xFF72777A),
+                                            fontStyle: FontStyle.normal),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () async {
+                                    final prefs = await _prefs;
+                                    setState(() {
+                                      isEngineering = !isEngineering;
+                                      // moldingOpt = '0';
+                                      // utilityOpt = '0';
+                                      // productionOpt = '0';
+                                      if (isEngineering == true) {
+                                        engineerOpt = '1';
+                                        print(true);
+                                      } else {
+                                        print(false);
+                                        engineerOpt = '0';
+                                      }
+                                      otherOpt = '0';
+                                    });
+                                    // prefs.setString("moldingOpt", moldingOpt);
+                                    // prefs.setString("utilityOpt", utilityOpt);
+                                    // prefs.setString("productionOpt", productionOpt);
+                                    prefs.setString("engineerOpt", engineerOpt);
+                                    // prefs.setString("otherOpt", otherOpt);
+                                    prefs.setString("percentBool", "1");
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.40,
+                                    height: 40,
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: const Color(0xFF979C9E)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                            width: 30,
+                                            height: 30,
+                                            child: Checkbox(
+                                                value: isEngineering,
+                                                onChanged: (value) async {
+                                                  final prefs = await _prefs;
+                                                  if (value != null) {
+                                                    setState(() {
+                                                      isEngineering =
+                                                          !isEngineering;
+                                                      // moldingOpt = '0';
+                                                      // utilityOpt = '0';
+                                                      // productionOpt = '0';
+                                                      print(value);
+                                                      if (isEngineering ==
+                                                          true) {
+                                                        engineerOpt = '1';
+                                                        print(true);
+                                                      } else {
+                                                        print(false);
+                                                        engineerOpt = '0';
+                                                      }
+                                                      // otherOpt = '0';
+                                                    });
+                                                    // prefs.setString(
+                                                    //     "moldingOpt", moldingOpt);
+                                                    // prefs.setString(
+                                                    //     "utilityOpt", utilityOpt);
+                                                    // prefs.setString(
+                                                    //     "productionOpt", productionOpt);
+                                                    prefs.setString(
+                                                        "engineerOpt",
+                                                        engineerOpt);
+                                                    // prefs.setString("otherOpt", otherOpt);
+                                                    prefs.setString(
+                                                        "percentBool", "1");
+                                                  }
+                                                })),
+                                        Text(
+                                          engineering,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Color(0xFF72777A),
+                                              fontStyle: FontStyle.normal),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              isOther = !isOther;
+                              // moldingOpt = '0';
+                              // utilityOpt = '0';
+                              // productionOpt = '0';
+                              // engineerOpt = '0';
+                              if (isOther == true) {
+                                otherOpt = '1';
+                                print(true);
+                              } else {
+                                print(false);
+                                otherOpt = '0';
+                              }
+                            });
+                            // prefs.setString("moldingOpt", moldingOpt);
+                            // prefs.setString("utilityOpt", utilityOpt);
+                            // prefs.setString("productionOpt", productionOpt);
+                            // prefs.setString("engineerOpt", engineerOpt);
+                            prefs.setString("otherOpt", otherOpt);
+                            prefs.setString("percentBool", "1");
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.40,
+                                  height: 40,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xFF979C9E)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Checkbox(
+                                              value: isOther,
+                                              onChanged: (value) async {
+                                                final prefs = await _prefs;
+                                                if (value != null) {
+                                                  setState(() {
+                                                    isOther = !isOther;
+                                                    // moldingOpt = '0';
+                                                    // utilityOpt = '0';
+                                                    // productionOpt = '0';
+                                                    // engineerOpt = '0';
+                                                    if (isOther == true) {
+                                                      otherOpt = '1';
+                                                      print(true);
+                                                    } else {
+                                                      print(false);
+                                                      otherOpt = '0';
+                                                    }
+                                                  });
+                                                  // prefs.setString("moldingOpt", moldingOpt);
+                                                  // prefs.setString("utilityOpt", utilityOpt);
+                                                  // prefs.setString(
+                                                  //     "productionOpt", productionOpt);
+                                                  // prefs.setString(
+                                                  //     "engineerOpt", engineerOpt);
+                                                  prefs.setString(
+                                                      "otherOpt", otherOpt);
+                                                  prefs.setString(
+                                                      "percentBool", "1");
+                                                }
+                                              })),
+                                      Text(
+                                        other,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xFF72777A),
+                                            fontStyle: FontStyle.normal),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
             Container(
-              margin: EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: percentage,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
+              margin: EdgeInsets.only(top: 16, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        isMolding = !isMolding;
-                        moldingOpt = '1';
-                        // utilityOpt = '0';
-                        // productionOpt = '0';
-                        // engineerOpt = '0';
-                        // otherOpt = '0';
-                      });
-                      prefs.setString("moldingOpt", moldingOpt);
-                      // prefs.setString("utilityOpt", utilityOpt);
-                      // prefs.setString("productionOpt", productionOpt);
-                      // prefs.setString("engineerOpt", engineerOpt);
-                      // prefs.setString("otherOpt", otherOpt);
-                      prefs.setString("percentBool", "1");
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.40,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Checkbox(
-                                  value: isMolding,
-                                  onChanged: (value) async {
-                                    final prefs = await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        isMolding = !isMolding;
-                                        moldingOpt = '1';
-                                        // utilityOpt = '0';
-                                        // productionOpt = '0';
-                                        // engineerOpt = '0';
-                                        // otherOpt = '0';
-                                      });
-                                      prefs.setString("moldingOpt", moldingOpt);
-                                      // prefs.setString("utilityOpt", utilityOpt);
-                                      // prefs.setString(
-                                      //     "productionOpt", productionOpt);
-                                      // prefs.setString(
-                                      //     "engineerOpt", engineerOpt);
-                                      // prefs.setString("otherOpt", otherOpt);
-                                      prefs.setString("percentBool", "1");
-                                    }
-                                  })),
-                         Text(
-                            molding,
+                  RichText(
+                    text: TextSpan(
+                      text: picture_analis,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '*',
                             style: TextStyle(
+                                fontFamily: 'Rubik',
                                 fontSize: 16,
-                                color: Color(0xFF72777A),
-                                fontStyle: FontStyle.normal),
-                          )
-                        ],
-                      ),
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                      ],
                     ),
                   ),
                   InkWell(
-                    onTap: () async {
-                      final prefs = await _prefs;
-                      setState(() {
-                        isUtility = !isUtility;
-                        // moldingOpt = '0';
-                        utilityOpt = '1';
-                        // productionOpt = '0';
-                        // engineerOpt = '0';
-                        // otherOpt = '0';
-                      });
-                      // prefs.setString("moldingOpt", moldingOpt);
-                      prefs.setString("utilityOpt", utilityOpt);
-                      // prefs.setString("productionOpt", productionOpt);
-                      // prefs.setString("engineerOpt", engineerOpt);
-                      // prefs.setString("otherOpt", otherOpt);
-                      prefs.setString("percentBool", "1");
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.40,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Checkbox(
-                                  value: isUtility,
-                                  onChanged: (value) async {
-                                    final prefs = await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        isUtility = !isUtility;
-                                        // moldingOpt = '0';
-                                        utilityOpt = '1';
-                                        // productionOpt = '0';
-                                        // engineerOpt = '0';
-                                        // otherOpt = '0';
-                                      });
-                                      // prefs.setString("moldingOpt", moldingOpt);
-                                      prefs.setString("utilityOpt", utilityOpt);
-                                      // prefs.setString(
-                                      //     "productionOpt", productionOpt);
-                                      // prefs.setString(
-                                      //     "engineerOpt", engineerOpt);
-                                      // prefs.setString("otherOpt", otherOpt);
-                                      prefs.setString("percentBool", "1");
-                                    }
-                                  })),
-                           Text(
-                            utility,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF72777A),
-                                fontStyle: FontStyle.normal),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () async {
-                final prefs = await _prefs;
-                setState(() {
-                  isProduction = !isProduction;
-                  // moldingOpt = '0';
-                  // utilityOpt = '0';
-                  productionOpt = '1';
-                  // engineerOpt = '0';
-                  // otherOpt = '0';
-                });
-                // prefs.setString("moldingOpt", moldingOpt);
-                // prefs.setString("utilityOpt", utilityOpt);
-                prefs.setString("productionOpt", productionOpt);
-                // prefs.setString("engineerOpt", engineerOpt);
-                // prefs.setString("otherOpt", otherOpt);
-                prefs.setString("percentBool", "1");
-              },
-              child: Container(
-                margin: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.40,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Checkbox(
-                                  value: isProduction,
-                                  onChanged: (value) async {
-                                    final prefs = await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        isProduction = !isProduction;
-                                        // moldingOpt = '0';
-                                        // utilityOpt = '0';
-                                        productionOpt = '1';
-                                        // engineerOpt = '0';
-                                        // otherOpt = '0';
-                                      });
-                                      // prefs.setString("moldingOpt", moldingOpt);
-                                      // prefs.setString("utilityOpt", utilityOpt);
-                                      prefs.setString(
-                                          "productionOpt", productionOpt);
-                                      // prefs.setString(
-                                      //     "engineerOpt", engineerOpt);
-                                      // prefs.setString("otherOpt", otherOpt);
-                                      prefs.setString("percentBool", "1");
-                                    }
-                                  })),
-                           Text(
-                            production,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF72777A),
-                                fontStyle: FontStyle.normal),
-                          )
-                        ],
-                      ),
-                    ),
-                    InkWell(
                       onTap: () async {
                         final prefs = await _prefs;
                         setState(() {
-                          isEngineering = !isEngineering;
-                          // moldingOpt = '0';
-                          // utilityOpt = '0';
-                          // productionOpt = '0';
-                          engineerOpt = '1';
-                          otherOpt = '0';
+                          imageProblemPath.clear();
+                          imageFileList!.clear();
+                          prefs.setStringList(
+                              "imagesKetPath", imageProblemPath);
                         });
-                        // prefs.setString("moldingOpt", moldingOpt);
-                        // prefs.setString("utilityOpt", utilityOpt);
-                        // prefs.setString("productionOpt", productionOpt);
-                        prefs.setString("engineerOpt", engineerOpt);
-                        // prefs.setString("otherOpt", otherOpt);
-                        prefs.setString("percentBool", "1");
                       },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.40,
-                        height: 40,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFF979C9E)),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Checkbox(
-                                    value: isEngineering,
-                                    onChanged: (value) async {
-                                      final prefs = await _prefs;
-                                      if (value != null) {
-                                        setState(() {
-                                          isEngineering = !isEngineering;
-                                          // moldingOpt = '0';
-                                          // utilityOpt = '0';
-                                          // productionOpt = '0';
-                                          engineerOpt = '1';
-                                          // otherOpt = '0';
-                                        });
-                                        // prefs.setString(
-                                        //     "moldingOpt", moldingOpt);
-                                        // prefs.setString(
-                                        //     "utilityOpt", utilityOpt);
-                                        // prefs.setString(
-                                        //     "productionOpt", productionOpt);
-                                        prefs.setString(
-                                            "engineerOpt", engineerOpt);
-                                        // prefs.setString("otherOpt", otherOpt);
-                                        prefs.setString("percentBool", "1");
-                                      }
-                                    })),
-                             Text(
-                              engineering,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF72777A),
-                                  fontStyle: FontStyle.normal),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () async {
-                final prefs = await _prefs;
-                setState(() {
-                  isOther = !isOther;
-                  // moldingOpt = '0';
-                  // utilityOpt = '0';
-                  // productionOpt = '0';
-                  // engineerOpt = '0';
-                  otherOpt = '1';
-                });
-                // prefs.setString("moldingOpt", moldingOpt);
-                // prefs.setString("utilityOpt", utilityOpt);
-                // prefs.setString("productionOpt", productionOpt);
-                // prefs.setString("engineerOpt", engineerOpt);
-                prefs.setString("otherOpt", otherOpt);
-                prefs.setString("percentBool", "1");
-              },
-              child: Container(
-                margin: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.40,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Checkbox(
-                                  value: isOther,
-                                  onChanged: (value) async {
-                                    final prefs = await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        isOther = !isOther;
-                                        // moldingOpt = '0';
-                                        // utilityOpt = '0';
-                                        // productionOpt = '0';
-                                        // engineerOpt = '0';
-                                        otherOpt = '1';
-                                      });
-                                      // prefs.setString("moldingOpt", moldingOpt);
-                                      // prefs.setString("utilityOpt", utilityOpt);
-                                      // prefs.setString(
-                                      //     "productionOpt", productionOpt);
-                                      // prefs.setString(
-                                      //     "engineerOpt", engineerOpt);
-                                      prefs.setString("otherOpt", otherOpt);
-                                      prefs.setString("percentBool", "1");
-                                    }
-                                  })),
-                           Text(
-                            other,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF72777A),
-                                fontStyle: FontStyle.normal),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: picture_analis,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
+                      child: Text(
+                        "Hapus Foto",
                         style: TextStyle(
+                            decoration: TextDecoration.underline,
                             fontFamily: 'Rubik',
                             fontSize: 16,
                             color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
+                            fontWeight: FontWeight.w400),
+                      ))
+                ],
               ),
             ),
-            imageFileList!.isEmpty
-                ? InkWell(
+            imageProblemPath.isNotEmpty
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Row(
+                          children: imageProblemPath.map((img) {
+                            return Container(
+                              width: 120,
+                              height: 120,
+                              margin: EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: FileImage(File(img)),
+                                      fit: BoxFit.fill),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                            );
+                          }).toList(),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            imageFileList!.length != 4
+                                ? showBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return optionPickImage(context);
+                                    })
+                                : () {
+                                    Fluttertoast.showToast(
+                                        msg: "Foto sudah ada 4",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Color(0xFF00AEDB),
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                  };
+                            print("panjang = " +
+                                imageFileList!.length.toString());
+                            print("gambar = " +
+                                imageProblemPath.length.toString());
+                          },
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFF979C9E)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                Icon(
+                                  Icons.add_a_photo,
+                                  color: Color(0xFF979C9E),
+                                  size: 50,
+                                ),
+                                Text(
+                                  addmore,
+                                  style: const TextStyle(
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontFamily: 'Rubik',
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : InkWell(
                     onTap: () {
                       showBottomSheet(
                           context: context,
@@ -1344,75 +1724,6 @@ class StepFillDuaState extends State<StepFillDua> {
                             ),
                           ],
                         )),
-                  )
-                : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        Row(
-                          children: imageFileList!.map((img) {
-                            return Container(
-                              width: 120,
-                              height: 120,
-                              margin: EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: FileImage(File(img.path)),
-                                      fit: BoxFit.fill),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                            );
-                          }).toList(),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            imageFileList!.length != 4
-                                ? showBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return optionPickImage(context);
-                                    })
-                                : () {
-                                    Fluttertoast.showToast(
-                                        msg: "Foto sudah ada 4",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Color(0xFF00AEDB),
-                                        textColor: Colors.white,
-                                        fontSize: 16.0);
-                                  };
-                          },
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xFF979C9E)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                Icon(
-                                  Icons.add_a_photo,
-                                  color: Color(0xFF979C9E),
-                                  size: 50,
-                                ),
-                                Text(
-                                  addmore,
-                                  style: const TextStyle(
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontFamily: 'Rubik',
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
                   ),
           ],
         ),

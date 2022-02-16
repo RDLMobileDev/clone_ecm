@@ -3,24 +3,20 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future fillNewEmpatInsert(
-  String token,
-  String ecmId,
-  String idMachine,
-  String itemCheck,
-  String standard,
-  String actual,
-  String note,
-  String start,
-  String end,
-  String userId,
-  String userName
-) async {
+    // String token,
+    String ecmId,
+    String idMachine,
+    String itemCheck,
+    String standard,
+    String actual,
+    String note,
+    String start,
+    String end,
+    String userId,
+    String userName) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecmstep4_insert";
-  final response = await http.post(Uri.parse(url), headers: {
-    "Accept": "Application/json",
-    'Authorization': 'Bearer $token',
-  }, body: {
+  final response = await http.post(Uri.parse(url), body: {
     'ecm_id': ecmId,
     'id_machine': idMachine,
     'item_check': itemCheck,

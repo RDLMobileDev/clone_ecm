@@ -32,7 +32,7 @@
       "login": "Masuk"
     },
     "beranda": {
-      "loading": "Memuat riwayat E-CM Card...",
+      "loading": "Memuat riwayat E-CM Card",
       "no_data": "Tidak ada data riwayat",
       "hello": "Halo,",
       "welcome_to": "Selamat Datang di PT. Sugity Creatives Utility Maintenance",
@@ -45,10 +45,7 @@
       "property_of": "Properti dari PT. Sugity Creatives",
       "home": "Beranda",
       "notif": "Notifikasi",
-      "account": "Akun",
-      "approved": "E-CM Diterima",
-      "declined": "E-CM Ditolak",
-      "pending": "E-CM Tertunda"
+      "account": "Akun"
     },
     "riwayat": {
       "no_riwayat": "Riwayat Kosong",
@@ -61,16 +58,13 @@
       "a_hour_ago": "Sejam lalu",
       "one_week": "1 Minggu lalu",
       "two_week": "2 Minggu lalu",
-      "one_month": "1 Bulan lalu",
-      "show": "Data bulanan",
-      "his_empty": "Tidak ada data",
-      "empty": "Tidak ada data"
+      "one_month": "1 Bulan lalu"
     },
     "detail": {
       "preventive": "Preventive Maintenance",
       "tim_member": "Tim Member ",
       "incident": "Kejadian",
-      "why_analys": "Why Analysis",
+      "why_analys": "Why Analisis",
       "why_one": "Why 1",
       "item_checking": "Pengecekan Item",
       "standard": "Standard",
@@ -99,9 +93,7 @@
       "confirm": "Konfirmasi",
       "valid_download": "Anda ingin mengunduh dokumen ini?",
       "cancel": "Batal",
-      "download": "Unduh",
-      "approved_esign": "ECM Card diterima",
-      "declined_esign":  "ECM Card ditolak"
+      "download": "Unduh"
     },
     "setuju_e_sign": {
       "ecm_card_from": "E-CM Card dari",
@@ -114,11 +106,11 @@
     },
     "daftar_nama_tm": {
       "name_tm": "Nama TM",
-      "loading": "Memuat List Nama TM..."
+      "loading": "Memuat List Nama TM "
     },
     "informasi": {
       "informasi": "Informasi",
-      "symbol": "Simbol (Required to filled)",
+      "symbol": "Simbol *(Required to filled)",
       "rule_line_stop": "Rule line stop",
       "ten_minute": "> 10 menit = G/L wajib tanda tangan",
       "fiveteen_minute": "> 15 menit = C/L wajib tanda tangan",
@@ -126,10 +118,9 @@
       "fourty_minute": "> 40 menit = GM wajib tanda tangan"
     },
     "notifikasi_tl": {
-      "loading": "Loading Notifikasi...",
+      "loading": "Loading Notifikasi ",
       "notification_all": "Pemberitahuan",
       "mark_all": "Telah dibaca semua",
-      "mark_as_read": "Semua notifikasi telah dibaca",
       "send_ecm": "Mengirimi Anda E-CM Card",
       "a_hour": "1 Jam lalu",
       "review": "Lihat",
@@ -141,7 +132,6 @@
     "notifikasi_staff": {
       "notification_all": "Pemberitahuan",
       "mark_all": "Tandai dibaca semua",
-      "mark_as_read": "Semua notifikasi telah dibaca",
       "was_approve": "Telah Menyetujui E-CM Card Anda",
       "a_hour": "1 Jam Lalu",
       "one_day": "1 Hari Lalu"
@@ -163,11 +153,11 @@
       "sparepart": "Spare Part",
       "no_sparepart": "Belum ada suku cadang",
       "add_item": "Tambah Item",
-      "part_name": "Nama Part",
+      "part_name": "Nama Part *",
       "type_name": "Tulis Nama Part",
-      "quantity_used": "Quantity (Used)",
-      "quantity_stock": "Quantity (Stock)",
-      "cost": "Cost (Rp)",
+      "quantity_used": "Quantity (Used) * :",
+      "quantity_stock": "Quantity (Stock) * :",
+      "cost": "Cost (Rp) *",
       "type_cost": "Tulis Cost",
       "subtotal": "Sub Total (Rp):",
       "save_sparepart": "Simpan Spare Part",
@@ -178,13 +168,13 @@
     },
     "step_6": {
       "improvement": "Improvement/Kaizen",
-      "name": "Nama",
+      "name": "Nama *",
       "type_name": "Pilih Nama",
-      "idea": "Ide",
+      "idea": "Ide*",
       "type_idea": "Tulis Ide",
       "working_time": "Waktu Kerja",
       "repair": "Pengecekan + Perbaikan :",
-      "breaktime": "Waktu Istirahat",
+      "breaktime": "Waktu Istirahat (H)* :",
       "bm": "BM :",
       "in_house": "In-House M/P Cost (Rp)",
       "cost_": "Cost",
@@ -197,17 +187,17 @@
       "validation_repair": "Belum ada barang yang diperbaiki",
       "add_item": "Tambah Item",
       "item_repair": "Item Perbaikan",
-      "type_name_item": "Tulis Nama Item",
+      "type_name": "Tulis Nama Item",
       "note": "Note",
       "ok": "OK",
       "limit": "Limit",
       "ng": "N/G",
-      "starttime": "Waktu Awal",
+      "starttime": "Start Time",
       "hm": "HH:MM",
-      "end_time": "Waktu Akhir",
+      "end_time": "End Time",
       "name": "Nama",
       "type_name": "Tulis Nama",
-      "repair_made": "Tindakan Perbaikan",
+      "repair_made": "Perbaikan yang dilakukan",
       "type_message": "Tulis pesan..",
       "save_repair": "Simpan Perbaikan",
       "repair_time": "Waktu Perbaikan :",
@@ -217,13 +207,11 @@
       "validation_delete": "Anda yakin ingin menghapus item?",
       "cancel": "Batal",
       "delete": "Hapus",
-      "next_six": "Lanjut 6/8",
-      "item_name": "Nama Item"
+      "next_six": "Lanjut 6/8"
     },
     "step_4": {
       "item_checking": "Pengecekan Item",
-      "validation_checked": "Belum ada barang yang ditandai",
-      "validation_repair": "Belum ada barang yang diperbaiki",
+      "validation_repair": "Belum ada barang yang dicek",
       "add_item": "Tambahkan Item",
       "item_check": "Cek Item",
       "type_name": "Tulis Nama Item",
@@ -247,19 +235,19 @@
       "validation_delete": "Apakah anda yakin ingin menghapus item?",
       "cancel": "Batal",
       "delete": "Hapus",
-      "add_item_": "Tambah Item",
-      "next_five": "Lanjut 5/8"
+      "next_five": "Lanjut 5/8",
+      "validation_checked": "Belum ada barang yang dicek"
     },
     "step_3": {
-      "why_analysis": "Why Analysis",
-      "why": "Why 1",
-      "how": "How",
-      "type_message": "Tulis pesan...",
+      "why_analysis": "Why Analisis * :",
+      "why": "Why 1 *",
+      "how": "How ",
+      "type_message": "Tulis pesan",
       "back": "Kembali",
       "next_four": "Lanjut 4/8"
     },
     "step_2": {
-      "incident": "Kejadian",
+      "incident": "Kejadian ",
       "shift_a": "Shift A",
       "shift_b": "Shift B",
       "shift_ns": "Shift N/S",
@@ -269,13 +257,13 @@
       "quality": "Quality",
       "delivery": "Delivery",
       "cost": "Cost",
-      "percentage": "Percentage Mistake",
+      "percentage": "Percentage Mistake ",
       "utility": "Utility",
       "molding": "Molding",
       "production": "Production",
       "engineering": "Engineering",
       "other": "Other",
-      "picture": "Foto",
+      "picture": "Gambar ",
       "addmax": "Ketuk untuk menambahkan, maksimal 4 foto",
       "select_image": "Pilih penggunaan gambar",
       "gallery": "Galeri",
@@ -283,7 +271,6 @@
       "back": "Kembali",
       "crop": "Potong",
       "add_more": "Tambah lagi",
-      "picture_analysis": "Gambar dan Analisa",
       "next_three": "Lanjut 3/8"
     },
     "step_1": {
@@ -291,14 +278,13 @@
       "b_m": "Breakdown Maintenance",
       "p_m": "Preventive Maintenance",
       "i_m": "Information Maintenance",
-      "tanggal": "Tanggal",
+      "tanggal": "Tanggal *",
       "hbt": "HH/BB/TTTT",
-      "t_m": "Team Member",
+      "t_m": "Team Member *",
       "selectmember": "Pilih Member",
-      "factory": "Factory",
+      "factory": "Factory *",
       "select_factory": "Pilih Factory",
-      "select_factory_group": "Pilih group area",
-      "group_area": "Group Area",
+      "group_area": "Group Area *",
       "select_group_area": "Pilih Area Group",
       "machine_name": "Nama Mesin",
       "type_machine": "Tulis Nama Mesin",
@@ -306,6 +292,11 @@
       "type_machine_number": "Tulis Nomor Mesin",
       "cancel": "Batal",
       "next_two": "Lanjut"
+    },
+    "notification": {
+      "all_notification": "Semua notifikasi",
+      "mark": "Tandai semua telah dibaca",
+      "notification": "Memuat notifikasi"
     }
   }
 }

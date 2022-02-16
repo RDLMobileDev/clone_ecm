@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -5,6 +7,7 @@ import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
 import 'package:e_cm/homepage/home/model/incident_effect.dart';
 import 'package:e_cm/homepage/home/model/incident_mistake.dart';
+import 'package:e_cm/homepage/home/services/api_detail_history_home.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +18,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HistoryDetailPage extends StatefulWidget {
   final String notifId;
+  final bool isShowButton;
 
-  const HistoryDetailPage({required this.notifId});
+  const HistoryDetailPage({required this.notifId, required this.isShowButton});
 
   @override
   _HistoryDetailPageState createState() => _HistoryDetailPageState();
@@ -37,7 +41,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['item_check'] as List;
@@ -67,7 +71,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['item_repair'] as List;
@@ -97,7 +101,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['sparepart'] as List;
@@ -127,7 +131,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
         var data = response['data']['esign'] as List;
@@ -157,11 +161,32 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    var response = await getDetailEcm(notifUser, tokenUser);
+    var response = await getDetailHistoryEcm(notifUser, tokenUser);
     try {
       setStateIfMounted(() {
+        print("data detail");
         print(response['data']);
         detailEcmModel = DetailEcmModel.fromJson(response['data']);
+
+        // detailEcmModel.kaizenCheckH.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenCheckH.toString();
+        // detailEcmModel.kaizenCheckM.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenCheckM.toString();
+        // detailEcmModel.kaizenRepairH.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenRepairH.toString();
+        // detailEcmModel.kaizenRepairM.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenRepairM.toString();
+        // detailEcmModel.kaizenTotalH.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenTotalH.toString();
+        // detailEcmModel.kaizenTotalM.toString() == "null"
+        //     ? "-"
+        //     : detailEcmModel.kaizenTotalM.toString();
+
         incidentEffect =
             IncidentEffect.fromJson(response['data']['incident_effect'])
                 .toString();
@@ -223,6 +248,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     getItemRepair();
     getSparepart();
     getEsign();
+    print("id ecm history widget = " + widget.notifId);
   }
 
   @override
@@ -238,201 +264,226 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               Navigator.pop(context);
             }),
         title: Text(
-          "Preventive Maintance",
+          "Preventive Maintenance",
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 12),
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/img_ava.png')),
+      body: detailEcmModel.nama.toString() == "null"
+          ? Container(
+              color: Colors.white,
+              child: Center(
+                // Display Progress Indicator
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
                 ),
-              ),
-              Text(
-                detailEcmModel.nama.toString(),
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff00AEDB)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                // color: Colors.amberAccent,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .center, //Center Column contents vertically,
-                    crossAxisAlignment: CrossAxisAlignment
-                        .center, //Center Column contents horizontally,
-                    children: [
-                      Icon(Icons.location_on_outlined, color: Colors.grey),
-                      Text(
-                        detailEcmModel.lokasi.toString() +
-                            " · " +
-                            detailEcmModel.tanggal.toString(),
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Text("Machine : " +
-                  detailEcmModel.machineNama.toString() +
-                  " (" +
-                  detailEcmModel.nomormesin.toString() +
-                  ")"),
-              _buildDivider(),
-              Container(
+              ))
+          : SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
                 width: MediaQuery.of(context).size.width,
-                child: const Text("Incident",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Text(
-                    detailEcmModel.incidentShift.toString() +
-                        " · " +
-                        detailEcmModel.incidentJam.toString() +
-                        " · Effect : " +
-                        incidentEffect +
-                        " · Mistake : " +
-                        incidentMistake,
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Text(detailEcmModel.incidentProblem.toString(),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87)),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 200,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 200,
-                      height: 200,
+                      margin: EdgeInsets.only(bottom: 12),
+                      width: 100,
+                      height: 100,
                       decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto1.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                        image: DecorationImage(
+                            image: NetworkImage(detailEcmModel.foto ?? "-")),
+                      ),
                     ),
-                    const SizedBox(width: 10),
-                    Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto2.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                    Text(
+                      detailEcmModel.nama.toString(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xff00AEDB)),
                     ),
-                    const SizedBox(width: 10),
-                    Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto3.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                    SizedBox(
+                      height: 4,
                     ),
-                    const SizedBox(width: 10),
+                    Text(detailEcmModel.klasifikasi.toString()),
+                    SizedBox(
+                      height: 4,
+                    ),
                     Container(
-                      width: 200,
+                      // color: Colors.amberAccent,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .center, //Center Column contents vertically,
+                          crossAxisAlignment: CrossAxisAlignment
+                              .center, //Center Column contents horizontally,
+                          children: [
+                            Icon(Icons.location_on_outlined,
+                                color: Colors.grey),
+                            Text(
+                              detailEcmModel.lokasi.toString() +
+                                  " · " +
+                                  detailEcmModel.tanggal.toString(),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Text("Machine : " +
+                        detailEcmModel.machineNama.toString() +
+                        " (" +
+                        detailEcmModel.nomormesin.toString() +
+                        ")"),
+                    _buildDivider(),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: const Text("Incident",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                          detailEcmModel.incidentShift.toString() +
+                              " · " +
+                              detailEcmModel.incidentJam.toString() +
+                              " · Effect : " +
+                              incidentEffect +
+                              " · Mistake : " +
+                              incidentMistake,
+                          style: TextStyle(fontSize: 14, color: Colors.grey)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(detailEcmModel.incidentProblem.toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
                       height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  detailEcmModel.incidentFoto4.toString())),
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto1
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto2
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto3
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(detailEcmModel
+                                        .incidentFoto4
+                                        .toString())),
+                                color: Colors.grey[400],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildItemAnalyst(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildItemCheck(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildItemRepairing(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildImprovement(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildWorkingTime(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildCost(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildSparePart(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildSign(),
+                    ),
+                    _buildDivider(),
+                    Container(
+                      child: _buildTotalCost(),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      child: Visibility(
+                          visible: widget.isShowButton,
+                          child: _buildButtonAdd()),
                     ),
                   ],
                 ),
               ),
-              _buildDivider(),
-              Container(
-                child: _buildItemAnalyst(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildItemCheck(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildItemRepairing(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildImprovement(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildWorkingTime(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildCost(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildSparePart(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildSign(),
-              ),
-              _buildDivider(),
-              Container(
-                child: _buildTotalCost(),
-              ),
-              SizedBox(height: 20),
-              Container(
-                child: _buildButtonAdd(),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -554,7 +605,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("How"),
+              child: Text("Why 5"),
             ),
             Text(" : "),
             Expanded(
@@ -821,7 +872,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             Text(" : "),
             Expanded(
               flex: 4,
-              child: Text(detailEcmModel.kaizenIdea.toString()),
+              child: Text(detailEcmModel.kaizenIdea.toString() == "null"
+                  ? "-"
+                  : detailEcmModel.kaizenIdea.toString()),
             )
           ],
         ),
@@ -939,7 +992,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               flex: 4,
               child: Text("In-House M/P Cost (Rp)"),
             ),
-            Text(detailEcmModel.kaizenCosthouse.toString()),
+            Text(detailEcmModel.kaizenCosthouse.toString() == "null"
+                ? "-"
+                : detailEcmModel.kaizenCosthouse.toString()),
           ],
         ),
         Row(
@@ -949,7 +1004,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               flex: 4,
               child: Text("Out-House (Rp) : "),
             ),
-            Text(detailEcmModel.kaizenOutcosthouse.toString()),
+            Text(detailEcmModel.kaizenOutcosthouse.toString() == "null"
+                ? "-"
+                : detailEcmModel.kaizenOutcosthouse.toString()),
           ],
         ),
       ],
@@ -1037,16 +1094,40 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             itemBuilder: (context, i) {
               return Container(
                   margin: EdgeInsets.only(bottom: 8, top: 8),
-                  child: Text(
-                    (i + 1).toString() +
-                        ". " +
-                        _listEssign[i].nama.toString() +
-                        " - " +
-                        _listEssign[i].nama.toString(),
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        (i + 1).toString() +
+                            ". " +
+                            _listEssign[i].nama.toString() +
+                            " - " +
+                            _listEssign[i].jabatan.toString(),
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(
+                          _listEssign[i].status.toString() == "null"
+                              ? " "
+                              : _listEssign[i].status.toString() == "0"
+                                  ? "⊙ Pending"
+                                  : _listEssign[i].status.toString() == "1"
+                                      ? "✔ Approved"
+                                      : "✘ Decline",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: _listEssign[i].status.toString() == "null"
+                                  ? Colors.transparent
+                                  : _listEssign[i].status.toString() == "0"
+                                      ? Colors.grey
+                                      : _listEssign[i].status.toString() == "1"
+                                          ? Colors.blueAccent
+                                          : Colors.redAccent,
+                              fontWeight: FontWeight.w600))
+                    ],
                   ));
             },
           ),

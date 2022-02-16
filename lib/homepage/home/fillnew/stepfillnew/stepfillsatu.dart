@@ -16,6 +16,7 @@ import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
 import 'package:e_cm/homepage/home/services/membernameservice.dart';
+import 'package:e_cm/homepage/notification/model/response_review_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -41,7 +42,6 @@ class StepFillSatuState extends State<StepFillSatu> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
-  
   String classification = '';
   String b_m = '';
   String p_m = '';
@@ -53,6 +53,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   String selectmember = '';
   String factory = '';
   String select_factory = '';
+  String select_factory_group = '';
   String group_area = '';
   String select_group_area = '';
 
@@ -63,6 +64,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   String cancel = '';
   String next_two = '';
 
+  String filterTeamMember = "";
+  
   void setBahasa() async {
     final prefs = await _prefs;
     String bahasaBool = prefs.getString("bahasa") ?? "";
@@ -90,7 +93,6 @@ class StepFillSatuState extends State<StepFillSatu> {
     var dataLang = json.decode(response)['data'];
     if (mounted) {
       setState(() {
-      
         classification = dataLang['step_1']['classification'];
         b_m = dataLang['step_1']['b_m'];
         p_m = dataLang['step_1']['p_m'];
@@ -101,6 +103,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         selectmember = dataLang['step_1']['selectmember'];
         factory = dataLang['step_1']['factory'];
         select_factory = dataLang['step_1']['select_factory'];
+        select_factory_group = dataLang['step_1']['select_factory_group'];
 
         group_area = dataLang['step_1']['group_area'];
         select_group_area = dataLang['step_1']['select_group_area'];
@@ -110,8 +113,6 @@ class StepFillSatuState extends State<StepFillSatu> {
         type_machine_number = dataLang['step_1']['type_machine_number'];
         cancel = dataLang['step_1']['cancel'];
         next_two = dataLang['step_1']['next_two'];
-        
-       
       });
     }
   }
@@ -119,7 +120,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         classification = dataLang['step_1']['classification'];
@@ -132,6 +133,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         selectmember = dataLang['step_1']['selectmember'];
         factory = dataLang['step_1']['factory'];
         select_factory = dataLang['step_1']['select_factory'];
+        select_factory_group = dataLang['step_1']['select_factory_group'];
 
         group_area = dataLang['step_1']['group_area'];
         select_group_area = dataLang['step_1']['select_group_area'];
@@ -141,10 +143,20 @@ class StepFillSatuState extends State<StepFillSatu> {
         type_machine_number = dataLang['step_1']['type_machine_number'];
         cancel = dataLang['step_1']['cancel'];
         next_two = dataLang['step_1']['next_two'];
-     
-       
       });
     }
+  }
+
+  void clearText() async {
+    final prefs = await _prefs;
+    teamMemberController.clear();
+
+    setState(() {
+      members = "";
+      listTeamMember.clear();
+      prefs.remove("teamMember");
+      prefs.remove("namaMember");
+    });
   }
 
   void setLang() async {
@@ -161,8 +173,7 @@ class StepFillSatuState extends State<StepFillSatu> {
     }
   }
 
-
-  TextEditingController? machineNameController;
+  TextEditingController machineNameController = TextEditingController();
   TextEditingController machineNumberController = TextEditingController();
   TextEditingController teamMemberController = TextEditingController();
   TextEditingController factoryNameController = TextEditingController();
@@ -185,6 +196,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   String classificationIdSelected = '';
   String members = '';
   String idMachineFromName = '';
+
+  String namaKlasifikasiFromSession = '';
 
   List<ClassificationModel> _listClassification = [];
   List<LocationModel> _listLocation = [];
@@ -215,6 +228,11 @@ class StepFillSatuState extends State<StepFillSatu> {
     String tokenUser = prefs.getString("tokenKey").toString();
     String idUser = prefs.getString("idKeyUser").toString();
 
+    print(locationId);
+    print(locationIdGroup);
+    print(machineId);
+    print(machineDetailId);
+
     try {
       if (tokenUser != "" &&
           idClass != "" &&
@@ -233,6 +251,9 @@ class StepFillSatuState extends State<StepFillSatu> {
         prefs.setString("idEcm", result['data']['id_ecm'].toString());
         prefs.setString(
             "id_machine_res", result['data']['id_machine'].toString());
+
+        print(
+            "ecm id from step 1: ..... " + prefs.getString("idEcm").toString());
 
         if (result['response']['status'] == 200) {
           Fluttertoast.showToast(
@@ -280,7 +301,7 @@ class StepFillSatuState extends State<StepFillSatu> {
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(1990),
-            lastDate: DateTime(2022))
+            lastDate: DateTime(2030))
         .then((value) {
       if (value != null) {
         DateTime _fromDate = DateTime.now();
@@ -299,12 +320,19 @@ class StepFillSatuState extends State<StepFillSatu> {
   }
 
   Future<List<ClassificationModel>> getClassificationData() async {
+    if (_listClassification.isNotEmpty) {
+      return await classificationService.getClassificationData();
+    }
     _listClassification = await classificationService.getClassificationData();
 
-    if (_listClassification.isNotEmpty) {
-      for (int i = 0; i < _listClassification.length; i++) {
-        warnaClassifications.add(false);
-        mapClass[i] = false;
+    print("is list classification empty ? ${_listClassification.isEmpty}");
+    for (int i = 0; i < _listClassification.length; i++) {
+      warnaClassifications.add(false);
+      mapClass[i] = false;
+
+      if (namaKlasifikasiFromSession == _listClassification[i].nama) {
+        print(_listClassification[i].nama);
+        mapClass[i] = true;
       }
     }
 
@@ -327,8 +355,11 @@ class StepFillSatuState extends State<StepFillSatu> {
     try {
       final SharedPreferences prefs = await _prefs;
       String? tokenUser = prefs.getString("tokenKey").toString();
-      _listGroupArea = await locationService.getAreaGroupList(tokenUser);
-      return await locationService.getAreaGroupList(tokenUser);
+      String idLokasi = prefs.getString("locationId") ?? "";
+      print(idLokasi);
+      _listGroupArea =
+          await locationService.getAreaGroupList(tokenUser, idLokasi);
+      return await locationService.getAreaGroupList(tokenUser, idLokasi);
     } catch (e) {
       print(e);
       return [];
@@ -339,10 +370,14 @@ class StepFillSatuState extends State<StepFillSatu> {
     try {
       final SharedPreferences prefs = await _prefs;
       String? tokenUser = prefs.getString("tokenKey").toString();
-      _listMachineName = await machineNameService.getMachineName(tokenUser);
+      String idGroupArea = prefs.getString("locationIdGroup") ?? "";
+      String idLokasi = prefs.getString("locationId") ?? "";
+      _listMachineName = await machineNameService.getMachineName(
+          tokenUser, idLokasi, idGroupArea);
       print("data nama mesin: ");
       print(_listMachineName.length);
-      return await machineNameService.getMachineName(tokenUser);
+      return await machineNameService.getMachineName(
+          tokenUser, idLokasi, idGroupArea);
     } catch (e) {
       print(e);
       return [];
@@ -352,29 +387,64 @@ class StepFillSatuState extends State<StepFillSatu> {
   Future<List<MachineNumberModel>> getMachineNumberbyId() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
+    String idGroupArea = prefs.getString("locationIdGroup") ?? "";
+    String idLokasi = prefs.getString("locationId") ?? "";
     _listMachineNumber = await machineNumberService.getMachineNumber(
-        idMachineFromName, tokenUser);
+        idMachineFromName, idLokasi, idGroupArea, tokenUser);
     return await machineNumberService.getMachineNumber(
-        idMachineFromName, tokenUser);
+        idMachineFromName, idLokasi, idGroupArea, tokenUser);
     // print(_listMachineNumber);
   }
 
   Future<List<MemberNameModel>> getListMemberName() async {
     final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    listNamaMember = await getDataMemberName(tokenUser);
-    return await getDataMemberName(tokenUser);
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser") ?? "";
+    listNamaMember = await getDataMemberName(tokenUser, idUser);
+    return await getDataMemberName(tokenUser, idUser);
+  }
+
+  void setFormStep1AfterChoosing() async {
+    final prefs = await _prefs;
+
+    String? namaKlasifikasi = prefs.getString("namaKlasifikasi");
+    String? tglStepSatu = prefs.getString("tglStepSatu");
+    String? namaMember = prefs.getString("namaMember");
+    String? namaLokasi = prefs.getString("namaLokasi");
+    String? namaGroupLokasi = prefs.getString("namaGroupLokasi");
+    String? namaMesin = prefs.getString("namaMesin");
+    String? nomorMesin = prefs.getString("nomorMesinDetail");
+
+    if (namaKlasifikasi != null &&
+        tglStepSatu != null &&
+        namaMember != null &&
+        namaLokasi != null &&
+        namaGroupLokasi != null &&
+        namaMesin != null &&
+        nomorMesin != null) {
+      setState(() {
+        namaKlasifikasiFromSession = namaKlasifikasi;
+        dateSelected = tglStepSatu;
+        teamMemberController = TextEditingController(text: namaMember);
+        factoryNameController = TextEditingController(text: namaLokasi);
+        factoryNameGroupController =
+            TextEditingController(text: namaGroupLokasi);
+        machineNameController = TextEditingController(text: namaMesin);
+        machineNumberController = TextEditingController(text: nomorMesin);
+      });
+    }
   }
 
   @override
   void initState() {
+    super.initState();
     // getClassificationData();
     getListLocation();
     getListAreaGroup();
     getMachineName();
-    super.initState();
     setBahasa();
     setLang();
+    setFormStep1AfterChoosing();
   }
 
   @override
@@ -386,103 +456,122 @@ class StepFillSatuState extends State<StepFillSatu> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                classification,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Color(0xFF404446),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  text: TextSpan(
+                    text: classification,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                )),
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
-              height: 60,
+              height: 70,
               child: FutureBuilder(
                 future: getClassificationData(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
-                      child: Text("Memuat Klasifikasi..."),
+                      child: Text("Memuat Klasifikasi"),
                     );
                   }
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _listClassification.length,
-                    itemBuilder: (context, i) {
-                      return InkWell(
-                        onTap: () async {
-                          final prefs = await _prefs;
-                          setState(() {
-                            // isBreakDown = true;
-                            // isPreventive = false;
-                            // isInformation = false;
-                            // classificationIdSelected = '1';
-                            warnaClassifications[i] = !warnaClassifications[i];
-
-                            mapClass.updateAll((key, value) => false);
-                            if (mapClass[i] != null) {
-                              mapClass[i] = !mapClass[i]!;
-                            }
-                            print("map values -> $mapClass");
-                            prefs.setString(
-                                "idClassification", _listClassification[i].id);
-                            prefs.setString("classBool", "1");
-                          });
-                          Fluttertoast.showToast(
-                              msg:
-                                  'Anda memilih ${_listClassification[i].nama}',
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.greenAccent,
-                              textColor: Colors.white,
-                              fontSize: 16);
-                          // print(prefs.getString("idClassification"));
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.27,
-                          height: 56,
-                          margin: EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                              border: Border.all(
-                                  color: mapClass[i] == false
-                                      ? Colors.white
-                                      : Color(0xFF00AEDB)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 1,
-                                  offset: Offset(
-                                      0, 1), // changes position of shadow
-                                ),
-                              ]),
+                  return _listClassification.isEmpty
+                      ? Container(
                           child: Center(
-                            child: Text(
-                              _listClassification[i].nama,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: mapClass[i] == false
-                                      ? Color(0xFF404446)
-                                      : Color(0xFF00AEDB),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
-                            ),
+                            child: Text("No data classifications"),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _listClassification.length,
+                          itemBuilder: (context, i) {
+                            // if (namaKlasifikasiFromSession ==
+                            //     _listClassification[i].nama) {
+                            //   print(_listClassification[i].nama);
+                            //   mapClass[i] = true;
+                            // }
+
+                            return InkWell(
+                              onTap: () async {
+                                final prefs = await _prefs;
+                                setState(() {
+                                  mapClass.updateAll((key, value) => false);
+                                  if (mapClass[i] != null) {
+                                    mapClass[i] = true;
+                                  }
+
+                                  print("map values -> $mapClass");
+                                  prefs.setString("idClassification",
+                                      _listClassification[i].id);
+                                  prefs.setString("namaKlasifikasi",
+                                      _listClassification[i].nama);
+                                  prefs.setString("classBool", "1");
+                                });
+                                // Fluttertoast.showToast(
+                                //     msg:
+                                //         'Anda memilih ${_listClassification[i].nama}',
+                                //     toastLength: Toast.LENGTH_LONG,
+                                //     gravity: ToastGravity.BOTTOM,
+                                //     timeInSecForIosWeb: 2,
+                                //     backgroundColor: Colors.greenAccent,
+                                //     textColor: Colors.white,
+                                //     fontSize: 16);
+                                // print(prefs.getString("idClassification"));
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.27,
+                                height: 50,
+                                margin: EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    border: Border.all(
+                                        color: mapClass[i] == false
+                                            ? Colors.white
+                                            : Color(0xFF00AEDB)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                        offset: Offset(
+                                            0, 1), // changes position of shadow
+                                      ),
+                                    ]),
+                                child: Center(
+                                  child: Text(
+                                    _listClassification[i].nama,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: mapClass[i] == false
+                                            ? Color(0xFF404446)
+                                            : Color(0xFF00AEDB),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
                 },
               ),
             ),
@@ -521,16 +610,22 @@ class StepFillSatuState extends State<StepFillSatu> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Icon(Icons.calendar_today)),
-                    Text(
-                      dateSelected,
-                      style: const TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
+                    Container(
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Icon(Icons.calendar_today)),
+                          Text(
+                            dateSelected,
+                            style: const TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                         width: 40,
@@ -540,27 +635,53 @@ class StepFillSatuState extends State<StepFillSatu> {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: t_m,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: RichText(
+                    text: TextSpan(
+                      text: t_m,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                    onTap: () {
+                      clearText();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "Hapus Team Member",
                         style: TextStyle(
                             fontFamily: 'Rubik',
-                            fontSize: 16,
                             color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              ],
             ),
             TextFormField(
               controller: teamMemberController,
@@ -569,6 +690,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               onTap: () {
                 setState(() {
                   isTappedTeamMember = !isTappedTeamMember;
+                  print(teamMemberController);
                 });
               },
               onEditingComplete: () async {},
@@ -580,7 +702,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: const Color(0xFF979C9E))),
                   suffixIcon: Icon(Icons.search),
-                  hintText: 'Type name',
+                  hintText: 'Pilih member',
                   contentPadding:
                       EdgeInsets.symmetric(vertical: -5, horizontal: 10),
                   hintStyle: TextStyle(
@@ -599,7 +721,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
-                            child: Text("Loading member..."),
+                            child: Text("Memuat member"),
                           );
                         }
 
@@ -614,31 +736,45 @@ class StepFillSatuState extends State<StepFillSatu> {
                               onTap: () async {
                                 final prefs = await _prefs;
                                 if (listTeamMember.length != 6) {
-                                  if (members.isEmpty) {
+                                  if (!listTeamMember
+                                      .contains(listNamaMember[i].id)) {
+                                    if (members.isEmpty) {
+                                      setState(() {
+                                        members = listNamaMember[i].name + ', ';
+                                      });
+                                      teamMemberController =
+                                          TextEditingController(text: members);
+                                      // listTeamMember.add(listNamaMember[i].id);
+                                    } else {
+                                      setState(() {
+                                        members +=
+                                            listNamaMember[i].name + ', ';
+                                      });
+                                      teamMemberController =
+                                          TextEditingController(text: members);
+                                      // listTeamMember.add(listNamaMember[i].id);
+                                    }
+
+                                    listTeamMember.add(listNamaMember[i].id);
+                                    print(listTeamMember);
+                                    prefs.setStringList(
+                                        "teamMember", listTeamMember);
+                                    prefs.setString("namaMember", members);
+
+                                    prefs.setString("teamMemberBool", "1");
                                     setState(() {
-                                      members = listNamaMember[i].name + ', ';
+                                      isTappedTeamMember = !isTappedTeamMember;
                                     });
-                                    teamMemberController =
-                                        TextEditingController(text: members);
-                                    // listTeamMember.add(listNamaMember[i].id);
                                   } else {
-                                    setState(() {
-                                      members += listNamaMember[i].name + ', ';
-                                    });
-                                    teamMemberController =
-                                        TextEditingController(text: members);
-                                    // listTeamMember.add(listNamaMember[i].id);
+                                    Fluttertoast.showToast(
+                                        msg: 'Tidak boleh pilih nama yang sama',
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: Colors.greenAccent,
+                                        textColor: Colors.white,
+                                        fontSize: 16);
                                   }
-
-                                  listTeamMember.add(listNamaMember[i].id);
-                                  print(listTeamMember);
-                                  prefs.setStringList(
-                                      "teamMember", listTeamMember);
-
-                                  prefs.setString("teamMemberBool", "1");
-                                  setState(() {
-                                    isTappedTeamMember = !isTappedTeamMember;
-                                  });
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: 'Member maksimal 6',
@@ -717,7 +853,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
-                            child: Text("Memuat data factory..."),
+                            child: Text("Memuat data factory"),
                           );
                         }
 
@@ -741,8 +877,23 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString(
                                       "locationId", locationIdSelected);
+                                  prefs.setString("namaLokasi",
+                                      _listLocation[i].valueFactory);
                                   prefs.setString("locationBool", "1");
                                   print("id lokasi: $locationIdSelected");
+
+                                  prefs.remove("locationIdGroup");
+                                  prefs.remove("machineId");
+                                  prefs.remove("machineDetailId");
+                                  prefs.remove("machineNameBool");
+                                  prefs.remove("machineDetailBool");
+                                  prefs.remove("namaGroupLokasi");
+                                  prefs.remove("namaMesin");
+                                  prefs.remove("nomorMesinDetail");
+
+                                  factoryNameGroupController.clear();
+                                  machineNameController.clear();
+                                  machineNumberController.clear();
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -791,7 +942,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: select_factory,
+                  hintText: select_factory_group,
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
@@ -810,7 +961,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(
-                            child: Text("Memuat data factory group..."),
+                            child: Text("Memuat data factory group"),
                           );
                         }
 
@@ -834,8 +985,20 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   // getMachineNumberbyId(machineIdSelected);
                                   prefs.setString("locationIdGroup",
                                       locationIdGroupSelected);
+                                  prefs.setString("namaGroupLokasi",
+                                      _listGroupArea[i].valueGroup);
                                   prefs.setString("locationGroupBool", "1");
                                   print("id lokasi: $locationIdGroupSelected");
+
+                                  prefs.remove("machineId");
+                                  prefs.remove("machineDetailId");
+                                  prefs.remove("machineNameBool");
+                                  prefs.remove("machineDetailBool");
+                                  prefs.remove("namaMesin");
+                                  prefs.remove("nomorMesinDetail");
+
+                                  machineNameController.clear();
+                                  machineNumberController.clear();
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -869,6 +1032,8 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
+              readOnly: true,
+              showCursor: true,
               controller: machineNameController,
               onTap: () {
                 setState(() {
@@ -877,7 +1042,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               },
               onChanged: (value) async {
                 final prefs = await _prefs;
-                prefs.setString("machineId", value);
+                // prefs.setString("machineId", value);
                 prefs.setString("machineNameBool", "1");
               },
               style: const TextStyle(
@@ -913,8 +1078,10 @@ class StepFillSatuState extends State<StepFillSatu> {
                               return InkWell(
                                   onTap: () async {
                                     final prefs = await _prefs;
+                                    prefs.setString("machineId",
+                                        _listMachineName[i].idMesin);
                                     prefs.setString(
-                                        "machineId", _listMachineName[i].nama);
+                                        "namaMesin", _listMachineName[i].nama);
                                     prefs.setString("machineNameBool", "1");
                                     setState(() {
                                       idMachineFromName =
@@ -924,6 +1091,11 @@ class StepFillSatuState extends State<StepFillSatu> {
                                               text: _listMachineName[i].nama);
                                       isTapedMachineName = !isTapedMachineName;
                                     });
+                                    prefs.remove("machineDetailId");
+                                    prefs.remove("machineDetailBool");
+                                    prefs.remove("nomorMesinDetail");
+
+                                    machineNumberController.clear();
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 15),
@@ -934,7 +1106,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return Center(
-                          child: Text("Memuat nama mesin..."),
+                          child: Text("Memuat nama mesin"),
                         );
                       },
                     ),
@@ -962,26 +1134,17 @@ class StepFillSatuState extends State<StepFillSatu> {
               ),
             ),
             TextFormField(
+              readOnly: true,
+              showCursor: true,
               controller: machineNumberController,
               onTap: () {
                 setState(() {
                   isTappedMachineNumber = !isTappedMachineNumber;
                 });
-
-                if (_listMachineNumber.isEmpty) {
-                  Fluttertoast.showToast(
-                      msg: 'Pilih nama mesin dahulu',
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
-                      backgroundColor: Colors.greenAccent,
-                      textColor: Colors.white,
-                      fontSize: 16);
-                }
               },
               onChanged: (value) async {
                 final prefs = await _prefs;
-                prefs.setString("machineDetailId", value);
+                // prefs.setString("machineDetailId", value);
                 prefs.setString("machineDetailBool", "1");
               },
               style: const TextStyle(
@@ -1010,7 +1173,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            // physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _listMachineNumber.length,
                             itemBuilder: (context, i) {
@@ -1018,11 +1181,13 @@ class StepFillSatuState extends State<StepFillSatu> {
                                   onTap: () async {
                                     final prefs = await _prefs;
                                     prefs.setString("machineDetailId",
+                                        _listMachineNumber[i].id);
+                                    prefs.setString("nomorMesinDetail",
                                         _listMachineNumber[i].numberOfMachine);
                                     prefs.setString("machineDetailBool", "1");
                                     setState(() {
-                                      idMachineFromName =
-                                          _listMachineName[i].idMesin;
+                                      // idMachineFromName =
+                                      //     _listMachineName[i].idMesin;
                                       machineNumberController =
                                           TextEditingController(
                                               text: _listMachineNumber[i]
@@ -1041,7 +1206,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                         }
 
                         return Center(
-                          child: Text("Memuat nomor mesin..."),
+                          child: Text("Memuat nomor mesin"),
                         );
                       },
                     ),

@@ -1,11 +1,17 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
+import 'package:e_cm/homepage/home/services/api_get_item_steptujuh.dart';
 import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,12 +32,117 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   TextEditingController costRpController = TextEditingController();
 
   List<PartItemMachineModel> listItemMachineData = [];
+  List itemPartStepTujuh = [];
 
   bool isTapPartItemMachineInput = false;
   bool enableSave = false;
   int qtyStock = 0;
   int qtyUsed = 0;
   int subTotal = 0;
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String sparepart = "";
+  String no_sparepart = "";
+  String add_item = "";
+  String part_name = "";
+  String type_name = "";
+  String quantity_used = "";
+  String quantity_stock = "";
+  String cost = "";
+  String type_cost = "";
+  String subtotal2 = "";
+  String save_sparepart = "";
+  String cost_ = "";
+  String total_cost = "";
+  String back = "";
+  String next_eight = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal2 = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal2 = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
 
   void getItemUpdate(String idDataEcm) async {
     Map<String, dynamic> dataUpdateEcmPart = {};
@@ -48,6 +159,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
       qtyUsed = double.parse(dataUpdateEcmPart['used']).toInt();
       costRpController =
           TextEditingController(text: dataUpdateEcmPart['harga'].toString());
+
+      subTotal = qtyUsed * double.parse(costRpController.text).toInt();
     });
   }
 
@@ -65,13 +178,11 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   saveUpdatePart() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
+    print("tes update step 7");
 
     try {
       var resultUpdate = await partItemMachineService.saveUpdateFroEcm(
-          tokenUser,
-          widget.partIdEcm!,
-          qtyUsed.toString(),
-          costRpController.text);
+          tokenUser, widget.partIdEcm!, qtyUsed.toString(), "0");
       if (resultUpdate['response']['status'] == 200) {
         Fluttertoast.showToast(
           msg: 'Item berhasil diperbarui',
@@ -103,9 +214,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
     try {
       if (int.parse(qtyUsed) <= qtyStock) {
-        var result = await saveDataPartMachine(
-          tokenUser, idEcmKey!, idMesin!, partNameController.text, qtyStock.toString(), qtyUsed, costRpController.text
-        );
+        var result = await saveDataPartMachine(tokenUser, idEcmKey!, idMesin!,
+            partNameController.text, qtyStock.toString(), qtyUsed, "0");
         if (result['response']['status'] == 200) {
           prefs.setString("sparePartBool", "1");
           Fluttertoast.showToast(
@@ -123,14 +233,28 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             backgroundColor: Colors.greenAccent,
           );
         }
-      }else{
+      } else {
         Fluttertoast.showToast(
-            msg: 'Quantity used jangan melebihi stock',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.greenAccent,
-          );
+          msg: 'Quantity used tidak boleh melebihi stock',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
       }
+    } on SocketException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Koneksi Anda terputus, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    } on TimeoutException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Waktu koneksi Anda habis, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Terjadi kesalahan, periksa koneksi Anda',
@@ -141,13 +265,28 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     }
   }
 
+  void getItemForStep7() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idEcmKey = prefs.getString("idEcm") ?? "";
+
+    itemPartStepTujuh = await getItemStepTujuh(tokenUser, idEcmKey);
+  }
+
   @override
   void initState() {
     getPartItembyMacchine();
 
-    widget.isFromUpdate == true ? getItemUpdate(widget.partIdEcm!) : null;
+    if (widget.isFromUpdate == true) {
+      getItemUpdate(widget.partIdEcm!);
+      setState(() {
+        enableSave = true;
+      });
+    }
 
     super.initState();
+    setBahasa();
+    setLang();
   }
 
   @override
@@ -189,7 +328,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                                text: 'Part Name',
+                                text: part_name,
                                 style: TextStyle(color: Color(0xFF404446))),
                             TextSpan(
                                 text: ' * ',
@@ -203,24 +342,25 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 4),
-                      height: 40,
+                      height: 60,
                       decoration: BoxDecoration(
                           border: Border.all(color: const Color(0xFF979C9E)),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(5))),
                       child: TextFormField(
                         controller: partNameController,
+                        maxLength: 50,
                         style: const TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF404446),
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(top: 10, left: 10),
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
-                            hintText: 'Type Item Name'),
+                            hintText: type_name),
                       ),
                     ),
                     Container(
@@ -236,7 +376,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Quantity (Used)',
+                                    text: quantity_used,
                                     style: TextStyle(color: Color(0xFF404446))),
                                 TextSpan(
                                     text: ' * ',
@@ -260,6 +400,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   onTap: () {
                                     setState(() {
                                       qtyUsed != 0 ? qtyUsed-- : null;
+
+                                      int costRp =
+                                          costRpController.text.isNotEmpty
+                                              ? int.parse(costRpController.text)
+                                              : 0;
+
+                                      subTotal = qtyUsed * costRp;
+
                                       if (qtyUsed == 0) {
                                         enableSave = false;
                                       }
@@ -286,6 +434,14 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                   onTap: () {
                                     setState(() {
                                       qtyUsed++;
+
+                                      int costRp =
+                                          costRpController.text.isNotEmpty
+                                              ? int.parse(costRpController.text)
+                                              : 0;
+
+                                      subTotal = qtyUsed * costRp;
+
                                       enableSave = true;
                                     });
                                   },
@@ -317,7 +473,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Quantity (Stock)',
+                                    text: quantity_stock,
                                     style: TextStyle(color: Color(0xFF404446))),
                                 TextSpan(
                                     text: ' * ',
@@ -351,7 +507,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                                     height: 30,
                                     child: Icon(
                                       Icons.remove,
-                                      color: Color(0xFF979C9E),
+                                      color: qtyStock != 0
+                                          ? Color(0xFF20519F)
+                                          : Color(0xFF979C9E),
                                     ),
                                   ),
                                 ),
@@ -383,58 +541,79 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         ],
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 16),
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'Cost (Rp)',
-                                style: TextStyle(color: Color(0xFF404446))),
-                            TextSpan(
-                                text: ' * ',
-                                style: TextStyle(color: Colors.red)),
-                            TextSpan(
-                                text: ':',
-                                style: TextStyle(color: Color(0xFF404446))),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 5),
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: TextFormField(
-                        controller: costRpController,
-                        onChanged: (value) {
-                          int costRp = int.parse(value);
+                    // Container(
+                    //   margin: const EdgeInsets.only(top: 16),
+                    //   child: RichText(
+                    //     text: TextSpan(
+                    //       style: TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         fontSize: 16,
+                    //       ),
+                    //       children: <TextSpan>[
+                    //         TextSpan(
+                    //             text: cost,
+                    //             style: TextStyle(color: Color(0xFF404446))),
+                    //         TextSpan(
+                    //             text: ' * ',
+                    //             style: TextStyle(color: Colors.red)),
+                    //         TextSpan(
+                    //             text: ':',
+                    //             style: TextStyle(color: Color(0xFF404446))),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    // Container(
+                    //   padding: EdgeInsets.all(4),
+                    //   margin: const EdgeInsets.only(top: 5),
+                    //   height: 50,
+                    //   decoration: BoxDecoration(
+                    //       border: Border.all(color: const Color(0xFF979C9E)),
+                    //       borderRadius:
+                    //           const BorderRadius.all(Radius.circular(5))),
+                    //   child: TextFormField(
+                    //     controller: costRpController,
+                    //     maxLength: 7,
+                    //     onChanged: (value) {
+                    //       if (value.length <= 7) {
+                    //         int costRp = value.isEmpty ? 0 : int.parse(value);
 
-                          setState(() {
-                            subTotal = qtyUsed * costRp;
-                          });
-                        },
-                        keyboardType: TextInputType.number,
-                        style: const TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF404446),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(top: 10, left: 10),
-                            border:
-                                OutlineInputBorder(borderSide: BorderSide.none),
-                            hintText: 'Type the cost'),
-                      ),
-                    ),
+                    //         setState(() {
+                    //           subTotal = qtyUsed * costRp;
+                    //         });
+                    //       } else {
+                    //         Fluttertoast.showToast(
+                    //           msg: 'Cost tidak boleh melebihi 7 angka',
+                    //           toastLength: Toast.LENGTH_SHORT,
+                    //           gravity: ToastGravity.BOTTOM,
+                    //           backgroundColor: Colors.greenAccent,
+                    //         );
+                    //       }
+                    //     },
+                    //     keyboardType: TextInputType.number,
+                    //     style: const TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         color: Color(0xFF404446),
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w400,
+                    //         fontStyle: FontStyle.normal),
+                    //     decoration: InputDecoration(
+                    //         contentPadding: EdgeInsets.only(
+                    //           top: 10,
+                    //         ),
+                    //         border:
+                    //             OutlineInputBorder(borderSide: BorderSide.none),
+                    //         hintText: type_cost),
+                    //   ),
+                    // ),
+                    // Visibility(
+                    //   visible: false,
+                    //   child: Column(
+                    //     children: [
+
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -447,26 +626,29 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Sub Total (Rp) :",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          Text(
-                            subTotal.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
+                    Visibility(
+                      visible: false,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              subtotal2,
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            Text(
+                              subTotal.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     InkWell(
@@ -491,7 +673,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            "Save Spare part",
+                            save_sparepart,
                             style: TextStyle(
                                 fontFamily: 'Rubik',
                                 color: Colors.white,

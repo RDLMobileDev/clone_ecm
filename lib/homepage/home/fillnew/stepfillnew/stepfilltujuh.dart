@@ -1,6 +1,10 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, avoid_unnecessary_containers, curly_braces_in_flow_control_structures
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
@@ -19,6 +23,109 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController streamController = StreamController();
   late Timer _timer;
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String sparepart = "";
+  String no_sparepart = "";
+  String add_item = "";
+  String part_name = "";
+  String type_name = "";
+  String quantity_used = "";
+  String quantity_stock = "";
+  String cost = "";
+  String type_cost = "";
+  String subtotal = "";
+  String save_sparepart = "";
+  String cost_ = "";
+  String total_cost = "";
+  String back = "";
+  String next_eight = "";
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        sparepart = dataLang['step_7']['sparepart'];
+        no_sparepart = dataLang['step_7']['no_sparepart'];
+        add_item = dataLang['step_7']['add_item'];
+        part_name = dataLang['step_7']['part_name'];
+        type_name = dataLang['step_7']['type_name'];
+        quantity_used = dataLang['step_7']['quantity_used'];
+        quantity_stock = dataLang['step_7']['quantity_stock'];
+        cost = dataLang['step_7']['cost'];
+        total_cost = dataLang['step_7']['total_cost'];
+        back = dataLang['step_7']['back'];
+        next_eight = dataLang['step_7']['next_eight'];
+        subtotal = dataLang['step_7']['subtotal'];
+        save_sparepart = dataLang['step_7']['save_sparepart'];
+        cost_ = dataLang['step_7']['cost_'];
+        type_cost = dataLang['step_7']['type_cost'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
 
   List<PartItemMachineSavedModel> _listDataPartSaved = [];
 
@@ -41,27 +148,177 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
     // print(idEcmData);
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
+
     // var idPart = prefs.getString("idPartItemMachine");
     print("id data: $idEcmData");
 
-    var result = await partItemMachineSaveService.deletePartItemMachineSaved(
-        idEcmData, tokenUser);
+    try {
+      var result = await partItemMachineSaveService.deletePartItemMachineSaved(
+          idEcmData, tokenUser);
 
-    print(result);
+      print(result);
 
-    // getDataPartItemSaved();
+      // getDataPartItemSaved();
 
-    Fluttertoast.showToast(
-        msg: 'Item dihapus',
+      Fluttertoast.showToast(
+          msg: 'Item dihapus',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+    } on SocketException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Koneksi Anda terputus, coba lagi nanti',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
         backgroundColor: Colors.greenAccent,
-        textColor: Colors.white,
-        fontSize: 16);
+      );
+    } on TimeoutException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Waktu koneksi Anda terputus, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    } on PlatformException catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Terjadi gangguan di sistem Anda, coba lagi nanti',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Terjadi kesalahan, periksa koneksi Anda',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.greenAccent,
+      );
+    }
   }
 
-  void addItemStep7Finish() async {
+  void confirmDelete(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.topRight,
+                child: Image.asset(
+                  "assets/icons/X.png",
+                  width: 20,
+                ),
+              ),
+            ),
+            Container(
+              child: Center(
+                  child: Image.asset(
+                "assets/icons/Sign.png",
+                width: 100,
+              )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 8),
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Text(
+                  "Confirm",
+                  style: TextStyle(
+                      color: Color(0xFF404446),
+                      fontFamily: 'Rubik',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Text(
+                  "Are you sure want to delete item?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color(0xFF404446),
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      width: 115,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF00AEDB)),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Center(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                              color: Color(0xFF00AEDB),
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 14,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      deletePartMachineSaved(
+                          _listDataPartSaved[index].ecmPartId);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                        width: 115,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFEB3434),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Delete",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void setBoolItemStep7() async {
     final prefs = await _prefs;
     prefs.setString("sparePartBool", "0");
   }
@@ -69,10 +326,12 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   @override
   void initState() {
     getDataPartItemSaved();
-    addItemStep7Finish();
+    setBoolItemStep7();
     _timer =
         Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
     print("tes step 7");
+    setBahasa();
+    setLang();
     super.initState();
   }
 
@@ -87,12 +346,13 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.58,
       child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Text("Spare Part",
+              child: Text(sparepart,
                   style: TextStyle(
                     fontFamily: 'Rubik',
                     fontWeight: FontWeight.w400,
@@ -134,7 +394,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                 width: 250,
                               ),
                               Center(
-                                child: Text("No spare part yet",
+                                child: Text(no_sparepart,
                                     style: TextStyle(
                                       fontFamily: 'Rubik',
                                       color: Color(0xFF00AEDB),
@@ -182,7 +442,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                       children: [
                                         Container(
                                           child: Text(
-                                              "Cost: ${_listDataPartSaved[i].totalHarga}",
+                                              "$cost_ ${_listDataPartSaved[i].totalHarga}",
                                               style: TextStyle(
                                                 fontFamily: 'Rubik',
                                                 color: Colors.white,
@@ -196,30 +456,28 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
+                                              // InkWell(
+                                              //   onTap: () {
+                                              //     Navigator.of(context).push(
+                                              //         MaterialPageRoute(
+                                              //             builder: (context) =>
+                                              //                 AddItemFillTujuh(
+                                              //                   isFromUpdate:
+                                              //                       true,
+                                              //                   partIdEcm:
+                                              //                       _listDataPartSaved[
+                                              //                               i]
+                                              //                           .ecmPartId,
+                                              //                 )));
+                                              //   },
+                                              //   child: Image.asset(
+                                              //     "assets/icons/akar-icons_edit.png",
+                                              //     width: 20,
+                                              //   ),
+                                              // ),
                                               InkWell(
                                                 onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AddItemFillTujuh(
-                                                                isFromUpdate:
-                                                                    true,
-                                                                partIdEcm:
-                                                                    _listDataPartSaved[
-                                                                            i]
-                                                                        .ecmPartId,
-                                                              )));
-                                                },
-                                                child: Image.asset(
-                                                  "assets/icons/akar-icons_edit.png",
-                                                  width: 20,
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  deletePartMachineSaved(
-                                                      _listDataPartSaved[i]
-                                                          .ecmPartId);
+                                                  confirmDelete(i);
                                                 },
                                                 child: Image.asset(
                                                   "assets/icons/trash.png",
@@ -259,7 +517,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                               )));
                     },
               child: Container(
-                margin: EdgeInsets.only(top: 50),
+                margin: EdgeInsets.only(top: 10),
                 width: MediaQuery.of(context).size.width,
                 height: 40,
                 decoration: BoxDecoration(
@@ -276,7 +534,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        "Add Item",
+                        add_item,
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Colors.white,

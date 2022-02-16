@@ -23,6 +23,11 @@ class StepFillEmpat extends StatefulWidget {
 
 class _StepFillEmpatState extends State<StepFillEmpat> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  String data = "Item deleted successfully";
+
+  List<ItemChecking> _listItemChecking = [];
+  StreamController step4getController = StreamController();
+  late Timer _timer;
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -56,6 +61,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   String delete = '';
   String validation_checked = '';
   String add_item_ = '';
+  int waitingTime = 0;
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -169,18 +175,19 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  String data = "Item deleted successfully";
-
-  List<ItemChecking> _listItemChecking = [];
-
-  void getDataItemChecking() async {
+  Future<List> getDataItemChecking() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
-    String? ecmId = prefs.getString("idEcm") ?? "-";
-    String? userId = prefs.getString("idKeyUser") ?? "-";
+    String ecmId = prefs.getString("idEcm") ?? "-";
+    String userId = prefs.getString("idKeyUser") ?? "-";
 
     try {
+      print("ecm id: $ecmId");
+      print("user id: $userId");
       var data = await getFillNewEmpat(ecmId, userId, token);
+
+      print("data from hasil input form step 4");
+      print(data['data']);
 
       switch (data["response"]['status']) {
         case 200:
@@ -189,18 +196,18 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                 .map((e) => ItemChecking.fromJson(e))
                 .toList();
           });
+
+          step4getController.add(_listItemChecking);
+
           break;
         default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
+          setState(() {
+            _listItemChecking = [];
+          });
           break;
       }
+
+      return _listItemChecking;
     } catch (e) {
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -211,23 +218,27 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
         exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
       }
 
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+      // Fluttertoast.showToast(
+      //     msg: exceptionMessage,
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     timeInSecForIosWeb: 2,
+      //     backgroundColor: Colors.greenAccent,
+      //     textColor: Colors.white,
+      //     fontSize: 16);
+      return [];
     }
   }
 
-  void deleteItemChecking() async {
+  void deleteItemChecking(String idEcmItem) async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idEcmItem = prefs.getString("idEcmItem");
+    // String? idEcmItem = prefs.getString("idEcmItem");
 
-    var result = await fillNewEmpatDelete(idEcmItem ?? "-", tokenUser);
+    var result = await fillNewEmpatDelete(idEcmItem, tokenUser);
+
+    print("response delete:");
+    print(result);
 
     try {
       String resultMessage = "Item berhasil dihapus";
@@ -248,7 +259,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
           backgroundColor: Colors.greenAccent,
           textColor: Colors.white,
           fontSize: 16);
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } catch (e) {
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -270,7 +281,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     }
   }
 
-  void confirmDelete() {
+  void confirmDelete(String ecmItemId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -359,7 +370,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                   ),
                   InkWell(
                     onTap: () async {
-                      deleteItemChecking();
+                      deleteItemChecking(ecmItemId);
                     },
                     child: Container(
                         width: 115,
@@ -387,46 +398,61 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
     );
   }
 
-  void setBoolItemStep4() async {
-    final prefs = await _prefs;
-    prefs.setString("itemStep4Bool", "0");
-  }
-
   @override
   void initState() {
     super.initState();
     getDataItemChecking();
-    setBoolItemStep4();
+    // _timer =
+    // Timer.periodic(Duration(seconds: 10), (e) => getDataItemChecking());
+    // Future.delayed(Duration(seconds: 3), () => getDataItemChecking());
     setLang();
     setBahasa();
   }
 
   @override
+  void dispose() {
+    // if (_timer.isActive) _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.58,
       child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: RichText(
-                text: TextSpan(
-                  text: item_checking,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: item_checking,
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Color(0xFF404446),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Timer(
+                            Duration(seconds: 3), () => getDataItemChecking());
+                      },
+                      icon: Icon(Icons.refresh))
+                ],
               ),
             ),
             SizedBox(
@@ -434,29 +460,29 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: _listItemChecking.isEmpty
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/images/empty.png",
-                            width: 250,
-                          ),
-                          Center(
-                            child: Text(validation_checked,
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF00AEDB),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      child: ListView.builder(
+              child: Container(
+                child: _listItemChecking.isEmpty
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "assets/images/checking.png",
+                              width: 250,
+                            ),
+                            Center(
+                              child: Text(validation_checked,
+                                  style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFF00AEDB),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: _listItemChecking.length,
@@ -530,7 +556,9 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                                           ),
                                           InkWell(
                                             onTap: () {
-                                              confirmDelete();
+                                              confirmDelete(_listItemChecking[i]
+                                                  .ecmitemId
+                                                  .toString());
                                             },
                                             child: Image.asset(
                                               "assets/icons/trash.png",
@@ -547,7 +575,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                           );
                         },
                       ),
-                    ),
+              ),
             ),
             InkWell(
               onTap: _listItemChecking.length == 6
@@ -569,7 +597,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
                       if (isInputted) {
                         // setState(() => getDataItemChecking());
-                        prefs.setString("itemStep4Bool", "1");
+                        // prefs.setString("itemStep4Bool", "1");
                         getDataItemChecking();
                       }
                     },

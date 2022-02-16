@@ -5,7 +5,10 @@ class StepEnamModel {
   String? repairM;
   String? hasilRepairH;
   String? hasilRepairM;
+  String? inHouseCost;
+  String? adminCost;
   String? mP;
+  String? outHouseRp;
 
   StepEnamModel(
       {this.checkH,
@@ -14,7 +17,10 @@ class StepEnamModel {
       this.repairM,
       this.hasilRepairH,
       this.hasilRepairM,
-      this.mP});
+      this.inHouseCost,
+      this.adminCost,
+      this.mP,
+      this.outHouseRp});
 
   factory StepEnamModel.fromJson(Map<String, dynamic> json) {
     return StepEnamModel(
@@ -24,7 +30,10 @@ class StepEnamModel {
         repairM: json['repair_m'].toString(),
         hasilRepairH: json['hasil_checkrepair_h'].toString(),
         hasilRepairM: json['hasil_checkrepair_m'].toString(),
-        mP: json['m/p'].toString());
+        inHouseCost: json['inhousecost'].toString(),
+        adminCost: json['admincost'].toString(),
+        mP: json['m/p'].toString(),
+        outHouseRp: json['outhouse'].toString());
   }
 
   Map<String, dynamic> toJson() => {

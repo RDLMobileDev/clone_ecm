@@ -1,33 +1,42 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/steplimaitemmodel.dart';
+import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FormStepFilllima extends StatefulWidget {
   final bool? isUpdate;
+  String? idEcmItem;
 
-  const FormStepFilllima({Key? key, this.isUpdate}) : super(key: key);
+  FormStepFilllima({Key? key, this.isUpdate, this.idEcmItem}) : super(key: key);
 
   @override
   _FormStepFilllimaState createState() => _FormStepFilllimaState();
 }
 
 class _FormStepFilllimaState extends State<FormStepFilllima> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController? startTimePickerController;
   TextEditingController? endTimePickerController;
+  TextEditingController repairMadeController = TextEditingController();
   final TextEditingController tecItem = TextEditingController();
-  final TextEditingController tecName = TextEditingController();
+  TextEditingController tecName = TextEditingController();
+  TextEditingController usernameStepLima = TextEditingController();
   List<ItemChecking> _listData = [];
   String _username = "";
+
+  bool itemNameTapped = false;
 
   Map<String, bool> noteOptions = {
     "ok": false,
@@ -56,59 +65,216 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   final DateTime now = DateTime.now();
 
   void getItemStepLimaforUpdate() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String? userId = prefs.getString("idKeyUser") ?? "-";
-    String? idEcmItem = prefs.getString("idEcmItem");
+    final prefs = await _prefs;
 
-    try {
-      final data = await getFillLimaItem(idEcmItem!, userId, token);
+    print(widget.idEcmItem);
 
-      switch (data["response"]['status']) {
-        case 200:
-          var dataItem = (data['data'] as List)
-              .map((e) => StepLimaItemModel.fromJson(e))
-              .toList();
-          setState(() {
-            formValue = {
-              "item": dataItem[0].partNama!,
-              "note": dataItem[0].note!,
-              "start": dataItem[0].tEcmitemStart!,
-              "end": dataItem[0].tEcmitemEnd!,
-              "name": dataItem[0].userName!,
-              "repair": dataItem[0].repairMade!,
-            };
-          });
-          break;
-        default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          break;
-      }
-    } catch (e) {
-      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
-      if (e is SocketException) {
-        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
-      }
+    var idUser = prefs.getString("idKeyUser").toString();
 
-      if (e is TimeoutException) {
-        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
-      }
+    String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
+    String noteStep5 = prefs.getString("noteStep5") ?? "";
+    String startTimeStep5 = prefs.getString("startTimeStep5") ?? "";
+    String endTimeStep5 = prefs.getString("endTimeStep5") ?? "";
+    String repairMade = prefs.getString("repairMade") ?? "";
 
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+    formValidations.updateAll((key, value) => true);
+
+    if (itemNameStepLima.isNotEmpty && itemNameStepLima != "") {
+      tecName = TextEditingController(text: itemNameStepLima);
+    }
+
+    if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ok") {
+      setState(() {
+        noteOptions["ok"] = true;
+        noteOptions["limit"] = false;
+        noteOptions["ng"] = false;
+
+        formValue["note"] = noteStep5;
+      });
+    } else if (noteStep5.isNotEmpty &&
+        noteStep5 != "" &&
+        noteStep5 == "limit") {
+      setState(() {
+        noteOptions["ok"] = false;
+        noteOptions["limit"] = true;
+        noteOptions["ng"] = false;
+        formValue["note"] = noteStep5;
+      });
+    } else if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ng") {
+      setState(() {
+        noteOptions["ok"] = false;
+        noteOptions["limit"] = false;
+        noteOptions["ng"] = true;
+        formValue["note"] = noteStep5;
+      });
+    }
+
+    if (startTimeStep5.isNotEmpty && startTimeStep5 != "") {
+      setState(() {
+        startTimePickerController = TextEditingController(text: startTimeStep5);
+        formValue["start"] = startTimeStep5;
+      });
+    }
+
+    if (endTimeStep5.isNotEmpty && endTimeStep5 != "") {
+      setState(() {
+        endTimePickerController = TextEditingController(text: endTimeStep5);
+        formValue["end"] = endTimeStep5;
+      });
+    }
+
+    if (repairMade.isNotEmpty && repairMade != "") {
+      setState(() {
+        repairMadeController = TextEditingController(text: repairMade);
+        formValue["repair"] = repairMade;
+      });
+    }
+
+    setState(() {
+      _username = prefs.getString("usernameKey") ?? "";
+      usernameStepLima = TextEditingController(text: _username);
+    });
+  }
+
+  //set Bahasa
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String item_repairing = '';
+  String validation_repair = '';
+  String add_item = '';
+  String item_repair = '';
+  String item_name = '';
+  String type_name_item = '';
+  String note = '';
+  String ok = '';
+  String limit = '';
+
+  String ng = '';
+  String starttime = '';
+  String hm = '';
+  String end_time = '';
+  String name = '';
+  String type_name = '';
+
+  String repair_made = '';
+  String type_message = '';
+  String save_repair = '';
+  String repair_time = '';
+  String total_repair = '';
+  String back = '';
+  String confirm = '';
+  String delete = '';
+  String validation_delete = '';
+  String cancel = '';
+
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        item_name = dataLang['step_5']['item_name'];
+        item_repair = dataLang['step_5']['item_repair'];
+        validation_repair = dataLang['step_5']['validation_repair'];
+        add_item = dataLang['step_5']['add_item'];
+        item_repairing = dataLang['step_5']['item_repairing'];
+        type_name_item = dataLang['step_5']['type_name_item'];
+
+        note = dataLang['step_5']['note'];
+        ok = dataLang['step_5']['ok'];
+        limit = dataLang['step_5']['limit'];
+        ng = dataLang['step_5']['ng'];
+        starttime = dataLang['step_5']['starttime'];
+        hm = dataLang['step_5']['hm'];
+        end_time = dataLang['step_5']['end_time'];
+        name = dataLang['step_5']['name'];
+        type_name = dataLang['step_5']['type_name'];
+
+        repair_made = dataLang['step_5']['repair_made'];
+        type_message = dataLang['step_5']['type_message'];
+        save_repair = dataLang['step_5']['save_repair'];
+        repair_time = dataLang['step_5']['repair_time'];
+        total_repair = dataLang['step_5']['total_repair'];
+
+        back = dataLang['step_5']['back'];
+        confirm = dataLang['step_5']['confirm'];
+        validation_delete = dataLang['step_5']['validation_delete'];
+        cancel = dataLang['step_5']['cancel'];
+        delete = dataLang['step_5']['delete'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      item_name = dataLang['step_5']['item_name'] ?? "Item Name";
+      item_repair = dataLang['step_5']['item_repair'];
+      validation_repair = dataLang['step_5']['validation_repair'];
+      add_item = dataLang['step_5']['add_item'];
+      item_repairing = dataLang['step_5']['item_repairing'];
+      type_name_item = dataLang['step_5']['type_name_item'];
+
+      note = dataLang['step_5']['note'];
+      ok = dataLang['step_5']['ok'];
+      limit = dataLang['step_5']['limit'];
+      ng = dataLang['step_5']['ng'];
+      starttime = dataLang['step_5']['starttime'];
+      hm = dataLang['step_5']['hm'];
+      end_time = dataLang['step_5']['end_time'];
+      name = dataLang['step_5']['name'];
+      type_name = dataLang['step_5']['type_name'];
+
+      repair_made = dataLang['step_5']['repair_made'];
+      type_message = dataLang['step_5']['type_message'];
+      save_repair = dataLang['step_5']['save_repair'];
+      repair_time = dataLang['step_5']['repair_time'];
+      total_repair = dataLang['step_5']['total_repair'];
+
+      back = dataLang['step_5']['back'];
+      confirm = dataLang['step_5']['confirm'];
+      validation_delete = dataLang['step_5']['validation_delete'];
+      cancel = dataLang['step_5']['cancel'];
+      delete = dataLang['step_5']['delete'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
     }
   }
 
@@ -117,9 +283,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String token = prefs.getString("tokenKey").toString();
     String? ecmId = prefs.getString("idEcm") ?? "-";
     String? userId = prefs.getString("idKeyUser") ?? "-";
+    print("from step 5 item");
+    print(ecmId);
 
     try {
       var data = await getFillNewEmpat(ecmId, userId, token);
+
+      print(data);
 
       switch (data["response"]['status']) {
         case 200:
@@ -161,15 +331,40 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     }
   }
 
-  void getStartTime() {
+  void getStartTime() async {
+    final prefs = await _prefs;
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
       setState(() {
+        if (endTimePickerController?.text != null &&
+            _isEndTimeGreaterThanStart(
+                endTimePickerController!.text, value!.format(context))) {
+          Fluttertoast.showToast(
+            msg: "Start time harus lebih kecil dari end time",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+          return;
+        }
+
         formValidations["start"] = true;
         startTimePickerController =
             TextEditingController(text: value!.format(context));
+        prefs.setString("startTimeStep5", value.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
@@ -179,15 +374,39 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     });
   }
 
-  void getEndTime() {
+  void getEndTime() async {
+    final prefs = await _prefs;
     showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: now.hour, minute: now.minute))
-        .then((value) {
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+                // Using 24-Hour format
+                alwaysUse24HourFormat: true),
+            // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+            child: child!);
+      },
+    ).then((value) {
+      if (startTimePickerController?.text != null &&
+          !_isEndTimeGreaterThanStart(
+              startTimePickerController!.text, value!.format(context))) {
+        Fluttertoast.showToast(
+          msg: "End time harus lebih besar dari start time",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+        return;
+      }
       setState(() {
         formValidations["end"] = true;
         endTimePickerController =
-            TextEditingController(text: value!.format(context));
+            TextEditingController(text: value?.format(context));
+        prefs.setString("endTimeStep5", value!.format(context));
 
         DateTime convertedValue =
             DateFormat("HH:mm").parse(value.format(context));
@@ -209,7 +428,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       String resultMessage = "Data disimpan";
       var result = await fillNewLimaInsert(
         token: tokenUser,
-        ecmItemId: ecmItemId,
+        ecmItemId: widget.isUpdate == true ? widget.idEcmItem : ecmItemId,
         userId: idUser,
         repairMessage: formValue["repair"],
         note: formValue["note"],
@@ -222,6 +441,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
       switch (result['response']['status']) {
         case 200:
+          prefs.setString("itemRepairBool", "1");
           Navigator.of(context).pop(true);
           break;
         default:
@@ -264,8 +484,36 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _username = prefs.getString("usernameKey") ?? "";
+      usernameStepLima = TextEditingController(text: _username);
       formValidations["name"] = true;
       formValue["name"] = _username;
+    });
+  }
+
+  bool _isEndTimeGreaterThanStart(String start, String end) {
+    DateFormat format = DateFormat("HH:mm");
+    DateTime parsedStart = format.parse(start);
+    DateTime parsedEnd = format.parse(end);
+    return parsedStart.isBefore(parsedEnd);
+  }
+
+  void timerGetDataStep4() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (timer.tick == 10 && _listData.isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Data item gagal dimuat",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        Navigator.of(context).pop();
+        timer.cancel();
+      } else {
+        timer.cancel();
+      }
+      getStep4Data();
     });
   }
 
@@ -275,9 +523,17 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   @override
   void initState() {
     super.initState();
-    getStep4Data();
+    setBahasa();
+    setLang();
+
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
+      timerGetDataStep4();
+      // Future.delayed(Duration(seconds: 3), () => getStep4Data());
+      // getUsernameSession();
+    } else {
+      // Future.delayed(Duration(seconds: 3), () => getStep4Data());
+      timerGetDataStep4();
     }
     getUsernameSession();
   }
@@ -300,305 +556,122 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       ),
       backgroundColor: Colors.white,
       body: Container(
+        height: MediaQuery.of(context).size.height,
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             Container(
+              child: Column(
+                children: <Widget>[
+                   Container(
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                'Item Name',
-                textAlign: TextAlign.left,
-                style: const TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: item_name,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 40,
               margin: const EdgeInsets.only(top: 10),
-              child: InputDecorator(
+              child: TextFormField(
+                controller: tecName,
+                showCursor: true,
+                readOnly: true,
+                onTap: () {
+                  setState(() {
+                    itemNameTapped = !itemNameTapped;
+                  });
+                },
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 18),
-                  fillColor: Colors.white,
-                  focusedBorder: InputBorder.none,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  filled: true,
-                ),
-                child: RawAutocomplete<ItemChecking>(
-                  displayStringForOption: _displayPartOption,
-                  optionsBuilder: (TextEditingValue tev) {
-                    return _listData.where((element) => element
-                        .toString()
-                        .contains(tev.text.toString().toLowerCase()));
-                  },
-                  onSelected: (item) {
-                    setState(() {
-                      formValidations["item"] =
-                          item.partNama.toString().isNotEmpty;
-                      formValue["item"] = item.partNama.toString();
-                    });
-                  },
-                  fieldViewBuilder: (context, textEditingController, focusNode,
-                      onFieldSubmitted) {
-                    return TextFormField(
-                      controller: textEditingController,
-                      focusNode: focusNode,
-                      readOnly: true,
-                      showCursor: false,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        hintText: "Type Item Name",
-                      ),
-                      onFieldSubmitted: (String value) {
-                        onFieldSubmitted();
-                        setState(() {
-                          formValidations["item"] = value.isNotEmpty;
-                          formValue["item"] = _listData
-                              .firstWhere((element) =>
-                                  value.contains(element.partNama ?? "-"))
-                              .partNama
-                              .toString();
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          textEditingController =
-                              TextEditingController(text: value);
-                          formValidations["item"] = value.isNotEmpty;
-                          formValue["item"] = _listData
-                              .firstWhere(
-                                  (element) =>
-                                      value.contains(element.partNama ?? "-"),
-                                  orElse: () => ItemChecking())
-                              .partNama
-                              .toString();
-                        });
-                      },
-                    );
-                  },
-                  optionsViewBuilder: (context, onSelected, options) {
-                    return Align(
-                      alignment: Alignment.topLeft,
-                      child: Material(
-                        elevation: 4.0,
-                        child: SizedBox(
-                          height: 200.0,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(8.0),
-                            itemCount: options.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final String option =
-                                  options.elementAt(index).partNama ?? "-";
-                              return GestureDetector(
-                                onTap: () {
-                                  onSelected(options.elementAt(index));
-                                  formValue["item"] = options
-                                      .elementAt(index)
-                                      .partNama
-                                      .toString();
-                                },
-                                child: ListTile(
-                                  title: Text(option),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              // TextField(
-              //   controller: tecItem,
-              //   keyboardType: TextInputType.text,
-              //   decoration: InputDecoration(
-              //       contentPadding: EdgeInsets.only(left: 18),
-              //       fillColor: Colors.white,
-              //       border: OutlineInputBorder(
-              //           borderRadius: BorderRadius.all(Radius.circular(5))),
-              //       filled: true,
-              //       hintText: 'Type Item Name'),
-              //   maxLines: 1,
-              //   onChanged: (value) {
-              //     setState(() {
-              //       formValidations["item"] = value.isNotEmpty;
-              //
-              //       formValue["item"] = value;
-              //     });
-              //   },
-              // ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                'Note',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey))),
               ),
             ),
-            Container(
-              height: 40,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 10, right: 10),
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: (noteOptions["ok"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Colors.transparent),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          noteOptions["ok"] = !(noteOptions["ok"] ?? false);
-                          noteOptions["limit"] = false;
-                          noteOptions["ng"] = false;
-
-                          formValidations["note"] =
-                              noteOptions.containsValue(true);
-                          formValue["note"] = "ok";
-                        });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.circle_outlined,
-                              color: (noteOptions["ok"] ?? false)
-                                  ? Color(0xFF00AEDB)
-                                  : Colors.grey,
-                              size: 20,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'OK',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'Rubik',
-                                color: (noteOptions["ok"] ?? false)
-                                    ? Color(0xFF00AEDB)
-                                    : Colors.black,
+            itemNameTapped == false
+                ? Container()
+                : _listData.isEmpty
+                    ? Container(
+                        margin: EdgeInsets.only(top: 5),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(
+                                height: 4,
                               ),
-                            )
-                          ],
+                              Text("Memuat nama item")
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _listData.length,
+                          itemBuilder: (context, i) {
+                            return InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    tecName = TextEditingController(
+                                        text: _listData[i].partNama);
+                                    formValidations["item"] = _listData[i]
+                                        .partNama
+                                        .toString()
+                                        .isNotEmpty;
+                                    itemNameTapped = !itemNameTapped;
+                                  });
+                                  prefs.setString("itemNameStepLima",
+                                      _listData[i].partNama.toString());
+                                  prefs.setString("idEcmItem",
+                                      _listData[i].ecmitemId.toString());
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Text(_listData[i].partNama!),
+                                ));
+                          },
                         ),
                       ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        noteOptions["limit"] = !(noteOptions["limit"] ?? false);
-                        noteOptions["ok"] = false;
-                        noteOptions["ng"] = false;
-
-                        formValidations["note"] =
-                            noteOptions.containsValue(true);
-                        formValue["note"] = "limit";
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10, right: 10),
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: (noteOptions["limit"] ?? false)
-                                  ? Color(0xFF00AEDB)
-                                  : Colors.grey),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Colors.transparent),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.change_history_outlined,
-                            color: (noteOptions["limit"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey,
-                            size: 20,
-                          ),
-                          Text(
-                            'Limit',
-                            style: TextStyle(
-                                color: (noteOptions["limit"] ?? false)
-                                    ? Color(0xFF00AEDB)
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontFamily: 'Rubik'),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        noteOptions["ng"] = !(noteOptions["ng"] ?? false);
-                        noteOptions["limit"] = false;
-                        noteOptions["ok"] = false;
-
-                        formValidations["note"] =
-                            noteOptions.containsValue(true);
-                        formValue["note"] = "ng";
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: (noteOptions["ng"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Colors.transparent),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.close,
-                            color: (noteOptions["ng"] ?? false)
-                                ? Color(0xFF00AEDB)
-                                : Colors.grey,
-                            size: 20,
-                          ),
-                          Text(
-                            'N / G',
-                            style: TextStyle(
-                                color: (noteOptions["ng"] ?? false)
-                                    ? Color(0xFF00AEDB)
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontFamily: 'Rubik'),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                'Start Time',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: starttime,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -645,10 +718,24 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 10),
-              child: Text(
-                'End Time',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+              child: RichText(
+                text: TextSpan(
+                  text: end_time,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -692,106 +779,342 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                 ],
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                'Name',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
+                ],
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              height: 40,
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                readOnly: true,
-                showCursor: false,
-                decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 18),
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    filled: true,
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                    hintText: 'Type Name'),
-                maxLines: 1,
-                controller: TextEditingController(text: _username),
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["name"] = value.isNotEmpty;
-
-                    formValue["name"] = value;
-                  });
-                },
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                'Repair made',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontFamily: 'Rubik'),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              child: TextFormField(
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: 'Type message...',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF979C9E)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+              child: Column(
+                children: <Widget>[
+                 
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: name,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    formValidations["repair"] = value.isNotEmpty;
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    height: 40,
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      // readOnly: true,
+                      // showCursor: false,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 18),
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          filled: true,
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          hintText: type_name),
+                      maxLines: 1,
+                      controller: usernameStepLima,
+                      onChanged: (value) {
+                        setState(() {
+                          formValidations["name"] = value.isNotEmpty;
 
-                    formValue["repair"] = value;
-                  });
-                },
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 50),
-              height: 40,
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          formValidations.containsValue(false)
-                              ? Colors.grey
-                              : Color(0xFF00AEDB)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ))),
-                  onPressed: formValidations.containsValue(false)
-                      ? null
-                      : () {
-                          saveStepInputRepairing();
-                        },
-                  child: Text(
-                    'Save Repairing',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Colors.white,
-                      fontSize: 16,
+                          formValue["name"] = value;
+                        });
+                      },
                     ),
-                  )),
-            ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: repair_made,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: TextFormField(
+                      controller: repairMadeController,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        hintText: type_message,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      onChanged: (value) async {
+                        final prefs = await _prefs;
+                        setState(() {
+                          formValidations["repair"] = value.isNotEmpty;
+
+                          formValue["repair"] = value;
+                        });
+                        prefs.setString("repairMade", value);
+                      },
+                    ),
+                  ),
+
+                   Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Judgement",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(top: 10, right: 10),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: (noteOptions["ok"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              color: Colors.transparent),
+                          child: InkWell(
+                            onTap: () async {
+                              final prefs = await _prefs;
+                              setState(() {
+                                noteOptions["ok"] =
+                                    !(noteOptions["ok"] ?? false);
+                                noteOptions["limit"] = false;
+                                noteOptions["ng"] = false;
+
+                                formValidations["note"] =
+                                    noteOptions.containsValue(true);
+                                formValue["note"] = "ok";
+                              });
+                              prefs.setString("noteStep5", "ok");
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle_outlined,
+                                    color: (noteOptions["ok"] ?? false)
+                                        ? Color(0xFF00AEDB)
+                                        : Colors.grey,
+                                    size: 20,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'OK',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik',
+                                      color: (noteOptions["ok"] ?? false)
+                                          ? Color(0xFF00AEDB)
+                                          : Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              noteOptions["limit"] =
+                                  !(noteOptions["limit"] ?? false);
+                              noteOptions["ok"] = false;
+                              noteOptions["ng"] = false;
+
+                              formValidations["note"] =
+                                  noteOptions.containsValue(true);
+                              formValue["note"] = "limit";
+                            });
+                            prefs.setString("noteStep5", "limit");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10, right: 10),
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: (noteOptions["limit"] ?? false)
+                                        ? Color(0xFF00AEDB)
+                                        : Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                                color: Colors.transparent),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.change_history_outlined,
+                                  color: (noteOptions["limit"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey,
+                                  size: 20,
+                                ),
+                                Text(
+                                  'Limit',
+                                  style: TextStyle(
+                                      color: (noteOptions["limit"] ?? false)
+                                          ? Color(0xFF00AEDB)
+                                          : Colors.grey,
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik'),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await _prefs;
+                            setState(() {
+                              noteOptions["ng"] = !(noteOptions["ng"] ?? false);
+                              noteOptions["limit"] = false;
+                              noteOptions["ok"] = false;
+
+                              formValidations["note"] =
+                                  noteOptions.containsValue(true);
+                              formValue["note"] = "ng";
+                            });
+                            prefs.setString("noteStep5", "ng");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: (noteOptions["ng"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                                color: Colors.transparent),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.close,
+                                  color: (noteOptions["ng"] ?? false)
+                                      ? Color(0xFF00AEDB)
+                                      : Colors.grey,
+                                  size: 20,
+                                ),
+                                Text(
+                                  'N / G',
+                                  style: TextStyle(
+                                      color: (noteOptions["ng"] ?? false)
+                                          ? Color(0xFF00AEDB)
+                                          : Colors.grey,
+                                      fontSize: 16,
+                                      fontFamily: 'Rubik'),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 50),
+                    height: 40,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                formValidations.containsValue(false)
+                                    ? Colors.grey
+                                    : Color(0xFF00AEDB)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ))),
+                        // onPressed: () {
+                        //   if (!formValidations.containsValue(false)) {
+                        //     saveStepInputRepairing();
+                        //   } else {}
+                        // },
+                        onPressed: () {
+                          if (!formValidations.containsValue(false) &&
+                              widget.isUpdate == true) {
+                            saveStepInputRepairing();
+                          } else if (!formValidations.containsValue(false)) {
+                            saveStepInputRepairing();
+                          } else {}
+                        },
+                        child: Text(
+                          widget.isUpdate == true
+                              ? 'Edit Repairing'
+                              : 'Save Repairing',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

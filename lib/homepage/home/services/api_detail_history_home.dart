@@ -2,15 +2,15 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future getHistoryAll(String token) async {
+Future getDetailHistoryEcm(String notifId, String token) async {
   String myUrl = MyUrl().getUrlDevice();
-  String url = "$myUrl/history_semua";
+  String url = "$myUrl/history_review?ecm_id=$notifId";
   final response = await http.get(Uri.parse(url), headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer $token'
   });
-  // print('Token : ${token}');
+  print('Token : ${token}');
   print(response.body);
 
   if (response.body.isNotEmpty) {

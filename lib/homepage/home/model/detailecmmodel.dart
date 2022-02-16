@@ -1,4 +1,5 @@
 class DetailEcmModel {
+  String? klasifikasi;
   String? foto;
   String? nama;
   String? lokasi;
@@ -39,7 +40,8 @@ class DetailEcmModel {
   String? totalCost;
 
   DetailEcmModel(
-      {this.foto,
+      {this.klasifikasi,
+      this.foto,
       this.nama,
       this.lokasi,
       this.tanggal,
@@ -80,6 +82,7 @@ class DetailEcmModel {
 
   factory DetailEcmModel.fromJson(Map<String, dynamic> json) {
     return DetailEcmModel(
+      klasifikasi: json['clasifikasi'].toString(),
       foto: json['foto'].toString(),
       nama: json['nama'].toString(),
       lokasi: json['lokasi'].toString(),
@@ -122,6 +125,7 @@ class DetailEcmModel {
   }
 
   Map<String, dynamic> toJson() => {
+        'clasifikasi': klasifikasi,
         'foto': foto,
         'nama': nama,
         'lokasi': lokasi,

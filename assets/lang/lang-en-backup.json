@@ -45,10 +45,7 @@
       "property_of": "Property of PT. Sugity Creatives",
       "home": "Home",
       "notif": "Notification",
-      "account": "Account",
-      "approved": "E-CM Approved",
-      "declined": "E-CM Declined",
-      "pending": "E-CM Pending"
+      "account": "Account"
     },
     "riwayat": {
       "no_riwayat": "History is empty",
@@ -61,10 +58,7 @@
       "a_hour_ago": "a hour ago",
       "one_week": "1 Week ago",
       "two_week": "2 Week ago",
-      "one_month": "1 Month ago",
-      "show": "Data monthly",
-      "his_empty": "No data",
-      "empty": "No data"
+      "one_month": "1 Month ago"
     },
     "detail": {
       "preventive": "Preventive Maintenance",
@@ -99,9 +93,7 @@
       "confirm": "Confirm",
       "valid_download": "You want to download this document?",
       "cancel": "Cancel",
-      "download": "Download",
-      "approved_esign": "ECM Card has been approved",
-      "declined_esign":  "ECM Card has been declined"
+      "download": "Download"
     },
     "setuju_e_sign": {
       "ecm_card_from": "E-CM Card from",
@@ -118,7 +110,7 @@
     },
     "informasi": {
       "informasi": "Information",
-      "symbol": "Symbol (Required to filled)",
+      "symbol": "Symbol *(Required to filled)",
       "rule_line_stop": "Rule line stop",
       "ten_minute": "> 10 minutes = G/L require e-sign",
       "fiveteen_minute": "> 15 minutes = C/L require e-sign",
@@ -129,7 +121,6 @@
       "loading": "Loading Notification...",
       "notification_all": "All Notification",
       "mark_all": "Mark all as read",
-      "mark_as_read": "All notification mark as read",
       "send_ecm": "Sent you a E-CM Card",
       "a_hour": "a hour ago",
       "review": "Review",
@@ -141,7 +132,6 @@
     "notifikasi_staff": {
       "notification_all": "All Notification",
       "mark_all": "Mark all as read",
-      "mark_as_read": "All notification mark as read",
       "was_approve": "Was Approve your E-CM Card",
       "a_hour": "a hour ago",
       "one_day": "1 Day ago"
@@ -163,11 +153,11 @@
       "sparepart": "Spare Part",
       "no_sparepart": "No spare part yet",
       "add_item": "Add Item",
-      "part_name": "Part Name ",
+      "part_name": "Part Name *",
       "type_name": "Type Item Name",
-      "quantity_used": "Quantity (Used)",
-      "quantity_stock": "Quantity (Stock)",
-      "cost": "Cost (Rp)",
+      "quantity_used": "Quantity (Used) * :",
+      "quantity_stock": "Quantity (Stock) * :",
+      "cost": "Cost (Rp) *",
       "type_cost": "Type the Cost",
       "subtotal": "Sub Total (Rp):",
       "save_sparepart": "Save Spare Part",
@@ -178,13 +168,13 @@
     },
     "step_6": {
       "improvement": "Improvement/Kaizen",
-      "name": "Name",
+      "name": "Name *",
       "type_name": "Type Name",
-      "idea": "Idea",
+      "idea": "Idea*",
       "type_idea": "Type your idea",
       "working_time": "Working Time",
-      "repair": "Check + Repair",
-      "breaktime": "Break Time",
+      "repair": "Check + Repair :",
+      "breaktime": "Break Time (H)* :",
       "bm": "BM :",
       "in_house": "In-House M/P Cost (Rp)",
       "cost_": "Cost",
@@ -197,7 +187,7 @@
       "validation_repair": "Haven’t repaired the item yet",
       "add_item": "Add Item",
       "item_repair": "Item Repair",
-      "type_name_item": "Type Item Name",
+      "type_name": "Type Item Name",
       "note": "Note",
       "ok": "OK",
       "limit": "Limit",
@@ -206,7 +196,6 @@
       "hm": "HH:MM",
       "end_time": "End Time",
       "name": "Name",
-      "type_name": "Type Name",
       "repair_made": "Repair made",
       "type_message": "Type message..",
       "save_repair": "Save Repairing",
@@ -217,12 +206,10 @@
       "validation_delete": "Are you sure want to delete item?",
       "cancel": "Cancel",
       "delete": "Delete",
-      "next_six": "Next 6/8",
-      "item_name": "Item Name"
+      "next_six": "Next 6/8"
     },
     "step_4": {
       "item_checking": "Item Checking",
-      "validation_checked": "Haven’t checked item yet",
       "validation_repair": "Haven’t repaired the item yet",
       "add_item": "Add Checking Item",
       "item_check": "Item Check",
@@ -247,19 +234,19 @@
       "validation_delete": "Are you sure want to delete item?",
       "cancel": "Cancel",
       "delete": "Delete",
-      "add_item_": "Add Item",
-      "next_five": "Next 5/8"
+      "next_five": "Next 5/8", 
+      "validation_checked": "Haven’t checked the item yet"
     },
     "step_3": {
-      "why_analysis": "Why Analysis",
-      "why": "Why 1",
-      "how": "How",
+      "why_analysis": "Why Analysis * :",
+      "why": "Why 1 *",
+      "how": "How *",
       "type_message": "Type message...",
       "back": "Back",
       "next_four": "Next 4/8"
     },
     "step_2": {
-      "incident": "Incident",
+      "incident": "Incident *",
       "shift_a": "Shift A",
       "shift_b": "Shift B",
       "shift_ns": "Shift N/S",
@@ -269,21 +256,20 @@
       "quality": "Quality",
       "delivery": "Delivery",
       "cost": "Cost",
-      "percentage": "Percentage Mistake",
+      "percentage": "Percentage Mistake *",
       "utility": "Utility",
       "molding": "Molding",
       "production": "Production",
       "engineering": "Engineering",
       "other": "Other",
-      "picture": "Photo",
-      "addmax": "Tap to add, max 4 photos",
+      "picture": "Picture *",
+      "addmax": "Tap to add, max 4 photo",
       "select_image": "Select Image Use",
       "gallery": "Gallery",
       "camera": "Camera",
       "back": "Back",
       "crop": "Crop",
       "add_more": "Add more",
-      "picture_analysis": "Picture and Analysis",
       "next_three": "Next 3/8"
     },
     "step_1": {
@@ -291,14 +277,13 @@
       "b_m": "Breakdown Maintenance",
       "p_m": "Preventive Maintenance",
       "i_m": "Information Maintenance",
-      "tanggal": "Date",
+      "tanggal": "Date *",
       "hbt": "DD/MM/YYYY",
-      "t_m": "Team Member",
+      "t_m": "Team Member *",
       "selectmember": "Select Member",
-      "factory": "Factory",
+      "factory": "Factory *",
       "select_factory": "Select Factory",
-      "select_factory_group": "Select factory group",
-      "group_area": "Group Area",
+      "group_area": "Group Area *",
       "select_group_area": "Select Group Area",
       "machine_name": "Machine Name",
       "type_machine": "Type Machine",
@@ -306,6 +291,11 @@
       "type_machine_number": "Type Machine Number",
       "cancel": "Cancel",
       "next_two": "Next"
+    },
+    "notification": {
+      "all_notification": "All Notification",
+      "mark": "Mark all as read",
+      "notification": "Loading notifications..."
     }
   }
 }

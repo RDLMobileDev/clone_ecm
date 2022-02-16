@@ -2,7 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+
+import 'dart:io';
 
 import 'package:e_cm/auth/view/login.dart';
 import 'package:e_cm/homepage/account/services/apilogout.dart';
@@ -23,129 +24,148 @@ class AccountMember extends StatefulWidget {
 class _AccountMemberState extends State<AccountMember> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  String locale = Platform.localeName;
+
+  static const _localizedValues = <String, Map<String, String>>{
+    'en_US': {
+      'logout_sukses': 'Logout Success',
+      'check': 'Check your connection',
+      'problem': 'There was a problem with your connection',
+      'logout': 'Do you sure to logout?'
+    },
+    'id_ID': {
+      'logout_sukses': 'Logout sukses',
+      'check': 'Periksa koneksi internet',
+      'problem': 'Terjadi masalah pada koneksi Anda',
+      'logout': 'Apakah anda yakin ingin keluar?'
+    },
+  };
+
   String userName = "";
   String emailName = "";
+  String roleName = "";
+  String photoUserLink = "";
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
   String logoutName = '';
   String leaveName = '';
+  String confirm = '';
+  String confirm_logout = '';
+  String cancel = '';
+  String leave = '';
 
-
-  void confirmLogout(){
+  void confirmLogout() {
     showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return SimpleDialog(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 16, right: 16),
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.topRight,
-                        child: Image.asset(
-                          "assets/icons/X.png",
-                          width: 20,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Center(
-                          child: Image.asset(
-                        "assets/images/img_attendance_logout.png",
-                        width: 150,
-                      )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Confirm",
-                          style: TextStyle(
-                              color: Color(0xFF404446),
-                              fontFamily: 'Rubik',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8, left: 16, right: 16),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Do your sure to logout",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xFF404446),
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                               Navigator.of(context).pop();
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.only(top: 20,right: 5),
-                              width: 130,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Color(0xFF00AEDB)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      color: Color(0xFF00AEDB),
-                                      fontFamily: 'Rubik',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              )),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            postLogout();
-                            
-                          },
-                          child: Container(
-                              margin: EdgeInsets.only(top: 20),
-                              width: 130,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: Color(0xffcf0000),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  "Logout",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Rubik',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              )),
-                        ),
-                      ],
-                    )
-                  ],
-                );
-                });
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    "assets/icons/X.png",
+                    width: 20,
+                  ),
+                ),
+              ),
+              Container(
+                child: Center(
+                    child: Image.asset(
+                  "assets/images/img_attendance_logout.png",
+                  width: 150,
+                )),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    confirm,
+                    style: TextStyle(
+                        color: Color(0xFF404446),
+                        fontFamily: 'Rubik',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    confirm_logout,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Color(0xFF404446),
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(top: 20, right: 5),
+                        width: 130,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Color(0xFF00AEDB)),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                                color: Color(0xFF00AEDB),
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      postLogout();
+                    },
+                    child: Container(
+                        margin: EdgeInsets.only(top: 20),
+                        width: 130,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Color(0xffcf0000),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Logout",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
   }
 
   void setBahasa() async {
@@ -177,6 +197,9 @@ class _AccountMemberState extends State<AccountMember> {
       setState(() {
         logoutName = dataLang['account']['logout'];
         leaveName = dataLang['account']['leave'];
+        confirm = dataLang['account']['confirm'];
+        confirm_logout = dataLang['account']['confirm_logout'];
+        cancel = dataLang['account']['cancel'];
       });
     }
   }
@@ -184,11 +207,14 @@ class _AccountMemberState extends State<AccountMember> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         logoutName = dataLang['account']['logout'];
         leaveName = dataLang['account']['leave'];
+        confirm = dataLang['account']['confirm'];
+        confirm_logout = dataLang['account']['confirm_logout'];
+        cancel = dataLang['account']['cancel'];
       });
     }
   }
@@ -219,7 +245,8 @@ class _AccountMemberState extends State<AccountMember> {
       if (rspLogut['response']['status'] == 200) {
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Logout Sukses',
+              msg:
+                  _localizedValues[locale]!['logout_sukses'] ?? "Logout sukses",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -228,23 +255,25 @@ class _AccountMemberState extends State<AccountMember> {
               fontSize: 16);
         });
         prefs.clear();
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => LogIn()));
-      } else {
-        setState(() {
-          Fluttertoast.showToast(
-              msg: 'Periksa jaringan internet anda',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LogIn()),
+            (Route<dynamic> route) => false);
+        // setState(() {
+        //   Fluttertoast.showToast(
+        //       msg: _localizedValues[locale]!['check'] ??
+        //           'Periksa jaringan internet anda',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.greenAccent,
+        //       textColor: Colors.white,
+        //       fontSize: 16);
+        // });
       }
     } catch (e) {
       Fluttertoast.showToast(
-          msg: 'Periksa jaringan internet anda',
+          msg: _localizedValues[locale]!['check'] ??
+              'Periksa jaringan internet anda',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -259,10 +288,15 @@ class _AccountMemberState extends State<AccountMember> {
     String emailUser = prefs.getString("emailKey").toString();
     String? tokenUser = prefs.getString("tokenKey").toString();
     String nameUser = prefs.getString("usernameKey").toString();
+    String roleUser = prefs.getString("namaJabatanKey").toString();
+    String photoUser = prefs.getString("photoUser") ?? "-";
+
     print(emailUser);
     setState(() {
       userName = nameUser;
       emailName = emailUser;
+      roleName = roleUser;
+      photoUserLink = photoUser;
     });
 
     var rspGetUser = await getUser(emailUser, tokenUser);
@@ -276,6 +310,12 @@ class _AccountMemberState extends State<AccountMember> {
     getDataUser();
     setBahasa();
     setLang();
+
+    if (Platform.localeName != "en_US" || Platform.localeName != "id_ID") {
+      setState(() {
+        locale = "en_US";
+      });
+    }
 
     Timer _timer =
         Timer.periodic(Duration(milliseconds: 500), (timer) => setLang());
@@ -300,7 +340,7 @@ class _AccountMemberState extends State<AccountMember> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: AssetImage("assets/images/sudin.png"))),
+                              image: NetworkImage(photoUserLink))),
                     ),
                     SizedBox(width: 10),
                     Column(
@@ -315,7 +355,7 @@ class _AccountMemberState extends State<AccountMember> {
                               color: Color(0xFF404446)),
                         ),
                         Text(
-                          emailName,
+                          emailName + " - (" + roleName + ")",
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
@@ -337,7 +377,7 @@ class _AccountMemberState extends State<AccountMember> {
               SizedBox(
                 height: 24,
               ),
-               Container(
+              Container(
                 margin: EdgeInsets.only(bottom: 16),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -358,7 +398,7 @@ class _AccountMemberState extends State<AccountMember> {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.only(left: 14),
-                          width: MediaQuery.of(context).size.width*0.595,
+                          width: MediaQuery.of(context).size.width * 0.595,
                           child: Text(
                             bahasa,
                             style: TextStyle(
@@ -370,17 +410,18 @@ class _AccountMemberState extends State<AccountMember> {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 14),
-                          width: MediaQuery.of(context).size.width*0.595,
+                          width: MediaQuery.of(context).size.width * 0.595,
                           child: Text(
-                            bahasa == 'Bahasa Indonesia'? "Gunakan bahasa berbeda pada app ini":
-                            "Use app in another language",
+                            bahasa == 'Bahasa Indonesia'
+                                ? "Gunakan bahasa berbeda pada app ini"
+                                : "Use app in another language",
                             style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 12,
-                                color: Colors.grey,),
+                              fontFamily: 'Rubik',
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
-
                       ],
                     ),
                     FlutterSwitch(
@@ -465,7 +506,20 @@ class _AccountMemberState extends State<AccountMember> {
                   ),
                 ),
               ),
-             
+              Spacer(),
+              Container(
+                margin: EdgeInsets.only(top: 16),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                child: Text(
+                  "App Version 1.0.3",
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Colors.black54,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400),
+                ),
+              )
             ],
           ),
         ),
@@ -473,16 +527,16 @@ class _AccountMemberState extends State<AccountMember> {
     );
   }
 
-   Widget showDialogLogout() {
+  Widget showDialogLogout() {
     return SimpleDialog(
       children: [
-         InkWell(
-           onTap: (){
-             setState(() {
-               Navigator.pop(context);
-             });
-           },
-           child: Container(
+        InkWell(
+          onTap: () {
+            setState(() {
+              Navigator.pop(context);
+            });
+          },
+          child: Container(
             margin: EdgeInsets.only(left: 16, right: 16),
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.topRight,
@@ -490,100 +544,103 @@ class _AccountMemberState extends State<AccountMember> {
               "assets/icons/X.png",
               width: 20,
             ),
-                 ),
-         ),
+          ),
+        ),
         Container(
           margin: EdgeInsets.only(top: 10),
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
-          child: Image.asset("assets/images/img_attendance_logout.png",
-          width: 100,
-          height: 100,),
+          child: Image.asset(
+            "assets/images/img_attendance_logout.png",
+            width: 100,
+            height: 100,
+          ),
         ),
         Container(
           margin: EdgeInsets.only(top: 8),
           alignment: Alignment.center,
-          child: Row(children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width,
-              child: Text("Confirm",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black54,
-                fontFamily: 'Rubik',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),),
-            ),
-          
-          ],),
+          child: Row(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width,
+                child: Text(
+                  "Confirm",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontFamily: 'Rubik',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      
         Container(
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.only(right: 20, left: 20),
-          child: Text("E-CM must approved by",
-          style: TextStyle(
-            fontFamily: 'Rubik',
-            color: Colors.black54,
-            fontSize: 16
-          ),),
-
+          child: Text(
+            "E-CM must approved by",
+            style: TextStyle(
+                fontFamily: 'Rubik', color: Colors.black54, fontSize: 16),
+          ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 8, left: 16, right: 16),
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 30,
-                      height: 30,
-                      child: Image.asset("assets/images/img_ava.png"),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      width: MediaQuery.of(context).size.width*0.5,
-                      child: Text("Dadi",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                      ),),
-                    ),
-
-                    Container(
-                      width: MediaQuery.of(context).size.width*0.2,
-                      child: Text(" - ",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                      ),),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width*0.2,
-                      child: Text("GM",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                      ),),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )
-        ),
+            margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: 30,
+                        height: 30,
+                        child: Image.asset("assets/images/img_ava.png"),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 10),
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Text(
+                          "Dadi",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: Text(
+                          " - ",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: Text(
+                          "GM",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )),
         InkWell(
-          onTap: () {
-            
-          },
+          onTap: () {},
           child: Row(
             children: [
-               Container(
+              Container(
                   margin: EdgeInsets.only(top: 20, left: 16, right: 16),
                   width: MediaQuery.of(context).size.width,
                   height: 40,
@@ -601,7 +658,7 @@ class _AccountMemberState extends State<AccountMember> {
                     ),
                   )),
               InkWell(
-                onTap: (){
+                onTap: () {
                   setState(() {
                     postLogout();
                   });

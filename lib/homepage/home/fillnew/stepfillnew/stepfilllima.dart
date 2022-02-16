@@ -182,14 +182,9 @@ class _StepFillLimaState extends State<StepFillLima> {
           });
           break;
         default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item repairing',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
+          setState(() {
+            _listItemChecking = [];
+          });
           break;
       }
     } catch (e) {
@@ -202,18 +197,18 @@ class _StepFillLimaState extends State<StepFillLima> {
         exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
       }
 
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
+      // Fluttertoast.showToast(
+      //     msg: exceptionMessage,
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     timeInSecForIosWeb: 2,
+      //     backgroundColor: Colors.greenAccent,
+      //     textColor: Colors.white,
+      //     fontSize: 16);
     }
   }
 
-  void confirmDelete() {
+  void confirmDelete(String ecmItemId) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -298,9 +293,21 @@ class _StepFillLimaState extends State<StepFillLima> {
                           )),
                     ),
                     InkWell(
-                      onTap: () async {
-                        await hapusItemStepLima();
-                        getDataItemRepairing();
+                      onTap: () {
+                        hapusItemStepLima(ecmItemId).then((value) {
+                          if (value['response']['status'] != 200) {
+                            Fluttertoast.showToast(
+                                msg: 'Item gagal dihapus',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.greenAccent,
+                                textColor: Colors.white,
+                                fontSize: 16);
+                          }
+                          Navigator.of(context).pop(true);
+                          getDataItemRepairing();
+                        });
                       },
                       child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
@@ -328,46 +335,19 @@ class _StepFillLimaState extends State<StepFillLima> {
         });
   }
 
-  Future hapusItemStepLima() async {
+  Future hapusItemStepLima(String ecmItemId) async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
-    String? ecmItemId = prefs.getString("idEcmItem");
 
-    var result = await deleteFillLima.hapusItemFillLima(token, ecmItemId!);
+    var result = await deleteFillLima.hapusItemFillLima(token, ecmItemId);
 
-    if (result['response']['status'] == 200) {
-      Fluttertoast.showToast(
-          msg: 'Item dihapus',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-      Navigator.of(context).pop(true);
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Item gagal dihapus',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-      Navigator.of(context).pop(true);
-    }
-  }
-
-  void setBoolFinishStep5() async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString("itemRepairBool", "0");
+    return result;
   }
 
   @override
   void initState() {
     super.initState();
     getDataItemRepairing();
-    setBoolFinishStep5();
     setLang();
     setBahasa();
   }
@@ -375,19 +355,31 @@ class _StepFillLimaState extends State<StepFillLima> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.58,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                item_repairing,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+              child: RichText(
+                text: TextSpan(
+                  text: item_repairing,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
             ),
             SizedBox(
@@ -401,7 +393,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                       child: Column(
                         children: [
                           Image.asset(
-                            "assets/images/empty.png",
+                            "assets/images/repair.png",
                             width: 250,
                           ),
                           Center(
@@ -418,6 +410,7 @@ class _StepFillLimaState extends State<StepFillLima> {
                     )
                   : Container(
                       child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: _listItemChecking.length,
                         itemBuilder: (context, i) {
@@ -471,6 +464,11 @@ class _StepFillLimaState extends State<StepFillLima> {
                                                       .push(MaterialPageRoute(
                                                           builder: (context) =>
                                                               FormStepFilllima(
+                                                                idEcmItem:
+                                                                    _listItemChecking[
+                                                                            i]
+                                                                        .ecmitemId
+                                                                        .toString(),
                                                                 isUpdate: true,
                                                               )));
                                             },
@@ -480,9 +478,10 @@ class _StepFillLimaState extends State<StepFillLima> {
                                             ),
                                           ),
                                           InkWell(
-                                            onTap: () async {
-                                              confirmDelete();
-                                              print("Klik delete step 5");
+                                            onTap: () {
+                                              confirmDelete(_listItemChecking[i]
+                                                  .ecmitemId
+                                                  .toString());
                                             },
                                             child: Image.asset(
                                               "assets/icons/trash.png",
