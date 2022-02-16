@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController historyStreamController = StreamController();
   String userName = "";
-  bool isVisibility = true, activitySectionJabatan = false;
+  bool isVisibility = true, activitySectionJabatan = false, addcard = true;
 
   // late Timer _timer;
 
@@ -189,10 +189,12 @@ class _HomeState extends State<Home> {
       setState(() {
         if (jabatanUser != 8) {
           isVisibility = false;
-          activitySectionJabatan = true;
-        } else {
-          isVisibility = true;
+          addcard = true;
           activitySectionJabatan = false;
+        } else {
+          isVisibility = false;
+          addcard = true;
+          activitySectionJabatan = true;
         }
       });
     }
@@ -461,7 +463,7 @@ class _HomeState extends State<Home> {
                 height: 25,
               ),
               Container(
-                height: 220,
+                height: 280,
                 child: Column(
                   children: [
                     Container(
@@ -480,7 +482,8 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Visibility(
-                      visible: isVisibility,
+                      visible: addcard,
+                      //add ecm
                       child: InkWell(
                         onTap: () {
                           Navigator.of(context).push(routeToFillNew());
@@ -520,7 +523,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Visibility(
-                        visible: isVisibility,
+                        visible: addcard,
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.only(top: 8, right: 16, left: 16),
@@ -625,13 +628,14 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       height: 16,
                     ),
-                    Visibility(
-                      visible: activitySectionJabatan,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            InkWell(
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          //sign ecm
+                          Visibility(
+                            visible: isVisibility,
+                            child: InkWell(
                               onTap: () {
                                 // Navigator.of(context).push(
                                 //     MaterialPageRoute(builder: (context) => ApprovedEcm()));
@@ -672,10 +676,18 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ),
-                            SizedBox(
+                          ),
+                          Visibility(
+                            visible: isVisibility,
+                            child: SizedBox(
                               height: 16,
                             ),
-                            InkWell(
+                          ),
+                          //listname
+
+                          Visibility(
+                            visible: activitySectionJabatan,
+                            child: InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ListTmName()));
@@ -714,10 +726,14 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            InkWell(
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          //history ecm
+                          Visibility(
+                            visible: isVisibility,
+                            child: InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => HistoryPage()));
@@ -756,8 +772,8 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     Spacer(),
