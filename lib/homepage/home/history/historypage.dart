@@ -932,7 +932,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                         child: _listMontly.isEmpty
                             ? const Center(
-                                child: Text("No data here"),
+                                child: CircularProgressIndicator(),
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
@@ -1221,10 +1221,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                       child: _listDaily.isEmpty
                           ? const Center(
-                              child: Text(
-                                "No data here",
-                                style: TextStyle(fontSize: 14),
-                              ),
+                              child: CircularProgressIndicator(),
                             )
                           : ListView.builder(
                               shrinkWrap: true,
