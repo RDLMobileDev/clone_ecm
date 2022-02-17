@@ -711,7 +711,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                         child: _listAll.isEmpty
                             ? const Center(
-                                child: Text("No data here"),
+                                child: CircularProgressIndicator(),
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
@@ -757,7 +757,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                                             Color(0xFF00AEDB),
                                                         shape: BoxShape.circle,
                                                         image: DecorationImage(
-                                                            image: NetworkImage(_listAll[i].foto ?? "-" ))),
+                                                            image: NetworkImage(
+                                                                _listAll[i]
+                                                                        .foto ??
+                                                                    "-"))),
                                                   ),
                                                   const SizedBox(
                                                     width: 16,
@@ -976,7 +979,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                                             Color(0xFF00AEDB),
                                                         shape: BoxShape.circle,
                                                         image: DecorationImage(
-                                                            image: NetworkImage(_listMontly[i].foto ?? "-"))),
+                                                            image: NetworkImage(
+                                                                _listMontly[i]
+                                                                        .foto ??
+                                                                    "-"))),
                                                   ),
                                                   const SizedBox(
                                                     width: 16,
@@ -1262,7 +1268,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                                       color: Color(0xFF00AEDB),
                                                       shape: BoxShape.circle,
                                                       image: DecorationImage(
-                                                          image: NetworkImage(_listDaily[i].foto ?? "-"))),
+                                                          image: NetworkImage(
+                                                              _listDaily[i]
+                                                                      .foto ??
+                                                                  "-"))),
                                                 ),
                                                 const SizedBox(
                                                   width: 16,
