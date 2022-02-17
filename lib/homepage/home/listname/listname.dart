@@ -15,7 +15,6 @@ class ListTmName extends StatefulWidget {
 }
 
 class _ListTmNameState extends State<ListTmName> {
-
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
@@ -58,12 +57,11 @@ class _ListTmNameState extends State<ListTmName> {
   void getLanguageId() async {
     var response = await rootBundle.loadString("assets/lang/lang-id.json");
     var dataLang = json.decode(response)['data'];
-  
+
     if (mounted) {
       setState(() {
         list_tm = dataLang['daftar_nama_tm']['name_tm'];
         loading = dataLang['daftar_nama_tm']['loading'];
-      
       });
     }
   }
@@ -81,22 +79,23 @@ class _ListTmNameState extends State<ListTmName> {
       getLanguageId();
     }
   }
-  
-  
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   List listTmName = [];
 
   Future getListTmFromService() async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String idUser = prefs.getString("idKeyUser").toString();
+    try {
+      final prefs = await _prefs;
+      String tokenUser = prefs.getString("tokenKey").toString();
+      String idUser = prefs.getString("idKeyUser").toString();
 
-    listTmName = await listTmService.getListTmName(tokenUser, idUser);
+      listTmName = await listTmService.getListTmName(tokenUser, idUser);
 
-
-    return await listTmService.getListTmName(tokenUser, idUser);
+      return await listTmService.getListTmName(tokenUser, idUser);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -132,14 +131,19 @@ class _ListTmNameState extends State<ListTmName> {
         child: FutureBuilder(
           future: getListTmFromService(),
           builder: (context, snapshot) {
-            if(!snapshot.hasData){
+            if (!snapshot.hasData) {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Center(child: Text(loading,style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                      ),),),
+                child: Center(
+                  child: Text(
+                    loading,
+                    style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               );
             }
 
@@ -148,49 +152,57 @@ class _ListTmNameState extends State<ListTmName> {
               itemCount: listTmName.length,
               itemBuilder: (context, i) {
                 return Container(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Color(0xFFE3E5E5)))),
-              child: Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF00AEDB),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(listTmName[i]['photo']))),
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      border:
+                          Border(bottom: BorderSide(color: Color(0xFFE3E5E5)))),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        child: CircleAvatar(
+                          radius: 48,
+                          child: listTmName[i]['photo'] == null
+                              ? Image.asset("assets/images/img_ava.png")
+                              : Image.network(listTmName[i]['photo']),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF00AEDB),
+                          shape: BoxShape.circle,
+                          // image: DecorationImage(
+                          //     image: NetworkImage(listTmName[i]['photo']))
+                        ),
                       ),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: listTmName[i]['nama'],
-                            style: TextStyle(
-                                color: Color(0xFF00AEDB),
-                                fontWeight: FontWeight.w700)),
-                        TextSpan(
-                            text: ' - ',
-                            style: TextStyle(color: Color(0xFF00AEDB))),
-                        TextSpan(
-                            text: listTmName[i]['jabatan'],
-                            style: TextStyle(color: Color(0xFF00AEDB))),
-                      ],
-                    ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                          ),
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: listTmName[i]['nama'],
+                                style: TextStyle(
+                                    color: Color(0xFF00AEDB),
+                                    fontWeight: FontWeight.w700)),
+                            TextSpan(
+                                text: ' - ',
+                                style: TextStyle(color: Color(0xFF00AEDB))),
+                            TextSpan(
+                                text: listTmName[i]['jabatan'],
+                                style: TextStyle(color: Color(0xFF00AEDB))),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
+                );
               },
             );
           },

@@ -25,14 +25,14 @@ class HistoryEcmService {
         for (int i = 0; i < dataHistory['data'].length; i++) {
           var dataModel = HistoryEcmModel(
             dataHistory['data'][i]['ecm_id'].toString(),
-            dataHistory['data'][i]['date'],
-            dataHistory['data'][i]['lokasi'],
-            dataHistory['data'][i]['classification'],
-            dataHistory['data'][i]['total_harga'],
+            dataHistory['data'][i]['date'].toString(),
+            dataHistory['data'][i]['lokasi'].toString(),
+            dataHistory['data'][i]['classification'].toString(),
+            dataHistory['data'][i]['total_harga'].toString(),
             dataHistory['data'][i]['arrayitemrepair'],
-            dataHistory['data'][i]['nama_mesin'],
-            dataHistory['data'][i]['no_mesin'],
-            dataHistory['data'][i]['problem'],
+            dataHistory['data'][i]['nama_mesin'].toString(),
+            dataHistory['data'][i]['no_mesin'].toString(),
+            dataHistory['data'][i]['problem'].toString(),
           );
           _listHistoryEcmData.add(dataModel);
         }
