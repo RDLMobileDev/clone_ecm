@@ -463,7 +463,7 @@ class _HomeState extends State<Home> {
                 height: 25,
               ),
               Container(
-                height: 280,
+                height: 310,
                 child: Column(
                   children: [
                     Container(
@@ -732,7 +732,7 @@ class _HomeState extends State<Home> {
                           ),
                           //history ecm
                           Visibility(
-                            visible: isVisibility,
+                            visible: activitySectionJabatan,
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
