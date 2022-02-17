@@ -213,9 +213,11 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     var idPartMachine = prefs.getString("idPartItemMachine");
 
     try {
-      if (int.parse(qtyUsed) <= qtyStock) {
+      if ((int.parse(qtyUsed) <= qtyStock) | (int.parse(qtyUsed) >= qtyStock)) {
         var result = await saveDataPartMachine(tokenUser, idEcmKey!, idMesin!,
             partNameController.text, qtyStock.toString(), qtyUsed, "0");
+
+        print(result);
         if (result['response']['status'] == 200) {
           prefs.setString("sparePartBool", "1");
           Fluttertoast.showToast(
@@ -233,13 +235,6 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             backgroundColor: Colors.greenAccent,
           );
         }
-      } else {
-        Fluttertoast.showToast(
-          msg: 'Quantity used tidak boleh melebihi stock',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.greenAccent,
-        );
       }
     } on SocketException catch (e) {
       Fluttertoast.showToast(
