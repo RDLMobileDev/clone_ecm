@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -428,7 +429,7 @@ class _DetailEcmState extends State<DetailEcm> {
       }
       // Navigator.of(context).pop();
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Dashboard()));
+          .push(MaterialPageRoute(builder: (context) => ApprovedEcm()));
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(

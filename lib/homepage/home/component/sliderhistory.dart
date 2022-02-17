@@ -7,16 +7,23 @@ class SliderHistory extends StatelessWidget {
   final String? factoryPlace;
   final String? classificationName;
   final String? costRp;
+  final String? namaMesin;
+  final String? noMesin;
+  final String? problem;
+
   final List? itemsRepair;
 
-  const SliderHistory(
-      {Key? key,
-      this.tanggal,
-      this.factoryPlace,
-      this.classificationName,
-      this.costRp,
-      this.itemsRepair})
-      : super(key: key);
+  const SliderHistory({
+    Key? key,
+    this.tanggal,
+    this.factoryPlace,
+    this.classificationName,
+    this.costRp,
+    this.namaMesin,
+    this.noMesin,
+    this.problem,
+    this.itemsRepair,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,7 @@ class SliderHistory extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.all(16),
       width: MediaQuery.of(context).size.width * 0.7,
-      height: 130,
+      height: 150,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           border: Border.all(color: Color(0xFF00AEDB))),
@@ -52,7 +59,34 @@ class SliderHistory extends StatelessWidget {
                 color: Color(0xFF00AEDB)),
           ),
           SizedBox(
-            height: 22,
+            height: 4,
+          ),
+          Text(
+            namaMesin ?? "-",
+            style: TextStyle(
+                fontFamily: 'Rubik',
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF404446)),
+          ),
+          Text(
+            noMesin ?? "-",
+            style: TextStyle(
+                fontFamily: 'Rubik',
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF404446)),
+          ),
+          Text(
+            problem ?? "-",
+            style: TextStyle(
+                fontFamily: 'Rubik',
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF404446)),
+          ),
+          SizedBox(
+            height: 14,
           ),
           Text(
             "Rp. $costRp",
@@ -62,9 +96,9 @@ class SliderHistory extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF404446)),
           ),
-          SizedBox(
-            height: 5,
-          ),
+          // SizedBox(
+          //   height: 5,
+          // ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
