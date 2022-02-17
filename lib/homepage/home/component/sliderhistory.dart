@@ -29,7 +29,7 @@ class SliderHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(13),
       width: MediaQuery.of(context).size.width * 0.7,
       height: 150,
       decoration: BoxDecoration(
