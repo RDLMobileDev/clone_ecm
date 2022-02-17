@@ -607,7 +607,7 @@ class _HomeState extends State<Home> {
                                       Text(
                                         ecm_pending,
                                         style: TextStyle(
-                                            color: Color(0xff979C9E),
+                                            color: Colors.black,
                                             fontFamily: 'Rubik',
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),
