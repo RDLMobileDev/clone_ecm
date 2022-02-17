@@ -203,6 +203,10 @@ class _HomeState extends State<Home> {
     String idUser = prefs.getString("idKeyUser").toString();
     String tokenUser = prefs.getString("tokenKey").toString();
 
+    _listHistoryEcmUser =
+        await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
+    historyStreamController.add(_listHistoryEcmUser);
+
     try {
       _listHistoryEcmUser =
           await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
@@ -420,7 +424,7 @@ class _HomeState extends State<Home> {
                                         color: Color(0xFF404446)))),
                           )
                         : Container(
-                            height: 130,
+                            height: 150,
                             child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: _listHistoryEcmUser.length,
@@ -447,6 +451,9 @@ class _HomeState extends State<Home> {
                                     costRp: _listHistoryEcmUser[i].totalHarga,
                                     factoryPlace: _listHistoryEcmUser[i].lokasi,
                                     tanggal: _listHistoryEcmUser[i].date,
+                                    namaMesin: _listHistoryEcmUser[i].namaMesin,
+                                    noMesin: _listHistoryEcmUser[i].noMesin,
+                                    problem: _listHistoryEcmUser[i].problem,
                                     itemsRepair:
                                         _listHistoryEcmUser[i].arrayitemrepair,
                                   ),
