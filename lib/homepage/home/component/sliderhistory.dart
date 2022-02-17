@@ -66,7 +66,7 @@ class SliderHistory extends StatelessWidget {
             style: TextStyle(
                 fontFamily: 'Rubik',
                 fontSize: 10,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w600,
                 color: Color(0xFF404446)),
           ),
           Text(
