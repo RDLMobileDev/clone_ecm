@@ -206,6 +206,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   }
 
   saveSparePart(String qtyUsed, String costRp) async {
+    print("save sparepart");
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
     String? idEcmKey = prefs.getString("idEcm");
@@ -213,7 +214,16 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     var idPartMachine = prefs.getString("idPartItemMachine");
 
     try {
-      if ((int.parse(qtyUsed) <= qtyStock) | (int.parse(qtyUsed) >= qtyStock)) {
+      if (partNameController.text == "") {
+        Fluttertoast.showToast(
+            msg: 'Nama part harus diisi',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      } else {
         var result = await saveDataPartMachine(tokenUser, idEcmKey!, idMesin!,
             partNameController.text, qtyStock.toString(), qtyUsed, "0");
 
@@ -235,6 +245,10 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             backgroundColor: Colors.greenAccent,
           );
         }
+        // if ((int.parse(qtyUsed) <= qtyStock) |
+        //     (int.parse(qtyUsed) >= qtyStock)) {
+
+        // }
       }
     } on SocketException catch (e) {
       Fluttertoast.showToast(
@@ -647,12 +661,12 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                       ),
                     ),
                     InkWell(
-                      onTap: enableSave == true && widget.isFromUpdate == false
+                      onTap: widget.isFromUpdate == false
                           ? () {
                               saveSparePart(
                                   qtyUsed.toString(), costRpController.text);
                             }
-                          : enableSave == true && widget.isFromUpdate == true
+                          : widget.isFromUpdate == true
                               ? () {
                                   saveUpdatePart();
                                 }
@@ -662,9 +676,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
                         width: MediaQuery.of(context).size.width,
                         height: 40,
                         decoration: BoxDecoration(
-                            color: enableSave == false
-                                ? Color(0xFF979C9E)
-                                : Color(0xFF00AEDB),
+                            color: Color(0xFF00AEDB),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
