@@ -118,38 +118,38 @@ class _StepFillTigaState extends State<StepFillTiga> {
     print("why1");
     print(why2);
 
-    // try {
-    //   if ((why1.isNotEmpty || why1 != "-") &&
-    //       (why2.isNotEmpty || why2 != "-")) {
-    //     var result = await fillNewTiga(
-    //         why1, why2, why3, why4, why5, "", ecmId, tokenUser);
-    //     print(result);
+    try {
+      if ((why1.isNotEmpty || why1 != "-") &&
+          (why2.isNotEmpty || why2 != "-")) {
+        var result = await fillNewTiga(
+            why1, why2, why3, why4, why5, "", ecmId, tokenUser);
+        print(result);
 
-    //     Fluttertoast.showToast(
-    //         msg: 'Data step 3 Disimpan',
-    //         toastLength: Toast.LENGTH_SHORT,
-    //         gravity: ToastGravity.BOTTOM,
-    //         timeInSecForIosWeb: 2,
-    //         backgroundColor: Colors.greenAccent,
-    //         textColor: Colors.white,
-    //         fontSize: 16);
-    //   } else {
-    //     Fluttertoast.showToast(
-    //         msg: 'Data tidak disimpan, cek semua input field',
-    //         toastLength: Toast.LENGTH_SHORT,
-    //         gravity: ToastGravity.BOTTOM,
-    //         timeInSecForIosWeb: 2,
-    //         backgroundColor: Colors.greenAccent,
-    //         textColor: Colors.white,
-    //         fontSize: 16);
-    //   }
-    // } on SocketException catch (e) {
-    //   print(e);
-    // } on TimeoutException catch (e) {
-    //   print(e);
-    // } catch (e) {
-    //   print(e);
-    // }
+        Fluttertoast.showToast(
+            msg: 'Data step 3 Disimpan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Data tidak disimpan, cek semua input field',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+    } on SocketException catch (e) {
+      print(e);
+    } on TimeoutException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void setFormStep3AfterChoosing() async {
