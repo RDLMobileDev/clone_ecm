@@ -106,48 +106,50 @@ class _StepFillTigaState extends State<StepFillTiga> {
 
   void saveStepFillTiga() async {
     final prefs = await _prefs;
-    var why1 = prefs.getString("why1") ?? "";
-    var why2 = prefs.getString("why2") ?? "";
-    var why3 = prefs.getString("why3") ?? "-";
-    var why4 = prefs.getString("why4") ?? "-";
-    var why5 = "";
-    var how = prefs.getString("howC") ?? "";
-    var ecmId = prefs.getString("idEcm") ?? "";
+    String why1 = prefs.getString("why1") ?? "-";
+    String why2 = prefs.getString("why2") ?? "-";
+    String why3 = prefs.getString("why3") ?? "-";
+    String why4 = prefs.getString("why4") ?? "-";
+    String why5 = prefs.getString("howC") ?? "";
+    // String how = ;
+    String ecmId = prefs.getString("idEcm") ?? "";
     String tokenUser = prefs.getString("tokenKey").toString();
 
-    print(why1);
+    print("why1");
+    print(why2);
 
-    try {
-      if (why1.isNotEmpty && why2.isNotEmpty) {
-        var result = await fillNewTiga(
-            why1, why2, why3, why4, why5, how, ecmId, tokenUser);
-        print(result);
+    // try {
+    //   if ((why1.isNotEmpty || why1 != "-") &&
+    //       (why2.isNotEmpty || why2 != "-")) {
+    //     var result = await fillNewTiga(
+    //         why1, why2, why3, why4, why5, "", ecmId, tokenUser);
+    //     print(result);
 
-        Fluttertoast.showToast(
-            msg: 'Data step 3 Disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      } else {
-        Fluttertoast.showToast(
-            msg: 'Data tidak disimpan, cek semua input field',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      }
-    } on SocketException catch (e) {
-      print(e);
-    } on TimeoutException catch (e) {
-      print(e);
-    } catch (e) {
-      print(e);
-    }
+    //     Fluttertoast.showToast(
+    //         msg: 'Data step 3 Disimpan',
+    //         toastLength: Toast.LENGTH_SHORT,
+    //         gravity: ToastGravity.BOTTOM,
+    //         timeInSecForIosWeb: 2,
+    //         backgroundColor: Colors.greenAccent,
+    //         textColor: Colors.white,
+    //         fontSize: 16);
+    //   } else {
+    //     Fluttertoast.showToast(
+    //         msg: 'Data tidak disimpan, cek semua input field',
+    //         toastLength: Toast.LENGTH_SHORT,
+    //         gravity: ToastGravity.BOTTOM,
+    //         timeInSecForIosWeb: 2,
+    //         backgroundColor: Colors.greenAccent,
+    //         textColor: Colors.white,
+    //         fontSize: 16);
+    //   }
+    // } on SocketException catch (e) {
+    //   print(e);
+    // } on TimeoutException catch (e) {
+    //   print(e);
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 
   void setFormStep3AfterChoosing() async {
@@ -210,13 +212,13 @@ class _StepFillTigaState extends State<StepFillTiga> {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                     children: const <TextSpan>[
-                        TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
                     ],
                   ),
                 ),
@@ -254,13 +256,13 @@ class _StepFillTigaState extends State<StepFillTiga> {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                     children: const <TextSpan>[
-                        TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
                     ],
                   ),
                 ),
@@ -358,7 +360,6 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
-                
               ),
             ),
           ),
@@ -376,7 +377,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                   });
                 },
                 decoration: InputDecoration(
-                  fillColor: Colors.white,
+                    fillColor: Colors.white,
                     border: OutlineInputBorder(),
                     filled: true,
                     hintText: type_message),

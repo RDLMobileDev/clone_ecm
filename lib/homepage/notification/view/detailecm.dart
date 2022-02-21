@@ -360,6 +360,9 @@ class _DetailEcmState extends State<DetailEcm> {
             IncidentMistake.fromJson(response['data']['incident_mistake'])
                 .toString();
       });
+
+      print("why 1");
+      print(detailEcmModel.analisisWhy2);
     } catch (e) {
       print("detail ecm response -> $e");
       setState(() {
