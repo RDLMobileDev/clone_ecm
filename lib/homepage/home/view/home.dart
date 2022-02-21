@@ -33,7 +33,11 @@ class _HomeState extends State<Home> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController historyStreamController = StreamController();
   String userName = "";
-  bool isVisibility = true, activitySectionJabatan = false;
+  bool isVisibility = true,
+      activitySectionJabatan = false,
+      activityListTm = false,
+      activityEcmStatusCount = false,
+      activityFillNew = false;
 
   // late Timer _timer;
 
@@ -188,13 +192,18 @@ class _HomeState extends State<Home> {
     if (jabatanUser != null) {
       setState(() {
         if (jabatanUser == 8) {
+          print(jabatanUser);
           isVisibility = true;
-
+          activityListTm = false;
           activitySectionJabatan = false;
+          activityEcmStatusCount = true;
+          activityFillNew = true;
         } else {
           isVisibility = true;
-
+          activityListTm = true;
           activitySectionJabatan = true;
+          activityEcmStatusCount = false;
+          activityFillNew = false;
         }
       });
     }
@@ -489,7 +498,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Visibility(
-                      visible: isVisibility,
+                      visible: activityFillNew,
                       //add ecm
                       child: InkWell(
                         onTap: () {
@@ -530,7 +539,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Visibility(
-                        visible: isVisibility,
+                        visible: activityEcmStatusCount,
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.only(top: 8, right: 16, left: 16),
@@ -693,7 +702,7 @@ class _HomeState extends State<Home> {
                           //listname
 
                           Visibility(
-                            visible: isVisibility,
+                            visible: activityListTm,
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
