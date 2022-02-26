@@ -957,63 +957,63 @@ class _FillNewState extends State<FillNew> {
                   // onStepTapped: (step) => tapped(step),
                   onStepContinue: continued,
                   onStepCancel: cancel,
-                  controlsBuilder: (context, {onStepCancel, onStepContinue}) {
-                    print(onStepContinue);
-                    return Container(
-                      margin: const EdgeInsets.only(top: 50),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () => cancel(),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Color(0xFF00AEDB)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  back,
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xFF00AEDB)),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: _stepClicked == 9 ? null : () => continued(),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF00AEDB),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  next == "Finish"
-                                      ? next
-                                      : "$next $_stepClicked/$_stepTotal",
-                                  style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
+                  // controlsBuilder: (context, {onStepCancel, onStepContinue}) {
+                  //   print(onStepContinue);
+                  //   return Container(
+                  //     margin: const EdgeInsets.only(top: 50),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: <Widget>[
+                  //         InkWell(
+                  //           onTap: () => cancel(),
+                  //           child: Container(
+                  //             width: MediaQuery.of(context).size.width * 0.4,
+                  //             height: 40,
+                  //             decoration: BoxDecoration(
+                  //                 color: Colors.white,
+                  //                 border: Border.all(color: Color(0xFF00AEDB)),
+                  //                 borderRadius:
+                  //                     BorderRadius.all(Radius.circular(5))),
+                  //             child: Center(
+                  //               child: Text(
+                  //                 back,
+                  //                 style: TextStyle(
+                  //                     fontFamily: 'Rubik',
+                  //                     fontSize: 16,
+                  //                     fontWeight: FontWeight.w400,
+                  //                     color: Color(0xFF00AEDB)),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         InkWell(
+                  //           onTap: _stepClicked == 9 ? null : () => continued(),
+                  //           child: Container(
+                  //             width: MediaQuery.of(context).size.width * 0.4,
+                  //             height: 40,
+                  //             decoration: BoxDecoration(
+                  //                 color: Color(0xFF00AEDB),
+                  //                 borderRadius:
+                  //                     BorderRadius.all(Radius.circular(5))),
+                  //             child: Center(
+                  //               child: Text(
+                  //                 next == "Finish"
+                  //                     ? next
+                  //                     : "$next $_stepClicked/$_stepTotal",
+                  //                 style: TextStyle(
+                  //                   fontFamily: 'Rubik',
+                  //                   fontSize: 16,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: Colors.white,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         )
+                  //       ],
+                  //     ),
+                  //   );
+                  // },
                   // ignore: prefer_const_literals_to_create_immutables
                   steps: _steps,
                 ),
