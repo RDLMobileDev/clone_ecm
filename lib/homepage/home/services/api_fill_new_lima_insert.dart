@@ -12,6 +12,7 @@ Future fillNewLimaInsert(
     String idMesin,
     String itemCheck,
     String idUser,
+    String ecmItemId,
     String token) async {
   String myUrl = MyUrl().getUrlDevice();
   String url = "$myUrl/ecmstep5_insert";
@@ -42,7 +43,8 @@ Future fillNewLimaInsert(
     'id_ecm': idEcm,
     'id_machine': idMesin,
     'item_check': itemCheck,
-    'id_user': idUser
+    'id_user': idUser,
+    'ecmitem_id': ecmItemId
   });
 
   if (response.body.isNotEmpty) {
