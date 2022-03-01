@@ -342,48 +342,50 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     print(ecmId);
 
     String resultMessage = "Data disimpan";
-    var result = await fillNewEmpatInsert(
-        // tokenUser,
-        ecmId!,
-        idMachineRes!,
-        tecName.text,
-        formValue["standard"]!,
-        formValue["actual"]!,
-        formValue["note"]!,
-        startTimePickController!.text,
-        endTimePickController!.text,
-        idUser,
-        formValue["name"]!);
 
-    print(result);
+    try {
+      var result = await fillNewEmpatInsert(
+          // tokenUser,
+          ecmId!,
+          idMachineRes!,
+          tecName.text,
+          formValue["standard"]!,
+          formValue["actual"]!,
+          formValue["note"]!,
+          startTimePickController!.text,
+          endTimePickController!.text,
+          idUser,
+          formValue["name"]!);
 
-    switch (result['response']['status']) {
-      case 200:
-        print(result['data']['t_ecmitem_id'].toString());
-        prefs.setString("idEcmItem", result['data']['t_ecmitem_id'].toString());
+      print(result);
 
-        prefs.setString("itemStep4Bool", "1");
-        print(result['data']['t_ecmitem_id'].toString());
-        Navigator.of(context)
-          ..pop()
-          ..pop(true);
-        break;
-      default:
-        resultMessage = "Data gagal disimpan";
-        break;
-    }
+      switch (result['response']['status']) {
+        case 200:
+          print(result['data']['t_ecmitem_id'].toString());
+          prefs.setString(
+              "idEcmItem", result['data']['t_ecmitem_id'].toString());
 
-    Fluttertoast.showToast(
-      msg: resultMessage,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 2,
-      backgroundColor: Colors.greenAccent,
-      textColor: Colors.white,
-      fontSize: 16,
-    );
+          prefs.setString("itemStep4Bool", "1");
+          print(result['data']['t_ecmitem_id'].toString());
+          Navigator.of(context)
+            ..pop()
+            ..pop(true);
+          break;
+        default:
+          resultMessage = "Data gagal disimpan";
+          break;
+      }
 
-    try {} catch (e) {
+      Fluttertoast.showToast(
+        msg: resultMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16,
+      );
+    } catch (e) {
       print("exception occured -> $e");
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -1068,6 +1070,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                 formValidations["name"] =
                                     _users[i].userFullName!.isNotEmpty;
                                 formValue["name"] = _users[i].userId!;
+                                prefs.setString(
+                                    "idUserChecker", _users[i].userId!);
                                 prefs.setString(
                                     "userStep4", _users[i].userFullName!);
                                 tapMemberName = !tapMemberName;

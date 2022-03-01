@@ -5,9 +5,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/item_checking.dart';
+import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/model/steplimaitemmodel.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
+import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +36,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   TextEditingController tecName = TextEditingController();
   TextEditingController usernameStepLima = TextEditingController();
   List<ItemChecking> _listData = [];
+  List<PartModel> partsItem = <PartModel>[];
+
   String _username = "";
 
   bool itemNameTapped = false;
@@ -287,29 +291,30 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     print(ecmId);
 
     try {
-      var data = await getFillNewEmpat(ecmId, userId, token);
+      var dataItemName = await getFillNewEmpat(ecmId, userId, token);
 
-      print(data);
+      print("data item name step input 5");
+      print(dataItemName);
 
-      switch (data["response"]['status']) {
-        case 200:
-          setState(() {
-            _listData = (data['data'] as List)
-                .map((e) => ItemChecking.fromJson(e))
-                .toList();
-          });
-          break;
-        default:
-          Fluttertoast.showToast(
-              msg: 'Gagal mendapat daftar item checking',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          break;
-      }
+      // switch (data["response"]['status']) {
+      //   case 200:
+      //     setState(() {
+      //       _listData = (data['data'] as List)
+      //           .map((e) => ItemChecking.fromJson(e))
+      //           .toList();
+      //     });
+      //     break;
+      //   default:
+      //     Fluttertoast.showToast(
+      //         msg: 'Gagal mendapat daftar item checking',
+      //         toastLength: Toast.LENGTH_SHORT,
+      //         gravity: ToastGravity.BOTTOM,
+      //         timeInSecForIosWeb: 2,
+      //         backgroundColor: Colors.greenAccent,
+      //         textColor: Colors.white,
+      //         fontSize: 16);
+      //     break;
+      // }
     } catch (e) {
       String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
       if (e is SocketException) {
@@ -418,26 +423,41 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
   void saveStepInputRepairing() async {
     final prefs = await SharedPreferences.getInstance();
+    var ecmId = prefs.getString("idEcm");
     var ecmItemId = prefs.getString("idEcmItem");
     var idUser = prefs.getString("idKeyUser").toString();
+    var machineId = prefs.getString("machineId");
+    var idUserChecker = prefs.getString("idUserChecker");
+
+    String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
-    print("ecm item id -> $ecmItemId");
+    print("id Ecm -> $ecmId");
+    print("user id-> $idUser");
+    print("id mesin -> $machineId");
+    print("note -> ${formValue["note"]}");
+    print("start -> ${formValue["start"]}");
+    print("end -> ${formValue["end"]}");
+    print("repair -> ${formValue["repair"]}");
+    print("item name -> $itemNameStepLima");
+    print("tokennya -> $tokenUser");
 
     try {
       String resultMessage = "Data disimpan";
       var result = await fillNewLimaInsert(
-        token: tokenUser,
-        ecmItemId: widget.isUpdate == true ? widget.idEcmItem : ecmItemId,
-        userId: idUser,
-        repairMessage: formValue["repair"],
-        note: formValue["note"],
-        start: formValue["start"],
-        end: formValue["end"],
-      );
+          formValue["note"] ?? "-",
+          formValue["start"] ?? "-",
+          formValue["end"] ?? "-",
+          formValue["repair"] ?? "-",
+          idUserChecker ?? "-",
+          ecmId ?? "-",
+          machineId ?? "-",
+          itemNameStepLima,
+          idUser,
+          ecmItemId ?? "0",
+          tokenUser);
 
       print("result insert 5 -> $result");
-      print(result['data']['t_ecmitem_id']);
 
       switch (result['response']['status']) {
         case 200:
@@ -517,6 +537,22 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     });
   }
 
+  void fetchLocationPartData() async {
+    var prefs = await _prefs;
+    String ecmId = prefs.getString("idEcm") ?? "";
+    String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    var dataItem =
+        await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
+
+    setState(() {
+      partsItem = dataItem;
+    });
+
+    print("data ecm id -> $ecmId");
+    print("data parts -> ${partsItem.length}");
+  }
+
   static String _displayPartOption(ItemChecking option) =>
       option.partNama ?? "-";
 
@@ -536,6 +572,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       timerGetDataStep4();
     }
     getUsernameSession();
+
+    fetchLocationPartData();
   }
 
   @override
@@ -563,229 +601,230 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
             Container(
               child: Column(
                 children: <Widget>[
-                   Container(
-              width: MediaQuery.of(context).size.width,
-              child: RichText(
-                text: TextSpan(
-                  text: item_name,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: RichText(
+                      text: TextSpan(
+                        text: item_name,
                         style: TextStyle(
                             fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
                             fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              margin: const EdgeInsets.only(top: 10),
-              child: TextFormField(
-                controller: tecName,
-                showCursor: true,
-                readOnly: true,
-                onTap: () {
-                  setState(() {
-                    itemNameTapped = !itemNameTapped;
-                  });
-                },
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey))),
-              ),
-            ),
-            itemNameTapped == false
-                ? Container()
-                : _listData.isEmpty
-                    ? Container(
-                        margin: EdgeInsets.only(top: 5),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              CircularProgressIndicator(),
-                              SizedBox(
-                                height: 4,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 10),
+                    child: TextFormField(
+                      controller: tecName,
+                      showCursor: true,
+                      readOnly: true,
+                      onTap: () {
+                        setState(() {
+                          itemNameTapped = !itemNameTapped;
+                        });
+                      },
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey))),
+                    ),
+                  ),
+                  itemNameTapped == false
+                      ? Container()
+                      : partsItem.isEmpty
+                          ? Container(
+                              margin: EdgeInsets.only(top: 5),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text("Memuat nama item")
+                                  ],
+                                ),
                               ),
-                              Text("Memuat nama item")
-                            ],
+                            )
+                          : Container(
+                              height: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: partsItem.length,
+                                itemBuilder: (context, i) {
+                                  return InkWell(
+                                      onTap: () async {
+                                        final prefs = await _prefs;
+                                        setState(() {
+                                          tecName = TextEditingController(
+                                              text: partsItem[i].mPartNama);
+                                          formValidations["item"] = partsItem[i]
+                                              .mPartNama
+                                              .toString()
+                                              .isNotEmpty;
+                                          itemNameTapped = !itemNameTapped;
+                                        });
+                                        prefs.setString("itemNameStepLima",
+                                            partsItem[i].mPartNama.toString());
+                                        // prefs.setString("idEcmItem",
+                                        //     _listData[i].ecmitemId.toString());
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        child:
+                                            Text(partsItem[i].mPartNama ?? "-"),
+                                      ));
+                                },
+                              ),
+                            ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: starttime,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(0),
+                    margin: EdgeInsets.only(top: 10),
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.access_time, color: Colors.grey),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            onTap: () => getStartTime(),
+                            readOnly: true,
+                            controller: startTimePickerController,
+                            decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(0),
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                filled: true,
+                                hintText: 'HH:MM'),
                           ),
                         ),
-                      )
-                    : Container(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _listData.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                                onTap: () async {
-                                  final prefs = await _prefs;
-                                  setState(() {
-                                    tecName = TextEditingController(
-                                        text: _listData[i].partNama);
-                                    formValidations["item"] = _listData[i]
-                                        .partNama
-                                        .toString()
-                                        .isNotEmpty;
-                                    itemNameTapped = !itemNameTapped;
-                                  });
-                                  prefs.setString("itemNameStepLima",
-                                      _listData[i].partNama.toString());
-                                  prefs.setString("idEcmItem",
-                                      _listData[i].ecmitemId.toString());
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(_listData[i].partNama!),
-                                ));
-                          },
-                        ),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: end_time,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
                       ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: starttime,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(0),
-              margin: EdgeInsets.only(top: 10),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(Icons.access_time, color: Colors.grey),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      onTap: () => getStartTime(),
-                      readOnly: true,
-                      controller: startTimePickerController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(0),
-                          fillColor: Colors.white,
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: 'HH:MM'),
                     ),
                   ),
-                  SizedBox(
-                    width: 40,
+                  Container(
+                    padding: EdgeInsets.all(0),
+                    margin: EdgeInsets.only(top: 10),
                     height: 40,
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  text: end_time,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(0),
-              margin: EdgeInsets.only(top: 10),
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(Icons.access_time, color: Colors.grey),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      onTap: () => getEndTime(),
-                      readOnly: true,
-                      controller: endTimePickerController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(0),
-                          fillColor: Colors.white,
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: 'HH:MM'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.access_time, color: Colors.grey),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            onTap: () => getEndTime(),
+                            readOnly: true,
+                            controller: endTimePickerController,
+                            decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(0),
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                filled: true,
+                                hintText: 'HH:MM'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey,
-                    ),
-                  )
-                ],
-              ),
-            ),
                 ],
               ),
             ),
             Container(
               child: Column(
                 children: <Widget>[
-                 
                   Container(
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(top: 10),
@@ -889,8 +928,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                       },
                     ),
                   ),
-
-                   Container(
+                  Container(
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(top: 10),
                     child: RichText(
