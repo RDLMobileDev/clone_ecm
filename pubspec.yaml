@@ -63,7 +63,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/ecm-logo.png"
+  image_path: "assets/icons/ecm-logo-ios.png"
 
 flutter:
   fonts:
