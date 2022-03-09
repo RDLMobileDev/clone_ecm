@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -336,6 +337,25 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         " (" +
                         detailEcmModel.nomormesin.toString() +
                         ")"),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => FillNew(
+                                  ecmId: widget.notifId,
+                                )));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        decoration: BoxDecoration(color: Color(0xff00AEDB)),
+                        child: Center(
+                            child: Text(
+                          "Edit E-CM",
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        )),
+                      ),
+                    ),
                     _buildDivider(),
                     Container(
                       width: MediaQuery.of(context).size.width,

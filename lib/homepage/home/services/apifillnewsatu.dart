@@ -66,3 +66,22 @@ Future fillNewSatu(
     print(e);
   }
 }
+
+Future getStep1Data(String ecmId, String token) async {
+  String url = MyUrl().getUrlDevice();
+
+  try {
+    final response = await http.get(
+      Uri.parse("$url/ecm_step1_get?ecm_id=$ecmId"),
+      headers: {
+        "Accept": "Application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return jsonDecode(response.body);
+  } catch (e) {
+    print(e);
+    return [];
+  }
+}

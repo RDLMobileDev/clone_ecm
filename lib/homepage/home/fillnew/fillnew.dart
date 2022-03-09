@@ -25,7 +25,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FillNew extends StatefulWidget {
-  const FillNew({Key? key}) : super(key: key);
+  final String? ecmId;
+  const FillNew({Key? key, this.ecmId}) : super(key: key);
 
   @override
   _FillNewState createState() => _FillNewState();
@@ -226,7 +227,11 @@ class _FillNewState extends State<FillNew> {
   List<Step> get _steps => [
         Step(
           title: Text(''),
-          content: Form(key: _formKeys[0], child: StepFillSatu()),
+          content: Form(
+              key: _formKeys[0],
+              child: StepFillSatu(
+                ecmId: widget.ecmId,
+              )),
           isActive: _currentStep >= 0,
           // state: _currentStep >= 0
           //     ? StepState.complete

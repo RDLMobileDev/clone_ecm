@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/fillnew/model/step_fill_satu_model.dart';
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/groupareamodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
@@ -25,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_time_format/date_time_format.dart';
 
 class StepFillSatu extends StatefulWidget {
+  final String? ecmId;
   final StepFillSatuState stepFillSatuState = StepFillSatuState();
 
   void getSaveFillSatu() {
@@ -32,12 +34,15 @@ class StepFillSatu extends StatefulWidget {
     stepFillSatuState.saveFillNewSatu();
   }
 
+  StepFillSatu({Key? key, this.ecmId}) : super(key: key);
+
   @override
   StepFillSatuState createState() => StepFillSatuState();
 }
 
 class StepFillSatuState extends State<StepFillSatu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  StepFillSatuModel stepFillSatuModel = StepFillSatuModel();
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -65,7 +70,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   String next_two = '';
 
   String filterTeamMember = "";
-  
+
   void setBahasa() async {
     final prefs = await _prefs;
     String bahasaBool = prefs.getString("bahasa") ?? "";
@@ -435,6 +440,18 @@ class StepFillSatuState extends State<StepFillSatu> {
     }
   }
 
+  void getStep1DataForEdit() async {
+    final prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    var result = await getStep1Data(widget.ecmId!, tokenUser);
+
+    if (result['response']['status'] == 200) {
+      setState(() {
+        stepFillSatuModel = StepFillSatuModel.fromJson(result['data']);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -445,6 +462,8 @@ class StepFillSatuState extends State<StepFillSatu> {
     setBahasa();
     setLang();
     setFormStep1AfterChoosing();
+
+    print("id ecm edit ${widget.ecmId}");
   }
 
   @override
