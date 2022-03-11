@@ -178,8 +178,13 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   Future<List> getDataItemChecking() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
-    String ecmId = prefs.getString("idEcm") ?? "-";
+    String ecmId =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
     String userId = prefs.getString("idKeyUser") ?? "-";
+
+    if (prefs.getString("ecmIdEdit").toString() != "null") {
+      prefs.setString("itemStep4Bool", "1");
+    }
 
     try {
       print("ecm id: $ecmId");

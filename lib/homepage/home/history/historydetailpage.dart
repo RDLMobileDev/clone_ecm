@@ -9,7 +9,7 @@ import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
 import 'package:e_cm/homepage/home/model/incident_effect.dart';
 import 'package:e_cm/homepage/home/model/incident_mistake.dart';
 import 'package:e_cm/homepage/home/services/api_detail_history_home.dart';
-import 'package:e_cm/homepage/home/services/apidetailecm.dart';
+// import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,9 +19,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HistoryDetailPage extends StatefulWidget {
   final String notifId;
+  final String? ecmId;
   final bool isShowButton;
 
-  const HistoryDetailPage({required this.notifId, required this.isShowButton});
+  const HistoryDetailPage(
+      {required this.notifId, required this.isShowButton, this.ecmId});
 
   @override
   _HistoryDetailPageState createState() => _HistoryDetailPageState();
@@ -337,25 +339,29 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         " (" +
                         detailEcmModel.nomormesin.toString() +
                         ")"),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => FillNew(
-                                  ecmId: widget.notifId,
-                                )));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 40,
-                        decoration: BoxDecoration(color: Color(0xff00AEDB)),
-                        child: Center(
-                            child: Text(
-                          "Edit E-CM",
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        )),
-                      ),
-                    ),
+                    widget.ecmId != null
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => FillNew(
+                                        ecmId: widget.ecmId,
+                                      )));
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(top: 10),
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              decoration:
+                                  BoxDecoration(color: Color(0xff00AEDB)),
+                              child: Center(
+                                  child: Text(
+                                "Edit E-CM",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                              )),
+                            ),
+                          )
+                        : Container(),
                     _buildDivider(),
                     Container(
                       width: MediaQuery.of(context).size.width,

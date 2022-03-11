@@ -344,7 +344,7 @@ class StepFillDuaState extends State<StepFillDua> {
   void saveStepFillDua() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    var idEcmKey = prefs.getString("idEcm") ?? "";
+    // var idEcmKey = prefs.getString("idEcm") ?? "";
     var shiftAkey = prefs.getString("shiftA") ?? "";
     var shiftBkey = prefs.getString("shiftB") ?? "";
     var shiftCkey = prefs.getString("shiftC") ?? "";
@@ -386,7 +386,7 @@ class StepFillDuaState extends State<StepFillDua> {
         production: productionOptKey,
         engineering: engineerOptKey,
         other: otherOptKey,
-        ecmId: idEcmKey,
+        ecmId: prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "",
         // images: files
         // imagesName: imagesKeyName,
         imagesPath: imagesKetPath,
@@ -509,7 +509,7 @@ class StepFillDuaState extends State<StepFillDua> {
     if (imagesKetPath.isNotEmpty) {
       imageProblemPath.addAll(imagesKetPath);
     } else {
-      print("asdjfghasdjk");
+      print("gambar tidak ada");
     }
 
     // TIME AND DESC PROBLEM
@@ -518,6 +518,107 @@ class StepFillDuaState extends State<StepFillDua> {
         timePickController = TextEditingController(text: timePickState);
         problemTypeController = TextEditingController(text: problemTypeState);
       });
+    }
+  }
+
+  void getStep2DataForEdit() async {
+    final prefs = await _prefs;
+    String idEcmEdit = prefs.getString("ecmIdEdit") ?? "0";
+    String token = prefs.getString("tokenKey") ?? "-";
+
+    List<String> fotoStep2forEdit = [];
+
+    print("id ecm di step 2 $idEcmEdit");
+
+    if (idEcmEdit != "0") {
+      try {
+        var result = await getStepDuaDataForEdit(idEcmEdit, token);
+
+        if (result['response']['status'] == 200) {
+          if (result['data'] != null) {
+            print("getttt step 2 update");
+            var dataStepDua = result['data'];
+
+            prefs.setString("shiftA", dataStepDua['t_ecm_shifta'].toString());
+            prefs.setString("shiftB", dataStepDua['t_ecm_shiftb'].toString());
+            prefs.setString("shiftC", dataStepDua['t_ecm_shiftns'].toString());
+
+            prefs.setString("timePickState", dataStepDua['t_ecm_time']);
+            prefs.setString("problemTypeState", dataStepDua['t_ecm_problem']);
+
+            prefs.setString(
+                "safetyOpt",
+                dataStepDua['t_ecm_safety'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_safety'].toString());
+            prefs.setString(
+                "qualityOpt",
+                dataStepDua['t_ecm_quality'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_quality'].toString());
+            prefs.setString(
+                "deliveryOpt",
+                dataStepDua['t_ecm_delivery'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_delivery'].toString());
+            prefs.setString(
+                "costOpt",
+                dataStepDua['t_ecm_cost'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_cost'].toString());
+
+            prefs.setString(
+                "moldingOpt",
+                dataStepDua['t_ecm_molding'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_molding'].toString());
+            prefs.setString(
+                "utilityOpt",
+                dataStepDua['t_ecm_utility'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_utility'].toString());
+            prefs.setString(
+                "productionOpt",
+                dataStepDua['t_ecm_production'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_production'].toString());
+            prefs.setString(
+                "engineerOpt",
+                dataStepDua['t_ecm_engineering'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_engineering'].toString());
+            prefs.setString(
+                "otherOpt",
+                dataStepDua['t_ecm_other'] == null
+                    ? ""
+                    : dataStepDua['t_ecm_other'].toString());
+
+            if (dataStepDua['t_ecm_foto1'] != null) {
+              fotoStep2forEdit.add(dataStepDua['t_ecm_foto1']);
+            }
+
+            if (dataStepDua['t_ecm_foto2'] != null) {
+              fotoStep2forEdit.add(dataStepDua['t_ecm_foto2']);
+            }
+
+            if (dataStepDua['t_ecm_foto3'] != null) {
+              fotoStep2forEdit.add(dataStepDua['t_ecm_foto3']);
+            }
+
+            if (dataStepDua['t_ecm_foto4'] != null) {
+              fotoStep2forEdit.add(dataStepDua['t_ecm_foto4']);
+            }
+
+            setState(() {
+              imageProblemPath.addAll(fotoStep2forEdit);
+            });
+
+            setFormStep2AfterChoosing();
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
@@ -535,10 +636,14 @@ class StepFillDuaState extends State<StepFillDua> {
 
   @override
   void initState() {
-    print("step 2 init");
     super.initState();
+    print("step 2 init");
+
     setLang();
     setBahasa();
+
+    getStep2DataForEdit();
+
     setFormStep2AfterChoosing();
     checkKlasifikasiTypeValue();
   }
@@ -1621,16 +1726,24 @@ class StepFillDuaState extends State<StepFillDua> {
                       children: [
                         Row(
                           children: imageProblemPath.map((img) {
+                            bool urlIstrue = Uri.parse(img).isAbsolute;
                             return Container(
                               width: 120,
                               height: 120,
                               margin: EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: FileImage(File(img)),
-                                      fit: BoxFit.fill),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
+                              decoration: urlIstrue == true
+                                  ? BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(img),
+                                          fit: BoxFit.fill),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8)))
+                                  : BoxDecoration(
+                                      image: DecorationImage(
+                                          image: FileImage(File(img)),
+                                          fit: BoxFit.fill),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8))),
                             );
                           }).toList(),
                         ),

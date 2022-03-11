@@ -112,7 +112,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
     String why4 = prefs.getString("why4") ?? "-";
     String why5 = prefs.getString("howC") ?? "";
     // String how = ;
-    String ecmId = prefs.getString("idEcm") ?? "";
+    // String ecmId = prefs.getString("idEcm") ?? "";
     String tokenUser = prefs.getString("tokenKey").toString();
 
     print("why1");
@@ -122,7 +122,14 @@ class _StepFillTigaState extends State<StepFillTiga> {
       if ((why1.isNotEmpty || why1 != "-") &&
           (why2.isNotEmpty || why2 != "-")) {
         var result = await fillNewTiga(
-            why1, why2, why3, why4, why5, "", ecmId, tokenUser);
+            why1,
+            why2,
+            why3,
+            why4,
+            why5,
+            "",
+            prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "",
+            tokenUser);
         print(result);
 
         Fluttertoast.showToast(
@@ -170,9 +177,38 @@ class _StepFillTigaState extends State<StepFillTiga> {
     }
   }
 
+  void getStep3DataForEdit() async {
+    final prefs = await _prefs;
+    String idEcmEdit = prefs.getString("ecmIdEdit") ?? "0";
+    String token = prefs.getString("tokenKey") ?? "-";
+
+    print("id ecm di step 3 => $idEcmEdit");
+
+    if (idEcmEdit != "0") {
+      try {
+        var result = await getStepTigaDataForEdit(idEcmEdit, token);
+
+        print(result);
+
+        if (result['response']['status'] == 200) {
+          var dataStepTiga = result['data'];
+          prefs.setString("why1", dataStepTiga['t_ecm_why1']);
+          prefs.setString("why2", dataStepTiga['t_ecm_why2']);
+          prefs.setString("why3", dataStepTiga['t_ecm_why3']);
+          prefs.setString("why4", dataStepTiga['t_ecm_why4']);
+          prefs.setString("howC", dataStepTiga['t_ecm_why5']);
+          setFormStep3AfterChoosing();
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getStep3DataForEdit();
     setLang();
     setBahasa();
     setFormStep3AfterChoosing();

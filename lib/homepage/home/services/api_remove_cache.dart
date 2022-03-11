@@ -74,6 +74,9 @@ void removeCacheFillEcm() async {
   prefs.remove("outHouseCost");
   prefs.remove("vendorName");
   prefs.remove("ttlCostOutHouse");
+
+  // remove ecm edit
+  prefs.remove("ecmIdEdit");
 }
 
 // Future<bool> checkDataTemporaryStep6() async {

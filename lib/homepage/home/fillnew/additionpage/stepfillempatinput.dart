@@ -277,7 +277,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void fetchLocationPartData() async {
     var prefs = await _prefs;
-    String ecmId = prefs.getString("idEcm") ?? "";
+    String ecmId =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
@@ -334,10 +335,10 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void saveStepInputChecking() async {
     final prefs = await _prefs;
-    var ecmId = prefs.getString("idEcm");
+    var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     var idUser = prefs.getString("idKeyUser").toString();
     // String tokenUser = prefs.getString("tokenKey") ?? "";
-    var idMachineRes = prefs.getString("id_machine_res");
+    var idMachineRes = prefs.getString("id_machine_res") ?? "";
 
     print(ecmId);
 
@@ -346,8 +347,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     try {
       var result = await fillNewEmpatInsert(
           // tokenUser,
-          ecmId!,
-          idMachineRes!,
+          ecmId,
+          idMachineRes,
           tecName.text,
           formValue["standard"]!,
           formValue["actual"]!,

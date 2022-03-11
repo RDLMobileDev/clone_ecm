@@ -423,7 +423,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
   void saveStepInputRepairing() async {
     final prefs = await SharedPreferences.getInstance();
-    var ecmId = prefs.getString("idEcm");
+    var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     var ecmItemId = prefs.getString("idEcmItem");
     var idUser = prefs.getString("idKeyUser").toString();
     var machineId = prefs.getString("machineId");
@@ -450,7 +450,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
           formValue["end"] ?? "-",
           formValue["repair"] ?? "-",
           idUserChecker ?? "-",
-          ecmId ?? "-",
+          ecmId,
           machineId ?? "-",
           itemNameStepLima,
           idUser,
@@ -539,7 +539,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
   void fetchLocationPartData() async {
     var prefs = await _prefs;
-    String ecmId = prefs.getString("idEcm") ?? "";
+    String ecmId =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     String tokenUser = prefs.getString("tokenKey") ?? "";
 
     var dataItem =

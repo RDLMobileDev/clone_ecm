@@ -167,7 +167,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   Future<List> getPartItembyMacchine() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    String idEcmKey = prefs.getString("idEcm") ?? "";
+    String idEcmKey =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
 
     listItemMachineData =
         await partItemMachineService.getPartItemMachine(tokenUser, idEcmKey);
@@ -209,7 +210,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
     print("save sparepart");
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    String? idEcmKey = prefs.getString("idEcm");
+    String idEcmKey =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     String? idMesin = prefs.getString("id_machine_res");
     var idPartMachine = prefs.getString("idPartItemMachine");
 
@@ -224,7 +226,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             textColor: Colors.white,
             fontSize: 16);
       } else {
-        var result = await saveDataPartMachine(tokenUser, idEcmKey!, idMesin!,
+        var result = await saveDataPartMachine(tokenUser, idEcmKey, idMesin!,
             partNameController.text, qtyStock.toString(), qtyUsed, "0");
 
         print(result);
@@ -277,7 +279,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   void getItemForStep7() async {
     final prefs = await _prefs;
     String tokenUser = prefs.getString("tokenKey").toString();
-    String idEcmKey = prefs.getString("idEcm") ?? "";
+    String idEcmKey =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
 
     itemPartStepTujuh = await getItemStepTujuh(tokenUser, idEcmKey);
   }

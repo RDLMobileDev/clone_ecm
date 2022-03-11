@@ -8,7 +8,7 @@ Future checkEcmRejectedByTL(String idUser, String token) async {
 
   final response = await http.post(Uri.parse("$url/cekecmrejected"),
       headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
-      body: {"user_id": idUser});
+      body: {"id_user": idUser});
 
   return jsonDecode(response.body);
 }

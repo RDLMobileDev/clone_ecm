@@ -556,7 +556,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
   getStep6() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    String ecmId = prefs.getString("idEcm").toString();
+    String ecmId =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     String ecmitemId = prefs.getString("idEcmItem").toString();
     String userId = prefs.getString("idKeyUser").toString();
 
@@ -675,7 +676,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
     // String newOutHouseCost = costOutHouseController.text.replaceAll(".", "");
 
     String? tokenUser = prefs.getString("tokenKey").toString();
-    String idEcm = prefs.getString("idEcm").toString();
+    String idEcm =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
     String idKeyUser = prefs.getString("idKeyUser").toString();
     String userName = prefs.getString("userName").toString();
     String idea = prefs.getString("idea").toString();

@@ -316,7 +316,9 @@ class _FillNewState extends State<FillNew> {
             prefs.getString("locationBool")!.isNotEmpty &&
             prefs.getString("machineNameBool")!.isNotEmpty &&
             prefs.getString("machineDetailBool")!.isNotEmpty) {
-          _stepFillSatu.getSaveFillSatu();
+          widget.ecmId == null
+              ? _stepFillSatu.getSaveFillSatu()
+              : _stepFillSatu.getUpdateFillSatu();
           setState(() {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;

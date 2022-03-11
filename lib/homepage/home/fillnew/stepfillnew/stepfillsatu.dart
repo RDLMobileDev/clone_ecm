@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors, prefer_is_empty
+// ignore_for_file: sized_box_for_whitespace, avoid_print, unnecessary_const, use_key_in_widget_constructors, prefer_const_constructors, prefer_is_empty, prefer_typing_uninitialized_variables
 
 import 'dart:async';
 import 'dart:convert';
@@ -32,6 +32,10 @@ class StepFillSatu extends StatefulWidget {
   void getSaveFillSatu() {
     // print("tes step 1");
     stepFillSatuState.saveFillNewSatu();
+  }
+
+  void getUpdateFillSatu() {
+    stepFillSatuState.updateFillNewSatu();
   }
 
   StepFillSatu({Key? key, this.ecmId}) : super(key: key);
@@ -214,8 +218,104 @@ class StepFillSatuState extends State<StepFillSatu> {
   List<bool> warnaClassifications = [];
   Map<int, bool> mapClass = {};
 
+  void updateFillNewSatu() async {
+    print("asdk");
+    final prefs = await _prefs;
+    print(prefs.getString("ecmIdEdit"));
+    // print("from prefs: ${prefs.getString("idClassification")}");
+
+    var idClass = prefs.getString("idClassification") ?? "";
+    var tglStepSatu = prefs.getString("tglStepSatu") ?? "";
+
+    // var teamMember = prefs.getString("teamMember");
+
+    List<String>? teamId = prefs.getStringList("teamMember") ?? [];
+    var locationId = prefs.getString("locationId") ?? "";
+    var locationIdGroup = prefs.getString("locationIdGroup") ?? "";
+    var machineId = prefs.getString("machineId") ?? "";
+    var machineDetailId = prefs.getString("machineDetailId") ?? "";
+
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser").toString();
+
+    print(locationId);
+    print(locationIdGroup);
+    print(machineId);
+    print(machineDetailId);
+
+    try {
+      if (tokenUser != "" &&
+          idClass != "" &&
+          tglStepSatu != "" &&
+          idUser != "" &&
+          teamId.length != 0 &&
+          locationId != "" &&
+          locationIdGroup != "" &&
+          machineId != "" &&
+          machineDetailId != "") {
+        var result = await postStepSatuEdit(
+            tokenUser,
+            prefs.getString("ecmIdEdit") ?? "0",
+            idClass,
+            tglStepSatu,
+            idUser,
+            teamId,
+            locationId,
+            locationIdGroup,
+            machineId,
+            machineDetailId);
+
+        print("response edit step 1");
+        print(result);
+
+        // print(result['data']['id_ecm']);
+        // prefs.setString("idEcm", result['data']['id_ecm'].toString());
+        prefs.setString(
+            "id_machine_res", result['data']['id_machine'].toString());
+
+        if (result['response']['status'] == 200) {
+          Fluttertoast.showToast(
+              msg: 'Data step 1 diperbarui',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Kesalahan jaringan. Data gagal disimpan.',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+          print(result);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Data tidak disimpan, cek semua input field',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+    } on SocketException catch (e) {
+      print(e);
+    } on TimeoutException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
+    print("save satuuu");
     final prefs = await _prefs;
     // print("from prefs: ${prefs.getString("idClassification")}");
 
@@ -412,6 +512,10 @@ class StepFillSatuState extends State<StepFillSatu> {
   void setFormStep1AfterChoosing() async {
     final prefs = await _prefs;
 
+    print("id ecm for edit: ${widget.ecmId}");
+
+    String tokenUser = prefs.getString("tokenKey").toString();
+
     String? namaKlasifikasi = prefs.getString("namaKlasifikasi");
     String? tglStepSatu = prefs.getString("tglStepSatu");
     String? namaMember = prefs.getString("namaMember");
@@ -437,6 +541,52 @@ class StepFillSatuState extends State<StepFillSatu> {
         machineNameController = TextEditingController(text: namaMesin);
         machineNumberController = TextEditingController(text: nomorMesin);
       });
+    } else if (widget.ecmId != null) {
+      prefs.setString("ecmIdEdit", widget.ecmId ?? "0");
+      var result = await getStepSatuDataForEdit(widget.ecmId ?? "0", tokenUser);
+
+      if (result['response']['status'] == 200) {
+        var dataEcmStep1 = result['data'];
+        if (dataEcmStep1 != null) {
+          // set data preference untuk data update step 1
+
+          // prefs.setString("classBool", "1");
+          // prefs.setString("dateBool", "1");
+          // prefs.setString("teamMemberBool", "1");
+          // prefs.setString("locationBool", "1");
+          // prefs.setString("machineNameBool", "1");
+          // prefs.setString("machineDetailBool", "1");
+
+          // listTeamMember =
+          //     List<String>.from(dataEcmStep1['team_member_id'] as List);
+
+          // prefs.setString(
+          //     "idClassification", dataEcmStep1['classification_id'].toString());
+          // prefs.setString("tglStepSatu", dataEcmStep1['date']);
+          // prefs.setStringList("teamMember", listTeamMember);
+          // prefs.setString("locationId", dataEcmStep1['factory'].toString());
+          // prefs.setString(
+          //     "locationIdGroup", dataEcmStep1['group_factory'].toString());
+          // prefs.setString("machineId", dataEcmStep1['machine_id'].toString());
+          // prefs.setString(
+          //     "machineDetailId", dataEcmStep1['machinedetail_id'].toString());
+
+          setState(() {
+            namaKlasifikasiFromSession = dataEcmStep1['classification_name'];
+            dateSelected = dataEcmStep1['date'];
+            teamMemberController =
+                TextEditingController(text: dataEcmStep1['team_member']);
+            factoryNameController =
+                TextEditingController(text: dataEcmStep1['factory_name']);
+            factoryNameGroupController =
+                TextEditingController(text: dataEcmStep1['group_name']);
+            machineNameController =
+                TextEditingController(text: dataEcmStep1['machine_name']);
+            machineNumberController =
+                TextEditingController(text: dataEcmStep1['machinedetail_name']);
+          });
+        }
+      }
     }
   }
 
@@ -455,13 +605,13 @@ class StepFillSatuState extends State<StepFillSatu> {
   @override
   void initState() {
     super.initState();
-    // getClassificationData();
+    setFormStep1AfterChoosing();
+    getClassificationData();
     getListLocation();
     getListAreaGroup();
     getMachineName();
     setBahasa();
     setLang();
-    setFormStep1AfterChoosing();
 
     print("id ecm edit ${widget.ecmId}");
   }

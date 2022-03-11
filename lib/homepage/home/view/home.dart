@@ -69,6 +69,9 @@ class _HomeState extends State<Home> {
   String ecm_approved = '';
   String ecm_declined = '';
   String ecm_pending = '';
+
+  // bool hidePopupReject = false;
+
   var cardStatus;
 
   void _onRefresh() async {
@@ -186,7 +189,7 @@ class _HomeState extends State<Home> {
     return nameUser;
   }
 
-  void showDialogEcmDitolak() {
+  void showDialogEcmDitolak(String alasan, String notifId, String ecmId) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -208,17 +211,27 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 8),
+                margin: EdgeInsets.only(top: 8, left: 16, right: 16),
                 width: MediaQuery.of(context).size.width,
                 child: Center(
-                  child: Text("E-CM Anda ditolak karena ....."),
+                  child: Text(
+                    "E-CM Anda ditolak karena $alasan",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
                 ),
               ),
               InkWell(
                 onTap: () async {
+                  // print(notifId);
+                  print(ecmId);
+                  // print(alasan);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => HistoryDetailPage(
-                            notifId: '785',
+                            notifId: ecmId,
+                            ecmId: ecmId,
                             isShowButton: false,
                           )));
                 },
@@ -256,7 +269,9 @@ class _HomeState extends State<Home> {
       print(result);
 
       if (result['data'] != null) {
-        showDialogEcmDitolak();
+        var dataEcmId = result['data'];
+        showDialogEcmDitolak(dataEcmId['alasan'],
+            dataEcmId['id_notif'].toString(), dataEcmId['id_ecm'].toString());
       }
     } catch (e) {
       print(e);

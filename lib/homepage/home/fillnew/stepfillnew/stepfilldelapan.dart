@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/dashboard.dart';
-import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
+// import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
 import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/apifillnewdelapan.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
@@ -141,39 +141,72 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   postStepDelapan() async {
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
-    String? ecmId = prefs.getString("idEcm").toString();
+    String ecmId = prefs.getString("idEcm") ?? "";
+    String ecmIdEdit = prefs.getString("ecmIdEdit") ?? "";
 
     String engineerToKey = prefs.getString("engineerTo") ?? "0";
     String productToKey = prefs.getString("productTo") ?? "0";
     String othersToKey = prefs.getString("othersTo") ?? "0";
-    String idEcm = prefs.getString("idEcm") ?? "";
+    String idEcm =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
 
     try {
-      var response = await fillNewDelapan(
-              ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
-          .timeout(const Duration(seconds: 15));
+      if (prefs.getString("ecmIdEdit").toString() != "null") {
+        print("step 8 edit id ecm ${prefs.getString("ecmIdEdit")}");
+        // var response = await fillNewDelapanEdit(
+        //         ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
+        //     .timeout(const Duration(seconds: 15));
 
-      print("response step 8:");
-      print(response);
+        // print("response step 8 edit:");
+        // print(response);
 
-      if (response['response']['status'] == 200) {
-        print("sukses");
+        // if (response['response']['status'] == 200) {
+        //   print("sukses diperbarui step 8");
+        // } else {
+        //   Fluttertoast.showToast(
+        //       msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       fontSize: 16);
+
+        //   var response =
+        //       await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+        //   removeStepCacheFillEcm();
+        //   removeCacheFillEcm();
+        //   Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => Dashboard()),
+        //       ModalRoute.withName("/"));
+        // }
       } else {
-        Fluttertoast.showToast(
-            msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            fontSize: 16);
+        print("ini ecm baru step 8");
+        // var response = await fillNewDelapan(
+        //         ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+        //     .timeout(const Duration(seconds: 15));
 
-        var response =
-            await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
-        removeStepCacheFillEcm();
-        removeCacheFillEcm();
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
-            ModalRoute.withName("/"));
+        // print("response step 8:");
+        // print(response);
+
+        // if (response['response']['status'] == 200) {
+        //   print("sukses");
+        // } else {
+        //   Fluttertoast.showToast(
+        //       msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       fontSize: 16);
+
+        //   var response =
+        //       await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+        //   removeStepCacheFillEcm();
+        //   removeCacheFillEcm();
+        //   Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => Dashboard()),
+        //       ModalRoute.withName("/"));
+        // }
       }
     } on TimeoutException catch (_) {
       showDialog<String>(
@@ -209,10 +242,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.greenAccent,
         );
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
-            ModalRoute.withName("/"));
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => Dashboard()),
+        //     ModalRoute.withName("/"));
       });
     }
   }
