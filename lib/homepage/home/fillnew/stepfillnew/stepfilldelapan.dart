@@ -153,60 +153,60 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     try {
       if (prefs.getString("ecmIdEdit").toString() != "null") {
         print("step 8 edit id ecm ${prefs.getString("ecmIdEdit")}");
-        // var response = await fillNewDelapanEdit(
-        //         ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
-        //     .timeout(const Duration(seconds: 15));
+        var response = await fillNewDelapanEdit(
+                ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
+            .timeout(const Duration(seconds: 15));
 
-        // print("response step 8 edit:");
-        // print(response);
+        print("response step 8 edit:");
+        print(response);
 
-        // if (response['response']['status'] == 200) {
-        //   print("sukses diperbarui step 8");
-        // } else {
-        //   Fluttertoast.showToast(
-        //       msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
-        //       toastLength: Toast.LENGTH_SHORT,
-        //       gravity: ToastGravity.BOTTOM,
-        //       timeInSecForIosWeb: 2,
-        //       fontSize: 16);
+        if (response['response']['status'] == 200) {
+          print("sukses diperbarui step 8");
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              fontSize: 16);
 
-        //   var response =
-        //       await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
-        //   removeStepCacheFillEcm();
-        //   removeCacheFillEcm();
-        //   Navigator.pushAndRemoveUntil(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => Dashboard()),
-        //       ModalRoute.withName("/"));
-        // }
+          var response =
+              await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+          removeStepCacheFillEcm();
+          removeCacheFillEcm();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Dashboard()),
+              ModalRoute.withName("/"));
+        }
       } else {
         print("ini ecm baru step 8");
-        // var response = await fillNewDelapan(
-        //         ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
-        //     .timeout(const Duration(seconds: 15));
+        var response = await fillNewDelapan(
+                ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+            .timeout(const Duration(seconds: 15));
 
-        // print("response step 8:");
-        // print(response);
+        print("response step 8:");
+        print(response);
 
-        // if (response['response']['status'] == 200) {
-        //   print("sukses");
-        // } else {
-        //   Fluttertoast.showToast(
-        //       msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
-        //       toastLength: Toast.LENGTH_SHORT,
-        //       gravity: ToastGravity.BOTTOM,
-        //       timeInSecForIosWeb: 2,
-        //       fontSize: 16);
+        if (response['response']['status'] == 200) {
+          print("sukses");
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              fontSize: 16);
 
-        //   var response =
-        //       await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
-        //   removeStepCacheFillEcm();
-        //   removeCacheFillEcm();
-        //   Navigator.pushAndRemoveUntil(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => Dashboard()),
-        //       ModalRoute.withName("/"));
-        // }
+          var response =
+              await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+          removeStepCacheFillEcm();
+          removeCacheFillEcm();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Dashboard()),
+              ModalRoute.withName("/"));
+        }
       }
     } on TimeoutException catch (_) {
       showDialog<String>(

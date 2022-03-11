@@ -219,7 +219,7 @@ class StepFillSatuState extends State<StepFillSatu> {
   Map<int, bool> mapClass = {};
 
   void updateFillNewSatu() async {
-    print("asdk");
+    print("update ecm step 1");
     final prefs = await _prefs;
     print(prefs.getString("ecmIdEdit"));
     // print("from prefs: ${prefs.getString("idClassification")}");
