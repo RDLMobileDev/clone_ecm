@@ -426,24 +426,16 @@ class _FillNewState extends State<FillNew> {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-          // Fluttertoast.showToast(
-          //     msg: 'Tambahkan item dahulu',
-          //     toastLength: Toast.LENGTH_SHORT,
-          //     gravity: ToastGravity.BOTTOM,
-          //     timeInSecForIosWeb: 2,
-          //     fontSize: 16);
         }
       }
 
       if (_currentStep == 7) {
-        print("step in: " + _stepClicked.toString());
-        setState(() {
-          next = 'Finish';
-        });
         if ((prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "0") ||
             prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "1") {
+          await _stepFillDelapan.getMethodPostStep();
+
           showDialog(
               barrierDismissible: false,
               context: context,
@@ -457,9 +449,9 @@ class _FillNewState extends State<FillNew> {
                   ),
                 );
               });
+
           try {
             successStep8();
-            await _stepFillDelapan.getMethodPostStep();
             Timer.periodic(Duration(seconds: 10), (timer) async {
               if (timer.tick == 5) {
                 removeStepCacheFillEcm();
@@ -501,13 +493,6 @@ class _FillNewState extends State<FillNew> {
               ),
             );
           }
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Pilih satu field Copy to',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
         }
       }
     } catch (e) {

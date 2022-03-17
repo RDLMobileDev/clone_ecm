@@ -139,6 +139,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   }
 
   postStepDelapan() async {
+    print("post dari step 8");
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     String ecmId = prefs.getString("idEcm") ?? "";
@@ -147,12 +148,38 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     String engineerToKey = prefs.getString("engineerTo") ?? "0";
     String productToKey = prefs.getString("productTo") ?? "0";
     String othersToKey = prefs.getString("othersTo") ?? "0";
-    String idEcm =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+
+    print("ini ecm baru step 8");
+    print("id ecm edit: $ecmIdEdit");
 
     try {
-      if (prefs.getString("ecmIdEdit").toString() != "null") {
-        print("step 8 edit id ecm ${prefs.getString("ecmIdEdit")}");
+      if (ecmIdEdit.isEmpty || ecmIdEdit == "" || ecmIdEdit == "null") {
+        var res = await fillNewDelapan(
+                ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+            .timeout(const Duration(seconds: 15));
+
+        print("response step 8:");
+        print(res);
+
+        if (res['response']['status'] == 200) {
+          print("sukses");
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              fontSize: 16);
+
+          await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
+          removeStepCacheFillEcm();
+          removeCacheFillEcm();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Dashboard()),
+              ModalRoute.withName("/"));
+        }
+      } else {
         var response = await fillNewDelapanEdit(
                 ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
             .timeout(const Duration(seconds: 15));
@@ -170,36 +197,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
               timeInSecForIosWeb: 2,
               fontSize: 16);
 
-          var response =
-              await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
-          removeStepCacheFillEcm();
-          removeCacheFillEcm();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Dashboard()),
-              ModalRoute.withName("/"));
-        }
-      } else {
-        print("ini ecm baru step 8");
-        var response = await fillNewDelapan(
-                ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
-            .timeout(const Duration(seconds: 15));
-
-        print("response step 8:");
-        print(response);
-
-        if (response['response']['status'] == 200) {
-          print("sukses");
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
-
-          var response =
-              await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+          // var response =
+          //     await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
           removeStepCacheFillEcm();
           removeCacheFillEcm();
           Navigator.pushAndRemoveUntil(
@@ -231,8 +230,6 @@ class StepFillDelapanState extends State<StepFillDelapan> {
       );
       // A timeout occurred.
     } on SocketException catch (_) {
-      // print(e);
-      // var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
       removeStepCacheFillEcm();
       removeCacheFillEcm();
       setStateIfMounted(() {
@@ -242,12 +239,106 @@ class StepFillDelapanState extends State<StepFillDelapan> {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.greenAccent,
         );
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => Dashboard()),
-        //     ModalRoute.withName("/"));
       });
     }
+
+    // try {
+    //   if (prefs.getString("ecmIdEdit").toString() != "null") {
+    //     print("step 8 edit id ecm ${prefs.getString("ecmIdEdit")}");
+    //     var response = await fillNewDelapanEdit(
+    //             ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
+    //         .timeout(const Duration(seconds: 15));
+
+    //     print("response step 8 edit:");
+    //     print(response);
+
+    //     if (response['response']['status'] == 200) {
+    //       print("sukses diperbarui step 8");
+    //     } else {
+    //       Fluttertoast.showToast(
+    //           msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+    //           toastLength: Toast.LENGTH_SHORT,
+    //           gravity: ToastGravity.BOTTOM,
+    //           timeInSecForIosWeb: 2,
+    //           fontSize: 16);
+
+    //       var response =
+    //           await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
+    //       removeStepCacheFillEcm();
+    //       removeCacheFillEcm();
+    //       Navigator.pushAndRemoveUntil(
+    //           context,
+    //           MaterialPageRoute(builder: (context) => Dashboard()),
+    //           ModalRoute.withName("/"));
+    //     }
+    //   } else {
+    //     print("ini ecm baru step 8");
+    //     var res = await fillNewDelapan(
+    //             ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+    //         .timeout(const Duration(seconds: 15));
+
+    //     print("response step 8:");
+    //     print(res);
+
+    //     if (res['response']['status'] == 200) {
+    //       print("sukses");
+    //     } else {
+    //       Fluttertoast.showToast(
+    //           msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+    //           toastLength: Toast.LENGTH_SHORT,
+    //           gravity: ToastGravity.BOTTOM,
+    //           timeInSecForIosWeb: 2,
+    //           fontSize: 16);
+
+    //       await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
+    //       removeStepCacheFillEcm();
+    //       removeCacheFillEcm();
+    //       Navigator.pushAndRemoveUntil(
+    //           context,
+    //           MaterialPageRoute(builder: (context) => Dashboard()),
+    //           ModalRoute.withName("/"));
+    //     }
+    //   }
+    // } on TimeoutException catch (_) {
+    //   showDialog<String>(
+    //     context: context,
+    //     builder: (BuildContext context) => AlertDialog(
+    //       title: const Text('Timeout'),
+    //       content: const Text(
+    //           'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           onPressed: () => Navigator.of(context)
+    //             ..pop()
+    //             ..pop(true),
+    //           child: const Text('Kembali'),
+    //         ),
+    //         TextButton(
+    //           onPressed: () => postStepDelapan(),
+    //           child: const Text('Kirim Ulang'),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    //   // A timeout occurred.
+    // } on SocketException catch (_) {
+    //   // print(e);
+    //   // var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
+    //   removeStepCacheFillEcm();
+    //   removeCacheFillEcm();
+    //   setStateIfMounted(() {
+    //     Fluttertoast.showToast(
+    //       msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
+    //       toastLength: Toast.LENGTH_LONG,
+    //       gravity: ToastGravity.BOTTOM,
+    //       backgroundColor: Colors.greenAccent,
+    //     );
+    //     // Navigator.pushAndRemoveUntil(
+    //     //     context,
+    //     //     MaterialPageRoute(builder: (context) => Dashboard()),
+    //     //     ModalRoute.withName("/"));
+    //   });
+    // }
   }
 
   @override
