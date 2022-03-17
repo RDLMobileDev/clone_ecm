@@ -103,7 +103,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
   List<ApprovedModel> _listApproved = [];
 
   Future<List<ApprovedModel>> getApprovedData() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     String? tokenUser = prefs.getString("tokenKey").toString();
     String? idUser = prefs.getString("idKeyUser").toString();
@@ -206,7 +205,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                             // ignore: prefer_const_literals_to_create_immutables
                             children: <TextSpan>[
                               TextSpan(
-                                  text: ecm_from,
+                                  text: "$ecm_from ",
                                   style: TextStyle(color: Color(0xFF6C7072))),
                               TextSpan(
                                   text: _listApproved[i].nama.toString(),
@@ -315,45 +314,46 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         SizedBox(
                                           width: 8,
                                         ),
-                                        Container(
-                                          width: 63,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFF00AEDB),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Center(
-                                            child: Text(
-                                              approve,
-                                              style: TextStyle(
-                                                  fontFamily: 'Rubik',
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Container(
-                                          width: 63,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFFF0000),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Center(
-                                            child: Text(
-                                              decline,
-                                              style: TextStyle(
-                                                  fontFamily: 'Rubik',
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ),
+                                        // Container(
+                                        //   width: 63,
+                                        //   height: 24,
+                                        //   decoration: BoxDecoration(
+                                        //       color: Color(0xFF00AEDB),
+                                        //       borderRadius: BorderRadius.all(
+                                        //           Radius.circular(5))),
+                                        //   child: Center(
+                                        //     child: Text(
+                                        //       approve,
+                                        //       style: TextStyle(
+                                        //           fontFamily: 'Rubik',
+                                        //           color: Colors.white,
+                                        //           fontSize: 12,
+                                        //           fontWeight: FontWeight.w400),
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // SizedBox(
+                                        //   width: 8,
+                                        // ),
+                                        // Container(
+                                        //   width: 63,
+                                        //   height: 24,
+                                        //   decoration: BoxDecoration(
+                                        //       color: Color(0xFFFF0000),
+                                        //       borderRadius: BorderRadius.all(
+                                        //           Radius.circular(5))),
+                                        //   child: Center(
+                                        //     child: Text(
+                                        //       decline,
+                                        //       style: TextStyle(
+                                        //           fontFamily: 'Rubik',
+                                        //           color: Colors.white,
+                                        //           fontSize: 12,
+                                        //           fontWeight:
+                                        //               FontWeight.w400),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ],
                                     )
                                   : _listApproved[i].status == "1"

@@ -15,7 +15,7 @@ Future getUser(String emailKey, String token) async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-    print('Token : ${token}');
+    print('Token : $token');
     print(response);
 
     if (response.body.isNotEmpty) {

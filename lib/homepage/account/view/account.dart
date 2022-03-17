@@ -22,7 +22,7 @@ class AccountMember extends StatefulWidget {
 }
 
 class _AccountMemberState extends State<AccountMember> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   String locale = Platform.localeName;
 

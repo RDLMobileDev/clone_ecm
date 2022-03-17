@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_cm/homepage/home/services/api_cek_ecm_rejected.dart';
 import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:http/http.dart' as http;
@@ -68,6 +69,9 @@ class _HomeState extends State<Home> {
   String ecm_approved = '';
   String ecm_declined = '';
   String ecm_pending = '';
+
+  // bool hidePopupReject = false;
+
   var cardStatus;
 
   void _onRefresh() async {
@@ -185,6 +189,95 @@ class _HomeState extends State<Home> {
     return nameUser;
   }
 
+  void showDialogEcmDitolak(String alasan, String notifId, String ecmId) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    "assets/icons/X.png",
+                    width: 20,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8, left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    "E-CM Anda ditolak karena $alasan",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  // print(notifId);
+                  print(ecmId);
+                  // print(alasan);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => HistoryDetailPage(
+                            notifId: ecmId,
+                            ecmId: ecmId,
+                            isShowButton: false,
+                          )));
+                },
+                child: Container(
+                    margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF00AEDB),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Center(
+                      child: Text(
+                        "Lihat E-CM",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              )
+            ],
+          );
+        });
+  }
+
+  void cekStatusEcmTolak() async {
+    final SharedPreferences prefs = await _prefs;
+    String? tokenUser = prefs.getString("tokenKey").toString();
+    String idUser = prefs.getString("idKeyUser") ?? "-";
+
+    try {
+      var result = await checkEcmRejectedByTL(idUser, tokenUser);
+      print("respon ecm ditolak");
+      print(result);
+
+      if (result['data'] != null) {
+        var dataEcmId = result['data'];
+        showDialogEcmDitolak(dataEcmId['alasan'],
+            dataEcmId['id_notif'].toString(), dataEcmId['id_ecm'].toString());
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   getRoleUser() async {
     final SharedPreferences prefs = await _prefs;
     int? jabatanUser = prefs.getInt("jabatanKey");
@@ -198,6 +291,8 @@ class _HomeState extends State<Home> {
           activitySectionJabatan = false;
           activityEcmStatusCount = true;
           activityFillNew = true;
+
+          cekStatusEcmTolak();
         } else {
           isVisibility = true;
           activityListTm = true;
@@ -443,8 +538,9 @@ class _HomeState extends State<Home> {
                               itemBuilder: (context, i) {
                                 return InkWell(
                                   onTap: () {
-                                    // print(
-                                    //     _listHistoryEcmUser[i].ecmId.toString());
+                                    print(_listHistoryEcmUser[i]
+                                        .ecmId
+                                        .toString());
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>

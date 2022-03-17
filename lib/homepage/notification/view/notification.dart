@@ -225,97 +225,103 @@ class _NotificationMemberState extends State<NotificationMember> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(16, 45, 24, 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(all_notification,
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        color: Color(0xff404446),
-                        fontWeight: FontWeight.w700)),
-                InkWell(
-                  onTap: () {
-                    markAsRead();
-                  },
-                  child: Text(mark_read,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 40, 24, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(all_notification,
                       style: TextStyle(
                           fontFamily: 'Rubik',
-                          fontSize: 12,
-                          color: Color(0xff00AEDB))),
-                ),
-              ],
+                          fontSize: 16,
+                          color: Color(0xff404446),
+                          fontWeight: FontWeight.w700)),
+                  InkWell(
+                    onTap: () {
+                      markAsRead();
+                    },
+                    child: Text(mark_read,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 12,
+                            color: Color(0xff00AEDB))),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Divider(
-            color: Colors.black54,
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
-            child: FutureBuilder(
-              future: getListNotif(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Text(notification);
-                }
+            const Divider(
+              color: Colors.black54,
+            ),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: FutureBuilder(
+                future: getListNotif(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text(notification);
+                  }
 
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: listNotificationEcm.length,
-                  itemBuilder: (context, i) {
-                    return Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(listNotificationEcm[i].foto),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: listNotificationEcm.length,
+                    itemBuilder: (context, i) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 16),
+                        child: Row(
                           children: [
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.0,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: listNotificationEcm[i].nama,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blueAccent),
-                                  ),
-                                  TextSpan(text: " "),
-                                  TextSpan(
-                                    text: approve_ecm,
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.grey),
-                                  )
-                                ],
-                              ),
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(listNotificationEcm[i].foto),
                             ),
-                            Text(
-                              listNotificationEcm[i].waktu,
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                            )
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: listNotificationEcm[i].nama,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blueAccent),
+                                      ),
+                                      TextSpan(text: " "),
+                                      TextSpan(
+                                        text: approve_ecm,
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.grey),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  listNotificationEcm[i].waktu,
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

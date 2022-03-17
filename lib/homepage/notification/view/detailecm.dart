@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
@@ -11,7 +12,9 @@ import 'package:e_cm/homepage/home/model/detailitemrepairmodel.dart';
 import 'package:e_cm/homepage/home/model/detailsparepartmodel.dart';
 import 'package:e_cm/homepage/home/model/incident_effect.dart';
 import 'package:e_cm/homepage/home/model/incident_mistake.dart';
+import 'package:e_cm/homepage/home/services/api_reject_ecm_service.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
+import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,8 +35,11 @@ class DetailEcm extends StatefulWidget {
 class _DetailEcmState extends State<DetailEcm> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  TextEditingController alasanTolak = TextEditingController();
+
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
+  bool isDeclined = false;
 
   String preventive_maintenance = '';
   String tim_member = '';
@@ -192,6 +198,141 @@ class _DetailEcmState extends State<DetailEcm> {
         declinedSign = dataLang['detail']['declined_esign'];
       });
     }
+  }
+
+  void postAlasanTolakEcm() async {
+    final SharedPreferences prefs = await _prefs;
+    String tokenUser = prefs.getString("tokenKey").toString();
+    String userId = prefs.getString("idKeyUser") ?? "-";
+
+    Map<String, dynamic> params = {
+      // "id_notif": userId,
+      "id_notif": widget.notifId,
+      "alasan": alasanTolak.text
+    };
+
+    try {
+      print("gassssssssss");
+
+      if (alasanTolak.text.isNotEmpty) {
+        var result = await postAlasanTolakTL(params, tokenUser);
+
+        print(result);
+
+        if (result['response']['status'] == 200) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 2,
+                  ),
+                );
+              });
+          await _loadingAction();
+          postUpdateStatus('2');
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Pembaruan status gagal',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Alasan penolakan harus diisi',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void showDialogInputReason(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    "assets/icons/X.png",
+                    width: 20,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    Text(
+                      "Masukan alasan penolakan E-CM",
+                      style: TextStyle(
+                          color: Color(0xFF404446),
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10, left: 16, right: 16),
+                      child: TextFormField(
+                        controller: alasanTolak,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: const Color(0xFF979C9E))),
+                            contentPadding: EdgeInsets.all(8),
+                            hintText: "Masukkan alasan Anda"),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  // Navigator.pop(context);
+                  postAlasanTolakEcm();
+                },
+                child: Container(
+                    margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF00AEDB),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Center(
+                      child: Text(
+                        "Kirim",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              )
+            ],
+          );
+        });
   }
 
   void setLang() async {
@@ -431,8 +572,12 @@ class _DetailEcmState extends State<DetailEcm> {
             fontSize: 16);
       }
       // Navigator.of(context).pop();
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => ApprovedEcm()));
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => ApprovedEcm()));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+          ModalRoute.withName("/"));
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -680,6 +825,65 @@ class _DetailEcmState extends State<DetailEcm> {
                     Container(
                       child: _buildTotalCost(),
                     ),
+                    SizedBox(height: 20),
+                    isDeclined == false
+                        ? Container()
+                        : Container(
+                            margin: EdgeInsets.only(top: 8),
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Masukan alasan penolakan E-CM",
+                                  style: TextStyle(
+                                      color: Color(0xFF404446),
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 10, left: 16, right: 16),
+                                  child: TextFormField(
+                                    controller: alasanTolak,
+                                    maxLines: 5,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color:
+                                                    const Color(0xFF979C9E))),
+                                        contentPadding: EdgeInsets.all(8),
+                                        hintText: "Masukkan alasan Anda"),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () async {
+                                    // Navigator.pop(context);
+                                    postAlasanTolakEcm();
+                                  },
+                                  child: Container(
+                                      margin: EdgeInsets.only(
+                                          top: 20, left: 16, right: 16),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFF00AEDB),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Center(
+                                        child: Text(
+                                          "Kirim",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Rubik',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
                     SizedBox(height: 20),
                     Visibility(
                       visible: widget.isShowButton,
@@ -1411,19 +1615,11 @@ class _DetailEcmState extends State<DetailEcm> {
                         side: BorderSide(color: Colors.redAccent))),
                 textStyle:
                     MaterialStateProperty.all(TextStyle(fontSize: 16.0))),
-            onPressed: () async {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: null,
-                        strokeWidth: 2,
-                      ),
-                    );
-                  });
-              await _loadingAction();
-              postUpdateStatus('2');
+            onPressed: () {
+              setState(() {
+                isDeclined = !isDeclined;
+              });
+              // showDialogInputReason(context);
             },
             child: Text(
               tolak,

@@ -25,7 +25,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FillNew extends StatefulWidget {
-  const FillNew({Key? key}) : super(key: key);
+  final String? ecmId;
+  const FillNew({Key? key, this.ecmId}) : super(key: key);
 
   @override
   _FillNewState createState() => _FillNewState();
@@ -226,7 +227,11 @@ class _FillNewState extends State<FillNew> {
   List<Step> get _steps => [
         Step(
           title: Text(''),
-          content: Form(key: _formKeys[0], child: StepFillSatu()),
+          content: Form(
+              key: _formKeys[0],
+              child: StepFillSatu(
+                ecmId: widget.ecmId,
+              )),
           isActive: _currentStep >= 0,
           // state: _currentStep >= 0
           //     ? StepState.complete
@@ -311,7 +316,9 @@ class _FillNewState extends State<FillNew> {
             prefs.getString("locationBool")!.isNotEmpty &&
             prefs.getString("machineNameBool")!.isNotEmpty &&
             prefs.getString("machineDetailBool")!.isNotEmpty) {
-          _stepFillSatu.getSaveFillSatu();
+          widget.ecmId == null
+              ? _stepFillSatu.getSaveFillSatu()
+              : _stepFillSatu.getUpdateFillSatu();
           setState(() {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
@@ -419,24 +426,16 @@ class _FillNewState extends State<FillNew> {
             _currentStep++;
             _stepClicked != 8 ? _stepClicked += 1 : null;
           });
-          // Fluttertoast.showToast(
-          //     msg: 'Tambahkan item dahulu',
-          //     toastLength: Toast.LENGTH_SHORT,
-          //     gravity: ToastGravity.BOTTOM,
-          //     timeInSecForIosWeb: 2,
-          //     fontSize: 16);
         }
       }
 
       if (_currentStep == 7) {
-        print("step in: " + _stepClicked.toString());
-        setState(() {
-          next = 'Finish';
-        });
         if ((prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "0") ||
             prefs.getString("copyToBool")!.isNotEmpty &&
                 prefs.getString("copyToBool") == "1") {
+          await _stepFillDelapan.getMethodPostStep();
+
           showDialog(
               barrierDismissible: false,
               context: context,
@@ -450,9 +449,9 @@ class _FillNewState extends State<FillNew> {
                   ),
                 );
               });
+
           try {
             successStep8();
-            await _stepFillDelapan.getMethodPostStep();
             Timer.periodic(Duration(seconds: 10), (timer) async {
               if (timer.tick == 5) {
                 removeStepCacheFillEcm();
@@ -494,13 +493,6 @@ class _FillNewState extends State<FillNew> {
               ),
             );
           }
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Pilih satu field Copy to',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
         }
       }
     } catch (e) {

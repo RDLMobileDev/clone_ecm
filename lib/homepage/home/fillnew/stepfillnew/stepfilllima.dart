@@ -167,8 +167,13 @@ class _StepFillLimaState extends State<StepFillLima> {
   void getDataItemRepairing() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("tokenKey").toString();
-    String? ecmId = prefs.getString("idEcm") ?? "-";
+    String? ecmId =
+        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
     String? userId = prefs.getString("idKeyUser") ?? "-";
+
+    if (prefs.getString("ecmIdEdit").toString() != "null") {
+      prefs.setString("itemRepairBool", "1");
+    }
 
     try {
       var data = await getFillNewLima(ecmId, userId, token);

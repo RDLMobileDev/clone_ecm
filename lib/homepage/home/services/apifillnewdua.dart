@@ -14,6 +14,8 @@ import 'package:image_picker/image_picker.dart';
 // File foto3,
 // File foto4,
 
+String myUrl = MyUrl().getUrlDevice();
+
 Future fillNewDua({
   required String token,
   required String shiftA,
@@ -35,9 +37,9 @@ Future fillNewDua({
   required List<String>? imagesPath,
   required String ecmId,
 }) async {
-  String myUrl = MyUrl().getUrlDevice() + "/ecm_step2";
+  String url = myUrl + "/ecm_step2";
   // String url = "$myUrl/siswa/izin";
-  var uri = Uri.parse(myUrl);
+  var uri = Uri.parse(url);
 
   http.MultipartRequest request = http.MultipartRequest("POST", uri);
   print("list images: ${imagesPath!.length.toString()}");
@@ -83,5 +85,19 @@ Future fillNewDua({
     return convertDatatoJson;
   } else {
     return "error";
+  }
+}
+
+Future getStepDuaDataForEdit(String idEcm, String token) async {
+  try {
+    final response = await http
+        .get(Uri.parse("$myUrl/ecm_step2_get?ecm_id=$idEcm"), headers: {
+      "Accept": "Application/json",
+      'Authorization': 'Bearer $token',
+    });
+
+    return jsonDecode(response.body);
+  } catch (e) {
+    print(e);
   }
 }
