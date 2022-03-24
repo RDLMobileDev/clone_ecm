@@ -5,10 +5,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/services/apifillnewtiga.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../fillnew.dart';
 
 class StepFillTiga extends StatefulWidget {
   final _StepFillTigaState stepFillTigaState = _StepFillTigaState();
@@ -105,44 +108,50 @@ class _StepFillTigaState extends State<StepFillTiga> {
   bool _customTileExpanded = false;
 
   void saveStepFillTiga() async {
-    final prefs = await _prefs;
-    String why1 = prefs.getString("why1") ?? "-";
-    String why2 = prefs.getString("why2") ?? "-";
-    String why3 = prefs.getString("why3") ?? "-";
-    String why4 = prefs.getString("why4") ?? "-";
-    String why5 = prefs.getString("howC") ?? "";
-    // String how = ;
-    // String ecmId = prefs.getString("idEcm") ?? "";
-    String tokenUser = prefs.getString("tokenKey").toString();
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
-    print("why1");
-    print(why2);
+    // print("why1");
+    // print(why2);
 
     try {
-      if ((why1.isNotEmpty || why1 != "-") &&
-          (why2.isNotEmpty || why2 != "-")) {
+      if (why1Controller.text.isNotEmpty && why2Controller.text.isNotEmpty) {
         var result = await fillNewTiga(
-            why1,
-            why2,
-            why3,
-            why4,
-            why5,
+            why1Controller.text,
+            why2Controller.text,
+            why3Controller.text.isNotEmpty ? why3Controller.text : "-",
+            why4Controller.text.isNotEmpty ? why4Controller.text : "-",
+            howController.text.isNotEmpty ? howController.text : "-",
             "",
-            prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "",
+            ecmId,
             tokenUser);
         print(result);
 
-        Fluttertoast.showToast(
-            msg: 'Data step 3 Disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
+        if (result['response']['status'] == 200) {
+          Fluttertoast.showToast(
+              msg: 'Data step 3 Disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+
+          isStepTigaFill.value = false;
+          isStepEmpatFill.value = true;
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Terjadi kesalahan, Data gagal disimpan',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: 'Data tidak disimpan, cek semua input field',
+            msg: 'Kolom Why 1 dan Why 2 wajib diisi',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -216,8 +225,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKeyStep3,
+    return SingleChildScrollView(
       child: Column(
         children: [
           Container(
@@ -418,7 +426,57 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     filled: true,
                     hintText: type_message),
                 maxLines: 5,
-              ))
+              )),
+          Container(
+            margin: EdgeInsets.only(top: 26),
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    isStepDuaFill.value = true;
+                    isStepTigaFill.value = false;
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        border: Border.all(color: Color(0xFF00AEDB))),
+                    child: Center(
+                      child: Text(
+                        "Kembali",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF00AEDB),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () => saveStepFillTiga(),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Color(0xFF00AEDB)),
+                    child: Center(
+                      child: Text("Lanjut 4/8",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400)),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );

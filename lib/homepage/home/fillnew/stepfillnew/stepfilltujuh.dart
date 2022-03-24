@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/services.dart';
 // import 'package:intl/intl.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/add_item_step7.dart';
@@ -130,9 +132,12 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   List<PartItemMachineSavedModel> _listDataPartSaved = [];
 
   Future<List<PartItemMachineSavedModel>> getDataPartItemSaved() async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String? idEcmKey = prefs.getString("idEcm") ?? "";
+    // final prefs = await _prefs;
+    // String tokenUser = prefs.getString("tokenKey").toString();
+    // String? idEcmKey = prefs.getString("idEcm") ?? "";
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcmKey = SharedPrefsUtil.getEcmId();
 
     _listDataPartSaved = await partItemMachineSaveService
         .getPartItemMachineSaveData(tokenUser, idEcmKey);
@@ -146,8 +151,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
   void deletePartMachineSaved(String idEcmData) async {
     // print(idEcmData);
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
+    // final prefs = await _prefs;
+    // String tokenUser = prefs.getString("tokenKey").toString();
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
     // var idPart = prefs.getString("idPartItemMachine");
     print("id data: $idEcmData");
@@ -547,6 +554,59 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                 ),
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(top: 26),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      isStepTujuhFill.value = false;
+                      isStepEnamFill.value = true;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(color: Color(0xFF00AEDB))),
+                      child: Center(
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF00AEDB),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      isStepTujuhFill.value = false;
+                      isStepDelapanFill.value = true;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          color: Color(0xFF00AEDB)),
+                      child: Center(
+                        child: Text("Lanjut 8/8",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

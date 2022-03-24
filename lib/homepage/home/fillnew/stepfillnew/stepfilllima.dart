@@ -5,10 +5,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/fillnew/additionpage/formstepfilllima.dart';
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/apideletefillnewlima.dart';
 import 'package:e_cm/homepage/home/services/apifillnewlimadelete.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -166,10 +168,14 @@ class _StepFillLimaState extends State<StepFillLima> {
 
   void getDataItemRepairing() async {
     final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String? ecmId =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
-    String? userId = prefs.getString("idKeyUser") ?? "-";
+    // String token = prefs.getString("tokenKey").toString();
+    // String? ecmId =
+    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
+    // String? userId = prefs.getString("idKeyUser") ?? "-";
+
+    String token = SharedPrefsUtil.getTokenUser();
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String userId = SharedPrefsUtil.getIdUser();
 
     if (prefs.getString("ecmIdEdit").toString() != "null") {
       prefs.setString("itemRepairBool", "1");
@@ -177,6 +183,8 @@ class _StepFillLimaState extends State<StepFillLima> {
 
     try {
       var data = await getFillNewLima(ecmId, userId, token);
+      print("data step 5");
+      print(data);
 
       switch (data["response"]['status']) {
         case 200:
@@ -341,8 +349,10 @@ class _StepFillLimaState extends State<StepFillLima> {
   }
 
   Future hapusItemStepLima(String ecmItemId) async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
+    // final prefs = await SharedPreferences.getInstance();
+    // String token = prefs.getString("tokenKey").toString();
+
+    String token = SharedPrefsUtil.getTokenUser();
 
     var result = await deleteFillLima.hapusItemFillLima(token, ecmItemId);
 
@@ -592,6 +602,70 @@ class _StepFillLimaState extends State<StepFillLima> {
                 ],
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(top: 26),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      isStepEmpatFill.value = true;
+                      isStepLimaFill.value = false;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(color: Color(0xFF00AEDB))),
+                      child: Center(
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF00AEDB),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_listItemChecking.isNotEmpty) {
+                        isStepLimaFill.value = false;
+                        isStepEnamFill.value = true;
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: 'Anda belum menambahkan item',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.greenAccent,
+                            textColor: Colors.white,
+                            fontSize: 16);
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          color: Color(0xFF00AEDB)),
+                      child: Center(
+                        child: Text("Lanjut 6/8",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

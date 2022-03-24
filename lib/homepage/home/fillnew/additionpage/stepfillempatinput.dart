@@ -12,6 +12,7 @@ import 'package:e_cm/homepage/home/services/apifillnewempatgetbyid.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatinsert.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatupdate.dart';
 import 'package:e_cm/homepage/home/services/getsemuauser.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -171,8 +172,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void getStepEmpatData() async {
     final prefs = await _prefs;
-    String idUser = prefs.getString("idKeyUser").toString();
-    String tokenUser = prefs.getString("tokenKey") ?? "";
+    String idUser = SharedPrefsUtil.getIdUser();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     String userName = prefs.getString("userStep4") ?? "";
 
     try {
@@ -276,10 +277,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void fetchLocationPartData() async {
-    var prefs = await _prefs;
-    String ecmId =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    String tokenUser = prefs.getString("tokenKey") ?? "";
+    // var prefs = await _prefs;
+    // String ecmId =
+    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+    // String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
     parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
     print("data ecm id -> $ecmId");
@@ -287,9 +291,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void fetchAllUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String idUser = prefs.getString("idKeyUser").toString();
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idUser = SharedPrefsUtil.getIdUser();
     try {
       var result = await getUserAll(tokenUser, idUser);
 
@@ -335,12 +339,16 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void saveStepInputChecking() async {
     final prefs = await _prefs;
-    var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    var idUser = prefs.getString("idKeyUser").toString();
-    // String tokenUser = prefs.getString("tokenKey") ?? "";
-    var idMachineRes = prefs.getString("id_machine_res") ?? "";
+    // var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+    // var idUser = prefs.getString("idKeyUser").toString();
 
-    print(ecmId);
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String idUser = SharedPrefsUtil.getIdUser();
+
+    // String tokenUser = prefs.getString("tokenKey") ?? "";
+    String idMachineRes = SharedPrefsUtil.getIdMesinRes();
+
+    // print(ecmId);
 
     String resultMessage = "Data disimpan";
 
@@ -350,27 +358,34 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           ecmId,
           idMachineRes,
           tecName.text,
-          formValue["standard"]!,
-          formValue["actual"]!,
-          formValue["note"]!,
+          formValue["standard"] ?? "-",
+          formValue["actual"] ?? "-",
+          formValue["note"] ?? "-",
           startTimePickController!.text,
           endTimePickController!.text,
           idUser,
-          formValue["name"]!);
+          formValue["name"] ?? "-");
 
       print(result);
 
       switch (result['response']['status']) {
         case 200:
           print(result['data']['t_ecmitem_id'].toString());
-          prefs.setString(
-              "idEcmItem", result['data']['t_ecmitem_id'].toString());
 
-          prefs.setString("itemStep4Bool", "1");
-          print(result['data']['t_ecmitem_id'].toString());
+          SharedPrefsUtil.setIdEcmItem(
+              result['data']['t_ecmitem_id'].toString());
+
+          // prefs.setString(
+          //     "idEcmItem", result['data']['t_ecmitem_id'].toString());
+
+          // prefs.setString("itemStep4Bool", "1");
+
+          // print(result['data']['t_ecmitem_id'].toString());
+
           Navigator.of(context)
             ..pop()
             ..pop(true);
+
           break;
         default:
           resultMessage = "Data gagal disimpan";
@@ -1071,10 +1086,17 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                 formValidations["name"] =
                                     _users[i].userFullName!.isNotEmpty;
                                 formValue["name"] = _users[i].userId!;
-                                prefs.setString(
-                                    "idUserChecker", _users[i].userId!);
-                                prefs.setString(
-                                    "userStep4", _users[i].userFullName!);
+
+                                SharedPrefsUtil.setIdUserChecker(
+                                    _users[i].userId!);
+
+                                SharedPrefsUtil.setNameUserChecker(
+                                    _users[i].userFullName!);
+
+                                // prefs.setString(
+                                //     "idUserChecker", _users[i].userId!);
+                                // prefs.setString(
+                                //     "userStep4", _users[i].userFullName!);
                                 tapMemberName = !tapMemberName;
                               });
                             },

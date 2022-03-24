@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:e_cm/homepage/home/model/approvedmodel.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -104,8 +105,8 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
 
   Future<List<ApprovedModel>> getApprovedData() async {
     final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String? idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idUser = SharedPrefsUtil.getIdUser();
     print("jabatan = " + idUser.toString());
     try {
       var response = await getApproved(idUser, tokenUser);

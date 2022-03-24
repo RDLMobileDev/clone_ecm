@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:e_cm/homepage/home/services/api_cek_ecm_rejected.dart';
 import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
@@ -31,7 +32,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   StreamController historyStreamController = StreamController();
   String userName = "";
   bool isVisibility = true,
@@ -181,8 +182,8 @@ class _HomeState extends State<Home> {
   }
 
   Future<String> getNameUser() async {
-    final SharedPreferences prefs = await _prefs;
-    String nameUser = prefs.getString("usernameKey").toString();
+    // final SharedPreferences prefs = await _prefs;
+    String nameUser = SharedPrefsUtil.getUsername();
     setState(() {
       userName = nameUser;
     });
@@ -259,9 +260,9 @@ class _HomeState extends State<Home> {
   }
 
   void cekStatusEcmTolak() async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String idUser = prefs.getString("idKeyUser") ?? "-";
+    // final SharedPreferences prefs = await _prefs;
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idUser = SharedPrefsUtil.getIdUser();
 
     try {
       var result = await checkEcmRejectedByTL(idUser, tokenUser);
@@ -279,12 +280,12 @@ class _HomeState extends State<Home> {
   }
 
   getRoleUser() async {
-    final SharedPreferences prefs = await _prefs;
-    int? jabatanUser = prefs.getInt("jabatanKey");
+    // final SharedPreferences prefs = await _prefs;
+    String jabatanUser = SharedPrefsUtil.getIdJabatanKey();
 
-    if (jabatanUser != null) {
+    if (jabatanUser.isNotEmpty || jabatanUser != "") {
       setState(() {
-        if (jabatanUser == 8) {
+        if (jabatanUser == "8") {
           print(jabatanUser);
           isVisibility = true;
           activityListTm = false;
@@ -305,9 +306,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<HistoryEcmModel>> getHistoryEcmByUser() async {
-    final SharedPreferences prefs = await _prefs;
-    String idUser = prefs.getString("idKeyUser").toString();
-    String tokenUser = prefs.getString("tokenKey").toString();
+    // final SharedPreferences prefs = await _prefs;
+    String idUser = SharedPrefsUtil.getIdUser();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
     _listHistoryEcmUser =
         await historyEcmService.getHistoryEcmModel(idUser, tokenUser);
@@ -334,9 +335,10 @@ class _HomeState extends State<Home> {
   }
 
   getCardStatus() async {
-    final SharedPreferences prefs = await _prefs;
-    String idUser = prefs.getString("idKeyUser").toString();
-    String tokenUser = prefs.getString("tokenKey").toString();
+    // final SharedPreferences prefs = await _prefs;
+    String idUser = SharedPrefsUtil.getIdUser();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    ;
     var url =
         "http://app.ragdalion.com/ecm/public/api/home_cekecm?id_user=$idUser";
     try {
@@ -359,16 +361,15 @@ class _HomeState extends State<Home> {
   }
 
   void removeCacheEcmFromDb() async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey") ?? "";
-    String idEcm = prefs.getString("idEcm") ?? "";
-
+    // final prefs = await _prefs;
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcm = SharedPrefsUtil.getEcmId();
     if ((tokenUser.isNotEmpty || tokenUser != "") &&
         (idEcm.isNotEmpty || idEcm != "")) {
       var response = await removeEcmCancelUser.removeEcmLast(tokenUser, idEcm);
 
-      removeStepCacheFillEcm();
-      removeCacheFillEcm();
+      // removeStepCacheFillEcm();
+      // removeCacheFillEcm();
     }
   }
 

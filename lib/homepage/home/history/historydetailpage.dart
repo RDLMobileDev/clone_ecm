@@ -11,6 +11,7 @@ import 'package:e_cm/homepage/home/model/incident_mistake.dart';
 import 'package:e_cm/homepage/home/services/api_detail_history_home.dart';
 // import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -43,7 +44,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -73,7 +74,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   Future<List<ItemRepairModel>> getItemRepair() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -101,9 +102,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   }
 
   Future<List<SparepartModel>> getSparepart() async {
-    final SharedPreferences prefs = await _prefs;
+    // final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -131,9 +132,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   }
 
   Future<List<EsignModel>> getEsign() async {
-    final SharedPreferences prefs = await _prefs;
+    // final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     var response = await getDetailHistoryEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -161,9 +162,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   }
 
   getDetailData() async {
-    final SharedPreferences prefs = await _prefs;
+    // final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     var response = await getDetailHistoryEcm(notifUser, tokenUser);
     try {
       setStateIfMounted(() {
@@ -216,9 +217,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   }
 
   postUpdateStatus(String statusUser) async {
-    final SharedPreferences prefs = await _prefs;
+    // final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     try {
       var response = await updateStatus(notifUser, notifUser, tokenUser);
       print(response);

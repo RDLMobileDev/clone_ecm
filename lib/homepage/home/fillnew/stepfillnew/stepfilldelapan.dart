@@ -5,13 +5,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/model/summaryapprovemodel.dart';
 // import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
 import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/apifillnewdelapan.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
+import 'package:e_cm/homepage/home/services/summaryapproveservice.dart';
+import 'package:e_cm/homepage/home/view/home.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillDelapan extends StatefulWidget {
@@ -20,7 +26,7 @@ class StepFillDelapan extends StatefulWidget {
   final StepFillDelapanState stepFillDelapanState = StepFillDelapanState();
 
   getMethodPostStep() async {
-    var res = await stepFillDelapanState.postStepDelapan();
+    // var res = await stepFillDelapanState.postStepDelapan();
   }
 
   @override
@@ -29,6 +35,8 @@ class StepFillDelapan extends StatefulWidget {
 
 class StepFillDelapanState extends State<StepFillDelapan> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  List<SummaryApproveModel> _listSummaryApproval = [];
+
   String? copyToGroup;
   String engineerTo = '', productTo = '', othersTo = '';
 
@@ -138,75 +146,436 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     if (mounted) setState(f);
   }
 
-  postStepDelapan() async {
-    print("post dari step 8");
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String ecmId = prefs.getString("idEcm") ?? "";
-    String ecmIdEdit = prefs.getString("ecmIdEdit") ?? "";
+  Future _isLoading() async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return _listSummaryApproval.isEmpty
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 2,
+                  ),
+                )
+              : SimpleDialog(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Get.off(const Dashboard());
+                        // Navigator.pushAndRemoveUntil(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => Dashboard()),
+                        //     ModalRoute.withName("/"));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, right: 16),
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.topRight,
+                        child: Image.asset(
+                          "assets/icons/X.png",
+                          width: 20,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                          child: Image.asset(
+                        "assets/icons/done.png",
+                        width: 150,
+                      )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8),
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: Text(
+                          "Terimakasih",
+                          style: TextStyle(
+                              color: Color(0xFF404446),
+                              fontFamily: 'Rubik',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 8, left: 16, right: 16),
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: Text(
+                          "Formulir Anda telah disimpan dan menunggu untuk disetujui",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color(0xFF404446),
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        // final prefs = await _prefs;
+                        // prefs.remove("idEcm");
+                        SharedPrefsUtil.clearEcmId();
 
-    String engineerToKey = prefs.getString("engineerTo") ?? "0";
-    String productToKey = prefs.getString("productTo") ?? "0";
-    String othersToKey = prefs.getString("othersTo") ?? "0";
+                        if (_listSummaryApproval.isNotEmpty) {
+                          print("data approve");
+                          print(_listSummaryApproval);
+                          summaryPopup();
+                        } else {
+                          print(_listSummaryApproval);
+                        }
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                          width: MediaQuery.of(context).size.width,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Color(0xFF00AEDB),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          child: Center(
+                            child: Text(
+                              "Lihat Ringkasan",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )),
+                    )
+                  ],
+                );
+        });
+  }
 
-    print("ini ecm baru step 8");
-    print("id ecm edit: $ecmIdEdit");
+  Future<void> successStep8() async {
+    // final prefs = await _prefs;
+    // String idUser = prefs.getString("idKeyUser").toString();
+    // String tokenUser = prefs.getString("tokenKey").toString();
+    // String idEcm = prefs.getString("idEcm").toString();
+
+    String idUser = SharedPrefsUtil.getIdUser();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcm = SharedPrefsUtil.getEcmId();
 
     try {
-      if (ecmIdEdit.isEmpty || ecmIdEdit == "" || ecmIdEdit == "null") {
-        var res = await fillNewDelapan(
-                ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
-            .timeout(const Duration(seconds: 15));
+      _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
+          tokenUser, idEcm, idUser);
 
-        print("response step 8:");
-        print(res);
+      print(_listSummaryApproval[0].lineStopJam);
+      // removeStepCacheFillEcm();
+      // removeCacheFillEcm();
 
-        if (res['response']['status'] == 200) {
-          print("sukses");
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
+      _isLoading();
+    } catch (e) {
+      print(e);
+      // removeStepCacheFillEcm();
+      // removeCacheFillEcm();
+      // setStateIfMounted(() {
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => Dashboard()),
+      //       ModalRoute.withName("/"));
+      // });
 
-          await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
-          removeStepCacheFillEcm();
-          removeCacheFillEcm();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Dashboard()),
-              ModalRoute.withName("/"));
-        }
+      Get.off(const Dashboard());
+    }
+  }
+
+  void summaryPopup() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              InkWell(
+                onTap: () async {
+                  // final prefs = await _prefs;
+                  // prefs.remove("idEcm");
+                  // Navigator.pushAndRemoveUntil(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => Dashboard()),
+                  //     ModalRoute.withName("/"));
+
+                  SharedPrefsUtil.clearEcmId();
+
+                  Get.off(const Dashboard());
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(left: 16, right: 16),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    "assets/icons/X.png",
+                    width: 20,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 16, right: 16),
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: Text(
+                    "Ringkasan",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF404446)),
+                  ),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 16, right: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                ),
+                decoration: const BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Text(
+                      "BM",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF404446)),
+                    ),
+                    Text(
+                      "${_listSummaryApproval[0].lineStopJam}H ${_listSummaryApproval[0].lineStopMenit}M",
+                      style: const TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF404446)),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 16, right: 16),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: const BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: const Text(
+                  "E-CM harus disetujui oleh",
+                  style: TextStyle(
+                      color: Color(0xFF404446),
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 16, right: 16),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: const BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: _listSummaryApproval.length,
+                  itemBuilder: (context, i) {
+                    if (_listSummaryApproval[i].nama != "null") {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          _listSummaryApproval[i].foto),
+                                      fit: BoxFit.fill)),
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Text(
+                                "${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
+                          ],
+                        ),
+                      );
+                    }
+
+                    return Container();
+                  },
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  // final prefs = await _prefs;
+                  // prefs.remove("idEcm");
+
+                  SharedPrefsUtil.clearEcmId();
+                  Get.off(Dashboard());
+
+                  // Navigator.pushAndRemoveUntil(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => Dashboard()),
+                  //     ModalRoute.withName("/"));
+                },
+                child: Container(
+                    margin: EdgeInsets.only(top: 20, left: 16, right: 16),
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                        color: Color(0xFF00AEDB),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: const Center(
+                      child: Text(
+                        "Selesai",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              )
+            ],
+          );
+        });
+  }
+
+  Future postStepDelapan() async {
+    print("post dari step 8");
+    // final SharedPreferences prefs = await _prefs;
+    // String? tokenUser = prefs.getString("tokenKey").toString();
+    // String ecmId = prefs.getString("idEcm") ?? "";
+    // String ecmIdEdit = prefs.getString("ecmIdEdit") ?? "";
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String ecmId = SharedPrefsUtil.getEcmId();
+    // String ecmIdEdit = prefs.getString("ecmIdEdit") ?? "";
+
+    // String engineerToKey = prefs.getString("engineerTo") ?? "0";
+    // String productToKey = prefs.getString("productTo") ?? "0";
+    // String othersToKey = prefs.getString("othersTo") ?? "0";
+
+    try {
+      var res = await fillNewDelapan(
+              ecmId, engineerTo, productTo, othersTo, tokenUser)
+          .timeout(const Duration(seconds: 15));
+
+      print("response step 8:");
+      print(res);
+
+      if (res['response']['status'] == 200) {
+        print("sukses");
+
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 4,
+                  ),
+                ),
+              );
+            });
+
+        await successStep8();
+
+        // Fluttertoast.showToast(
+        //     msg: 'Selesai, data E-CM Anda disimpan',
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIosWeb: 2,
+        //     fontSize: 16);
+        // Get.off(Dashboard());
       } else {
-        var response = await fillNewDelapanEdit(
-                ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
-            .timeout(const Duration(seconds: 15));
+        // Fluttertoast.showToast(
+        //     msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIosWeb: 2,
+        //     fontSize: 16);
 
-        print("response step 8 edit:");
-        print(response);
-
-        if (response['response']['status'] == 200) {
-          print("sukses diperbarui step 8");
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
-
-          // var response =
-          //     await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
-          removeStepCacheFillEcm();
-          removeCacheFillEcm();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Dashboard()),
-              ModalRoute.withName("/"));
-        }
+        // await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
+        // Get.off(Dashboard());
+        // removeStepCacheFillEcm();
+        // removeCacheFillEcm();
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => Dashboard()),
+        //     ModalRoute.withName("/"));
       }
+      // if (ecmIdEdit.isEmpty || ecmIdEdit == "" || ecmIdEdit == "null") {
+      //   var res = await fillNewDelapan(
+      //           ecmId, engineerToKey, productToKey, othersToKey, tokenUser)
+      //       .timeout(const Duration(seconds: 15));
+
+      //   print("response step 8:");
+      //   print(res);
+
+      //   if (res['response']['status'] == 200) {
+      //     print("sukses");
+      //   } else {
+      //     Fluttertoast.showToast(
+      //         msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+      //         toastLength: Toast.LENGTH_SHORT,
+      //         gravity: ToastGravity.BOTTOM,
+      //         timeInSecForIosWeb: 2,
+      //         fontSize: 16);
+
+      //     await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
+      //     removeStepCacheFillEcm();
+      //     removeCacheFillEcm();
+      //     Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => Dashboard()),
+      //         ModalRoute.withName("/"));
+      //   }
+      // } else {
+      //   var response = await fillNewDelapanEdit(
+      //           ecmIdEdit, engineerToKey, productToKey, othersToKey, tokenUser)
+      //       .timeout(const Duration(seconds: 15));
+
+      //   print("response step 8 edit:");
+      //   print(response);
+
+      //   if (response['response']['status'] == 200) {
+      //     print("sukses diperbarui step 8");
+      //   } else {
+      //     Fluttertoast.showToast(
+      //         msg: 'Koneksi bermasalah, E-CM Anda tidak disimpan',
+      //         toastLength: Toast.LENGTH_SHORT,
+      //         gravity: ToastGravity.BOTTOM,
+      //         timeInSecForIosWeb: 2,
+      //         fontSize: 16);
+
+      //     // var response =
+      //     //     await removeEcmCancelUser.removeEcmLast(tokenUser, ecmId);
+      //     removeStepCacheFillEcm();
+      //     removeCacheFillEcm();
+      //     Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => Dashboard()),
+      //         ModalRoute.withName("/"));
+      //   }
+      // }
     } on TimeoutException catch (_) {
       showDialog<String>(
         context: context,
@@ -405,7 +774,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                 children: [
                   InkWell(
                     onTap: () async {
-                      final SharedPreferences prefs = await _prefs;
+                      // final SharedPreferences prefs = await _prefs;
                       setState(() {
                         engineerTo = '1';
                         productTo = '0';
@@ -413,10 +782,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                         copyToGroup = '1';
                         setCopyTo();
                       });
-                      prefs.setString("engineerTo", engineerTo);
-                      prefs.setString("productTo", productTo);
-                      prefs.setString("othersTo", othersTo);
-                      prefs.setString("copyToBool", "1");
+                      // prefs.setString("engineerTo", engineerTo);
+                      // prefs.setString("productTo", productTo);
+                      // prefs.setString("othersTo", othersTo);
+                      // prefs.setString("copyToBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -436,8 +805,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                   groupValue: copyToGroup,
                                   value: '1',
                                   onChanged: (value) async {
-                                    final SharedPreferences prefs =
-                                        await _prefs;
+                                    // final SharedPreferences prefs =
+                                    //     await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         copyToGroup = value as String;
@@ -446,10 +815,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                         othersTo = '0';
                                         setCopyTo();
                                       });
-                                      prefs.setString("engineerTo", engineerTo);
-                                      prefs.setString("productTo", productTo);
-                                      prefs.setString("othersTo", othersTo);
-                                      prefs.setString("copyToBool", "1");
+                                      // prefs.setString("engineerTo", engineerTo);
+                                      // prefs.setString("productTo", productTo);
+                                      // prefs.setString("othersTo", othersTo);
+                                      // prefs.setString("copyToBool", "1");
                                     }
                                   })),
                           Text(engineer)
@@ -459,7 +828,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   ),
                   InkWell(
                     onTap: () async {
-                      final SharedPreferences prefs = await _prefs;
+                      // final SharedPreferences prefs = await _prefs;
                       setState(() {
                         engineerTo = '0';
                         productTo = '1';
@@ -467,10 +836,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                         copyToGroup = '2';
                         setCopyTo();
                       });
-                      prefs.setString("engineerTo", engineerTo);
-                      prefs.setString("productTo", productTo);
-                      prefs.setString("othersTo", othersTo);
-                      prefs.setString("copyToBool", "1");
+                      // prefs.setString("engineerTo", engineerTo);
+                      // prefs.setString("productTo", productTo);
+                      // prefs.setString("othersTo", othersTo);
+                      // prefs.setString("copyToBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -500,10 +869,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                         othersTo = '0';
                                         setCopyTo();
                                       });
-                                      prefs.setString("engineerTo", engineerTo);
-                                      prefs.setString("productTo", productTo);
-                                      prefs.setString("othersTo", othersTo);
-                                      prefs.setString("copyToBool", "1");
+                                      // prefs.setString("engineerTo", engineerTo);
+                                      // prefs.setString("productTo", productTo);
+                                      // prefs.setString("othersTo", othersTo);
+                                      // prefs.setString("copyToBool", "1");
                                     }
                                   })),
                           Text(product)
@@ -513,7 +882,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   ),
                   InkWell(
                     onTap: () async {
-                      final SharedPreferences prefs = await _prefs;
+                      // final SharedPreferences prefs = await _prefs;
                       setState(() {
                         engineerTo = '0';
                         productTo = '0';
@@ -521,10 +890,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                         copyToGroup = '3';
                         setCopyTo();
                       });
-                      prefs.setString("engineerTo", engineerTo);
-                      prefs.setString("productTo", productTo);
-                      prefs.setString("othersTo", othersTo);
-                      prefs.setString("copyToBool", "1");
+                      // prefs.setString("engineerTo", engineerTo);
+                      // prefs.setString("productTo", productTo);
+                      // prefs.setString("othersTo", othersTo);
+                      // prefs.setString("copyToBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -553,10 +922,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                                         productTo = '0';
                                         othersTo = '1';
                                       });
-                                      prefs.setString("engineerTo", engineerTo);
-                                      prefs.setString("productTo", productTo);
-                                      prefs.setString("othersTo", othersTo);
-                                      prefs.setString("copyToBool", "1");
+                                      // prefs.setString("engineerTo", engineerTo);
+                                      // prefs.setString("productTo", productTo);
+                                      // prefs.setString("othersTo", othersTo);
+                                      // prefs.setString("copyToBool", "1");
                                     }
                                   })),
                           Text(others)
@@ -601,6 +970,58 @@ class StepFillDelapanState extends State<StepFillDelapan> {
             //             fontWeight: FontWeight.w400)),
             //   ),
             // ),
+            Container(
+              margin: EdgeInsets.only(top: 26),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      isStepDelapanFill.value = false;
+                      isStepTujuhFill.value = true;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(color: Color(0xFF00AEDB))),
+                      child: const Center(
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF00AEDB),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await postStepDelapan();
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          color: Color(0xFF00AEDB)),
+                      child: const Center(
+                        child: Text("Akhiri",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
