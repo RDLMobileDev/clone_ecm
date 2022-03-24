@@ -4,12 +4,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/services/apifillnewdua.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../fillnew.dart';
 
 class StepFillDua extends StatefulWidget {
   final StepFillDuaState stepFillDuaState = StepFillDuaState();
@@ -199,7 +202,7 @@ class StepFillDuaState extends State<StepFillDua> {
   final DateTime now = DateTime.now();
 
   void getTime() async {
-    final prefs = await _prefs;
+    // final prefs = await _prefs;
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
     showTimePicker(
@@ -217,10 +220,11 @@ class StepFillDuaState extends State<StepFillDua> {
       String formattedTime =
           localizations.formatTimeOfDay(value!, alwaysUse24HourFormat: true);
       setState(() {
+        timePickState = formattedTime;
         timePickController = TextEditingController(text: formattedTime);
       });
-      prefs.setString("timePickState", formattedTime);
-      prefs.setString("timeBool", "1");
+      // prefs.setString("timePickState", formattedTime);
+      // prefs.setString("timeBool", "1");
     });
   }
 
@@ -342,61 +346,45 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void saveStepFillDua() async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    // var idEcmKey = prefs.getString("idEcm") ?? "";
-    var shiftAkey = prefs.getString("shiftA") ?? "";
-    var shiftBkey = prefs.getString("shiftB") ?? "";
-    var shiftCkey = prefs.getString("shiftC") ?? "";
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcm = SharedPrefsUtil.getEcmId();
 
-    var safetyOptKey = prefs.getString("safetyOpt") ?? "";
-    var qualityOptKey = prefs.getString("qualityOpt") ?? "";
-    var deliveryOptKey = prefs.getString("deliveryOpt") ?? "";
-    var costOptKey = prefs.getString("costOpt") ?? "";
+    try {
+      if (timePickState.isNotEmpty &&
+          problemTypeState.isNotEmpty &&
+          imageProblemPath.isNotEmpty) {
+        var result = await fillNewDua(
+          token: tokenUser,
+          shiftA: shiftA,
+          shiftB: shiftB,
+          shiftNs: shiftC,
+          time: timePickState,
+          problem: problemTypeState,
+          safety: safetyOpt,
+          quality: qualityOpt,
+          delivery: deliveryOpt,
+          cost: costOpt,
+          molding: moldingOpt,
+          utility: utilityOpt,
+          production: productionOpt,
+          engineering: engineerOpt,
+          other: otherOpt,
+          ecmId: idEcm,
+          // images: files
+          // imagesName: imagesKeyName,
+          imagesPath: imageProblemPath,
+        );
 
-    var moldingOptKey = prefs.getString("moldingOpt") ?? "";
-    var utilityOptKey = prefs.getString("utilityOpt") ?? "";
-    var productionOptKey = prefs.getString("productionOpt") ?? "";
-    var engineerOptKey = prefs.getString("engineerOpt") ?? "";
-    var otherOptKey = prefs.getString("otherOpt") ?? "";
-
-    var problemTypeState = prefs.getString("problemTypeState") ?? "";
-    // var imagesKeyName = prefs.getStringList("imagesKeyName");
-    var imagesKetPath = prefs.getStringList("imagesKetPath") ?? [];
-    var timePickState = prefs.getString("timePickState") ?? "";
-
-    // print(files.length);
-
-    if (timePickState.isNotEmpty &&
-        problemTypeState.isNotEmpty &&
-        imagesKetPath.isNotEmpty) {
-      var result = await fillNewDua(
-        token: tokenUser,
-        shiftA: shiftAkey,
-        shiftB: shiftBkey,
-        shiftNs: shiftCkey,
-        time: timePickState,
-        problem: problemTypeState,
-        safety: safetyOptKey,
-        quality: qualityOptKey,
-        delivery: deliveryOptKey,
-        cost: costOptKey,
-        molding: moldingOptKey,
-        utility: utilityOptKey,
-        production: productionOptKey,
-        engineering: engineerOptKey,
-        other: otherOptKey,
-        ecmId: prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "",
-        // images: files
-        // imagesName: imagesKeyName,
-        imagesPath: imagesKetPath,
-      );
-
-      print(result);
-
-      goToStepFillTiga('Data step 2 Disimpan');
-    } else {
-      goToStepFillTiga('Data tidak disimpan, cek semua input field');
+        if (result['response']['status'] == 200) {
+          goToStepFillTiga('Data Step 2 disimpan');
+          isStepDuaFill.value = false;
+          isStepTigaFill.value = true;
+        }
+      } else {
+        goToStepFillTiga('Data gagal disimpan, cek semua input field');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -623,9 +611,11 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void checkKlasifikasiTypeValue() async {
-    final prefs = await _prefs;
+    // final prefs = await _prefs;
 
-    String klasifikasiType = prefs.getString("namaKlasifikasi") ?? "";
+    String klasifikasiType = SharedPrefsUtil.getNamaKlasifikasi();
+
+    print("nama klasifikasi => $klasifikasiType");
 
     if (klasifikasiType != "" && klasifikasiType.isNotEmpty) {
       setState(() {
@@ -683,17 +673,17 @@ class StepFillDuaState extends State<StepFillDua> {
                 children: [
                   InkWell(
                     onTap: () async {
-                      final prefs = await _prefs;
+                      // final prefs = await _prefs;
                       setState(() {
                         incidentGroup = '1';
                         shiftA = '1';
                         shiftB = '0';
                         shiftC = '0';
                       });
-                      prefs.setString("shiftA", shiftA);
-                      prefs.setString("shiftB", shiftB);
-                      prefs.setString("shiftC", shiftC);
-                      prefs.setString("shiftBool", "1");
+                      // prefs.setString("shiftA", shiftA);
+                      // prefs.setString("shiftB", shiftB);
+                      // prefs.setString("shiftC", shiftC);
+                      // prefs.setString("shiftBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -713,7 +703,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                   groupValue: incidentGroup,
                                   value: '1',
                                   onChanged: (value) async {
-                                    final prefs = await _prefs;
+                                    // final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         incidentGroup = value as String;
@@ -721,10 +711,10 @@ class StepFillDuaState extends State<StepFillDua> {
                                         shiftB = '0';
                                         shiftC = '0';
                                       });
-                                      prefs.setString("shiftA", shiftA);
-                                      prefs.setString("shiftB", shiftB);
-                                      prefs.setString("shiftC", shiftC);
-                                      prefs.setString("shiftBool", "1");
+                                      // prefs.setString("shiftA", shiftA);
+                                      // prefs.setString("shiftB", shiftB);
+                                      // prefs.setString("shiftC", shiftC);
+                                      // prefs.setString("shiftBool", "1");
                                     }
                                   })),
                           Text(shift_a)
@@ -734,17 +724,17 @@ class StepFillDuaState extends State<StepFillDua> {
                   ),
                   InkWell(
                     onTap: () async {
-                      final prefs = await _prefs;
+                      // final prefs = await _prefs;
                       setState(() {
                         incidentGroup = '2';
                         shiftA = '0';
                         shiftB = '1';
                         shiftC = '0';
                       });
-                      prefs.setString("shiftA", shiftA);
-                      prefs.setString("shiftB", shiftB);
-                      prefs.setString("shiftC", shiftC);
-                      prefs.setString("shiftBool", "1");
+                      // prefs.setString("shiftA", shiftA);
+                      // prefs.setString("shiftB", shiftB);
+                      // prefs.setString("shiftC", shiftC);
+                      // prefs.setString("shiftBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -764,7 +754,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                   groupValue: incidentGroup,
                                   value: '2',
                                   onChanged: (value) async {
-                                    final prefs = await _prefs;
+                                    // final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         incidentGroup = value as String;
@@ -772,12 +762,12 @@ class StepFillDuaState extends State<StepFillDua> {
                                         shiftB = '1';
                                         shiftC = '0';
                                       });
-                                      prefs.setString("shiftA", shiftA);
-                                      prefs.setString("shiftB", shiftB);
-                                      prefs.setString("shiftC", shiftC);
-                                      prefs.setString(
-                                          "insidenShift", incidentGroup!);
-                                      prefs.setString("shiftBool", "1");
+                                      // prefs.setString("shiftA", shiftA);
+                                      // prefs.setString("shiftB", shiftB);
+                                      // prefs.setString("shiftC", shiftC);
+                                      // prefs.setString(
+                                      //     "insidenShift", incidentGroup!);
+                                      // prefs.setString("shiftBool", "1");
                                     }
                                   })),
                           Text(shift_b)
@@ -787,17 +777,17 @@ class StepFillDuaState extends State<StepFillDua> {
                   ),
                   InkWell(
                     onTap: () async {
-                      final prefs = await _prefs;
+                      // final prefs = await _prefs;
                       setState(() {
                         incidentGroup = '3';
                         shiftA = '0';
                         shiftB = '0';
                         shiftC = '1';
                       });
-                      prefs.setString("shiftA", shiftA);
-                      prefs.setString("shiftB", shiftB);
-                      prefs.setString("shiftC", shiftC);
-                      prefs.setString("shiftBool", "1");
+                      // prefs.setString("shiftA", shiftA);
+                      // prefs.setString("shiftB", shiftB);
+                      // prefs.setString("shiftC", shiftC);
+                      // prefs.setString("shiftBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.28,
@@ -817,7 +807,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                   groupValue: incidentGroup,
                                   value: '3',
                                   onChanged: (value) async {
-                                    final prefs = await _prefs;
+                                    // final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         incidentGroup = value as String;
@@ -825,10 +815,10 @@ class StepFillDuaState extends State<StepFillDua> {
                                         shiftB = '0';
                                         shiftC = '1';
                                       });
-                                      prefs.setString("shiftA", shiftA);
-                                      prefs.setString("shiftB", shiftB);
-                                      prefs.setString("shiftC", shiftC);
-                                      prefs.setString("shiftBool", "1");
+                                      // prefs.setString("shiftA", shiftA);
+                                      // prefs.setString("shiftB", shiftB);
+                                      // prefs.setString("shiftC", shiftC);
+                                      // prefs.setString("shiftBool", "1");
                                     }
                                   })),
                           Text(shift_ns)
@@ -877,9 +867,12 @@ class StepFillDuaState extends State<StepFillDua> {
                 maxLines: 5,
                 maxLength: 500,
                 onChanged: (value) async {
-                  final prefs = await _prefs;
-                  prefs.setString("problemTypeState", value);
-                  prefs.setString("ketikProblemBool", "1");
+                  setState(() {
+                    problemTypeState = value;
+                  });
+                  // final prefs = await _prefs;
+                  // prefs.setString("problemTypeState", value);
+                  // prefs.setString("ketikProblemBool", "1");
                 },
                 style: const TextStyle(
                     fontFamily: 'Rubik',
@@ -898,7 +891,7 @@ class StepFillDuaState extends State<StepFillDua> {
                 children: [
                   InkWell(
                     onTap: () async {
-                      final prefs = await _prefs;
+                      // final prefs = await _prefs;
                       setState(() {
                         isSafety = !isSafety;
                         if (isSafety == true) {
@@ -912,11 +905,11 @@ class StepFillDuaState extends State<StepFillDua> {
                         // deliveryOpt = '0';
                         // costOpt = '0';
                       });
-                      prefs.setString("safetyOpt", safetyOpt);
+                      // prefs.setString("safetyOpt", safetyOpt);
                       // prefs.setString("qualityOpt", qualityOpt);
                       // prefs.setString("deliveryOpt", deliveryOpt);
                       // prefs.setString("costOpt", costOpt);
-                      prefs.setString("typeProblemBool", "1");
+                      // prefs.setString("typeProblemBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -935,7 +928,7 @@ class StepFillDuaState extends State<StepFillDua> {
                               child: Checkbox(
                                   value: isSafety,
                                   onChanged: (value) async {
-                                    final prefs = await _prefs;
+                                    // final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         isSafety = !isSafety;
@@ -950,12 +943,12 @@ class StepFillDuaState extends State<StepFillDua> {
                                         // deliveryOpt = '0';
                                         // costOpt = '0';
                                       });
-                                      prefs.setString("safetyOpt", safetyOpt);
+                                      // prefs.setString("safetyOpt", safetyOpt);
                                       // prefs.setString("qualityOpt", qualityOpt);
                                       // prefs.setString(
                                       //     "deliveryOpt", deliveryOpt);
                                       // prefs.setString("costOpt", costOpt);
-                                      prefs.setString("typeProblemBool", "1");
+                                      // prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
                           Text(
@@ -971,7 +964,7 @@ class StepFillDuaState extends State<StepFillDua> {
                   ),
                   InkWell(
                     onTap: () async {
-                      final prefs = await _prefs;
+                      // final prefs = await _prefs;
                       setState(() {
                         isQuality = !isQuality;
                         // safetyOpt = '0';
@@ -986,10 +979,10 @@ class StepFillDuaState extends State<StepFillDua> {
                         // costOpt = '0';
                       });
                       // prefs.setString("safetyOpt", safetyOpt);
-                      prefs.setString("qualityOpt", qualityOpt);
+                      // prefs.setString("qualityOpt", qualityOpt);
                       // prefs.setString("deliveryOpt", deliveryOpt);
                       // prefs.setString("costOpt", costOpt);
-                      prefs.setString("typeProblemBool", "1");
+                      // prefs.setString("typeProblemBool", "1");
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -1008,7 +1001,7 @@ class StepFillDuaState extends State<StepFillDua> {
                               child: Checkbox(
                                   value: isQuality,
                                   onChanged: (value) async {
-                                    final prefs = await _prefs;
+                                    // final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         isQuality = !isQuality;
@@ -1024,10 +1017,10 @@ class StepFillDuaState extends State<StepFillDua> {
                                         costOpt = '0';
                                       });
                                       // prefs.setString("safetyOpt", safetyOpt);
-                                      prefs.setString("qualityOpt", qualityOpt);
+                                      // prefs.setString("qualityOpt", qualityOpt);
                                       // prefs.setString("deliveryOpt", deliveryOpt);
                                       // prefs.setString("costOpt", costOpt);
-                                      prefs.setString("typeProblemBool", "1");
+                                      // prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
                           Text(
@@ -1046,7 +1039,7 @@ class StepFillDuaState extends State<StepFillDua> {
             ),
             InkWell(
               onTap: () async {
-                final prefs = await _prefs;
+                // final prefs = await _prefs;
                 setState(() {
                   isDelivery = !isDelivery;
                   // safetyOpt = '0';
@@ -1062,9 +1055,9 @@ class StepFillDuaState extends State<StepFillDua> {
                 });
                 // prefs.setString("safetyOpt", safetyOpt);
                 // prefs.setString("qualityOpt", qualityOpt);
-                prefs.setString("deliveryOpt", deliveryOpt);
+                // prefs.setString("deliveryOpt", deliveryOpt);
                 // prefs.setString("costOpt", costOpt);
-                prefs.setString("typeProblemBool", "1");
+                // prefs.setString("typeProblemBool", "1");
               },
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
@@ -1088,7 +1081,7 @@ class StepFillDuaState extends State<StepFillDua> {
                               child: Checkbox(
                                   value: isDelivery,
                                   onChanged: (value) async {
-                                    final prefs = await _prefs;
+                                    // final prefs = await _prefs;
                                     if (value != null) {
                                       setState(() {
                                         isDelivery = !isDelivery;
@@ -1105,10 +1098,10 @@ class StepFillDuaState extends State<StepFillDua> {
                                       });
                                       // prefs.setString("safetyOpt", safetyOpt);
                                       // prefs.setString("qualityOpt", qualityOpt);
-                                      prefs.setString(
-                                          "deliveryOpt", deliveryOpt);
+                                      // prefs.setString(
+                                      //     "deliveryOpt", deliveryOpt);
                                       // prefs.setString("costOpt", costOpt);
-                                      prefs.setString("typeProblemBool", "1");
+                                      // prefs.setString("typeProblemBool", "1");
                                     }
                                   })),
                           Text(
@@ -1123,7 +1116,7 @@ class StepFillDuaState extends State<StepFillDua> {
                     ),
                     InkWell(
                       onTap: () async {
-                        final prefs = await _prefs;
+                        // final prefs = await _prefs;
                         setState(() {
                           isCost = !isCost;
                           // safetyOpt = '0';
@@ -1140,8 +1133,8 @@ class StepFillDuaState extends State<StepFillDua> {
                         // prefs.setString("safetyOpt", safetyOpt);
                         // prefs.setString("qualityOpt", qualityOpt);
                         // prefs.setString("deliveryOpt", deliveryOpt);
-                        prefs.setString("costOpt", costOpt);
-                        prefs.setString("typeProblemBool", "1");
+                        // prefs.setString("costOpt", costOpt);
+                        // prefs.setString("typeProblemBool", "1");
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.40,
@@ -1160,7 +1153,7 @@ class StepFillDuaState extends State<StepFillDua> {
                                 child: Checkbox(
                                     value: isCost,
                                     onChanged: (value) async {
-                                      final prefs = await _prefs;
+                                      // final prefs = await _prefs;
                                       if (value != null) {
                                         setState(() {
                                           isCost = !isCost;
@@ -1180,8 +1173,8 @@ class StepFillDuaState extends State<StepFillDua> {
                                         //     "qualityOpt", qualityOpt);
                                         // prefs.setString(
                                         //     "deliveryOpt", deliveryOpt);
-                                        prefs.setString("costOpt", costOpt);
-                                        prefs.setString("typeProblemBool", "1");
+                                        // prefs.setString("costOpt", costOpt);
+                                        // prefs.setString("typeProblemBool", "1");
                                       }
                                     })),
                             Text(
@@ -1838,6 +1831,56 @@ class StepFillDuaState extends State<StepFillDua> {
                           ],
                         )),
                   ),
+            Container(
+              margin: EdgeInsets.only(top: 26),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      isStepSatuFill.value = true;
+                      isStepDuaFill.value = false;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(color: Color(0xFF00AEDB))),
+                      child: Center(
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF00AEDB),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => saveStepFillDua(),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          color: Color(0xFF00AEDB)),
+                      child: Center(
+                        child: Text("Lanjut 3/8",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

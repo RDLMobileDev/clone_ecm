@@ -5,9 +5,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/fillnew/additionpage/stepfillempatinput.dart';
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatdelete.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -177,14 +179,18 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
   Future<List> getDataItemChecking() async {
     final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String ecmId =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
-    String userId = prefs.getString("idKeyUser") ?? "-";
+    // String token = prefs.getString("tokenKey").toString();
+    // String ecmId =
+    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
+    // String userId = prefs.getString("idKeyUser") ?? "-";
 
-    if (prefs.getString("ecmIdEdit").toString() != "null") {
-      prefs.setString("itemStep4Bool", "1");
-    }
+    String token = SharedPrefsUtil.getTokenUser();
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String userId = SharedPrefsUtil.getIdUser();
+
+    // if (prefs.getString("ecmIdEdit").toString() != "null") {
+    //   prefs.setString("itemStep4Bool", "1");
+    // }
 
     try {
       print("ecm id: $ecmId");
@@ -236,9 +242,11 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   }
 
   void deleteItemChecking(String idEcmItem) async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
+    // final prefs = await _prefs;
+    // String tokenUser = prefs.getString("tokenKey").toString();
     // String? idEcmItem = prefs.getString("idEcmItem");
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
     var result = await fillNewEmpatDelete(idEcmItem, tokenUser);
 
@@ -423,7 +431,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.58,
+      height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -595,7 +603,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                           fontSize: 16);
                     }
                   : () async {
-                      final prefs = await _prefs;
+                      // final prefs = await _prefs;
                       bool isInputted = await Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => StepFillEmpatInput()));
@@ -635,6 +643,72 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 26),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      isStepEmpatFill.value = false;
+                      isStepTigaFill.value = true;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(color: Color(0xFF00AEDB))),
+                      child: Center(
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF00AEDB),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_listItemChecking.isNotEmpty) {
+                        isStepEmpatFill.value = false;
+                        isStepLimaFill.value = true;
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: 'Anda belum menambahkan item',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.greenAccent,
+                            textColor: Colors.white,
+                            fontSize: 16);
+                      }
+                      // isStepEmpatFill.value = false;
+                      // isStepLimaFill.value = true;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          color: Color(0xFF00AEDB)),
+                      child: Center(
+                        child: Text("Lanjut 5/8",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),
+                  )
+                ],
               ),
             )
           ],

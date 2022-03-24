@@ -6,6 +6,8 @@ import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
@@ -22,7 +24,18 @@ import 'package:e_cm/homepage/home/view/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+var isStepSatuFill = true.obs,
+    isStepDuaFill = false.obs,
+    isStepTigaFill = false.obs,
+    isStepEmpatFill = false.obs,
+    isStepLimaFill = false.obs,
+    isStepEnamFill = false.obs,
+    isStepTujuhFill = false.obs,
+    isStepDelapanFill = false.obs;
 
 class FillNew extends StatefulWidget {
   final String? ecmId;
@@ -34,6 +47,7 @@ class FillNew extends StatefulWidget {
 
 class _FillNewState extends State<FillNew> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final storage = GetStorage();
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -100,111 +114,6 @@ class _FillNewState extends State<FillNew> {
     }
   }
 
-  Future _isLoading() async {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return _listSummaryApproval.isEmpty
-              ? Center(
-                  child: CircularProgressIndicator(
-                    value: null,
-                    strokeWidth: 2,
-                  ),
-                )
-              : SimpleDialog(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Dashboard()),
-                            ModalRoute.withName("/"));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 16, right: 16),
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.topRight,
-                        child: Image.asset(
-                          "assets/icons/X.png",
-                          width: 20,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Center(
-                          child: Image.asset(
-                        "assets/icons/done.png",
-                        width: 150,
-                      )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Terimakasih",
-                          style: TextStyle(
-                              color: Color(0xFF404446),
-                              fontFamily: 'Rubik',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8, left: 16, right: 16),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Formulir Anda telah disimpan dan menunggu untuk disetujui",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xFF404446),
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        final prefs = await _prefs;
-                        prefs.remove("idEcm");
-
-                        if (_listSummaryApproval.isNotEmpty) {
-                          print("data approve");
-                          print(_listSummaryApproval);
-                          summaryPopup();
-                        } else {
-                          print(_listSummaryApproval);
-                        }
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(top: 20, left: 16, right: 16),
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          child: Center(
-                            child: Text(
-                              "Lihat Ringkasan",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          )),
-                    )
-                  ],
-                );
-        });
-  }
-
   final StepFillSatu _stepFillSatu = StepFillSatu();
   final StepFillDua _stepFillDua = StepFillDua();
   final StepFillTiga _stepFillTiga = StepFillTiga();
@@ -221,8 +130,6 @@ class _FillNewState extends State<FillNew> {
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
   ];
-
-  List<SummaryApproveModel> _listSummaryApproval = [];
 
   List<Step> get _steps => [
         Step(
@@ -436,22 +343,8 @@ class _FillNewState extends State<FillNew> {
                 prefs.getString("copyToBool") == "1") {
           await _stepFillDelapan.getMethodPostStep();
 
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: null,
-                      strokeWidth: 4,
-                    ),
-                  ),
-                );
-              });
-
           try {
-            successStep8();
+            // successStep8();
             Timer.periodic(Duration(seconds: 10), (timer) async {
               if (timer.tick == 5) {
                 removeStepCacheFillEcm();
@@ -508,195 +401,6 @@ class _FillNewState extends State<FillNew> {
             fontSize: 16);
       }
     }
-  }
-
-  void successStep8() async {
-    final prefs = await _prefs;
-    String idUser = prefs.getString("idKeyUser").toString();
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String idEcm = prefs.getString("idEcm").toString();
-
-    try {
-      _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
-          tokenUser, idEcm, idUser);
-
-      print(_listSummaryApproval[0].lineStopJam);
-      removeStepCacheFillEcm();
-      removeCacheFillEcm();
-
-      _isLoading();
-    } catch (e) {
-      print(e);
-      removeStepCacheFillEcm();
-      removeCacheFillEcm();
-      setStateIfMounted(() {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
-            ModalRoute.withName("/"));
-      });
-    }
-  }
-
-  void summaryPopup() async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            children: [
-              InkWell(
-                onTap: () async {
-                  final prefs = await _prefs;
-                  prefs.remove("idEcm");
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
-                      ModalRoute.withName("/"));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 16, right: 16),
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.topRight,
-                  child: Image.asset(
-                    "assets/icons/X.png",
-                    width: 20,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: Text(
-                    "Ringkasan",
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF404446)),
-                  ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(left: 16, right: 16),
-                padding: EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    Text(
-                      "BM",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF404446)),
-                    ),
-                    Text(
-                      "${_listSummaryApproval[0].lineStopJam}H ${_listSummaryApproval[0].lineStopMenit}M",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF404446)),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(left: 16, right: 16),
-                padding: EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
-                child: Text(
-                  "E-CM harus disetujui oleh",
-                  style: TextStyle(
-                      color: Color(0xFF404446),
-                      fontFamily: 'Rubik',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(left: 16, right: 16),
-                padding: EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(color: Color(0xFFCDCFD0)))),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: _listSummaryApproval.length,
-                  itemBuilder: (context, i) {
-                    if (_listSummaryApproval[i].nama != "null") {
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          _listSummaryApproval[i].foto),
-                                      fit: BoxFit.fill)),
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Text(
-                                "${_listSummaryApproval[i].nama} - ${_listSummaryApproval[i].role}")
-                          ],
-                        ),
-                      );
-                    }
-
-                    return Container();
-                  },
-                ),
-              ),
-              InkWell(
-                onTap: () async {
-                  final prefs = await _prefs;
-                  prefs.remove("idEcm");
-
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
-                      ModalRoute.withName("/"));
-                },
-                child: Container(
-                    margin: EdgeInsets.only(top: 20, left: 16, right: 16),
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF00AEDB),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: Center(
-                      child: Text(
-                        "Selesai",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    )),
-              )
-            ],
-          );
-        });
   }
 
   cancel() async {
@@ -937,80 +641,94 @@ class _FillNewState extends State<FillNew> {
                 ))
           ],
         ),
-        body: SizedBox(
+        body: Container(
           width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Expanded(
-                child: Stepper(
-                  type: StepperType.horizontal,
-                  physics: ScrollPhysics(),
-                  currentStep: _currentStep,
-                  // onStepTapped: (step) => tapped(step),
-                  onStepContinue: continued,
-                  onStepCancel: cancel,
-                  // controlsBuilder: (context, {onStepCancel, onStepContinue}) {
-                  //   print(onStepContinue);
-                  //   return Container(
-                  //     margin: const EdgeInsets.only(top: 50),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: <Widget>[
-                  //         InkWell(
-                  //           onTap: () => cancel(),
-                  //           child: Container(
-                  //             width: MediaQuery.of(context).size.width * 0.4,
-                  //             height: 40,
-                  //             decoration: BoxDecoration(
-                  //                 color: Colors.white,
-                  //                 border: Border.all(color: Color(0xFF00AEDB)),
-                  //                 borderRadius:
-                  //                     BorderRadius.all(Radius.circular(5))),
-                  //             child: Center(
-                  //               child: Text(
-                  //                 back,
-                  //                 style: TextStyle(
-                  //                     fontFamily: 'Rubik',
-                  //                     fontSize: 16,
-                  //                     fontWeight: FontWeight.w400,
-                  //                     color: Color(0xFF00AEDB)),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         InkWell(
-                  //           onTap: _stepClicked == 9 ? null : () => continued(),
-                  //           child: Container(
-                  //             width: MediaQuery.of(context).size.width * 0.4,
-                  //             height: 40,
-                  //             decoration: BoxDecoration(
-                  //                 color: Color(0xFF00AEDB),
-                  //                 borderRadius:
-                  //                     BorderRadius.all(Radius.circular(5))),
-                  //             child: Center(
-                  //               child: Text(
-                  //                 next == "Finish"
-                  //                     ? next
-                  //                     : "$next $_stepClicked/$_stepTotal",
-                  //                 style: TextStyle(
-                  //                   fontFamily: 'Rubik',
-                  //                   fontSize: 16,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: Colors.white,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         )
-                  //       ],
-                  //     ),
-                  //   );
-                  // },
-                  // ignore: prefer_const_literals_to_create_immutables
-                  steps: _steps,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  child: Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StepperNumber(
+                            numberStep: "1",
+                            isFilled: isStepSatuFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "2",
+                            isFilled: isStepDuaFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "3",
+                            isFilled: isStepTigaFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "4",
+                            isFilled: isStepEmpatFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "5",
+                            isFilled: isStepLimaFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "6",
+                            isFilled: isStepEnamFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "7",
+                            isFilled: isStepTujuhFill.value,
+                          ),
+                          LineStepper(),
+                          StepperNumber(
+                            numberStep: "8",
+                            isFilled: isStepDelapanFill.value,
+                          ),
+                        ],
+                      )),
                 ),
-              ),
-            ],
+                Obx(() => Visibility(
+                    visible: isStepSatuFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillSatu()))),
+                Obx(() => Visibility(
+                    visible: isStepDuaFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillDua()))),
+                Obx(() => Visibility(
+                    visible: isStepTigaFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillTiga()))),
+                Obx(() => Visibility(
+                    visible: isStepEmpatFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillEmpat()))),
+                Obx(() => Visibility(
+                    visible: isStepLimaFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillLima()))),
+                Obx(() => Visibility(
+                    visible: isStepEnamFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillEnam()))),
+                Obx(() => Visibility(
+                    visible: isStepTujuhFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15), child: StepFillTujuh()))),
+                Obx(() => Visibility(
+                    visible: isStepDelapanFill.value,
+                    child: Container(
+                        padding: EdgeInsets.all(15),
+                        child: StepFillDelapan()))),
+              ],
+            ),
           ),
         ),
       ),

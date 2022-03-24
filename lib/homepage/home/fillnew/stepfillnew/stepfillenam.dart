@@ -3,12 +3,14 @@
 import 'dart:convert';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/getstep6model.dart';
 import 'package:e_cm/homepage/home/model/vendorstep6model.dart';
 import 'package:e_cm/homepage/home/services/apifillnewenam.dart';
 import 'package:e_cm/homepage/home/services/apifillnewenamget.dart';
 import 'package:e_cm/homepage/home/services/getsemuauser.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,6 +53,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
   String in_house = '';
   String cost = 'Cost';
   String out_house = '';
+
+  String idUsernameIdea = '-';
 
   String prefLineStopH = '0',
       prefLineStopM = '0',
@@ -555,11 +559,16 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
   getStep6() async {
     final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String ecmId =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    String ecmitemId = prefs.getString("idEcmItem").toString();
-    String userId = prefs.getString("idKeyUser").toString();
+    // String? tokenUser = prefs.getString("tokenKey").toString();
+    // String ecmId =
+    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+    // String ecmitemId = prefs.getString("idEcmItem").toString();
+    // String userId = prefs.getString("idKeyUser").toString();
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String ecmitemId = SharedPrefsUtil.getIdEcmItem();
+    String userId = SharedPrefsUtil.getIdUser();
 
     List<VendorStep6Model> listVendorTemp = [];
     try {
@@ -640,9 +649,12 @@ class _StepFillEnamState extends State<StepFillEnam> {
   }
 
   Future<List<AllUserModel>> getAllUserData() async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String idUser = prefs.getString("idKeyUser") ?? "";
+    // final SharedPreferences prefs = await _prefs;
+    // String? tokenUser = prefs.getString("tokenKey").toString();
+    // String idUser = prefs.getString("idKeyUser") ?? "";
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idUser = SharedPrefsUtil.getIdUser();
 
     print("id user step 6: " + idUser);
     var response = await getUserAll(tokenUser, idUser);
@@ -671,86 +683,86 @@ class _StepFillEnamState extends State<StepFillEnam> {
     return _listAllUser;
   }
 
-  postFillEnam() async {
-    final SharedPreferences prefs = await _prefs;
-    // String newOutHouseCost = costOutHouseController.text.replaceAll(".", "");
+  void postFillEnam() async {
+    String minuteTotalCr = stepEnamModel.hasilRepairM.toString().length == 1
+        ? "0" + stepEnamModel.hasilRepairM.toString()
+        : stepEnamModel.hasilRepairM.toString();
 
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String idEcm =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    String idKeyUser = prefs.getString("idKeyUser").toString();
-    String userName = prefs.getString("userName").toString();
-    String idea = prefs.getString("idea").toString();
-    String check = prefs.getString("check").toString();
-    String repair = prefs.getString("repair").toString();
-    String totalcr = prefs.getString("totalcr").toString();
-    String breaks = prefs.getString("breaks").toString();
-    String lineStart = prefs.getString("lineStart").toString();
-    String lineStop = prefs.getString("lineStop").toString();
-    String ttlLineStop = prefs.getString("ttlLineStop").toString();
-    String costH = prefs.getString("costH").toString();
-    String costMp = prefs.getString("costMp").toString();
-    String costInHouse = prefs.getString("costInHouse").toString();
-    String outHouseH = prefs.getString("outHouseH").toString() == "null"
-        ? "0"
-        : prefs.getString("outHouseH").toString();
-    String outHouseMp = prefs.getString("outHouseMp").toString() == "null"
-        ? "0"
-        : prefs.getString("outHouseMp").toString();
-    String outHouseCost = prefs.getString("outHouseCost").toString() == "null"
-        ? "0"
-        : prefs.getString("outHouseCost").toString();
-    String ttlCostOutHouse =
-        prefs.getString("ttlCostOutHouse").toString() == "null"
-            ? "0"
-            : prefs.getString("ttlCostOutHouse").toString();
+    String minuteRepair = stepEnamModel.repairM.toString().length == 1
+        ? "0" + stepEnamModel.repairM.toString()
+        : stepEnamModel.repairM.toString();
+
+    String minuteCheck = stepEnamModel.checkM.toString().length == 1
+        ? "0" + stepEnamModel.checkM.toString()
+        : stepEnamModel.checkM.toString();
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcm = SharedPrefsUtil.getEcmId();
+    String idUser = SharedPrefsUtil.getIdUser();
+    // idUsernameIdea
+    String idea = ideaController.text.isEmpty ? "-" : ideaController.text;
+    String check = stepEnamModel.checkH.toString() + ":" + minuteCheck;
+    String repair = stepEnamModel.repairH.toString() + ":" + minuteRepair;
+    String totalcr =
+        stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr;
+    String breaks = _counter.toString();
+    String lineStart = stepEnamModel.hasilRepairH.toString() +
+        ":" +
+        stepEnamModel.hasilRepairM.toString();
+    String lineStop = _counter.toString() + ":00";
+    String ttlLineStop = "0";
+    String costH = _newLineStopH.toString();
+    String costMp = stepEnamModel.mP.toString();
+    String costInHouse = _costInHouse.toString();
+    String outHouseH =
+        outHouseHController.text.isEmpty ? "0" : outHouseHController.text;
+    String outHouseMp =
+        outHouseMpController.text.isEmpty ? "0" : outHouseMpController.text;
+    String outHouseCost =
+        costOutHouseController.text.isEmpty ? "0" : costOutHouseController.text;
+    String ttlCostOutHouse = _costOutHouse.toString().replaceAll(".", "");
 
     try {
-      // print("kirim data step 6");
-      print(check);
-      print(repair);
-      print(totalcr);
-      print(breaks);
-      print(lineStart);
-      print(lineStop);
-      print(ttlLineStop);
-      print(costH);
-      print(costMp);
-      print(costInHouse);
-      print(outHouseH);
-      print(outHouseMp);
-      print(outHouseCost);
-      print(ttlCostOutHouse);
-
-      var response = await fillNewEnam(
-          prefs.getString("idEcm").toString(),
-          prefs.getString("idKeyUser").toString(),
-          prefs.getString("userName").toString(),
-          prefs.getString("idea").toString(),
-          prefs.getString("check").toString(),
-          prefs.getString("repair").toString(),
-          prefs.getString("totalcr").toString(),
-          prefs.getString("breaks").toString(),
-          prefs.getString("lineStart").toString(),
-          prefs.getString("lineStop").toString(),
-          prefs.getString("ttlLineStop").toString(),
-          prefs.getString("costH").toString(),
-          prefs.getString("costMp").toString(),
-          prefs.getString("costInHouse").toString(),
+      var result = await fillNewEnam(
+          idEcm,
+          idUser,
+          idUsernameIdea,
+          idea,
+          check,
+          repair,
+          totalcr,
+          breaks,
+          lineStart,
+          lineStop,
+          ttlLineStop,
+          costH,
+          costMp,
+          costInHouse,
           outHouseH,
           outHouseMp,
           outHouseCost,
           ttlCostOutHouse,
           tokenUser);
 
-      var data = response['data'];
-      print(response);
-      Fluttertoast.showToast(
-        msg: 'Data step 6 disimpan',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.greenAccent,
-      );
+      if (result['response']['status'] == 200) {
+        Fluttertoast.showToast(
+          msg: 'Data step 6 disimpan',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
+
+        isStepEnamFill.value = false;
+        isStepTujuhFill.value = true;
+      } else {
+        print(result);
+        Fluttertoast.showToast(
+          msg: 'Data step 6 gagal disimpan',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+        );
+      }
     } catch (e) {
       print(e);
       print("Something error");
@@ -923,17 +935,24 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       itemBuilder: (context, i) {
                         return InkWell(
                             onTap: () async {
-                              final SharedPreferences prefs = await _prefs;
-                              prefs.setString("userName",
-                                  _listAllUser[i].userId.toString());
-                              prefs.setString("namaImprovement",
-                                  _listAllUser[i].userFullName!);
-                              prefs.setString("userNameBool", "1");
                               setState(() {
+                                idUsernameIdea =
+                                    _listAllUser[i].userId.toString();
                                 userNameController = TextEditingController(
                                     text: _listAllUser[i].userFullName);
                                 isTapedUserName = !isTapedUserName;
                               });
+
+                              // final SharedPreferences prefs = await _prefs;
+                              // prefs.setString("userName",
+                              //     _listAllUser[i].userId.toString());
+                              // prefs.setString("namaImprovement",
+                              //     _listAllUser[i].userFullName!);
+                              // prefs.setString("userNameBool", "1");
+                              // setState(() {
+                              //   userNameController = TextEditingController(
+                              //       text: _listAllUser[i].userFullName);
+                              // });
                               // getMachineNumberbyId(_listAllUser[i].idMesin);
                               // print("id mesin: $machineIdSelected");
                             },
@@ -980,12 +999,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   border: Border.all(color: const Color(0xFF979C9E)),
                   borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextFormField(
-                onChanged: (value) async {
-                  final SharedPreferences prefs = await _prefs;
-                  prefs.setString("idea", value);
-                  prefs.setString("ideaBool", "1");
-                  print(prefs.getString("idea"));
-                },
                 controller: ideaController,
                 style: const TextStyle(
                     fontFamily: 'Rubik',
@@ -1925,14 +1938,14 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       children: listVendor.map((e) {
                         return InkWell(
                             onTap: () async {
-                              final prefs = await _prefs;
+                              // final prefs = await _prefs;
                               setState(() {
                                 vendorPriceController =
                                     TextEditingController(text: e.vendorName);
                                 costOutHouseController =
                                     TextEditingController(text: e.vendorPrice);
-                                prefs.setString("outHouseCost", e.vendorPrice!);
-                                prefs.setString("vendorName", e.vendorName!);
+                                // prefs.setString("outHouseCost", e.vendorPrice!);
+                                // prefs.setString("vendorName", e.vendorName!);
                                 isTapVendor = !isTapVendor;
                               });
                             },
@@ -1968,10 +1981,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                 maxLength: 2,
                                 onChanged: (text) async {
                                   resultHOutHouse(text);
-                                  final prefs = await _prefs;
-                                  prefs.setString("outHouseH", text);
-                                  prefs.setString("outHouseHBool", "1");
-                                  setFormValueStep6AfterChoosing();
+                                  // final prefs = await _prefs;
+                                  // prefs.setString("outHouseH", text);
+                                  // prefs.setString("outHouseHBool", "1");
+                                  // setFormValueStep6AfterChoosing();
                                 },
                                 controller: outHouseHController,
                                 keyboardType: TextInputType.number,
@@ -2032,10 +2045,10 @@ class _StepFillEnamState extends State<StepFillEnam> {
                                 maxLength: 2,
                                 onChanged: (text) async {
                                   resultMpOutHouse(text);
-                                  final SharedPreferences prefs = await _prefs;
-                                  prefs.setString("outHouseMp", text);
-                                  prefs.setString("outHouseMpBool", "1");
-                                  setFormValueStep6AfterChoosing();
+                                  // final SharedPreferences prefs = await _prefs;
+                                  // prefs.setString("outHouseMp", text);
+                                  // prefs.setString("outHouseMpBool", "1");
+                                  // setFormValueStep6AfterChoosing();
                                 },
                                 controller: outHouseMpController,
                                 keyboardType: TextInputType.number,
@@ -2180,6 +2193,58 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 ),
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(top: 26),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      isStepEnamFill.value = false;
+                      isStepLimaFill.value = true;
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(color: Color(0xFF00AEDB))),
+                      child: Center(
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF00AEDB),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      postFillEnam();
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          color: Color(0xFF00AEDB)),
+                      child: Center(
+                        child: Text("Lanjut 7/8",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

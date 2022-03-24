@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:e_cm/auth/view/login.dart';
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,18 +19,19 @@ class _SplashScreenState extends State<SplashScreen> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   void moveToLogin() async {
-    final SharedPreferences prefs = await _prefs;
-    String? idKeyUser = prefs.getString("idKeyUser");
-    String? emailKey = prefs.getString("emailKey");
-    String? deviceKey = prefs.getString("deviceKey");
-    String? tokenKey = prefs.getString("tokenKey");
-    String? usernameKey = prefs.getString("usernameKey");
+    // final SharedPreferences prefs = await _prefs;
 
-    if (idKeyUser != null &&
-        emailKey != null &&
-        deviceKey != null &&
-        tokenKey != null &&
-        usernameKey != null) {
+    String idKeyUser = SharedPrefsUtil.getIdUser();
+    String emailKey = SharedPrefsUtil.getEmailKey();
+    String deviceKey = SharedPrefsUtil.getDeviceKey();
+    String tokenKey = SharedPrefsUtil.getTokenUser();
+    String usernameKey = SharedPrefsUtil.getUsername();
+
+    if ((idKeyUser.isNotEmpty || idKeyUser != "") &&
+        (emailKey.isNotEmpty || emailKey != "") &&
+        (deviceKey.isNotEmpty || deviceKey != "") &&
+        (tokenKey.isNotEmpty || tokenKey != "") &&
+        (usernameKey.isNotEmpty || usernameKey != "")) {
       Timer(
           Duration(seconds: 3),
           () => Navigator.of(context).pushReplacement(

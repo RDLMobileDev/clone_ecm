@@ -6,11 +6,10 @@ import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
-import 'package:e_cm/homepage/home/model/steplimaitemmodel.dart';
-import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
 import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -38,7 +37,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   List<ItemChecking> _listData = [];
   List<PartModel> partsItem = <PartModel>[];
 
-  String _username = "";
+  String _username = "", itemNameStepLimaInsert = "";
 
   bool itemNameTapped = false;
 
@@ -135,7 +134,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     }
 
     setState(() {
-      _username = prefs.getString("usernameKey") ?? "";
+      // _username = prefs.getString("usernameKey") ?? "";
+      _username = SharedPrefsUtil.getUsername();
       usernameStepLima = TextEditingController(text: _username);
     });
   }
@@ -422,46 +422,56 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   }
 
   void saveStepInputRepairing() async {
-    final prefs = await SharedPreferences.getInstance();
-    var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    var ecmItemId = prefs.getString("idEcmItem");
-    var idUser = prefs.getString("idKeyUser").toString();
-    var machineId = prefs.getString("machineId");
-    var idUserChecker = prefs.getString("idUserChecker");
+    // final prefs = await SharedPreferences.getInstance();
 
-    String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
-    String tokenUser = prefs.getString("tokenKey") ?? "";
+    // var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+    // var ecmItemId = prefs.getString("idEcmItem");
+    // var idUser = prefs.getString("idKeyUser").toString();
+    // var machineId = prefs.getString("machineId");
+    // var idUserChecker = prefs.getString("idUserChecker");
 
-    print("id Ecm -> $ecmId");
-    print("user id-> $idUser");
-    print("id mesin -> $machineId");
-    print("note -> ${formValue["note"]}");
-    print("start -> ${formValue["start"]}");
-    print("end -> ${formValue["end"]}");
-    print("repair -> ${formValue["repair"]}");
-    print("item name -> $itemNameStepLima");
-    print("tokennya -> $tokenUser");
+    // String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
+    // String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    // print("id Ecm -> $ecmId");
+    // print("user id-> $idUser");
+    // print("id mesin -> $machineId");
+    // print("note -> ${formValue["note"]}");
+    // print("start -> ${formValue["start"]}");
+    // print("end -> ${formValue["end"]}");
+    // print("repair -> ${formValue["repair"]}");
+    // print("item name -> $itemNameStepLima");
+    // print("tokennya -> $tokenUser");
+
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String ecmItemId = SharedPrefsUtil.getIdEcmItem();
+    String idUser = SharedPrefsUtil.getIdUser();
+    String machineId = SharedPrefsUtil.getIdMesinRes();
+    String idUserChecker = SharedPrefsUtil.getIdUserChecker();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
     try {
       String resultMessage = "Data disimpan";
+
+      print(ecmItemId);
       var result = await fillNewLimaInsert(
           formValue["note"] ?? "-",
           formValue["start"] ?? "-",
           formValue["end"] ?? "-",
           formValue["repair"] ?? "-",
-          idUserChecker ?? "-",
+          idUserChecker,
           ecmId,
-          machineId ?? "-",
-          itemNameStepLima,
+          machineId,
+          itemNameStepLimaInsert,
           idUser,
-          ecmItemId ?? "0",
+          ecmItemId,
           tokenUser);
 
       print("result insert 5 -> $result");
 
       switch (result['response']['status']) {
         case 200:
-          prefs.setString("itemRepairBool", "1");
+          // prefs.setString("itemRepairBool", "1");
           Navigator.of(context).pop(true);
           break;
         default:
@@ -503,7 +513,8 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   void getUsernameSession() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _username = prefs.getString("usernameKey") ?? "";
+      // _username = prefs.getString("usernameKey") ?? "";
+      _username = SharedPrefsUtil.getUsername();
       usernameStepLima = TextEditingController(text: _username);
       formValidations["name"] = true;
       formValue["name"] = _username;
@@ -538,17 +549,22 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   }
 
   void fetchLocationPartData() async {
-    var prefs = await _prefs;
-    String ecmId =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    String tokenUser = prefs.getString("tokenKey") ?? "";
+    // var prefs = await _prefs;
+    // String ecmId =
+    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+    // String tokenUser = prefs.getString("tokenKey") ?? "";
+
+    String ecmId = SharedPrefsUtil.getEcmId();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
     var dataItem =
         await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
 
-    setState(() {
-      partsItem = dataItem;
-    });
+    if (mounted) {
+      setState(() {
+        partsItem = dataItem;
+      });
+    }
 
     print("data ecm id -> $ecmId");
     print("data parts -> ${partsItem.length}");
@@ -668,7 +684,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                                 itemBuilder: (context, i) {
                                   return InkWell(
                                       onTap: () async {
-                                        final prefs = await _prefs;
+                                        // final prefs = await _prefs;
                                         setState(() {
                                           tecName = TextEditingController(
                                               text: partsItem[i].mPartNama);
@@ -676,12 +692,10 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                                               .mPartNama
                                               .toString()
                                               .isNotEmpty;
+                                          itemNameStepLimaInsert =
+                                              partsItem[i].mPartNama.toString();
                                           itemNameTapped = !itemNameTapped;
                                         });
-                                        prefs.setString("itemNameStepLima",
-                                            partsItem[i].mPartNama.toString());
-                                        // prefs.setString("idEcmItem",
-                                        //     _listData[i].ecmitemId.toString());
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(

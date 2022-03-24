@@ -16,6 +16,7 @@ import 'package:e_cm/homepage/home/services/api_reject_ecm_service.dart';
 import 'package:e_cm/homepage/home/services/apidetailecm.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -202,8 +203,8 @@ class _DetailEcmState extends State<DetailEcm> {
 
   void postAlasanTolakEcm() async {
     final SharedPreferences prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String userId = prefs.getString("idKeyUser") ?? "-";
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String userId = SharedPrefsUtil.getIdUser();
 
     Map<String, dynamic> params = {
       // "id_notif": userId,
@@ -368,7 +369,8 @@ class _DetailEcmState extends State<DetailEcm> {
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    // String userId = SharedPrefsUtil.getIdUser();
     var response = await getDetailEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -398,7 +400,8 @@ class _DetailEcmState extends State<DetailEcm> {
   Future<List<ItemRepairModel>> getItemRepair() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    // String userId = SharedPrefsUtil.getIdUser();
     var response = await getDetailEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -428,7 +431,8 @@ class _DetailEcmState extends State<DetailEcm> {
   Future<List<SparepartModel>> getSparepart() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    // String userId = SharedPrefsUtil.getIdUser();
     var response = await getDetailEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -458,7 +462,8 @@ class _DetailEcmState extends State<DetailEcm> {
   Future<List<EsignModel>> getEsign() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    // String userId = SharedPrefsUtil.getIdUser();
     var response = await getDetailEcm(notifUser, tokenUser);
     if (response['response']['status'] == 200) {
       setStateIfMounted(() {
@@ -488,7 +493,8 @@ class _DetailEcmState extends State<DetailEcm> {
   getDetailData() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    // String userId = SharedPrefsUtil.getIdUser();
     var response = await getDetailEcm(notifUser, tokenUser);
     try {
       setStateIfMounted(() {
@@ -526,7 +532,8 @@ class _DetailEcmState extends State<DetailEcm> {
   postUpdateStatus(String statusUser) async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    // String userId = SharedPrefsUtil.getIdUser();
     try {
       var response = await updateStatus(notifUser, statusUser, tokenUser);
       print(response);

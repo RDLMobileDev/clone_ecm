@@ -10,6 +10,7 @@ import 'package:e_cm/homepage/home/history/service/get_history_daily.dart';
 import 'package:e_cm/homepage/home/history/service/get_history_monthly.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -184,7 +185,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<List<HistoryDaily>> getListDaily(String dateTarget) async {
     print("cek daily");
     final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     final String dateTime = _fromDate.format("Y-m-d");
 
     try {
@@ -231,7 +232,7 @@ class _HistoryPageState extends State<HistoryPage> {
       String yearsTarget, String monthTarget) async {
     final SharedPreferences prefs = await _prefs;
 
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     try {
       print("data berdasarkan = th " + yearsTarget + " / bln " + monthTarget);
       var response =
@@ -275,7 +276,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<List<HistoryAll>> getListAll() async {
     final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     try {
       var response = await getHistoryAll(tokenUser);
       if (response['response']['status'] == 200) {
@@ -320,8 +321,8 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Future<List<HistoryAll>> getListAllByName(String byName) async {
-    final SharedPreferences prefs = await _prefs;
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    // final SharedPreferences prefs = await _prefs;
+    String tokenUser = SharedPrefsUtil.getTokenUser();
     try {
       var response = await getHistoryAllByName(tokenUser, byName);
       if (response['response']['status'] == 200) {

@@ -8,10 +8,12 @@ import 'dart:io';
 import 'package:e_cm/auth/view/login.dart';
 import 'package:e_cm/homepage/account/services/apilogout.dart';
 import 'package:e_cm/homepage/account/services/apiuser.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountMember extends StatefulWidget {
@@ -234,41 +236,27 @@ class _AccountMemberState extends State<AccountMember> {
   }
 
   postLogout() async {
-    final SharedPreferences prefs = await _prefs;
-    String emailUser = prefs.getString("emailKey").toString();
-    String deviceUser = prefs.getString("deviceKey").toString();
-    String? tokenUser = prefs.getString("tokenKey").toString();
+    String emailUser = SharedPrefsUtil.getEmailKey();
+    String deviceUser = SharedPrefsUtil.getDeviceKey();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+
     try {
       // prefs.clear();
       var rspLogut = await logoutUser(emailUser, deviceUser, tokenUser);
       print(rspLogut);
       if (rspLogut['response']['status'] == 200) {
-        setState(() {
-          Fluttertoast.showToast(
-              msg:
-                  _localizedValues[locale]!['logout_sukses'] ?? "Logout sukses",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
-        prefs.clear();
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LogIn()),
-            (Route<dynamic> route) => false);
-        // setState(() {
-        //   Fluttertoast.showToast(
-        //       msg: _localizedValues[locale]!['check'] ??
-        //           'Periksa jaringan internet anda',
-        //       toastLength: Toast.LENGTH_SHORT,
-        //       gravity: ToastGravity.BOTTOM,
-        //       timeInSecForIosWeb: 2,
-        //       backgroundColor: Colors.greenAccent,
-        //       textColor: Colors.white,
-        //       fontSize: 16);
-        // });
+        Fluttertoast.showToast(
+            msg: _localizedValues[locale]!['logout_sukses'] ?? "Logout sukses",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+
+        SharedPrefsUtil.clearStorage();
+
+        Get.off(LogIn());
       }
     } catch (e) {
       Fluttertoast.showToast(
@@ -284,12 +272,19 @@ class _AccountMemberState extends State<AccountMember> {
   }
 
   getDataUser() async {
-    final SharedPreferences prefs = await _prefs;
-    String emailUser = prefs.getString("emailKey").toString();
-    String? tokenUser = prefs.getString("tokenKey").toString();
-    String nameUser = prefs.getString("usernameKey").toString();
-    String roleUser = prefs.getString("namaJabatanKey").toString();
-    String photoUser = prefs.getString("photoUser") ?? "-";
+    // final SharedPreferences prefs = await _prefs;
+
+    String emailUser = SharedPrefsUtil.getEmailKey();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String nameUser = SharedPrefsUtil.getUsername();
+    String roleUser = SharedPrefsUtil.getNamaJabatanKey();
+    String photoUser = SharedPrefsUtil.getPhotoUser();
+
+    // prefs.getString("photoUser") ?? "-";
+    // prefs.getString("namaJabatanKey").toString();
+    // prefs.getString("usernameKey").toString();
+    // prefs.getString("tokenKey").toString();
+    // prefs.getString("emailKey").toString();
 
     print(emailUser);
     setState(() {

@@ -10,6 +10,7 @@ import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:e_cm/homepage/home/services/api_get_item_steptujuh.dart';
 import 'package:e_cm/homepage/home/services/apifillsteptujuhformpage.dart';
 import 'package:e_cm/homepage/home/services/partitemmachineservice.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -209,11 +210,16 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   saveSparePart(String qtyUsed, String costRp) async {
     print("save sparepart");
     final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String idEcmKey =
-        prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    String? idMesin = prefs.getString("id_machine_res");
-    var idPartMachine = prefs.getString("idPartItemMachine");
+    // String tokenUser = prefs.getString("tokenKey").toString();
+    // String idEcmKey =
+    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
+    // String? idMesin = prefs.getString("id_machine_res");
+    // var idPartMachine = prefs.getString("idPartItemMachine");
+
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcmKey = SharedPrefsUtil.getEcmId();
+    String idMesin = SharedPrefsUtil.getIdMesinRes();
+    // var idPartMachine = prefs.getString("idPartItemMachine");
 
     try {
       if (partNameController.text == "") {
@@ -226,7 +232,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             textColor: Colors.white,
             fontSize: 16);
       } else {
-        var result = await saveDataPartMachine(tokenUser, idEcmKey, idMesin!,
+        var result = await saveDataPartMachine(tokenUser, idEcmKey, idMesin,
             partNameController.text, qtyStock.toString(), qtyUsed, "0");
 
         print(result);

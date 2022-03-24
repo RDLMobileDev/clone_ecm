@@ -7,6 +7,7 @@ import 'package:e_cm/auth/service/apilogin.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:e_cm/util/local_notification.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,11 +78,10 @@ class _LogInState extends State<LogIn> {
   void removeEcmNotCompleted() async {
     // idKeyUser
     // hapus data ecm card jika session kosong
-    final prefs = await _prefs;
-    String idUser = prefs.getString("idKeyUser") ?? "";
-    String tokenUser = prefs.getString("tokenKey") ?? "";
+    String idUser = SharedPrefsUtil.getIdUser();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
 
-    print(idUser);
+    print("from method remove login proses => $idUser");
     print(tokenUser);
 
     if (idUser.isNotEmpty || idUser != "") {
@@ -104,24 +104,36 @@ class _LogInState extends State<LogIn> {
       print(rspLogin);
 
       if (rspLogin['response']['status'] == 200) {
-        final SharedPreferences prefs = await _prefs;
+        // final SharedPreferences prefs = await _prefs;
 
-        prefs.setString("idKeyUser", rspLogin['data']['user']['id'].toString());
-        prefs.setString("emailKey", rspLogin['data']['user']['email']);
-        prefs.setString("deviceKey", deviceUser ?? "");
-        prefs.setString("tokenKey", rspLogin['data']['token']);
-        prefs.setString("usernameKey", rspLogin['data']['user']['username']);
-        prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
-        prefs.setString(
-            "namaJabatanKey", rspLogin['data']['user']['namajabatan']);
-        prefs.setString(
-            "photoUser", rspLogin['data']['user']['photo'].toString());
+        SharedPrefsUtil.setIdUser(rspLogin['data']['user']['id'].toString());
+        SharedPrefsUtil.setEmailKey(rspLogin['data']['user']['email']);
+        SharedPrefsUtil.setDeviceKey(deviceUser ?? "-");
+        SharedPrefsUtil.setTokenUser(rspLogin['data']['token']);
+        SharedPrefsUtil.setUsername(rspLogin['data']['user']['username']);
+        SharedPrefsUtil.setIdJabatanKey(
+            rspLogin['data']['user']['jabatan'].toString());
+        SharedPrefsUtil.setNamaJabatanKey(
+            rspLogin['data']['user']['namajabatan']);
+        SharedPrefsUtil.setPhotoUser(
+            rspLogin['data']['user']['photo'].toString());
 
-        print("ID user = " + (rspLogin['data']['user']['id']).toString());
-        print("EMAIL user = " + rspLogin['data']['user']['email']);
-        print("USERNAME user = " + rspLogin['data']['user']['username']);
-        print("TOKEN user = " + rspLogin['data']['token']);
-        print("JABATAN user = " + rspLogin['data']['user']['namajabatan']);
+        // prefs.setString("idKeyUser", rspLogin['data']['user']['id'].toString());
+        // prefs.setString("emailKey", rspLogin['data']['user']['email']);
+        // prefs.setString("deviceKey", deviceUser ?? "");
+        // prefs.setString("tokenKey", rspLogin['data']['token']);
+        // prefs.setString("usernameKey", rspLogin['data']['user']['username']);
+        // prefs.setInt("jabatanKey", rspLogin['data']['user']['jabatan']);
+        // prefs.setString(
+        //     "namaJabatanKey", rspLogin['data']['user']['namajabatan']);
+        // prefs.setString(
+        //     "photoUser", rspLogin['data']['user']['photo'].toString());
+
+        // print("ID user = " + (rspLogin['data']['user']['id']).toString());
+        // print("EMAIL user = " + rspLogin['data']['user']['email']);
+        // print("USERNAME user = " + rspLogin['data']['user']['username']);
+        // print("TOKEN user = " + rspLogin['data']['token']);
+        // print("JABATAN user = " + rspLogin['data']['user']['namajabatan']);
 
         removeEcmNotCompleted();
 

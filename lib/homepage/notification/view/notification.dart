@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:e_cm/homepage/notification/model/notifmodel.dart';
 import 'package:e_cm/homepage/notification/services/apinotif.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
@@ -123,13 +124,13 @@ class _NotificationMemberState extends State<NotificationMember> {
 
   Future getListNotif() async {
     final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String idUser = prefs.getString("idKeyUser").toString();
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String userId = SharedPrefsUtil.getIdUser();
 
     listNotificationEcm =
-        await notifikasiService.getNotificationData(tokenUser, idUser);
+        await notifikasiService.getNotificationData(tokenUser, userId);
 
-    return notifikasiService.getNotificationData(tokenUser, idUser);
+    return notifikasiService.getNotificationData(tokenUser, userId);
   }
 
   // String bahasa = "Bahasa Indonesia";
