@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:e_cm/homepage/home/listname/service/listtmservice.dart';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,9 +87,9 @@ class _ListTmNameState extends State<ListTmName> {
 
   Future getListTmFromService() async {
     try {
-      final prefs = await _prefs;
-      String tokenUser = prefs.getString("tokenKey").toString();
-      String idUser = prefs.getString("idKeyUser").toString();
+      // final prefs = await _prefs;
+      String tokenUser = SharedPrefsUtil.getTokenUser();
+      String idUser = SharedPrefsUtil.getIdUser();
 
       listTmName = await listTmService.getListTmName(tokenUser, idUser);
 

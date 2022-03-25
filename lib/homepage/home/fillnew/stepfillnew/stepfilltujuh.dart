@@ -28,6 +28,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
+  String tokenUser = SharedPrefsUtil.getTokenUser();
+  String idEcmKey = SharedPrefsUtil.getEcmId();
+  String idEcmEdit = SharedPrefsUtil.getEcmId();
+
   String sparepart = "";
   String no_sparepart = "";
   String add_item = "";
@@ -132,15 +136,11 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   List<PartItemMachineSavedModel> _listDataPartSaved = [];
 
   Future<List<PartItemMachineSavedModel>> getDataPartItemSaved() async {
-    // final prefs = await _prefs;
-    // String tokenUser = prefs.getString("tokenKey").toString();
-    // String? idEcmKey = prefs.getString("idEcm") ?? "";
-
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String idEcmKey = SharedPrefsUtil.getEcmId();
+    String ecmIdNewOrEdit =
+        idEcmKey.isEmpty || idEcmKey == "" ? idEcmEdit : idEcmKey;
 
     _listDataPartSaved = await partItemMachineSaveService
-        .getPartItemMachineSaveData(tokenUser, idEcmKey);
+        .getPartItemMachineSaveData(tokenUser, ecmIdNewOrEdit);
     print("total data: $idEcmKey");
 
     streamController.add(_listDataPartSaved);
@@ -150,15 +150,6 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
   }
 
   void deletePartMachineSaved(String idEcmData) async {
-    // print(idEcmData);
-    // final prefs = await _prefs;
-    // String tokenUser = prefs.getString("tokenKey").toString();
-
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-
-    // var idPart = prefs.getString("idPartItemMachine");
-    print("id data: $idEcmData");
-
     try {
       var result = await partItemMachineSaveService.deletePartItemMachineSaved(
           idEcmData, tokenUser);
@@ -325,15 +316,9 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
     );
   }
 
-  void setBoolItemStep7() async {
-    final prefs = await _prefs;
-    prefs.setString("sparePartBool", "0");
-  }
-
   @override
   void initState() {
     getDataPartItemSaved();
-    setBoolItemStep7();
     _timer =
         Timer.periodic(Duration(seconds: 3), (timer) => getDataPartItemSaved());
     print("tes step 7");

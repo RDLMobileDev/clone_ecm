@@ -53,6 +53,7 @@ Future fillNewDua({
   }
 
   print("from: $ecmId");
+  print(token);
 
   request.headers["Accept"] = "Application/json";
   request.headers["Authorization"] = "Bearer $token";
@@ -73,17 +74,14 @@ Future fillNewDua({
   request.fields['engineering'] = engineering;
   request.fields['ecm_id'] = ecmId;
 
-  // print("from field: ${request.fields['id_ecm']}");
-
   http.Response response = await http.Response.fromStream(await request.send());
-
-  print("Result: ${response.statusCode}");
 
   if (response.statusCode == 200) {
     var convertDatatoJson = jsonDecode(response.body);
     print(convertDatatoJson);
     return convertDatatoJson;
   } else {
+    print(response.body);
     return "error";
   }
 }

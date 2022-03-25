@@ -114,93 +114,93 @@ class _FillNewState extends State<FillNew> {
     }
   }
 
-  final StepFillSatu _stepFillSatu = StepFillSatu();
-  final StepFillDua _stepFillDua = StepFillDua();
-  final StepFillTiga _stepFillTiga = StepFillTiga();
-  final StepFillEnam _stepFillEnam = StepFillEnam();
-  final StepFillDelapan _stepFillDelapan = StepFillDelapan();
+  // final StepFillSatu _stepFillSatu = StepFillSatu();
+  // final StepFillDua _stepFillDua = StepFillDua();
+  // final StepFillTiga _stepFillTiga = StepFillTiga();
+  // final StepFillEnam _stepFillEnam = StepFillEnam();
+  // final StepFillDelapan _stepFillDelapan = StepFillDelapan();
 
-  final List<GlobalKey<FormState>> _formKeys = [
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-  ];
+  // final List<GlobalKey<FormState>> _formKeys = [
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  //   GlobalKey<FormState>(),
+  // ];
 
-  List<Step> get _steps => [
-        Step(
-          title: Text(''),
-          content: Form(
-              key: _formKeys[0],
-              child: StepFillSatu(
-                ecmId: widget.ecmId,
-              )),
-          isActive: _currentStep >= 0,
-          // state: _currentStep >= 0
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[1], child: StepFillDua()),
-          isActive: _currentStep >= 1,
-          // state: _currentStep >= 1
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[2], child: StepFillTiga()),
-          isActive: _currentStep >= 2,
-          // state: _currentStep >= 2
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[3], child: StepFillEmpat()),
-          isActive: _currentStep >= 3,
-          // state: _currentStep >= 3
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[4], child: StepFillLima()),
-          isActive: _currentStep >= 4,
-          // state: _currentStep >= 4
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[5], child: StepFillEnam()),
-          isActive: _currentStep >= 5,
-          // state: _currentStep >= 5
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[6], child: StepFillTujuh()),
-          isActive: _currentStep >= 6,
-          // state: _currentStep >= 6
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-        Step(
-          title: Text(''),
-          content: Form(key: _formKeys[7], child: StepFillDelapan()),
-          isActive: _currentStep >= 7,
-          // state: _currentStep >= 0
-          //     ? StepState.complete
-          //     : StepState.disabled,
-        ),
-      ];
+  // List<Step> get _steps => [
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(
+  //             key: _formKeys[0],
+  //             child: StepFillSatu(
+  //               ecmId: widget.ecmId,
+  //             )),
+  //         isActive: _currentStep >= 0,
+  //         // state: _currentStep >= 0
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[1], child: StepFillDua()),
+  //         isActive: _currentStep >= 1,
+  //         // state: _currentStep >= 1
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[2], child: StepFillTiga()),
+  //         isActive: _currentStep >= 2,
+  //         // state: _currentStep >= 2
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[3], child: StepFillEmpat()),
+  //         isActive: _currentStep >= 3,
+  //         // state: _currentStep >= 3
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[4], child: StepFillLima()),
+  //         isActive: _currentStep >= 4,
+  //         // state: _currentStep >= 4
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[5], child: StepFillEnam()),
+  //         isActive: _currentStep >= 5,
+  //         // state: _currentStep >= 5
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[6], child: StepFillTujuh()),
+  //         isActive: _currentStep >= 6,
+  //         // state: _currentStep >= 6
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //       Step(
+  //         title: Text(''),
+  //         content: Form(key: _formKeys[7], child: StepFillDelapan()),
+  //         isActive: _currentStep >= 7,
+  //         // state: _currentStep >= 0
+  //         //     ? StepState.complete
+  //         //     : StepState.disabled,
+  //       ),
+  //     ];
 
   int _currentStep = 0;
   final int _stepTotal = 8;
@@ -212,221 +212,221 @@ class _FillNewState extends State<FillNew> {
     setState(() => _currentStep = step);
   }
 
-  continued() async {
-    final prefs = await _prefs;
+  // continued() async {
+  //   final prefs = await _prefs;
 
-    try {
-      if (_currentStep == 0) {
-        if (prefs.getString("classBool")!.isNotEmpty &&
-            prefs.getString("dateBool")!.isNotEmpty &&
-            prefs.getString("teamMemberBool")!.isNotEmpty &&
-            prefs.getString("locationBool")!.isNotEmpty &&
-            prefs.getString("machineNameBool")!.isNotEmpty &&
-            prefs.getString("machineDetailBool")!.isNotEmpty) {
-          widget.ecmId == null
-              ? _stepFillSatu.getSaveFillSatu()
-              : _stepFillSatu.getUpdateFillSatu();
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Form belum terisi semua',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
-        }
-      }
+  //   try {
+  //     if (_currentStep == 0) {
+  //       if (prefs.getString("classBool")!.isNotEmpty &&
+  //           prefs.getString("dateBool")!.isNotEmpty &&
+  //           prefs.getString("teamMemberBool")!.isNotEmpty &&
+  //           prefs.getString("locationBool")!.isNotEmpty &&
+  //           prefs.getString("machineNameBool")!.isNotEmpty &&
+  //           prefs.getString("machineDetailBool")!.isNotEmpty) {
+  //         widget.ecmId == null
+  //             ? _stepFillSatu.getSaveFillSatu()
+  //             : _stepFillSatu.getUpdateFillSatu();
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       } else {
+  //         Fluttertoast.showToast(
+  //             msg: 'Form belum terisi semua',
+  //             toastLength: Toast.LENGTH_SHORT,
+  //             gravity: ToastGravity.BOTTOM,
+  //             timeInSecForIosWeb: 2,
+  //             fontSize: 16);
+  //       }
+  //     }
 
-      if (_currentStep == 1) {
-        if (prefs.getString("shiftBool")!.isNotEmpty &&
-            prefs.getString("timeBool")!.isNotEmpty &&
-            prefs.getString("ketikProblemBool")!.isNotEmpty &&
-            prefs.getString("typeProblemBool")!.isNotEmpty &&
-            prefs.getString("imageUploadBool")!.isNotEmpty) {
-          _stepFillDua.getSaveFillDua();
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Form belum terisi semua',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
-        }
-      }
+  //     if (_currentStep == 1) {
+  //       if (prefs.getString("shiftBool")!.isNotEmpty &&
+  //           prefs.getString("timeBool")!.isNotEmpty &&
+  //           prefs.getString("ketikProblemBool")!.isNotEmpty &&
+  //           prefs.getString("typeProblemBool")!.isNotEmpty &&
+  //           prefs.getString("imageUploadBool")!.isNotEmpty) {
+  //         _stepFillDua.getSaveFillDua();
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       } else {
+  //         Fluttertoast.showToast(
+  //             msg: 'Form belum terisi semua',
+  //             toastLength: Toast.LENGTH_SHORT,
+  //             gravity: ToastGravity.BOTTOM,
+  //             timeInSecForIosWeb: 2,
+  //             fontSize: 16);
+  //       }
+  //     }
 
-      if (_currentStep == 2) {
-        if (prefs.getString("whyBool1")!.isNotEmpty &&
-            prefs.getString("whyBool2")!.isNotEmpty) {
-          _stepFillTiga.getSaveStepFillTiga();
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Form belum terisi semua',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
-        }
-      }
+  //     if (_currentStep == 2) {
+  //       if (prefs.getString("whyBool1")!.isNotEmpty &&
+  //           prefs.getString("whyBool2")!.isNotEmpty) {
+  //         _stepFillTiga.getSaveStepFillTiga();
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       } else {
+  //         Fluttertoast.showToast(
+  //             msg: 'Form belum terisi semua',
+  //             toastLength: Toast.LENGTH_SHORT,
+  //             gravity: ToastGravity.BOTTOM,
+  //             timeInSecForIosWeb: 2,
+  //             fontSize: 16);
+  //       }
+  //     }
 
-      if (_currentStep == 3) {
-        String? itemStep4Bool = prefs.getString("itemStep4Bool");
-        if (itemStep4Bool!.isNotEmpty && itemStep4Bool == "1") {
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        }
-      }
+  //     if (_currentStep == 3) {
+  //       String? itemStep4Bool = prefs.getString("itemStep4Bool");
+  //       if (itemStep4Bool!.isNotEmpty && itemStep4Bool == "1") {
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       }
+  //     }
 
-      if (_currentStep == 4) {
-        String? itemRepairBool = prefs.getString("itemRepairBool");
-        if (itemRepairBool!.isNotEmpty && itemRepairBool == "1") {
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        }
-      }
+  //     if (_currentStep == 4) {
+  //       String? itemRepairBool = prefs.getString("itemRepairBool");
+  //       if (itemRepairBool!.isNotEmpty && itemRepairBool == "1") {
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       }
+  //     }
 
-      if (_currentStep == 5) {
-        // print("object step 6");
-        // &&
-        //     prefs.getString("outHouseHBool")!.isNotEmpty &&
-        //     prefs.getString("outHouseMpBool")!.isNotEmpty &&
-        //     prefs.getString("outHouseCostBool")!.isNotEmpty
-        if (prefs.getString("breakTimeBool")!.isNotEmpty) {
-          _stepFillEnam.getSaveFillEnam();
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Form belum terisi semua',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              fontSize: 16);
-        }
-      }
+  //     if (_currentStep == 5) {
+  //       // print("object step 6");
+  //       // &&
+  //       //     prefs.getString("outHouseHBool")!.isNotEmpty &&
+  //       //     prefs.getString("outHouseMpBool")!.isNotEmpty &&
+  //       //     prefs.getString("outHouseCostBool")!.isNotEmpty
+  //       if (prefs.getString("breakTimeBool")!.isNotEmpty) {
+  //         _stepFillEnam.getSaveFillEnam();
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       } else {
+  //         Fluttertoast.showToast(
+  //             msg: 'Form belum terisi semua',
+  //             toastLength: Toast.LENGTH_SHORT,
+  //             gravity: ToastGravity.BOTTOM,
+  //             timeInSecForIosWeb: 2,
+  //             fontSize: 16);
+  //       }
+  //     }
 
-      if (_currentStep == 6) {
-        String? sparePartBool = prefs.getString("sparePartBool");
-        if (sparePartBool!.isNotEmpty && sparePartBool == "1") {
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        } else if (sparePartBool.isNotEmpty && sparePartBool == "0") {
-          setState(() {
-            _currentStep++;
-            _stepClicked != 8 ? _stepClicked += 1 : null;
-          });
-        }
-      }
+  //     if (_currentStep == 6) {
+  //       String? sparePartBool = prefs.getString("sparePartBool");
+  //       if (sparePartBool!.isNotEmpty && sparePartBool == "1") {
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       } else if (sparePartBool.isNotEmpty && sparePartBool == "0") {
+  //         setState(() {
+  //           _currentStep++;
+  //           _stepClicked != 8 ? _stepClicked += 1 : null;
+  //         });
+  //       }
+  //     }
 
-      if (_currentStep == 7) {
-        if ((prefs.getString("copyToBool")!.isNotEmpty &&
-                prefs.getString("copyToBool") == "0") ||
-            prefs.getString("copyToBool")!.isNotEmpty &&
-                prefs.getString("copyToBool") == "1") {
-          await _stepFillDelapan.getMethodPostStep();
+  //     if (_currentStep == 7) {
+  //       if ((prefs.getString("copyToBool")!.isNotEmpty &&
+  //               prefs.getString("copyToBool") == "0") ||
+  //           prefs.getString("copyToBool")!.isNotEmpty &&
+  //               prefs.getString("copyToBool") == "1") {
+  //         await _stepFillDelapan.getMethodPostStep();
 
-          try {
-            // successStep8();
-            Timer.periodic(Duration(seconds: 10), (timer) async {
-              if (timer.tick == 5) {
-                removeStepCacheFillEcm();
-                removeCacheFillEcm();
-                Fluttertoast.showToast(
-                    msg: 'Terjadi masalah jaringan, E-CM Card tidak disimpan',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 2,
-                    fontSize: 16);
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Dashboard()),
-                    ModalRoute.withName("/"));
-                timer.cancel();
-              }
+  //         try {
+  //           // successStep8();
+  //           Timer.periodic(Duration(seconds: 10), (timer) async {
+  //             if (timer.tick == 5) {
+  //               removeStepCacheFillEcm();
+  //               removeCacheFillEcm();
+  //               Fluttertoast.showToast(
+  //                   msg: 'Terjadi masalah jaringan, E-CM Card tidak disimpan',
+  //                   toastLength: Toast.LENGTH_SHORT,
+  //                   gravity: ToastGravity.BOTTOM,
+  //                   timeInSecForIosWeb: 2,
+  //                   fontSize: 16);
+  //               Navigator.pushAndRemoveUntil(
+  //                   context,
+  //                   MaterialPageRoute(builder: (context) => Dashboard()),
+  //                   ModalRoute.withName("/"));
+  //               timer.cancel();
+  //             }
 
-              timer.cancel();
-            });
-          } catch (e) {
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text('Timeout'),
-                content: const Text(
-                    'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context)
-                      ..pop()
-                      ..pop(true),
-                    child: const Text('Kembali'),
-                  ),
-                  TextButton(
-                    onPressed: () => continued(),
-                    child: const Text('Kirim Ulang'),
-                  ),
-                ],
-              ),
-            );
-          }
-        }
-      }
-    } catch (e) {
-      print("fill new error -> $e");
-      if (_currentStep + 1 <= 6) {
-        Fluttertoast.showToast(
-            msg: 'Harap isi semua form di step ${_currentStep + 1}',
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.orangeAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      }
-    }
-  }
+  //             timer.cancel();
+  //           });
+  //         } catch (e) {
+  //           showDialog<String>(
+  //             context: context,
+  //             builder: (BuildContext context) => AlertDialog(
+  //               title: const Text('Timeout'),
+  //               content: const Text(
+  //                   'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
+  //               actions: <Widget>[
+  //                 TextButton(
+  //                   onPressed: () => Navigator.of(context)
+  //                     ..pop()
+  //                     ..pop(true),
+  //                   child: const Text('Kembali'),
+  //                 ),
+  //                 TextButton(
+  //                   onPressed: () => continued(),
+  //                   child: const Text('Kirim Ulang'),
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("fill new error -> $e");
+  //     if (_currentStep + 1 <= 6) {
+  //       Fluttertoast.showToast(
+  //           msg: 'Harap isi semua form di step ${_currentStep + 1}',
+  //           toastLength: Toast.LENGTH_LONG,
+  //           gravity: ToastGravity.BOTTOM,
+  //           timeInSecForIosWeb: 2,
+  //           backgroundColor: Colors.orangeAccent,
+  //           textColor: Colors.white,
+  //           fontSize: 16);
+  //     }
+  //   }
+  // }
 
-  cancel() async {
-    final prefs = await _prefs;
-    _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
-    if (_stepClicked == 10) {
-      setState(() => _stepClicked -= 2);
-    } else if (_stepClicked == 2) {
-      Navigator.of(context).pop();
-    } else {
-      setState(() => _stepClicked -= 1);
-    }
+  // cancel() async {
+  //   final prefs = await _prefs;
+  //   _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
+  //   if (_stepClicked == 10) {
+  //     setState(() => _stepClicked -= 2);
+  //   } else if (_stepClicked == 2) {
+  //     Navigator.of(context).pop();
+  //   } else {
+  //     setState(() => _stepClicked -= 1);
+  //   }
 
-    if (_currentStep != 7) {
-      setState(() {
-        textNext = 'Next';
-      });
-    }
+  //   if (_currentStep != 7) {
+  //     setState(() {
+  //       textNext = 'Next';
+  //     });
+  //   }
 
-    if (_currentStep == 6) {
-      prefs.remove("copyToBool");
-    }
+  //   if (_currentStep == 6) {
+  //     prefs.remove("copyToBool");
+  //   }
 
-    print("di: $_currentStep");
-    print(_stepClicked);
-  }
+  //   print("di: $_currentStep");
+  //   print(_stepClicked);
+  // }
 
   void cancelEcmRemoveData() async {
     final prefs = await _prefs;

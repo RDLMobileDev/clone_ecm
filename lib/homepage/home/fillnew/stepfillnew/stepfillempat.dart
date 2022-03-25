@@ -25,14 +25,20 @@ class StepFillEmpat extends StatefulWidget {
 
 class _StepFillEmpatState extends State<StepFillEmpat> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  String data = "Item deleted successfully";
 
   List<ItemChecking> _listItemChecking = [];
   StreamController step4getController = StreamController();
   late Timer _timer;
 
-  String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
+
+  String token = SharedPrefsUtil.getTokenUser();
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String userId = SharedPrefsUtil.getIdUser();
+
+  String bahasa = "Bahasa Indonesia";
+  String data = "Item deleted successfully";
 
   String item_checking = '';
   String validation_repair = '';
@@ -178,24 +184,10 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   }
 
   Future<List> getDataItemChecking() async {
-    final prefs = await SharedPreferences.getInstance();
-    // String token = prefs.getString("tokenKey").toString();
-    // String ecmId =
-    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
-    // String userId = prefs.getString("idKeyUser") ?? "-";
-
-    String token = SharedPrefsUtil.getTokenUser();
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String userId = SharedPrefsUtil.getIdUser();
-
-    // if (prefs.getString("ecmIdEdit").toString() != "null") {
-    //   prefs.setString("itemStep4Bool", "1");
-    // }
+    String idEcmtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     try {
-      print("ecm id: $ecmId");
-      print("user id: $userId");
-      var data = await getFillNewEmpat(ecmId, userId, token);
+      var data = await getFillNewEmpat(idEcmtoApi, userId, token);
 
       print("data from hasil input form step 4");
       print(data['data']);

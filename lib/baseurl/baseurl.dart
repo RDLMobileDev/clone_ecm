@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:http/http.dart' as http;
 
 class MyUrl {
@@ -13,20 +14,27 @@ class MyUrl {
   }
 
   postData(data, apiUrl) async {
-    var fullUrl = _url + apiUrl;
-    return await http.post(Uri.parse(fullUrl),
+    var fullUrl = _url + "/" + apiUrl;
+    final response = await http.post(Uri.parse(fullUrl),
         body: jsonEncode(data), headers: _setHeaders());
+
+    return json.decode(response.body);
   }
 
   getData(apiUrl) async {
-    var fullUrl = _url + apiUrl;
-    return await http.get(Uri.parse(fullUrl), headers: _setHeaders());
+    var fullUrl = _url + "/" + apiUrl;
+    final response = await http.get(Uri.parse(fullUrl), headers: _setHeaders());
+
+    return json.decode(response.body);
   }
 
-  _setHeaders() => {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-      };
+  Map<String, String> _setHeaders() {
+    return {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${SharedPrefsUtil.getTokenUser()}'
+    };
+  }
 
   String getVersion() {
     return versionNumber;

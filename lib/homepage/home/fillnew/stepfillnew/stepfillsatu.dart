@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/fillnew/model/step_fill_satu_model.dart';
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
@@ -30,19 +31,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_time_format/date_time_format.dart';
 
 class StepFillSatu extends StatefulWidget {
-  final String? ecmId;
-  final StepFillSatuState stepFillSatuState = StepFillSatuState();
-
-  void getSaveFillSatu() {
-    // print("tes step 1");
-    stepFillSatuState.saveFillNewSatu();
-  }
-
-  void getUpdateFillSatu() {
-    stepFillSatuState.updateFillNewSatu();
-  }
-
-  StepFillSatu({Key? key, this.ecmId}) : super(key: key);
+  const StepFillSatu({
+    Key? key,
+  }) : super(key: key);
 
   @override
   StepFillSatuState createState() => StepFillSatuState();
@@ -57,6 +48,21 @@ class StepFillSatuState extends State<StepFillSatu> {
   TextEditingController teamMemberController = TextEditingController();
   TextEditingController factoryNameController = TextEditingController();
   TextEditingController factoryNameGroupController = TextEditingController();
+
+  List<ClassificationModel> _listClassification = [];
+  List<LocationModel> _listLocation = [];
+  List<GroupAreaModel> _listGroupArea = [];
+  List<MachineNameModel> _listMachineName = [];
+  List<MachineNumberModel> _listMachineNumber = [];
+  List<String> listTeamMember = [];
+  List<MemberNameModel> listNamaMember = [];
+  List<bool> warnaClassifications = [];
+  Map<int, bool> mapClass = {};
+
+  String token = SharedPrefsUtil.getTokenUser();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String userId = SharedPrefsUtil.getIdUser();
 
   bool isTapedMachineName = false, isTappedMachineNumber = false;
   bool isBreakDown = false, isPreventive = false, isInformation = false;
@@ -77,16 +83,6 @@ class StepFillSatuState extends State<StepFillSatu> {
   String idMachineFromName = '';
 
   String namaKlasifikasiFromSession = '';
-
-  List<ClassificationModel> _listClassification = [];
-  List<LocationModel> _listLocation = [];
-  List<GroupAreaModel> _listGroupArea = [];
-  List<MachineNameModel> _listMachineName = [];
-  List<MachineNumberModel> _listMachineNumber = [];
-  List<String> listTeamMember = [];
-  List<MemberNameModel> listNamaMember = [];
-  List<bool> warnaClassifications = [];
-  Map<int, bool> mapClass = {};
 
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
@@ -223,90 +219,45 @@ class StepFillSatuState extends State<StepFillSatu> {
   }
 
   void updateFillNewSatu() async {
-    print("update ecm step 1");
-    final prefs = await _prefs;
-    print(prefs.getString("ecmIdEdit"));
-    // print("from prefs: ${prefs.getString("idClassification")}");
-
-    var idClass = prefs.getString("idClassification") ?? "";
-    var tglStepSatu = prefs.getString("tglStepSatu") ?? "";
-
-    // var teamMember = prefs.getString("teamMember");
-
-    List<String>? teamId = prefs.getStringList("teamMember") ?? [];
-    var locationId = prefs.getString("locationId") ?? "";
-    var locationIdGroup = prefs.getString("locationIdGroup") ?? "";
-    var machineId = prefs.getString("machineId") ?? "";
-    var machineDetailId = prefs.getString("machineDetailId") ?? "";
-
-    String tokenUser = prefs.getString("tokenKey").toString();
-    String idUser = prefs.getString("idKeyUser").toString();
-
-    print(locationId);
-    print(locationIdGroup);
-    print(machineId);
-    print(machineDetailId);
-
     try {
-      if (tokenUser != "" &&
-          idClass != "" &&
-          tglStepSatu != "" &&
-          idUser != "" &&
-          teamId.length != 0 &&
-          locationId != "" &&
-          locationIdGroup != "" &&
-          machineId != "" &&
-          machineDetailId != "") {
-        var result = await postStepSatuEdit(
-            tokenUser,
-            prefs.getString("ecmIdEdit") ?? "0",
-            idClass,
-            tglStepSatu,
-            idUser,
-            teamId,
-            locationId,
-            locationIdGroup,
-            machineId,
-            machineDetailId);
+      final result = await postStepSatuEdit(
+          token,
+          ecmIdEdit,
+          classificationIdSelected,
+          dateSelected,
+          userId,
+          listTeamMember,
+          locationIdSelected,
+          locationIdGroupSelected,
+          machineIdSelected,
+          machineDetailIdSelected);
 
-        print("response edit step 1");
-        print(result);
-
-        // print(result['data']['id_ecm']);
-        // prefs.setString("idEcm", result['data']['id_ecm'].toString());
-        prefs.setString(
-            "id_machine_res", result['data']['id_machine'].toString());
-
-        if (result['response']['status'] == 200) {
-          Fluttertoast.showToast(
-              msg: 'Data step 1 diperbarui',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          print(result);
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Kesalahan jaringan. Data gagal disimpan.',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          print(result);
-        }
-      } else {
+      if (result['response']['status'] == 200) {
         Fluttertoast.showToast(
-            msg: 'Data tidak disimpan, cek semua input field',
-            toastLength: Toast.LENGTH_LONG,
+            msg: 'Data step 1 diperbarui',
+            toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
             backgroundColor: Colors.greenAccent,
             textColor: Colors.white,
             fontSize: 16);
+
+        print(result);
+
+        SharedPrefsUtil.setIdMesinRes(result['data']['id_machine'].toString());
+
+        isStepSatuFill.value = false;
+        isStepDuaFill.value = true;
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Kesalahan jaringan. Data gagal diperbarui.',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+        print(result);
       }
     } on SocketException catch (e) {
       print(e);
@@ -319,8 +270,6 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
-    String token = SharedPrefsUtil.getTokenUser();
-    String userId = SharedPrefsUtil.getIdUser();
     try {
       if (token.isNotEmpty &&
           classificationIdSelected.isNotEmpty &&
@@ -433,9 +382,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   Future<List<LocationModel>> getListLocation() async {
     try {
       // final SharedPreferences prefs = await _prefs;
-      String tokenUser = SharedPrefsUtil.getTokenUser();
-      _listLocation = await locationService.getLocationData(tokenUser);
-      return await locationService.getLocationData(tokenUser);
+      _listLocation = await locationService.getLocationData(token);
+      return await locationService.getLocationData(token);
     } catch (e) {
       print(e);
       return [];
@@ -444,14 +392,9 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   Future<List<GroupAreaModel>> getListAreaGroup() async {
     try {
-      // final SharedPreferences prefs = await _prefs;
-      String tokenUser = SharedPrefsUtil.getTokenUser();
-      // String idLokasi = prefs.getString("locationId") ?? "";
-      // print(idLokasi);
       _listGroupArea =
-          await locationService.getAreaGroupList(tokenUser, locationIdSelected);
-      return await locationService.getAreaGroupList(
-          tokenUser, locationIdSelected);
+          await locationService.getAreaGroupList(token, locationIdSelected);
+      return await locationService.getAreaGroupList(token, locationIdSelected);
     } catch (e) {
       print(e);
       return [];
@@ -460,16 +403,12 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   Future<List<MachineNameModel>> getMachineName() async {
     try {
-      // final SharedPreferences prefs = await _prefs;
-      String tokenUser = SharedPrefsUtil.getTokenUser();
-      // String idGroupArea = prefs.getString("locationIdGroup") ?? "";
-      // String idLokasi = prefs.getString("locationId") ?? "";
       _listMachineName = await machineNameService.getMachineName(
-          tokenUser, locationIdSelected, locationIdGroupSelected);
+          token, locationIdSelected, locationIdGroupSelected);
       print("data nama mesin: ");
       print(_listMachineName.length);
       return await machineNameService.getMachineName(
-          tokenUser, locationIdSelected, locationIdGroupSelected);
+          token, locationIdSelected, locationIdGroupSelected);
     } catch (e) {
       print(e);
       return [];
@@ -477,94 +416,47 @@ class StepFillSatuState extends State<StepFillSatu> {
   }
 
   Future<List<MachineNumberModel>> getMachineNumberbyId() async {
-    // final SharedPreferences prefs = await _prefs;
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    // String idGroupArea = prefs.getString("locationIdGroup") ?? "";
-    // String idLokasi = prefs.getString("locationId") ?? "";
     _listMachineNumber = await machineNumberService.getMachineNumber(
-        idMachineFromName,
-        locationIdSelected,
-        locationIdGroupSelected,
-        tokenUser);
-    return await machineNumberService.getMachineNumber(idMachineFromName,
-        locationIdSelected, locationIdGroupSelected, tokenUser);
+        idMachineFromName, locationIdSelected, locationIdGroupSelected, token);
+    return await machineNumberService.getMachineNumber(
+        idMachineFromName, locationIdSelected, locationIdGroupSelected, token);
     // print(_listMachineNumber);
   }
 
   Future<List<MemberNameModel>> getListMemberName() async {
-    // final SharedPreferences prefs = await _prefs;
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String idUser = SharedPrefsUtil.getIdUser();
-    listNamaMember = await getDataMemberName(tokenUser, idUser);
-    return await getDataMemberName(tokenUser, idUser);
+    listNamaMember = await getDataMemberName(token, userId);
+    return await getDataMemberName(token, userId);
   }
 
   void setFormStep1AfterChoosing() async {
-    // final prefs = await _prefs;
+    if ((ecmIdEdit.isNotEmpty || ecmIdEdit != "") ||
+        (ecmId.isNotEmpty || ecmId != "")) {
+      final result = await MyUrl().getData("ecm_step1_get?ecm_id=$ecmIdEdit");
 
-    // print("id ecm for edit: ${widget.ecmId}");
+      print("response from data step 1 edit");
+      print("==========================================================");
+      print(result);
 
-    // String tokenUser = prefs.getString("tokenKey").toString();
+      var dataStepSatu = result['data'];
 
-    // String? namaKlasifikasi = prefs.getString("namaKlasifikasi");
-    // String? tglStepSatu = prefs.getString("tglStepSatu");
-    // String? namaMember = prefs.getString("namaMember");
-    // String? namaLokasi = prefs.getString("namaLokasi");
-    // String? namaGroupLokasi = prefs.getString("namaGroupLokasi");
-    // String? namaMesin = prefs.getString("namaMesin");
-    // String? nomorMesin = prefs.getString("nomorMesinDetail");
+      var dataTeamMember = dataStepSatu['team_member_id'] as List;
+      dataTeamMember.map((e) => listTeamMember.add(e)).toList();
 
-    // if (namaKlasifikasi != null &&
-    //     tglStepSatu != null &&
-    //     namaMember != null &&
-    //     namaLokasi != null &&
-    //     namaGroupLokasi != null &&
-    //     namaMesin != null &&
-    //     nomorMesin != null) {
-    //   setState(() {
-    //     namaKlasifikasiFromSession = namaKlasifikasi;
-    //     dateSelected = tglStepSatu;
-    //     teamMemberController = TextEditingController(text: namaMember);
-    //     factoryNameController = TextEditingController(text: namaLokasi);
-    //     factoryNameGroupController =
-    //         TextEditingController(text: namaGroupLokasi);
-    //     machineNameController = TextEditingController(text: namaMesin);
-    //     machineNumberController = TextEditingController(text: nomorMesin);
-    //   });
-    // } else if (widget.ecmId != null) {
-    //   prefs.setString("ecmIdEdit", widget.ecmId ?? "0");
-    //   var result = await getStepSatuDataForEdit(widget.ecmId ?? "0", tokenUser);
-
-    //   if (result['response']['status'] == 200) {
-    //     var dataEcmStep1 = result['data'];
-    //     if (dataEcmStep1 != null) {
-    //       setState(() {
-    //         namaKlasifikasiFromSession = dataEcmStep1['classification_name'];
-    //         dateSelected = dataEcmStep1['date'];
-    //         teamMemberController =
-    //             TextEditingController(text: dataEcmStep1['team_member']);
-    //         factoryNameController =
-    //             TextEditingController(text: dataEcmStep1['factory_name']);
-    //         factoryNameGroupController =
-    //             TextEditingController(text: dataEcmStep1['group_name']);
-    //         machineNameController =
-    //             TextEditingController(text: dataEcmStep1['machine_name']);
-    //         machineNumberController =
-    //             TextEditingController(text: dataEcmStep1['machinedetail_name']);
-    //       });
-    //     }
-    //   }
-    // }
-  }
-
-  void getStep1DataForEdit() async {
-    final prefs = await _prefs;
-    String tokenUser = prefs.getString("tokenKey").toString();
-    var result = await getStep1Data(widget.ecmId!, tokenUser);
-
-    if (result['response']['status'] == 200) {
       setState(() {
-        stepFillSatuModel = StepFillSatuModel.fromJson(result['data']);
+        namaKlasifikasiFromSession = dataStepSatu['classification_name'];
+        dateSelected = dataStepSatu['date'];
+        teamMemberController.text = dataStepSatu['team_member'];
+        factoryNameController.text = dataStepSatu['factory_name'];
+        factoryNameGroupController.text = dataStepSatu['group_name'];
+        machineNameController.text = dataStepSatu['machine_name'];
+        machineNumberController.text = dataStepSatu['machinedetail_name'];
+
+        classificationIdSelected = dataStepSatu['classification_id'].toString();
+
+        locationIdSelected = dataStepSatu['factory'].toString();
+        locationIdGroupSelected = dataStepSatu['group_factory'].toString();
+        machineIdSelected = dataStepSatu['machine_id'].toString();
+        machineDetailIdSelected = dataStepSatu['machinedetail_id'].toString();
       });
     }
   }
@@ -580,7 +472,7 @@ class StepFillSatuState extends State<StepFillSatu> {
     setBahasa();
     setLang();
 
-    print("id ecm edit ${widget.ecmId}");
+    // print("id ecm edit ${widget.ecmId}");
   }
 
   @override
@@ -1348,7 +1240,12 @@ class StepFillSatuState extends State<StepFillSatu> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () => Get.back(),
+                    onTap: () {
+                      if (ecmIdEdit.isNotEmpty || ecmIdEdit != "") {
+                        SharedPrefsUtil.clearEcmIdEdit();
+                      }
+                      Get.back();
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 40,
@@ -1368,7 +1265,9 @@ class StepFillSatuState extends State<StepFillSatu> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => saveFillNewSatu(),
+                    onTap: () => ecmIdEdit.isEmpty || ecmIdEdit == ""
+                        ? saveFillNewSatu()
+                        : updateFillNewSatu(),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 40,

@@ -26,8 +26,12 @@ class StepFillLima extends StatefulWidget {
 class _StepFillLimaState extends State<StepFillLima> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  String token = SharedPrefsUtil.getTokenUser();
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String userId = SharedPrefsUtil.getIdUser();
+
   String bahasa = "Bahasa Indonesia";
-  bool bahasaSelected = false;
 
   String item_repairing = '';
   String validation_repair = '';
@@ -55,6 +59,8 @@ class _StepFillLimaState extends State<StepFillLima> {
   String delete = '';
   String validation_delete = '';
   String cancel = '';
+
+  bool bahasaSelected = false;
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -167,22 +173,9 @@ class _StepFillLimaState extends State<StepFillLima> {
   List<ItemChecking> _listItemChecking = <ItemChecking>[];
 
   void getDataItemRepairing() async {
-    final prefs = await SharedPreferences.getInstance();
-    // String token = prefs.getString("tokenKey").toString();
-    // String? ecmId =
-    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "-";
-    // String? userId = prefs.getString("idKeyUser") ?? "-";
-
-    String token = SharedPrefsUtil.getTokenUser();
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String userId = SharedPrefsUtil.getIdUser();
-
-    if (prefs.getString("ecmIdEdit").toString() != "null") {
-      prefs.setString("itemRepairBool", "1");
-    }
-
     try {
-      var data = await getFillNewLima(ecmId, userId, token);
+      var data = await getFillNewLima(
+          ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId, userId, token);
       print("data step 5");
       print(data);
 
@@ -351,8 +344,6 @@ class _StepFillLimaState extends State<StepFillLima> {
   Future hapusItemStepLima(String ecmItemId) async {
     // final prefs = await SharedPreferences.getInstance();
     // String token = prefs.getString("tokenKey").toString();
-
-    String token = SharedPrefsUtil.getTokenUser();
 
     var result = await deleteFillLima.hapusItemFillLima(token, ecmItemId);
 

@@ -273,6 +273,7 @@ class _NotificationMemberState extends State<NotificationMember> {
                       return Container(
                         margin: EdgeInsets.only(bottom: 16),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CircleAvatar(
                               backgroundImage:
@@ -282,30 +283,48 @@ class _NotificationMemberState extends State<NotificationMember> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14.0,
-                                    ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.79,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      TextSpan(
-                                        text: listNotificationEcm[i].nama,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blueAccent),
-                                      ),
-                                      TextSpan(text: " "),
-                                      TextSpan(
-                                        text: approve_ecm,
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.grey),
-                                      )
+                                      Text(listNotificationEcm[i].nama,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blueAccent)),
+                                      Text(approve_ecm,
+                                          style: TextStyle(
+                                              fontSize: 14, color: Colors.grey))
                                     ],
                                   ),
                                 ),
+                                // RichText(
+                                //   textAlign: TextAlign.center,
+                                //   text: TextSpan(
+                                //     style: TextStyle(
+                                //       color: Colors.black,
+                                //       fontSize: 14.0,
+                                //     ),
+                                //     children: [
+                                //       TextSpan(
+                                //         text: listNotificationEcm[i].nama,
+                                //         style: TextStyle(
+                                //             fontSize: 14,
+                                //             fontWeight: FontWeight.bold,
+                                //             color: Colors.blueAccent),
+                                //       ),
+                                //       TextSpan(text: " "),
+                                //       TextSpan(
+                                //         text: approve_ecm,
+                                //         style: TextStyle(
+                                //             fontSize: 14, color: Colors.grey),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                                 Text(
                                   listNotificationEcm[i].waktu,
                                   style: TextStyle(

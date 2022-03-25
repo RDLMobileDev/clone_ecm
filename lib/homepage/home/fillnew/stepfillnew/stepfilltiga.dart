@@ -16,6 +16,8 @@ import '../fillnew.dart';
 class StepFillTiga extends StatefulWidget {
   final _StepFillTigaState stepFillTigaState = _StepFillTigaState();
 
+  StepFillTiga({Key? key}) : super(key: key);
+
   void getSaveStepFillTiga() {
     stepFillTigaState.saveStepFillTiga();
   }
@@ -27,13 +29,29 @@ class StepFillTiga extends StatefulWidget {
 class _StepFillTigaState extends State<StepFillTiga> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  String bahasa = "Bahasa Indonesia";
-  bool bahasaSelected = false;
+  GlobalKey<FormState> formKeyStep3 = GlobalKey();
+
+  TextEditingController why1Controller = TextEditingController();
+  TextEditingController why2Controller = TextEditingController();
+  TextEditingController why3Controller = TextEditingController();
+  TextEditingController why4Controller = TextEditingController();
+  TextEditingController howController = TextEditingController();
+
+  String ecmId = SharedPrefsUtil.getEcmId();
+
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String tokenUser = SharedPrefsUtil.getTokenUser();
 
   String why_analysis = '';
   String why = '';
   String how = '';
   String type_message = '';
+
+  String bahasa = "Bahasa Indonesia";
+
+  bool _customTileExpanded = false;
+
+  bool bahasaSelected = false;
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -97,20 +115,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
     }
   }
 
-  GlobalKey<FormState> formKeyStep3 = GlobalKey();
-
-  TextEditingController why1Controller = TextEditingController();
-  TextEditingController why2Controller = TextEditingController();
-  TextEditingController why3Controller = TextEditingController();
-  TextEditingController why4Controller = TextEditingController();
-  TextEditingController howController = TextEditingController();
-
-  bool _customTileExpanded = false;
-
   void saveStepFillTiga() async {
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-
     // print("why1");
     // print(why2);
 
@@ -123,7 +128,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
             why4Controller.text.isNotEmpty ? why4Controller.text : "-",
             howController.text.isNotEmpty ? howController.text : "-",
             "",
-            ecmId,
+            ecmId == "" || ecmId.isEmpty ? ecmIdEdit : ecmId,
             tokenUser);
         print(result);
 
@@ -168,45 +173,29 @@ class _StepFillTigaState extends State<StepFillTiga> {
     }
   }
 
-  void setFormStep3AfterChoosing() async {
-    final prefs = await _prefs;
-
-    String? why1 = prefs.getString("why1");
-    String? why2 = prefs.getString("why2");
-    String? why3 = prefs.getString("why3");
-    String? why4 = prefs.getString("why4");
-    String? howC = prefs.getString("howC");
-
-    if (why1 != null && why2 != null) {
-      why1Controller = TextEditingController(text: why1);
-      why2Controller = TextEditingController(text: why2);
-      why3Controller = TextEditingController(text: why3);
-      why4Controller = TextEditingController(text: why4);
-      howController = TextEditingController(text: howC);
-    }
-  }
-
   void getStep3DataForEdit() async {
-    final prefs = await _prefs;
-    String idEcmEdit = prefs.getString("ecmIdEdit") ?? "0";
-    String token = prefs.getString("tokenKey") ?? "-";
-
-    print("id ecm di step 3 => $idEcmEdit");
-
-    if (idEcmEdit != "0") {
+    if ((ecmId.isNotEmpty || ecmId != "") ||
+        (ecmIdEdit.isNotEmpty || ecmIdEdit != "")) {
       try {
-        var result = await getStepTigaDataForEdit(idEcmEdit, token);
+        var result = await getStepTigaDataForEdit(ecmIdEdit, tokenUser);
 
         print(result);
 
         if (result['response']['status'] == 200) {
           var dataStepTiga = result['data'];
-          prefs.setString("why1", dataStepTiga['t_ecm_why1']);
-          prefs.setString("why2", dataStepTiga['t_ecm_why2']);
-          prefs.setString("why3", dataStepTiga['t_ecm_why3']);
-          prefs.setString("why4", dataStepTiga['t_ecm_why4']);
-          prefs.setString("howC", dataStepTiga['t_ecm_why5']);
-          setFormStep3AfterChoosing();
+
+          setState(() {
+            why1Controller =
+                TextEditingController(text: dataStepTiga['t_ecm_why1']);
+            why2Controller =
+                TextEditingController(text: dataStepTiga['t_ecm_why2']);
+            why3Controller =
+                TextEditingController(text: dataStepTiga['t_ecm_why3']);
+            why4Controller =
+                TextEditingController(text: dataStepTiga['t_ecm_why4']);
+            howController =
+                TextEditingController(text: dataStepTiga['t_ecm_why5']);
+          });
         }
       } catch (e) {
         print(e);
@@ -220,7 +209,6 @@ class _StepFillTigaState extends State<StepFillTiga> {
     getStep3DataForEdit();
     setLang();
     setBahasa();
-    setFormStep3AfterChoosing();
   }
 
   @override

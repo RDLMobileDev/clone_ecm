@@ -283,6 +283,7 @@ class _DetailEcmState extends State<DetailEcm> {
                 margin: EdgeInsets.only(top: 8),
                 width: MediaQuery.of(context).size.width,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Masukan alasan penolakan E-CM",
@@ -839,6 +840,7 @@ class _DetailEcmState extends State<DetailEcm> {
                             margin: EdgeInsets.only(top: 8),
                             width: MediaQuery.of(context).size.width,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "Masukan alasan penolakan E-CM",
@@ -850,7 +852,8 @@ class _DetailEcmState extends State<DetailEcm> {
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(
-                                      top: 10, left: 16, right: 16),
+                                    top: 10,
+                                  ),
                                   child: TextFormField(
                                     controller: alasanTolak,
                                     maxLines: 5,
@@ -870,7 +873,8 @@ class _DetailEcmState extends State<DetailEcm> {
                                   },
                                   child: Container(
                                       margin: EdgeInsets.only(
-                                          top: 20, left: 16, right: 16),
+                                        top: 20,
+                                      ),
                                       width: MediaQuery.of(context).size.width,
                                       height: 40,
                                       decoration: BoxDecoration(
