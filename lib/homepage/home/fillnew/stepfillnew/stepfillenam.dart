@@ -73,6 +73,21 @@ class _StepFillEnamState extends State<StepFillEnam> {
       adminCost = '0';
   bool btnCheck = false;
   String back = '';
+  String checkKlasifikasiType = "";
+
+  void checkKlasifikasiTypeValue() async {
+    // final prefs = await _prefs;
+
+    String klasifikasiType = SharedPrefsUtil.getNamaKlasifikasi();
+
+    print("nama klasifikasi => $klasifikasiType");
+
+    if (klasifikasiType != "" && klasifikasiType.isNotEmpty) {
+      setState(() {
+        checkKlasifikasiType = klasifikasiType;
+      });
+    }
+  }
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -157,7 +172,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
   void clearText() async {
     final prefs = await _prefs;
     userNameController.clear();
-
     // setState(() {
     //   members = "";
     //   listTeamMember.clear();
@@ -189,6 +203,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   int _mp = 0;
   int _costInHouse = 0;
   int _costOutHouse = 0;
+
   // Future<List<AllUserModel>> getAllUserData() async {
   //   try {
   //     final SharedPreferences prefs = await _prefs;
@@ -798,6 +813,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
     setBahasa();
     setLang();
     setFormValueStep6AfterChoosing();
+    checkKlasifikasiTypeValue();
   }
 
   @override
@@ -1169,530 +1185,568 @@ class _StepFillEnamState extends State<StepFillEnam> {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: breaktime,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Color(0xFF404446),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                      children: const <TextSpan>[
-                        TextSpan(
-                            text: ' (H)',
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400)),
-                        TextSpan(
-                            text: ' *',
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w400)),
-                        TextSpan(
-                            text: ':',
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400)),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 150,
-                    height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
-                    child: TextFormField(
-                      controller: breakHoursController,
-                      keyboardType: TextInputType.number,
-                      maxLength: 2,
-                      // onChanged: (value) async {
-                      //   _incrementCounter(value);
-
-                      //   String minuteLineStop =
-                      //       _lineStopM.toString().length == 1
-                      //           ? "0" + _lineStopM.toString()
-                      //           : _lineStopM.toString();
-                      //   final SharedPreferences prefs = await _prefs;
-                      //   prefs.setString(
-                      //       "lineStop", _counter.toString() + ":00");
-                      //   prefs.setString("ttlLineStop",
-                      //       _lineStopH.toString() + ":" + minuteLineStop);
-                      //   prefs.setString("costH", _newLineStopH.toString());
-                      //   prefs.setString("costMp", stepEnamModel.mP.toString());
-                      //   prefs.setString("costTotal", _costInHouse.toString());
-                      //   prefs.setString("breakHours", value);
-                      //   prefs.setString("breakTimeBool", "1");
-                      // },
-                      decoration: InputDecoration(
-                        counter: Offstage(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 8),
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                  )
-                  // Container(
-                  //   width: 150,
-                  //   height: 40,
-                  //   decoration: BoxDecoration(
-                  //       border: Border.all(color: Color(0xFF979C9E)),
-                  //       borderRadius: BorderRadius.all(Radius.circular(40))),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       SizedBox(
-                  //         width: 40,
-                  //         height: 40,
-                  //         child: IconButton(
-                  //           onPressed: () async {
-                  //             _decreamentCounter();
-                  //             String minuteLineStop =
-                  //                 _lineStopM.toString().length == 1
-                  //                     ? "0" + _lineStopM.toString()
-                  //                     : _lineStopM.toString();
-                  //             final SharedPreferences prefs = await _prefs;
-                  //             prefs.setString(
-                  //                 "lineStop", _counter.toString() + ":00");
-                  //             prefs.setString("ttlLineStop",
-                  //                 _lineStopH.toString() + ":" + minuteLineStop);
-                  //             prefs.setString(
-                  //                 "costH", _newLineStopH.toString());
-                  //             prefs.setString(
-                  //                 "costMp", stepEnamModel.mP.toString());
-                  //             prefs.setString(
-                  //                 "costTotal", _costInHouse.toString());
-                  //             prefs.setString("breakTimeBool", "1");
-                  //           },
-                  //           icon: Icon(
-                  //             Icons.remove,
-                  //             color: _counter == 0
-                  //                 ? Color(0xFF979C9E)
-                  //                 : Color(0xFF20519F),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Text("$_counter"),
-                  //       SizedBox(
-                  //         width: 40,
-                  //         height: 40,
-                  //         child: IconButton(
-                  //           onPressed: () async {
-                  //             _incrementCounter();
-
-                  //             String minuteLineStop =
-                  //                 _lineStopM.toString().length == 1
-                  //                     ? "0" + _lineStopM.toString()
-                  //                     : _lineStopM.toString();
-                  //             final SharedPreferences prefs = await _prefs;
-                  //             prefs.setString(
-                  //                 "lineStop", _counter.toString() + ":00");
-                  //             prefs.setString("ttlLineStop",
-                  //                 _lineStopH.toString() + ":" + minuteLineStop);
-                  //             prefs.setString(
-                  //                 "costH", _newLineStopH.toString());
-                  //             prefs.setString(
-                  //                 "costMp", stepEnamModel.mP.toString());
-                  //             prefs.setString(
-                  //                 "costTotal", _costInHouse.toString());
-                  //             prefs.setString("breakTimeBool", "1");
-                  //           },
-                  //           icon: Icon(
-                  //             Icons.add,
-                  //             color: Color(0xFF20519F),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+            // ini
+            checkKlasifikasiType != "Breakdown Maintenance"
+                ? Container()
+                : Column(
                     children: [
-                      Text(
-                        breaktime + " (M)",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
+                      Container(
+                        margin: const EdgeInsets.only(top: 16),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: breaktime,
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFF404446),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                                children: const <TextSpan>[
+                                  TextSpan(
+                                      text: ' (H)',
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400)),
+                                  TextSpan(
+                                      text: ' *',
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 16,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w400)),
+                                  TextSpan(
+                                      text: ':',
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400)),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: 150,
+                              height: 50,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 60, vertical: 4),
+                              child: TextFormField(
+                                controller: breakHoursController,
+                                keyboardType: TextInputType.number,
+                                maxLength: 2,
+                                // onChanged: (value) async {
+                                //   _incrementCounter(value);
+
+                                //   String minuteLineStop =
+                                //       _lineStopM.toString().length == 1
+                                //           ? "0" + _lineStopM.toString()
+                                //           : _lineStopM.toString();
+                                //   final SharedPreferences prefs = await _prefs;
+                                //   prefs.setString(
+                                //       "lineStop", _counter.toString() + ":00");
+                                //   prefs.setString("ttlLineStop",
+                                //       _lineStopH.toString() + ":" + minuteLineStop);
+                                //   prefs.setString("costH", _newLineStopH.toString());
+                                //   prefs.setString("costMp", stepEnamModel.mP.toString());
+                                //   prefs.setString("costTotal", _costInHouse.toString());
+                                //   prefs.setString("breakHours", value);
+                                //   prefs.setString("breakTimeBool", "1");
+                                // },
+                                decoration: InputDecoration(
+                                  counter: Offstage(),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueAccent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(40))),
+                            )
+                            // Container(
+                            //   width: 150,
+                            //   height: 40,
+                            //   decoration: BoxDecoration(
+                            //       border: Border.all(color: Color(0xFF979C9E)),
+                            //       borderRadius: BorderRadius.all(Radius.circular(40))),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       SizedBox(
+                            //         width: 40,
+                            //         height: 40,
+                            //         child: IconButton(
+                            //           onPressed: () async {
+                            //             _decreamentCounter();
+                            //             String minuteLineStop =
+                            //                 _lineStopM.toString().length == 1
+                            //                     ? "0" + _lineStopM.toString()
+                            //                     : _lineStopM.toString();
+                            //             final SharedPreferences prefs = await _prefs;
+                            //             prefs.setString(
+                            //                 "lineStop", _counter.toString() + ":00");
+                            //             prefs.setString("ttlLineStop",
+                            //                 _lineStopH.toString() + ":" + minuteLineStop);
+                            //             prefs.setString(
+                            //                 "costH", _newLineStopH.toString());
+                            //             prefs.setString(
+                            //                 "costMp", stepEnamModel.mP.toString());
+                            //             prefs.setString(
+                            //                 "costTotal", _costInHouse.toString());
+                            //             prefs.setString("breakTimeBool", "1");
+                            //           },
+                            //           icon: Icon(
+                            //             Icons.remove,
+                            //             color: _counter == 0
+                            //                 ? Color(0xFF979C9E)
+                            //                 : Color(0xFF20519F),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Text("$_counter"),
+                            //       SizedBox(
+                            //         width: 40,
+                            //         height: 40,
+                            //         child: IconButton(
+                            //           onPressed: () async {
+                            //             _incrementCounter();
+
+                            //             String minuteLineStop =
+                            //                 _lineStopM.toString().length == 1
+                            //                     ? "0" + _lineStopM.toString()
+                            //                     : _lineStopM.toString();
+                            //             final SharedPreferences prefs = await _prefs;
+                            //             prefs.setString(
+                            //                 "lineStop", _counter.toString() + ":00");
+                            //             prefs.setString("ttlLineStop",
+                            //                 _lineStopH.toString() + ":" + minuteLineStop);
+                            //             prefs.setString(
+                            //                 "costH", _newLineStopH.toString());
+                            //             prefs.setString(
+                            //                 "costMp", stepEnamModel.mP.toString());
+                            //             prefs.setString(
+                            //                 "costTotal", _costInHouse.toString());
+                            //             prefs.setString("breakTimeBool", "1");
+                            //           },
+                            //           icon: Icon(
+                            //             Icons.add,
+                            //             color: Color(0xFF20519F),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // )
+                          ],
+                        ),
                       ),
-                      Text(" *",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400)),
-                      Text(":",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400))
+                      Container(
+                        margin: const EdgeInsets.only(top: 16),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  breaktime + " (M)",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Text(" *",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400)),
+                                Text(":",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400))
+                              ],
+                            ),
+                            Container(
+                              width: 150,
+                              height: 50,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 60, vertical: 4),
+                              child: TextFormField(
+                                controller: breakMinutesController,
+                                keyboardType: TextInputType.number,
+                                maxLength: 2,
+                                // onChanged: (value) async {
+                                //   _incrementCounterMinutes(value);
+                                //   String minuteLineStop =
+                                //       _lineStopM.toString().length == 1
+                                //           ? "0" + _lineStopM.toString()
+                                //           : _lineStopM.toString();
+                                //   final SharedPreferences prefs = await _prefs;
+                                //   prefs.setString(
+                                //       "lineStop", _counter.toString() + ":00");
+                                //   prefs.setString("ttlLineStop",
+                                //       _lineStopH.toString() + ":" + minuteLineStop);
+                                //   prefs.setString("costH", _newLineStopH.toString());
+                                //   prefs.setString("costMp", stepEnamModel.mP.toString());
+                                //   prefs.setString("costTotal", _costInHouse.toString());
+                                //   prefs.setString("breakMinutes", value);
+                                //   prefs.setString("breakTimeBool", "1");
+                                // },
+                                decoration: InputDecoration(
+                                  counter: Offstage(),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueAccent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(40))),
+                            )
+                            // Container(
+                            //   width: 150,
+                            //   height: 40,
+                            //   decoration: BoxDecoration(
+                            //       border: Border.all(color: Color(0xFF979C9E)),
+                            //       borderRadius: BorderRadius.all(Radius.circular(40))),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       SizedBox(
+                            //         width: 40,
+                            //         height: 40,
+                            //         child: IconButton(
+                            //           onPressed: () async {
+                            //             _decreamentCounterMinutes();
+                            //             String minuteLineStop =
+                            //                 _lineStopM.toString().length == 1
+                            //                     ? "0" + _lineStopM.toString()
+                            //                     : _lineStopM.toString();
+                            //             final SharedPreferences prefs = await _prefs;
+                            //             prefs.setString(
+                            //                 "lineStop", _counter.toString() + ":00");
+                            //             prefs.setString("ttlLineStop",
+                            //                 _lineStopH.toString() + ":" + minuteLineStop);
+                            //             prefs.setString(
+                            //                 "costH", _newLineStopH.toString());
+                            //             prefs.setString(
+                            //                 "costMp", stepEnamModel.mP.toString());
+                            //             prefs.setString(
+                            //                 "costTotal", _costInHouse.toString());
+                            //             prefs.setString("breakTimeBool", "1");
+                            //           },
+                            //           icon: Icon(
+                            //             Icons.remove,
+                            //             color: _counterMinutes == 0
+                            //                 ? Color(0xFF979C9E)
+                            //                 : Color(0xFF20519F),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Text("$_counterMinutes"),
+                            //       SizedBox(
+                            //         width: 40,
+                            //         height: 40,
+                            //         child: IconButton(
+                            //           onPressed: () async {
+                            //             _incrementCounterMinutes();
+
+                            //             String minuteLineStop =
+                            //                 _lineStopM.toString().length == 1
+                            //                     ? "0" + _lineStopM.toString()
+                            //                     : _lineStopM.toString();
+                            //             final SharedPreferences prefs = await _prefs;
+                            //             prefs.setString(
+                            //                 "lineStop", _counter.toString() + ":00");
+                            //             prefs.setString("ttlLineStop",
+                            //                 _lineStopH.toString() + ":" + minuteLineStop);
+                            //             prefs.setString(
+                            //                 "costH", _newLineStopH.toString());
+                            //             prefs.setString(
+                            //                 "costMp", stepEnamModel.mP.toString());
+                            //             prefs.setString(
+                            //                 "costTotal", _costInHouse.toString());
+                            //             prefs.setString("breakTimeBool", "1");
+                            //           },
+                            //           icon: Icon(
+                            //             Icons.add,
+                            //             color: Color(0xFF20519F),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // )
+                          ],
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          hitungLineStop();
+                          String minuteLineStop =
+                              _lineStopM.toString().length == 1
+                                  ? "0" + _lineStopM.toString()
+                                  : _lineStopM.toString();
+                          final SharedPreferences prefs = await _prefs;
+                          prefs.setString(
+                              "lineStop", _counter.toString() + ":00");
+
+                          prefs.setString("costH", _newLineStopH.toString());
+                          prefs.setString(
+                              "costMp", stepEnamModel.mP.toString());
+                          // prefs.setString("costTotal", _costInHouse.toString());
+                          prefs.setString(
+                              "breakHours", breakHoursController.text);
+                          prefs.setString(
+                              "breakMinutes", breakMinutesController.text);
+
+                          setFormValueStep6AfterChoosing();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              width: 150,
+                              height: 50,
+                              // padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
+                              child: Center(
+                                child: Text(
+                                  "Hitung Line Stop",
+                                  style: TextStyle(
+                                      color: Colors.white, fontFamily: 'Rubik'),
+                                ),
+                              ),
+                              //   child: TextFormField(
+                              //     controller: breakHoursController,
+                              //     keyboardType: TextInputType.number,
+                              //     maxLength: 2,
+                              //     onChanged: (value) async {
+                              //       _incrementCounter(value);
+
+                              //       String minuteLineStop =
+                              //           _lineStopM.toString().length == 1
+                              //               ? "0" + _lineStopM.toString()
+                              //               : _lineStopM.toString();
+                              //       final SharedPreferences prefs = await _prefs;
+                              //       prefs.setString(
+                              //           "lineStop", _counter.toString() + ":00");
+                              //       prefs.setString("ttlLineStop",
+                              //           _lineStopH.toString() + ":" + minuteLineStop);
+                              //       prefs.setString("costH", _newLineStopH.toString());
+                              //       prefs.setString("costMp", stepEnamModel.mP.toString());
+                              //       prefs.setString("costTotal", _costInHouse.toString());
+                              //       prefs.setString("breakHours", value);
+                              //       prefs.setString("breakTimeBool", "1");
+                              //     },
+                              //     decoration: InputDecoration(
+                              //       counter: Offstage(),
+                              //       contentPadding: EdgeInsets.symmetric(vertical: 8),
+                              //       border: OutlineInputBorder(borderSide: BorderSide.none),
+                              //     ),
+                              //   ),
+                              decoration: BoxDecoration(
+                                  color: Colors.blueAccent,
+                                  // border: Border.all(color: Colors.blueAccent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(40))),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 115,
+                              child: Text(
+                                "Line Stop",
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            Text(
+                              ":",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF979C9E)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Center(
+                                child: Text(
+                                  stepEnamModel.hasilRepairH.toString() ==
+                                          "null"
+                                      ? "0 H"
+                                      : stepEnamModel.hasilRepairH.toString() +
+                                          " H",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF979C9E)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Center(
+                                child: Text(
+                                  stepEnamModel.hasilRepairM.toString() ==
+                                          "null"
+                                      ? "0 M"
+                                      : stepEnamModel.hasilRepairM.toString() +
+                                          " M",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Center(
+                                child: Text(
+                                  "-",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF979C9E)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Center(
+                                child: Text(
+                                  "$_counter H",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF979C9E)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Center(
+                                child: Text(
+                                  "$_counterMinutes M",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Center(
+                                child: Text(
+                                  "=",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF979C9E)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Center(
+                                child: Text(
+                                  _lineStopH == 0
+                                      ? "$prefLineStopH H"
+                                      : "$_lineStopH H",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF979C9E)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Center(
+                                child: Text(
+                                  _lineStopM == 0
+                                      ? "$prefLineStopM M"
+                                      : "$_lineStopM M",
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF979C9E),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // sampe sini
                     ],
                   ),
-                  Container(
-                    width: 150,
-                    height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
-                    child: TextFormField(
-                      controller: breakMinutesController,
-                      keyboardType: TextInputType.number,
-                      maxLength: 2,
-                      // onChanged: (value) async {
-                      //   _incrementCounterMinutes(value);
-                      //   String minuteLineStop =
-                      //       _lineStopM.toString().length == 1
-                      //           ? "0" + _lineStopM.toString()
-                      //           : _lineStopM.toString();
-                      //   final SharedPreferences prefs = await _prefs;
-                      //   prefs.setString(
-                      //       "lineStop", _counter.toString() + ":00");
-                      //   prefs.setString("ttlLineStop",
-                      //       _lineStopH.toString() + ":" + minuteLineStop);
-                      //   prefs.setString("costH", _newLineStopH.toString());
-                      //   prefs.setString("costMp", stepEnamModel.mP.toString());
-                      //   prefs.setString("costTotal", _costInHouse.toString());
-                      //   prefs.setString("breakMinutes", value);
-                      //   prefs.setString("breakTimeBool", "1");
-                      // },
-                      decoration: InputDecoration(
-                        counter: Offstage(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 8),
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                  )
-                  // Container(
-                  //   width: 150,
-                  //   height: 40,
-                  //   decoration: BoxDecoration(
-                  //       border: Border.all(color: Color(0xFF979C9E)),
-                  //       borderRadius: BorderRadius.all(Radius.circular(40))),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       SizedBox(
-                  //         width: 40,
-                  //         height: 40,
-                  //         child: IconButton(
-                  //           onPressed: () async {
-                  //             _decreamentCounterMinutes();
-                  //             String minuteLineStop =
-                  //                 _lineStopM.toString().length == 1
-                  //                     ? "0" + _lineStopM.toString()
-                  //                     : _lineStopM.toString();
-                  //             final SharedPreferences prefs = await _prefs;
-                  //             prefs.setString(
-                  //                 "lineStop", _counter.toString() + ":00");
-                  //             prefs.setString("ttlLineStop",
-                  //                 _lineStopH.toString() + ":" + minuteLineStop);
-                  //             prefs.setString(
-                  //                 "costH", _newLineStopH.toString());
-                  //             prefs.setString(
-                  //                 "costMp", stepEnamModel.mP.toString());
-                  //             prefs.setString(
-                  //                 "costTotal", _costInHouse.toString());
-                  //             prefs.setString("breakTimeBool", "1");
-                  //           },
-                  //           icon: Icon(
-                  //             Icons.remove,
-                  //             color: _counterMinutes == 0
-                  //                 ? Color(0xFF979C9E)
-                  //                 : Color(0xFF20519F),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Text("$_counterMinutes"),
-                  //       SizedBox(
-                  //         width: 40,
-                  //         height: 40,
-                  //         child: IconButton(
-                  //           onPressed: () async {
-                  //             _incrementCounterMinutes();
 
-                  //             String minuteLineStop =
-                  //                 _lineStopM.toString().length == 1
-                  //                     ? "0" + _lineStopM.toString()
-                  //                     : _lineStopM.toString();
-                  //             final SharedPreferences prefs = await _prefs;
-                  //             prefs.setString(
-                  //                 "lineStop", _counter.toString() + ":00");
-                  //             prefs.setString("ttlLineStop",
-                  //                 _lineStopH.toString() + ":" + minuteLineStop);
-                  //             prefs.setString(
-                  //                 "costH", _newLineStopH.toString());
-                  //             prefs.setString(
-                  //                 "costMp", stepEnamModel.mP.toString());
-                  //             prefs.setString(
-                  //                 "costTotal", _costInHouse.toString());
-                  //             prefs.setString("breakTimeBool", "1");
-                  //           },
-                  //           icon: Icon(
-                  //             Icons.add,
-                  //             color: Color(0xFF20519F),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () async {
-                hitungLineStop();
-                String minuteLineStop = _lineStopM.toString().length == 1
-                    ? "0" + _lineStopM.toString()
-                    : _lineStopM.toString();
-                final SharedPreferences prefs = await _prefs;
-                prefs.setString("lineStop", _counter.toString() + ":00");
-
-                prefs.setString("costH", _newLineStopH.toString());
-                prefs.setString("costMp", stepEnamModel.mP.toString());
-                // prefs.setString("costTotal", _costInHouse.toString());
-                prefs.setString("breakHours", breakHoursController.text);
-                prefs.setString("breakMinutes", breakMinutesController.text);
-
-                setFormValueStep6AfterChoosing();
-              },
-              child: Container(
-                margin: EdgeInsets.only(top: 10),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    width: 150,
-                    height: 50,
-                    // padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
-                    child: Center(
-                      child: Text(
-                        "Hitung Line Stop",
-                        style:
-                            TextStyle(color: Colors.white, fontFamily: 'Rubik'),
-                      ),
-                    ),
-                    //   child: TextFormField(
-                    //     controller: breakHoursController,
-                    //     keyboardType: TextInputType.number,
-                    //     maxLength: 2,
-                    //     onChanged: (value) async {
-                    //       _incrementCounter(value);
-
-                    //       String minuteLineStop =
-                    //           _lineStopM.toString().length == 1
-                    //               ? "0" + _lineStopM.toString()
-                    //               : _lineStopM.toString();
-                    //       final SharedPreferences prefs = await _prefs;
-                    //       prefs.setString(
-                    //           "lineStop", _counter.toString() + ":00");
-                    //       prefs.setString("ttlLineStop",
-                    //           _lineStopH.toString() + ":" + minuteLineStop);
-                    //       prefs.setString("costH", _newLineStopH.toString());
-                    //       prefs.setString("costMp", stepEnamModel.mP.toString());
-                    //       prefs.setString("costTotal", _costInHouse.toString());
-                    //       prefs.setString("breakHours", value);
-                    //       prefs.setString("breakTimeBool", "1");
-                    //     },
-                    //     decoration: InputDecoration(
-                    //       counter: Offstage(),
-                    //       contentPadding: EdgeInsets.symmetric(vertical: 8),
-                    //       border: OutlineInputBorder(borderSide: BorderSide.none),
-                    //     ),
-                    //   ),
-                    decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        // border: Border.all(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  Container(
-                    width: 115,
-                    child: Text(
-                      "Line Stop",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  Text(
-                    ":",
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.hasilRepairH.toString() == "null"
-                            ? "0 H"
-                            : stepEnamModel.hasilRepairH.toString() + " H",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.hasilRepairM.toString() == "null"
-                            ? "0 M"
-                            : stepEnamModel.hasilRepairM.toString() + " M",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "-",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        "$_counter H",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        "$_counterMinutes M",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "=",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        _lineStopH == 0 ? "$prefLineStopH H" : "$_lineStopH H",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        _lineStopM == 0 ? "$prefLineStopM M" : "$_lineStopM M",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Container(
                 margin: const EdgeInsets.only(top: 24),
                 width: MediaQuery.of(context).size.width,

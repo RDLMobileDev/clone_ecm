@@ -509,6 +509,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                     ],
                   ),
                 )),
+            // ini
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width,
@@ -521,7 +522,6 @@ class StepFillSatuState extends State<StepFillSatu> {
                       child: Text("Memuat Klasifikasi"),
                     );
                   }
-
                   return _listClassification.isEmpty
                       ? Container(
                           child: Center(
