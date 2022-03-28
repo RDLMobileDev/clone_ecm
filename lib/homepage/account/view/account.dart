@@ -351,6 +351,7 @@ class _AccountMemberState extends State<AccountMember> {
                         ),
                         Text(
                           emailName + " - (" + roleName + ")",
+                          overflow: TextOverflow.fade,
                           style: TextStyle(
                               fontFamily: 'Rubik',
                               fontSize: 16,
