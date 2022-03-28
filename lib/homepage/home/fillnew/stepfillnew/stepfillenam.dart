@@ -73,6 +73,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
       adminCost = '0';
   bool btnCheck = false;
   String back = '';
+  
+  
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -1139,6 +1141,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         stepEnamModel.hasilRepairH.toString() == "null"
                             ? "0 H"
                             : stepEnamModel.hasilRepairH.toString() + " H",
+                            
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -1740,7 +1743,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       child: Text(
                         _newLineStopH == 0
                             ? "$prefNewLineStop  H"
-                            : "${_newLineStopH + _lineStopM} M",
+                            : "${(((double.parse(stepEnamModel.hasilRepairH.toString()) + double.parse(stepEnamModel.hasilRepairM.toString())/60))).toStringAsFixed(1)} H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
