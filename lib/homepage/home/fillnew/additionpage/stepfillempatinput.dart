@@ -483,7 +483,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     fetchLocationPartData();
     fetchAllUser();
 
-    if (widget.ecmItemId!.isNotEmpty) {
+    if ((widget.ecmItemId ?? "").isNotEmpty) {
       getStepEmpatData();
     }
   }
