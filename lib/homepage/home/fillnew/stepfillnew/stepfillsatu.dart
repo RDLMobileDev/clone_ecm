@@ -431,33 +431,38 @@ class StepFillSatuState extends State<StepFillSatu> {
   void setFormStep1AfterChoosing() async {
     if ((ecmIdEdit.isNotEmpty || ecmIdEdit != "") ||
         (ecmId.isNotEmpty || ecmId != "")) {
-      final result = await MyUrl().getData("ecm_step1_get?ecm_id=$ecmIdEdit");
+      try {
+        final result = await MyUrl().getData("ecm_step1_get?ecm_id=$ecmIdEdit");
 
-      print("response from data step 1 edit");
-      print("==========================================================");
-      print(result);
+        print("response from data step 1 edit");
+        print("==========================================================");
+        print(result);
 
-      var dataStepSatu = result['data'];
+        var dataStepSatu = result['data'];
 
-      var dataTeamMember = dataStepSatu['team_member_id'] as List;
-      dataTeamMember.map((e) => listTeamMember.add(e)).toList();
+        var dataTeamMember = dataStepSatu['team_member_id'] as List;
+        dataTeamMember.map((e) => listTeamMember.add(e)).toList();
 
-      setState(() {
-        namaKlasifikasiFromSession = dataStepSatu['classification_name'];
-        dateSelected = dataStepSatu['date'];
-        teamMemberController.text = dataStepSatu['team_member'];
-        factoryNameController.text = dataStepSatu['factory_name'];
-        factoryNameGroupController.text = dataStepSatu['group_name'];
-        machineNameController.text = dataStepSatu['machine_name'];
-        machineNumberController.text = dataStepSatu['machinedetail_name'];
+        setState(() {
+          namaKlasifikasiFromSession = dataStepSatu['classification_name'];
+          dateSelected = dataStepSatu['date'];
+          teamMemberController.text = dataStepSatu['team_member'];
+          factoryNameController.text = dataStepSatu['factory_name'];
+          factoryNameGroupController.text = dataStepSatu['group_name'];
+          machineNameController.text = dataStepSatu['machine_name'];
+          machineNumberController.text = dataStepSatu['machinedetail_name'];
 
-        classificationIdSelected = dataStepSatu['classification_id'].toString();
+          classificationIdSelected =
+              dataStepSatu['classification_id'].toString();
 
-        locationIdSelected = dataStepSatu['factory'].toString();
-        locationIdGroupSelected = dataStepSatu['group_factory'].toString();
-        machineIdSelected = dataStepSatu['machine_id'].toString();
-        machineDetailIdSelected = dataStepSatu['machinedetail_id'].toString();
-      });
+          locationIdSelected = dataStepSatu['factory'].toString();
+          locationIdGroupSelected = dataStepSatu['group_factory'].toString();
+          machineIdSelected = dataStepSatu['machine_id'].toString();
+          machineDetailIdSelected = dataStepSatu['machinedetail_id'].toString();
+        });
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
