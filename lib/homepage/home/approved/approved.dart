@@ -30,6 +30,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
   String approve = '';
   String decline = '';
   String approved = '';
+  String status = '';
   String yesterday = '';
 
   void setBahasa() async {
@@ -271,6 +272,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         ),
                                       ),
                                     ),
+                                    
                                   ],
                                 )
                               : _listApproved[i].status == "0"
