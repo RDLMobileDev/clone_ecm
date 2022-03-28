@@ -364,36 +364,42 @@ class StepFillDuaState extends State<StepFillDua> {
       if (Uri.parse(imageProblemPath.first).isAbsolute) {
         goToStepFillTiga('Anda harus mengganti foto & upload ulang');
       } else {
-        // var result = await fillNewDua(
-        //   token: token,
-        //   shiftA: shiftA,
-        //   shiftB: shiftB,
-        //   shiftNs: shiftC,
-        //   time: timePickState,
-        //   problem: problemTypeState,
-        //   safety: safetyOpt,
-        //   quality: qualityOpt,
-        //   delivery: deliveryOpt,
-        //   cost: costOpt,
-        //   molding: moldingOpt,
-        //   utility: utilityOpt,
-        //   production: productionOpt,
-        //   engineering: engineerOpt,
-        //   other: otherOpt,
-        //   ecmId: idEcmSendtoApi,
-        //   // images: files
-        //   // imagesName: imagesKeyName,
-        //   imagesPath: imageProblemPath,
-        // );
+        var result = await fillNewDua(
+          token: token,
+          shiftA: shiftA,
+          shiftB: shiftB,
+          shiftNs: shiftC,
+          time: timePickState,
+          problem: problemTypeState,
+          safety: safetyOpt,
+          quality: qualityOpt,
+          delivery: deliveryOpt,
+          cost: costOpt,
+          molding: moldingOpt,
+          utility: utilityOpt,
+          production: productionOpt,
+          engineering: engineerOpt,
+          other: otherOpt,
+          ecmId: idEcmSendtoApi,
+          imagesPath: imageProblemPath,
+        );
 
-        // print(result);
+        print("data step 2 edit");
+        print(result);
+
+        if (result['response']['status'] == 200) {
+          goToStepFillTiga('Data step 2 berhasil diubah');
+          isStepDuaFill.value = false;
+          isStepTigaFill.value = true;
+        } else {
+          goToStepFillTiga('Data step 2 gagal diubah');
+        }
 
         // if (result['response']['status'] == 200) {
         //   ecmId.isNotEmpty || ecmId != ""
-        //       ? goToStepFillTiga('Data Step 2 disimpan')
+        // ? goToStepFillTiga('Data Step 2 disimpan')
         //       : goToStepFillTiga('Data Step 2 diperbarui');
-        isStepDuaFill.value = false;
-        isStepTigaFill.value = true;
+
         // } else {
         //   goToStepFillTiga('Data Step 2 gagal diperbarui');
         // }
@@ -478,7 +484,7 @@ class StepFillDuaState extends State<StepFillDua> {
 
               if (dataStepDua['t_ecm_cost'] != null) {
                 isCost = !isCost;
-                costOpt = dataStepDua['t_ecm_delivery'].toString();
+                costOpt = dataStepDua['t_ecm_cost'].toString();
               }
 
               // set value for PERCENTAGE MISTAKE
@@ -1621,12 +1627,9 @@ class StepFillDuaState extends State<StepFillDua> {
                   ),
                   InkWell(
                       onTap: () async {
-                        final prefs = await _prefs;
                         setState(() {
                           imageProblemPath.clear();
                           imageFileList!.clear();
-                          prefs.setStringList(
-                              "imagesKetPath", imageProblemPath);
                         });
                       },
                       child: Text(

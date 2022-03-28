@@ -176,8 +176,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void getStepEmpatData() async {
+    String idItemEcmEdit = widget.ecmItemId ?? "0";
     try {
-      var result = await getIdFillNewEmpat(ecmItemId, idUser, tokenUser);
+      var result = await getIdFillNewEmpat(idItemEcmEdit, idUser, tokenUser);
       print("Data step 4 for update");
       print(result);
 
@@ -186,6 +187,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           var data = (result['data'] as List)
               .map((e) => ItemCheckingDetail.fromJson(e))
               .toList();
+
           setState(() {
             tecName = TextEditingController(text: data[0].partNama);
             formValue = {
@@ -225,7 +227,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 TextEditingController(text: formValue["start"]);
             endTimePickController =
                 TextEditingController(text: formValue["end"]);
-            tecMemberName = TextEditingController(text: userNameField);
+            tecMemberName = TextEditingController(text: _users[0].userName);
 
             switch (formValue["note"]) {
               case "ok":
@@ -405,10 +407,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void updateStepInputChecking() async {
+    String ecmIdNewOrEdit = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
+    String idEcmItemEdit = widget.ecmItemId ?? "0";
     try {
       String resultMessage = "Data diperbarui";
       var result = await fillNewEmpatUpdate(
-          ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId,
+          ecmIdNewOrEdit,
           idMachineRes,
           tecName.text,
           tecStandard.text,
@@ -418,7 +422,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           formValue["end"] ?? "00:00",
           idUser,
           formValue["name"] ?? "-",
-          ecmItemId,
+          idEcmItemEdit,
           tokenUser);
 
       print("hasil update step 4");
@@ -479,7 +483,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     fetchLocationPartData();
     fetchAllUser();
 
-    if (ecmItemId.isNotEmpty || ecmItemId != "") {
+    if (widget.ecmItemId!.isNotEmpty) {
       getStepEmpatData();
     }
   }
