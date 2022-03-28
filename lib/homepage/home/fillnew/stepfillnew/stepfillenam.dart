@@ -35,9 +35,16 @@ class _StepFillEnamState extends State<StepFillEnam> {
   TextEditingController breakHoursController = TextEditingController();
   TextEditingController breakMinutesController = TextEditingController();
 
+  String tokenUser = SharedPrefsUtil.getTokenUser();
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String ecmitemId = SharedPrefsUtil.getIdEcmItem();
+  String userId = SharedPrefsUtil.getIdUser();
+
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
   bool isTapVendor = false;
+  bool breakTimeFill = false;
 
   String improvement = '';
   String name = '';
@@ -369,16 +376,17 @@ class _StepFillEnamState extends State<StepFillEnam> {
           //   _counter = _counter;
           // }
           // resultLineStop();
+          breakTimeFill = true;
         });
-        prefs.setString("breaks", _counter.toString());
-        prefs.setString("breakHours", _counter.toString());
-        prefs.setString("breaks", _counter.toString());
-        prefs.setString("breakMinutes", _counterMinutes.toString());
-        prefs.setString("lineStopH", _lineStopH.toString());
-        prefs.setString("lineStopM", _lineStopM.toString());
-        prefs.setString("breakTimeBool", "1");
-        prefs.setString(
-            "ttlLineStop", _lineStopH.toString() + ":" + _lineStopM.toString());
+        // prefs.setString("breaks", _counter.toString());
+        // prefs.setString("breakHours", _counter.toString());
+        // prefs.setString("breaks", _counter.toString());
+        // prefs.setString("breakMinutes", _counterMinutes.toString());
+        // prefs.setString("lineStopH", _lineStopH.toString());
+        // prefs.setString("lineStopM", _lineStopM.toString());
+        // prefs.setString("breakTimeBool", "1");
+        // prefs.setString(
+        //     "ttlLineStop", _lineStopH.toString() + ":" + _lineStopM.toString());
       } else if (breakHoursController.text == "0" &&
           breakMinutesController.text == "0") {
         setState(() {
@@ -395,17 +403,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
           // }
           // resultLineStop();
           // resultCostInHouse();
+          breakTimeFill = true;
         });
-        prefs.setString("breaks", _counter.toString());
-        prefs.setString("breakHours", _counter.toString());
-        prefs.setString("breaks", _counter.toString());
-        prefs.setString("breakMinutes", _counterMinutes.toString());
+        // prefs.setString("breaks", _counter.toString());
+        // prefs.setString("breakHours", _counter.toString());
+        // prefs.setString("breaks", _counter.toString());
+        // prefs.setString("breakMinutes", _counterMinutes.toString());
 
-        prefs.setString("lineStopH", _newLineStopH.toString());
-        prefs.setString("lineStopM", _lineStopM.toString());
-        prefs.setString("breakTimeBool", "1");
-        prefs.setString(
-            "ttlLineStop", _lineStopH.toString() + ":" + _lineStopM.toString());
+        // prefs.setString("lineStopH", _newLineStopH.toString());
+        // prefs.setString("lineStopM", _lineStopM.toString());
+        // prefs.setString("breakTimeBool", "1");
+        // prefs.setString(
+        //     "ttlLineStop", _lineStopH.toString() + ":" + _lineStopM.toString());
       } else {
         Fluttertoast.showToast(
             msg: 'Waktu istirahat masih kosong',
@@ -558,21 +567,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
   }
 
   getStep6() async {
-    final SharedPreferences prefs = await _prefs;
-    // String? tokenUser = prefs.getString("tokenKey").toString();
-    // String ecmId =
-    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    // String ecmitemId = prefs.getString("idEcmItem").toString();
-    // String userId = prefs.getString("idKeyUser").toString();
-
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String ecmitemId = SharedPrefsUtil.getIdEcmItem();
-    String userId = SharedPrefsUtil.getIdUser();
-
+    String ecmIdEditOrNew = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
     List<VendorStep6Model> listVendorTemp = [];
     try {
-      var response = await getFillNewEnam(ecmId, userId, ecmitemId, tokenUser);
+      var response =
+          await getFillNewEnam(ecmIdEditOrNew, userId, ecmitemId, tokenUser);
       print("======= getData step 6 =======");
       print(response['data']);
 
@@ -610,20 +609,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
             ? "0" + stepEnamModel.hasilRepairM.toString()
             : stepEnamModel.hasilRepairM.toString();
         String minuteLineStart = "0" + stepEnamModel.hasilRepairM.toString();
-
-        prefs.setString(
-            "check", stepEnamModel.checkH.toString() + ":" + minuteCheck);
-        // prefs.setString("check", "3:00");
-        // prefs.setString("repair", "9:00");
-        // prefs.setString("totalcr", "5:00");
-        // prefs.setString("lineStart", "9:09");
-        prefs.setString(
-            "repair", stepEnamModel.repairH.toString() + ":" + minuteRepair);
-        prefs.setString("totalcr",
-            stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr);
-        String breaks = _counter.toString();
-        prefs.setString("lineStart",
-            stepEnamModel.hasilRepairH.toString() + ":" + minuteLineStart);
       } else {
         Fluttertoast.showToast(
             msg: 'Tidak ada data dari step 4 dan 5',
@@ -649,15 +634,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
   }
 
   Future<List<AllUserModel>> getAllUserData() async {
-    // final SharedPreferences prefs = await _prefs;
-    // String? tokenUser = prefs.getString("tokenKey").toString();
-    // String idUser = prefs.getString("idKeyUser") ?? "";
-
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String idUser = SharedPrefsUtil.getIdUser();
-
-    print("id user step 6: " + idUser);
-    var response = await getUserAll(tokenUser, idUser);
+    print("id user step 6: " + userId);
+    var response = await getUserAll(tokenUser, userId);
     if (response['response']['status'] == 200) {
       setState(() {
         var data = response['data'] as List;
@@ -684,6 +662,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   }
 
   void postFillEnam() async {
+    String ecmIdEditOrNew = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
     String minuteTotalCr = stepEnamModel.hasilRepairM.toString().length == 1
         ? "0" + stepEnamModel.hasilRepairM.toString()
         : stepEnamModel.hasilRepairM.toString();
@@ -724,7 +703,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
     try {
       var result = await fillNewEnam(
-          idEcm,
+          ecmIdEditOrNew,
           idUser,
           idUsernameIdea,
           idea,
@@ -2224,7 +2203,18 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                   InkWell(
                     onTap: () {
-                      postFillEnam();
+                      if (breakTimeFill == true) {
+                        postFillEnam();
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: 'Waktu istirahat masih kosong',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.greenAccent,
+                            textColor: Colors.white,
+                            fontSize: 16);
+                      }
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.4,

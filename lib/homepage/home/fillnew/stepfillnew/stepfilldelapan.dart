@@ -37,6 +37,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<SummaryApproveModel> _listSummaryApproval = [];
 
+  String tokenUser = SharedPrefsUtil.getTokenUser();
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+
   String? copyToGroup;
   String engineerTo = '', productTo = '', othersTo = '';
 
@@ -457,23 +461,11 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   }
 
   Future postStepDelapan() async {
-    print("post dari step 8");
-    // final SharedPreferences prefs = await _prefs;
-    // String? tokenUser = prefs.getString("tokenKey").toString();
-    // String ecmId = prefs.getString("idEcm") ?? "";
-    // String ecmIdEdit = prefs.getString("ecmIdEdit") ?? "";
-
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String ecmId = SharedPrefsUtil.getEcmId();
-    // String ecmIdEdit = prefs.getString("ecmIdEdit") ?? "";
-
-    // String engineerToKey = prefs.getString("engineerTo") ?? "0";
-    // String productToKey = prefs.getString("productTo") ?? "0";
-    // String othersToKey = prefs.getString("othersTo") ?? "0";
+    String ecmIdNewOrEdit = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     try {
       var res = await fillNewDelapan(
-              ecmId, engineerTo, productTo, othersTo, tokenUser)
+              ecmIdNewOrEdit, engineerTo, productTo, othersTo, tokenUser)
           .timeout(const Duration(seconds: 15));
 
       print("response step 8:");

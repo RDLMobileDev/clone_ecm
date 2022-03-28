@@ -23,15 +23,10 @@ class StepFillEmpatInput extends StatefulWidget {
   final String? ecmItemId;
 
   @override
-  _StepFillEmpatInputState createState() =>
-      _StepFillEmpatInputState(ecmItemId: ecmItemId);
+  _StepFillEmpatInputState createState() => _StepFillEmpatInputState();
 }
 
 class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
-  final String? ecmItemId;
-
-  _StepFillEmpatInputState({this.ecmItemId});
-
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   TextEditingController? endTimePickController;
@@ -43,14 +38,24 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   TextEditingController tecMemberName = TextEditingController();
 
   List<PartModel> parts = <PartModel>[];
-  var selectedPart;
   List<AllUserModel> _users = <AllUserModel>[];
+
+  var selectedPart;
   var selectedUser;
 
-  bool isTappedNameItem = false, tapMemberName = false;
+  String tokenUser = SharedPrefsUtil.getTokenUser();
+  String idUser = SharedPrefsUtil.getIdUser();
+  String userName = SharedPrefsUtil.getIdUserChecker();
+  String userNameField = SharedPrefsUtil.getNameUserChecker();
+  String ecmItemId = SharedPrefsUtil.getIdEcmItem();
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String idMachineRes = SharedPrefsUtil.getIdMesinRes();
 
   String _initialPartName = "Type Item Name";
   String _initialUser = "Type Name";
+
+  bool isTappedNameItem = false, tapMemberName = false;
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -171,14 +176,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void getStepEmpatData() async {
-    final prefs = await _prefs;
-    String idUser = SharedPrefsUtil.getIdUser();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String userName = prefs.getString("userStep4") ?? "";
-
+    String idItemEcmEdit = widget.ecmItemId ?? "0";
     try {
-      var result =
-          await getIdFillNewEmpat(widget.ecmItemId!, idUser, tokenUser);
+      var result = await getIdFillNewEmpat(idItemEcmEdit, idUser, tokenUser);
       print("Data step 4 for update");
       print(result);
 
@@ -187,6 +187,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           var data = (result['data'] as List)
               .map((e) => ItemCheckingDetail.fromJson(e))
               .toList();
+
           setState(() {
             tecName = TextEditingController(text: data[0].partNama);
             formValue = {
@@ -226,7 +227,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 TextEditingController(text: formValue["start"]);
             endTimePickController =
                 TextEditingController(text: formValue["end"]);
-            tecMemberName = TextEditingController(text: userName);
+            tecMemberName = TextEditingController(text: _users[0].userName);
 
             switch (formValue["note"]) {
               case "ok":
@@ -277,23 +278,12 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void fetchLocationPartData() async {
-    // var prefs = await _prefs;
-    // String ecmId =
-    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    // String tokenUser = prefs.getString("tokenKey") ?? "";
-
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-
     parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
     print("data ecm id -> $ecmId");
     print("data parts -> $parts");
   }
 
   void fetchAllUser() async {
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String idUser = SharedPrefsUtil.getIdUser();
     try {
       var result = await getUserAll(tokenUser, idUser);
 
@@ -338,13 +328,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void saveStepInputChecking() async {
-    final prefs = await _prefs;
-    // var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    // var idUser = prefs.getString("idKeyUser").toString();
-
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String idUser = SharedPrefsUtil.getIdUser();
-
     // String tokenUser = prefs.getString("tokenKey") ?? "";
     String idMachineRes = SharedPrefsUtil.getIdMesinRes();
 
@@ -424,18 +407,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void updateStepInputChecking() async {
-    final prefs = await SharedPreferences.getInstance();
-    var ecmId = prefs.getString("idEcm");
-    var idUser = prefs.getString("idKeyUser").toString();
-    var idMachineRes = prefs.getString("id_machine_res");
-    // var idEcmItem = prefs.getString("idEcmItem");
-    String tokenUser = prefs.getString("tokenKey") ?? "";
-
+    String ecmIdNewOrEdit = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
+    String idEcmItemEdit = widget.ecmItemId ?? "0";
     try {
       String resultMessage = "Data diperbarui";
       var result = await fillNewEmpatUpdate(
-          ecmId!,
-          idMachineRes!,
+          ecmIdNewOrEdit,
+          idMachineRes,
           tecName.text,
           tecStandard.text,
           tecActual.text,
@@ -444,7 +422,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           formValue["end"] ?? "00:00",
           idUser,
           formValue["name"] ?? "-",
-          ecmItemId!,
+          idEcmItemEdit,
           tokenUser);
 
       print("hasil update step 4");
@@ -505,9 +483,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     fetchLocationPartData();
     fetchAllUser();
 
-    print(widget.ecmItemId);
-
-    if (ecmItemId != null) {
+    if (widget.ecmItemId!.isNotEmpty) {
       getStepEmpatData();
     }
   }
@@ -1126,7 +1102,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     onPressed: formValidations.containsValue(false)
                         ? null
                         : () async {
-                            if (ecmItemId != null) {
+                            if (ecmIdEdit.isNotEmpty || ecmIdEdit != "") {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -1159,7 +1135,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                             // Navigator.of(context).pop();
                           },
                     child: Text(
-                      ecmItemId == null ? 'Save Checking' : "Update Checking",
+                      ecmIdEdit.isEmpty || ecmIdEdit == ""
+                          ? 'Save Checking'
+                          : "Update Checking",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Rubik',

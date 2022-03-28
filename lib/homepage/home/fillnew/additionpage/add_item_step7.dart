@@ -41,6 +41,11 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
   int qtyUsed = 0;
   int subTotal = 0;
 
+  String tokenUser = SharedPrefsUtil.getTokenUser();
+  String idEcmKey = SharedPrefsUtil.getEcmId();
+  String idEcmEdit = SharedPrefsUtil.getEcmIdEdit();
+  String idMesin = SharedPrefsUtil.getIdMesinRes();
+
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
 
@@ -209,17 +214,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
   saveSparePart(String qtyUsed, String costRp) async {
     print("save sparepart");
-    final prefs = await _prefs;
-    // String tokenUser = prefs.getString("tokenKey").toString();
-    // String idEcmKey =
-    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    // String? idMesin = prefs.getString("id_machine_res");
-    // var idPartMachine = prefs.getString("idPartItemMachine");
 
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String idEcmKey = SharedPrefsUtil.getEcmId();
-    String idMesin = SharedPrefsUtil.getIdMesinRes();
-    // var idPartMachine = prefs.getString("idPartItemMachine");
+    String ecmIdNewOrEdit =
+        idEcmKey.isEmpty || idEcmKey == "" ? idEcmEdit : idEcmKey;
 
     try {
       if (partNameController.text == "") {
@@ -232,12 +229,17 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             textColor: Colors.white,
             fontSize: 16);
       } else {
-        var result = await saveDataPartMachine(tokenUser, idEcmKey, idMesin,
-            partNameController.text, qtyStock.toString(), qtyUsed, "0");
+        var result = await saveDataPartMachine(
+            tokenUser,
+            ecmIdNewOrEdit,
+            idMesin,
+            partNameController.text,
+            qtyStock.toString(),
+            qtyUsed,
+            "0");
 
         print(result);
         if (result['response']['status'] == 200) {
-          prefs.setString("sparePartBool", "1");
           Fluttertoast.showToast(
             msg: 'Data item step 7 disimpan',
             toastLength: Toast.LENGTH_SHORT,

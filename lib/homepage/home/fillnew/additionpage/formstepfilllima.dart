@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
@@ -18,9 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FormStepFilllima extends StatefulWidget {
   final bool? isUpdate;
-  String? idEcmItem;
+  final String? idEcmItem;
 
-  FormStepFilllima({Key? key, this.isUpdate, this.idEcmItem}) : super(key: key);
+  const FormStepFilllima({Key? key, this.isUpdate, this.idEcmItem})
+      : super(key: key);
 
   @override
   _FormStepFilllimaState createState() => _FormStepFilllimaState();
@@ -34,10 +36,52 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   final TextEditingController tecItem = TextEditingController();
   TextEditingController tecName = TextEditingController();
   TextEditingController usernameStepLima = TextEditingController();
+
   List<ItemChecking> _listData = [];
   List<PartModel> partsItem = <PartModel>[];
 
+  String ecmId = SharedPrefsUtil.getEcmId();
+  String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
+  String ecmItemId = SharedPrefsUtil.getIdEcmItem();
+  String idUser = SharedPrefsUtil.getIdUser();
+  String machineId = SharedPrefsUtil.getIdMesinRes();
+  String idUserChecker = SharedPrefsUtil.getIdUserChecker();
+  String tokenUser = SharedPrefsUtil.getTokenUser();
+
   String _username = "", itemNameStepLimaInsert = "";
+
+  //set Bahasa
+  String bahasa = "Bahasa Indonesia";
+
+  String item_repairing = '';
+  String validation_repair = '';
+  String add_item = '';
+  String item_repair = '';
+  String item_name = '';
+  String type_name_item = '';
+  String note = '';
+  String ok = '';
+  String limit = '';
+
+  String ng = '';
+  String starttime = '';
+  String hm = '';
+  String end_time = '';
+  String name = '';
+  String type_name = '';
+
+  String repair_made = '';
+  String type_message = '';
+  String save_repair = '';
+  String repair_time = '';
+  String total_repair = '';
+  String back = '';
+  String confirm = '';
+  String delete = '';
+  String validation_delete = '';
+  String cancel = '';
+
+  bool bahasaSelected = false;
 
   bool itemNameTapped = false;
 
@@ -68,109 +112,78 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   final DateTime now = DateTime.now();
 
   void getItemStepLimaforUpdate() async {
-    final prefs = await _prefs;
+    // final prefs = await _prefs;
 
-    print(widget.idEcmItem);
+    // print(widget.idEcmItem);
 
-    var idUser = prefs.getString("idKeyUser").toString();
+    // var idUser = prefs.getString("idKeyUser").toString();
 
-    String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
-    String noteStep5 = prefs.getString("noteStep5") ?? "";
-    String startTimeStep5 = prefs.getString("startTimeStep5") ?? "";
-    String endTimeStep5 = prefs.getString("endTimeStep5") ?? "";
-    String repairMade = prefs.getString("repairMade") ?? "";
+    // String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
+    // String noteStep5 = prefs.getString("noteStep5") ?? "";
+    // String startTimeStep5 = prefs.getString("startTimeStep5") ?? "";
+    // String endTimeStep5 = prefs.getString("endTimeStep5") ?? "";
+    // String repairMade = prefs.getString("repairMade") ?? "";
+
+    final result = await MyUrl().getData(
+        "ecmstep5_getid?ecmitem_id=${widget.idEcmItem}&user_id=$idUser");
+
+    print("Data item step 5 edit");
+    print(result);
+
+    var dataItemStepLima = result['data'][0];
+
+    print(dataItemStepLima['part_nama']);
 
     formValidations.updateAll((key, value) => true);
 
-    if (itemNameStepLima.isNotEmpty && itemNameStepLima != "") {
-      tecName = TextEditingController(text: itemNameStepLima);
-    }
+    setState(() {
+      if (dataItemStepLima['part_nama'] != null) {
+        tecName = TextEditingController(text: dataItemStepLima['part_nama']);
+      }
 
-    if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ok") {
-      setState(() {
+      if (dataItemStepLima['note'] != null &&
+          dataItemStepLima['note'] == "ok") {
         noteOptions["ok"] = true;
         noteOptions["limit"] = false;
         noteOptions["ng"] = false;
 
-        formValue["note"] = noteStep5;
-      });
-    } else if (noteStep5.isNotEmpty &&
-        noteStep5 != "" &&
-        noteStep5 == "limit") {
-      setState(() {
+        formValue["note"] = dataItemStepLima['note'];
+      } else if (dataItemStepLima['note'] != null &&
+          dataItemStepLima['note'] == "limit") {
         noteOptions["ok"] = false;
         noteOptions["limit"] = true;
         noteOptions["ng"] = false;
-        formValue["note"] = noteStep5;
-      });
-    } else if (noteStep5.isNotEmpty && noteStep5 != "" && noteStep5 == "ng") {
-      setState(() {
+        formValue["note"] = dataItemStepLima['note'];
+      } else if (dataItemStepLima['note'] != null &&
+          dataItemStepLima['note'] == "ng") {
         noteOptions["ok"] = false;
         noteOptions["limit"] = false;
         noteOptions["ng"] = true;
-        formValue["note"] = noteStep5;
-      });
-    }
+        formValue["note"] = dataItemStepLima['note'];
+      }
 
-    if (startTimeStep5.isNotEmpty && startTimeStep5 != "") {
-      setState(() {
-        startTimePickerController = TextEditingController(text: startTimeStep5);
-        formValue["start"] = startTimeStep5;
-      });
-    }
+      if (dataItemStepLima['t_ecmitem_start'] != null) {
+        startTimePickerController =
+            TextEditingController(text: dataItemStepLima['t_ecmitem_start']);
+        formValue["start"] = dataItemStepLima['t_ecmitem_start'];
+      }
 
-    if (endTimeStep5.isNotEmpty && endTimeStep5 != "") {
-      setState(() {
-        endTimePickerController = TextEditingController(text: endTimeStep5);
-        formValue["end"] = endTimeStep5;
-      });
-    }
+      if (dataItemStepLima['t_ecmitem_end'] != null) {
+        endTimePickerController =
+            TextEditingController(text: dataItemStepLima['t_ecmitem_end']);
+        formValue["end"] = dataItemStepLima['t_ecmitem_end'];
+      }
 
-    if (repairMade.isNotEmpty && repairMade != "") {
-      setState(() {
-        repairMadeController = TextEditingController(text: repairMade);
-        formValue["repair"] = repairMade;
-      });
-    }
+      if (dataItemStepLima['repair_made'] != null) {
+        repairMadeController =
+            TextEditingController(text: dataItemStepLima['repair_made']);
+        formValue["repair"] = dataItemStepLima['repair_made'];
+      }
 
-    setState(() {
-      // _username = prefs.getString("usernameKey") ?? "";
       _username = SharedPrefsUtil.getUsername();
       usernameStepLima = TextEditingController(text: _username);
     });
   }
-
-  //set Bahasa
-  String bahasa = "Bahasa Indonesia";
-  bool bahasaSelected = false;
-
-  String item_repairing = '';
-  String validation_repair = '';
-  String add_item = '';
-  String item_repair = '';
-  String item_name = '';
-  String type_name_item = '';
-  String note = '';
-  String ok = '';
-  String limit = '';
-
-  String ng = '';
-  String starttime = '';
-  String hm = '';
-  String end_time = '';
-  String name = '';
-  String type_name = '';
-
-  String repair_made = '';
-  String type_message = '';
-  String save_repair = '';
-  String repair_time = '';
-  String total_repair = '';
-  String back = '';
-  String confirm = '';
-  String delete = '';
-  String validation_delete = '';
-  String cancel = '';
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -282,60 +295,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     }
   }
 
-  void getStep4Data() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("tokenKey").toString();
-    String? ecmId = prefs.getString("idEcm") ?? "-";
-    String? userId = prefs.getString("idKeyUser") ?? "-";
-    print("from step 5 item");
-    print(ecmId);
-
-    try {
-      var dataItemName = await getFillNewEmpat(ecmId, userId, token);
-
-      print("data item name step input 5");
-      print(dataItemName);
-
-      // switch (data["response"]['status']) {
-      //   case 200:
-      //     setState(() {
-      //       _listData = (data['data'] as List)
-      //           .map((e) => ItemChecking.fromJson(e))
-      //           .toList();
-      //     });
-      //     break;
-      //   default:
-      //     Fluttertoast.showToast(
-      //         msg: 'Gagal mendapat daftar item checking',
-      //         toastLength: Toast.LENGTH_SHORT,
-      //         gravity: ToastGravity.BOTTOM,
-      //         timeInSecForIosWeb: 2,
-      //         backgroundColor: Colors.greenAccent,
-      //         textColor: Colors.white,
-      //         fontSize: 16);
-      //     break;
-      // }
-    } catch (e) {
-      String exceptionMessage = "Terjadi kesalahan, silahkan dicoba lagi nanti";
-      if (e is SocketException) {
-        exceptionMessage = "Kesalahan jaringan, silahkan cek koneksi anda";
-      }
-
-      if (e is TimeoutException) {
-        exceptionMessage = "Jaringan buruk, silahkan cari koneksi yang stabil";
-      }
-
-      Fluttertoast.showToast(
-          msg: exceptionMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.greenAccent,
-          textColor: Colors.white,
-          fontSize: 16);
-    }
-  }
-
   void getStartTime() async {
     final prefs = await _prefs;
     showTimePicker(
@@ -422,49 +381,23 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   }
 
   void saveStepInputRepairing() async {
-    // final prefs = await SharedPreferences.getInstance();
-
-    // var ecmId = prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    // var ecmItemId = prefs.getString("idEcmItem");
-    // var idUser = prefs.getString("idKeyUser").toString();
-    // var machineId = prefs.getString("machineId");
-    // var idUserChecker = prefs.getString("idUserChecker");
-
-    // String itemNameStepLima = prefs.getString("itemNameStepLima") ?? "";
-    // String tokenUser = prefs.getString("tokenKey") ?? "";
-
-    // print("id Ecm -> $ecmId");
-    // print("user id-> $idUser");
-    // print("id mesin -> $machineId");
-    // print("note -> ${formValue["note"]}");
-    // print("start -> ${formValue["start"]}");
-    // print("end -> ${formValue["end"]}");
-    // print("repair -> ${formValue["repair"]}");
-    // print("item name -> $itemNameStepLima");
-    // print("tokennya -> $tokenUser");
-
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String ecmItemId = SharedPrefsUtil.getIdEcmItem();
-    String idUser = SharedPrefsUtil.getIdUser();
-    String machineId = SharedPrefsUtil.getIdMesinRes();
-    String idUserChecker = SharedPrefsUtil.getIdUserChecker();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idEcmNewOld = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     try {
       String resultMessage = "Data disimpan";
 
-      print(ecmItemId);
+      print(machineId);
       var result = await fillNewLimaInsert(
           formValue["note"] ?? "-",
           formValue["start"] ?? "-",
           formValue["end"] ?? "-",
           formValue["repair"] ?? "-",
           idUserChecker,
-          ecmId,
+          idEcmNewOld,
           machineId,
           itemNameStepLimaInsert,
           idUser,
-          ecmItemId,
+          widget.idEcmItem ?? "0",
           tokenUser);
 
       print("result insert 5 -> $result");
@@ -511,7 +444,6 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   }
 
   void getUsernameSession() async {
-    final prefs = await SharedPreferences.getInstance();
     setState(() {
       // _username = prefs.getString("usernameKey") ?? "";
       _username = SharedPrefsUtil.getUsername();
@@ -544,21 +476,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       } else {
         timer.cancel();
       }
-      getStep4Data();
+      // getStep4Data();
     });
   }
 
   void fetchLocationPartData() async {
-    // var prefs = await _prefs;
-    // String ecmId =
-    //     prefs.getString("idEcm") ?? prefs.getString("ecmIdEdit") ?? "";
-    // String tokenUser = prefs.getString("tokenKey") ?? "";
-
-    String ecmId = SharedPrefsUtil.getEcmId();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-
-    var dataItem =
-        await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
+    String id = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
+    var dataItem = await ApiLocationPartService.getPartLocations(id, tokenUser);
 
     if (mounted) {
       setState(() {
@@ -566,7 +490,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       });
     }
 
-    print("data ecm id -> $ecmId");
+    print("data ecm id -> $id");
     print("data parts -> ${partsItem.length}");
   }
 
@@ -581,7 +505,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
     if (widget.isUpdate == true) {
       getItemStepLimaforUpdate();
-      timerGetDataStep4();
+      // timerGetDataStep4();
       // Future.delayed(Duration(seconds: 3), () => getStep4Data());
       // getUsernameSession();
     } else {

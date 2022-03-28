@@ -94,7 +94,7 @@ class SharedPrefsUtil {
   }
 
   static String getEcmIdEdit() {
-    return storagePrefs.read(ecmIdEdit);
+    return storagePrefs.read(ecmIdEdit) ?? "";
   }
 
   static String getIdJabatanKey() {
@@ -122,11 +122,11 @@ class SharedPrefsUtil {
   }
 
   static String getIdMesinRes() {
-    return storagePrefs.read(idMesinRes);
+    return storagePrefs.read(idMesinRes) ?? "";
   }
 
   static String getNamaKlasifikasi() {
-    return storagePrefs.read(namaKlasifikasi);
+    return storagePrefs.read(namaKlasifikasi) ?? "";
   }
 
   static String getIdEcmItem() {
@@ -147,5 +147,9 @@ class SharedPrefsUtil {
 
   static void clearEcmId() {
     storagePrefs.remove(idEcm);
+  }
+
+  static void clearEcmIdEdit() {
+    storagePrefs.remove(ecmIdEdit);
   }
 }

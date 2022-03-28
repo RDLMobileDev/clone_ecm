@@ -14,6 +14,7 @@ import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -343,10 +344,13 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                     widget.ecmId != null
                         ? InkWell(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => FillNew(
-                                        ecmId: widget.ecmId,
-                                      )));
+                              SharedPrefsUtil.setEcmIdForEdit(
+                                  widget.ecmId ?? "0");
+                              Get.to(FillNew(
+                                ecmId: widget.ecmId,
+                              ));
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (context) => ));
                             },
                             child: Container(
                               margin: EdgeInsets.only(top: 10),
