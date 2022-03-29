@@ -177,6 +177,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
             itemCount: _listApproved.isEmpty ? 0 : _listApproved.length,
             itemBuilder: (context, i) {
               return Container(
+                margin: EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.only(top: 8, bottom: 8),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -236,7 +237,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                               color: Color(0xFF979C9E)),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 22),
+                          margin: const EdgeInsets.only(top: 6),
                           child: _listApproved[i].status == "null"
                               ? Row(
                                   children: [
@@ -272,8 +273,6 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         ),
                                       ),
                                     ),
-                                   
-                                    
                                   ],
                                 )
                               : _listApproved[i].status == "1"
@@ -285,7 +284,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         DetailEcm(
-                                                          isShowButton: true,
+                                                          isShowButton: false,
                                                           notifId:
                                                               _listApproved[i]
                                                                   .notifEcmId
@@ -318,26 +317,25 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         SizedBox(
                                           width: 8,
                                         ),
-                                         Container(
-                                              width: 63,
-                                              height: 24,
-                                              decoration: BoxDecoration(
-                                                  color: Color.fromARGB(255, 98, 204, 112),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              child: Center(
-                                                child: Text(
-                                                  "Disetujui",
-                                                  style: TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
+                                        Container(
+                                          width: 63,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 98, 204, 112),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Center(
+                                            child: Text(
+                                              "Disetujui",
+                                              style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400),
                                             ),
+                                          ),
+                                        ),
                                         // Container(
                                         //   width: 63,
                                         //   height: 24,
@@ -384,39 +382,42 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                       ? Row(
                                           children: [
                                             InkWell(
-                                              onTap: (){
-                                                 Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        DetailEcm(
-                                                          isShowButton: true,
-                                                          notifId:
-                                                              _listApproved[i]
-                                                                  .notifEcmId
-                                                                  .toString(),
-                                                        )));
+                                              onTap: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DetailEcm(
+                                                              isShowButton:
+                                                                  false,
+                                                              notifId:
+                                                                  _listApproved[
+                                                                          i]
+                                                                      .notifEcmId
+                                                                      .toString(),
+                                                            )));
                                               },
                                               child: Container(
-                                              width: 63,
-                                              height: 24,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: const Color(
-                                                          0xFF00AEDB)),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              child: Center(
-                                                child: Text(
-                                                  review,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400),
+                                                width: 63,
+                                                height: 24,
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: const Color(
+                                                            0xFF00AEDB)),
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                5))),
+                                                child: Center(
+                                                  child: Text(
+                                                    review,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Rubik',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
                                                 ),
                                               ),
-                                                                                      ),
                                             ),
                                             SizedBox(
                                               width: 8,
@@ -425,7 +426,8 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                               width: 63,
                                               height: 24,
                                               decoration: BoxDecoration(
-                                                  color: Color.fromARGB(255, 219, 39, 39),
+                                                  color: Color.fromARGB(
+                                                      255, 219, 39, 39),
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(5))),
@@ -443,9 +445,9 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                             ),
                                           ],
                                         )
-                                      :InkWell(
-                                        onTap: (){
-                                           Navigator.of(context).push(
+                                      : InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         DetailEcm(
@@ -455,29 +457,29 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                                                   .notifEcmId
                                                                   .toString(),
                                                         )));
-                                        },
-                                        child: Container(
-                                              width: 63,
-                                              height: 24,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: const Color(
-                                                          0xFF00AEDB)),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              child: Center(
-                                                child: Text(
-                                                  review,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
+                                          },
+                                          child: Container(
+                                            width: 63,
+                                            height: 24,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: const Color(
+                                                        0xFF00AEDB)),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))),
+                                            child: Center(
+                                              child: Text(
+                                                review,
+                                                style: TextStyle(
+                                                    fontFamily: 'Rubik',
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w400),
                                               ),
                                             ),
-                                      ),
+                                          ),
+                                        ),
                         )
                       ],
                     ),

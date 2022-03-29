@@ -213,7 +213,7 @@ class _DetailEcmState extends State<DetailEcm> {
     };
 
     try {
-      print("gassssssssss");
+      print("menolak ecm card");
 
       if (alasanTolak.text.isNotEmpty) {
         var result = await postAlasanTolakTL(params, tokenUser);
@@ -1361,8 +1361,10 @@ class _DetailEcmState extends State<DetailEcm> {
             Text(" : "),
             Expanded(
               flex: 4,
-              child:
-                  Text(detailEcmModel.kaizenBreaktimeH.toString() + " H 0 M"),
+              child: Text(detailEcmModel.kaizenBreaktimeH.toString() +
+                  " H " +
+                  detailEcmModel.kaizenBreaktimeM.toString() +
+                  " M"),
             )
           ],
         ),
