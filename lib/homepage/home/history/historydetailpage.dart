@@ -964,8 +964,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             Text(" : "),
             Expanded(
               flex: 4,
-              child:
-                  Text(detailEcmModel.kaizenBreaktimeH.toString() + " H 0 M"),
+              child: Text(detailEcmModel.kaizenBreaktimeH.toString() +
+                  " H " +
+                  detailEcmModel.kaizenBreaktimeM.toString() +
+                  " M"),
             )
           ],
         ),
