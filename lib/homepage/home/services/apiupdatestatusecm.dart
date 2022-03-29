@@ -11,6 +11,7 @@ Future updateStatus(String notifId, String notifStatus, String token) async {
   }, body: {
     'notifecm_id': notifId,
     'notifecm_status': notifStatus,
+    'remark': ""
   });
 
   // print(response.body);

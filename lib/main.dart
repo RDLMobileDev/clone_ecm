@@ -1,5 +1,3 @@
-//import 'package:e_cm/auth/view/splash_screen.dart';
-// import 'package:e_cm/homepage/dashboard.dart';
 // ignore_for_file: prefer_const_constructors
 
 import 'package:e_cm/auth/view/splash_screen.dart';
