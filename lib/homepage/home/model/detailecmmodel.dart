@@ -29,6 +29,7 @@ class DetailEcmModel {
   String? kaizenTotalH;
   String? kaizenTotalM;
   String? kaizenBreaktimeH;
+  String? kaizenBreaktimeM;
   String? kaizenLinestarH;
   String? kaizenLinestarM;
   String? kaizenLinestopH;
@@ -70,6 +71,7 @@ class DetailEcmModel {
       this.kaizenTotalH,
       this.kaizenTotalM,
       this.kaizenBreaktimeH,
+      this.kaizenBreaktimeM,
       this.kaizenLinestarH,
       this.kaizenLinestarM,
       this.kaizenLinestopH,
@@ -112,6 +114,7 @@ class DetailEcmModel {
       kaizenTotalH: json['kaizen_total_h'].toString(),
       kaizenTotalM: json['kaizen_total_m'].toString(),
       kaizenBreaktimeH: json['kaizen_breaktime_h'].toString(),
+      kaizenBreaktimeM: json['kaizen_breaktime_m'].toString(),
       kaizenLinestarH: json['kaizen_linestar_h'].toString(),
       kaizenLinestarM: json['kaizen_linestar_m'].toString(),
       kaizenLinestopH: json['kaizen_linestop_h'].toString(),
@@ -155,6 +158,7 @@ class DetailEcmModel {
         'kaizen_total_h': kaizenTotalH,
         'kaizen_total_m': kaizenTotalM,
         'kaizen_breaktime_h': kaizenBreaktimeH,
+        'kaizen_breaktime_m': kaizenBreaktimeM,
         'kaizen_linestar_h': kaizenLinestarH,
         'kaizen_linestar_m': kaizenLinestarM,
         'kaizen_linestop_h': kaizenLinestopH,

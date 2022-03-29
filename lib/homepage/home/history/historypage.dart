@@ -11,6 +11,7 @@ import 'package:e_cm/homepage/home/history/service/get_history_monthly.dart';
 import 'package:e_cm/homepage/home/services/apigetapproved.dart';
 import 'package:e_cm/homepage/notification/view/detailecm.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
+import 'package:e_cm/widget/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -376,8 +377,8 @@ class _HistoryPageState extends State<HistoryPage> {
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(1990),
-            lastDate: DateTime(2022))
+            firstDate: DateTime(2010),
+            lastDate: DateTime(2030))
         .then((value) {
       if (value != null) {
         DateTime _fromDate = DateTime.now();
@@ -405,8 +406,8 @@ class _HistoryPageState extends State<HistoryPage> {
     showMonthPicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(1990),
-            lastDate: DateTime(2022))
+            firstDate: DateTime(2010),
+            lastDate: DateTime(2030))
         .then((value) {
       if (value != null) {
         DateTime _fromDate = DateTime.now();
@@ -751,18 +752,18 @@ class _HistoryPageState extends State<HistoryPage> {
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: 48,
-                                                    height: 48,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xFF00AEDB),
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                            image: NetworkImage(
-                                                                _listAll[i]
-                                                                        .foto ??
-                                                                    "-"))),
-                                                  ),
+                                                      width: 48,
+                                                      height: 48,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                        child:
+                                                            NetworkImageWidget(
+                                                                imageUri:
+                                                                    _listAll[i]
+                                                                        .foto),
+                                                      )),
                                                   const SizedBox(
                                                     width: 16,
                                                   ),
@@ -772,31 +773,30 @@ class _HistoryPageState extends State<HistoryPage> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            style:
-                                                                const TextStyle(
-                                                              fontFamily:
-                                                                  'Rubik',
-                                                              fontSize: 16,
-                                                            ),
-                                                            // ignore: prefer_const_literals_to_create_immutables
-                                                            children: <
-                                                                TextSpan>[
-                                                              TextSpan(
-                                                                  text: _listAll[
-                                                                          i]
-                                                                      .nama
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      color: Color(
-                                                                          0xFF00AEDB),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                              const TextSpan(
-                                                                  text:
-                                                                      ' Making E-CM Card',
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.6,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                child: Text(
+                                                                    _listAll[i]
+                                                                        .nama
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        color: Color(
+                                                                            0xFF00AEDB),
+                                                                        fontWeight:
+                                                                            FontWeight.w700)),
+                                                              ),
+                                                              const Text(
+                                                                  'Making E-CM Card',
                                                                   style: TextStyle(
                                                                       color: Color(
                                                                           0xFF6C7072))),
@@ -806,95 +806,54 @@ class _HistoryPageState extends State<HistoryPage> {
                                                         const SizedBox(
                                                           height: 8,
                                                         ),
-                                                        Text(
-                                                          _listAll[i]
-                                                              .waktu
-                                                              .toString(),
-                                                          style: const TextStyle(
-                                                              fontFamily:
-                                                                  'Rubik',
-                                                              fontSize: 10,
-                                                              color: Color(
-                                                                  0xFF979C9E)),
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.6,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.3,
+                                                                child: Text(
+                                                                  _listAll[i]
+                                                                      .problem
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      fontFamily:
+                                                                          'Rubik',
+                                                                      fontSize:
+                                                                          10,
+                                                                      color: Colors
+                                                                          .black87),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                _listAll[i]
+                                                                    .waktu
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontFamily:
+                                                                        'Rubik',
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: Color(
+                                                                        0xFF979C9E)),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                        // Container(
-                                                        //   margin: const EdgeInsets.only(top: 22),
-                                                        //   child: Row(
-                                                        //     children: [
-                                                        //       InkWell(
-                                                        //         onTap: () {
-                                                        //           // Navigator.of(context).push(MaterialPageRoute(
-                                                        //           //     builder: (context) => DetailEcm(
-                                                        //           //           notifId: _listDaily[i]
-                                                        //           //               .notifEcmId
-                                                        //           //               .toString(),
-                                                        //           //         )));
-                                                        //           // print("ok");
-                                                        //         },
-                                                        //         child: Container(
-                                                        //           width: 63,
-                                                        //           height: 24,
-                                                        //           decoration: BoxDecoration(
-                                                        //               border: Border.all(
-                                                        //                   color: const Color(0xFF00AEDB)),
-                                                        //               borderRadius: const BorderRadius.all(
-                                                        //                   Radius.circular(5))),
-                                                        //           child: const Center(
-                                                        //             child: Text(
-                                                        //               "Review",
-                                                        //               style: TextStyle(
-                                                        //                   fontFamily: 'Rubik',
-                                                        //                   fontSize: 12,
-                                                        //                   fontWeight: FontWeight.w400),
-                                                        //             ),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //       SizedBox(
-                                                        //         width: 8,
-                                                        //       ),
-                                                        //       Container(
-                                                        //         width: 63,
-                                                        //         height: 24,
-                                                        //         decoration: BoxDecoration(
-                                                        //             color: Color(0xFF00AEDB),
-                                                        //             borderRadius:
-                                                        //                 BorderRadius.all(Radius.circular(5))),
-                                                        //         child: Center(
-                                                        //           child: Text(
-                                                        //             "Approve",
-                                                        //             style: TextStyle(
-                                                        //                 fontFamily: 'Rubik',
-                                                        //                 color: Colors.white,
-                                                        //                 fontSize: 12,
-                                                        //                 fontWeight: FontWeight.w400),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //       SizedBox(
-                                                        //         width: 8,
-                                                        //       ),
-                                                        //       Container(
-                                                        //         width: 63,
-                                                        //         height: 24,
-                                                        //         decoration: BoxDecoration(
-                                                        //             color: Color(0xFFFF0000),
-                                                        //             borderRadius:
-                                                        //                 BorderRadius.all(Radius.circular(5))),
-                                                        //         child: Center(
-                                                        //           child: Text(
-                                                        //             "Decline",
-                                                        //             style: TextStyle(
-                                                        //                 fontFamily: 'Rubik',
-                                                        //                 color: Colors.white,
-                                                        //                 fontSize: 12,
-                                                        //                 fontWeight: FontWeight.w400),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //     ],
-                                                        //   ),
-                                                        // )
                                                       ],
                                                     ),
                                                   ),
@@ -973,18 +932,19 @@ class _HistoryPageState extends State<HistoryPage> {
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: 48,
-                                                    height: 48,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xFF00AEDB),
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                            image: NetworkImage(
-                                                                _listMontly[i]
-                                                                        .foto ??
-                                                                    "-"))),
-                                                  ),
+                                                      width: 48,
+                                                      height: 48,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                        child:
+                                                            NetworkImageWidget(
+                                                                imageUri:
+                                                                    _listMontly[
+                                                                            i]
+                                                                        .foto),
+                                                      )),
                                                   const SizedBox(
                                                     width: 16,
                                                   ),
@@ -994,31 +954,31 @@ class _HistoryPageState extends State<HistoryPage> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            style:
-                                                                const TextStyle(
-                                                              fontFamily:
-                                                                  'Rubik',
-                                                              fontSize: 16,
-                                                            ),
-                                                            // ignore: prefer_const_literals_to_create_immutables
-                                                            children: <
-                                                                TextSpan>[
-                                                              TextSpan(
-                                                                  text: _listMontly[
-                                                                          i]
-                                                                      .nama
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      color: Color(
-                                                                          0xFF00AEDB),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                              const TextSpan(
-                                                                  text:
-                                                                      ' Making E-CM Card',
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.6,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                child: Text(
+                                                                    _listMontly[
+                                                                            i]
+                                                                        .nama
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        color: Color(
+                                                                            0xFF00AEDB),
+                                                                        fontWeight:
+                                                                            FontWeight.w700)),
+                                                              ),
+                                                              const Text(
+                                                                  'Making E-CM Card',
                                                                   style: TextStyle(
                                                                       color: Color(
                                                                           0xFF6C7072))),
@@ -1028,95 +988,54 @@ class _HistoryPageState extends State<HistoryPage> {
                                                         const SizedBox(
                                                           height: 8,
                                                         ),
-                                                        Text(
-                                                          _listMontly[i]
-                                                              .waktu
-                                                              .toString(),
-                                                          style: const TextStyle(
-                                                              fontFamily:
-                                                                  'Rubik',
-                                                              fontSize: 10,
-                                                              color: Color(
-                                                                  0xFF979C9E)),
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.6,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.3,
+                                                                child: Text(
+                                                                  _listMontly[i]
+                                                                      .problem
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      fontFamily:
+                                                                          'Rubik',
+                                                                      fontSize:
+                                                                          10,
+                                                                      color: Colors
+                                                                          .black87),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                _listMontly[i]
+                                                                    .waktu
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontFamily:
+                                                                        'Rubik',
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: Color(
+                                                                        0xFF979C9E)),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                        // Container(
-                                                        //   margin: const EdgeInsets.only(top: 22),
-                                                        //   child: Row(
-                                                        //     children: [
-                                                        //       InkWell(
-                                                        //         onTap: () {
-                                                        //           // Navigator.of(context).push(MaterialPageRoute(
-                                                        //           //     builder: (context) => DetailEcm(
-                                                        //           //           notifId: _listDaily[i]
-                                                        //           //               .notifEcmId
-                                                        //           //               .toString(),
-                                                        //           //         )));
-                                                        //           // print("ok");
-                                                        //         },
-                                                        //         child: Container(
-                                                        //           width: 63,
-                                                        //           height: 24,
-                                                        //           decoration: BoxDecoration(
-                                                        //               border: Border.all(
-                                                        //                   color: const Color(0xFF00AEDB)),
-                                                        //               borderRadius: const BorderRadius.all(
-                                                        //                   Radius.circular(5))),
-                                                        //           child: const Center(
-                                                        //             child: Text(
-                                                        //               "Review",
-                                                        //               style: TextStyle(
-                                                        //                   fontFamily: 'Rubik',
-                                                        //                   fontSize: 12,
-                                                        //                   fontWeight: FontWeight.w400),
-                                                        //             ),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //       SizedBox(
-                                                        //         width: 8,
-                                                        //       ),
-                                                        //       Container(
-                                                        //         width: 63,
-                                                        //         height: 24,
-                                                        //         decoration: BoxDecoration(
-                                                        //             color: Color(0xFF00AEDB),
-                                                        //             borderRadius:
-                                                        //                 BorderRadius.all(Radius.circular(5))),
-                                                        //         child: Center(
-                                                        //           child: Text(
-                                                        //             "Approve",
-                                                        //             style: TextStyle(
-                                                        //                 fontFamily: 'Rubik',
-                                                        //                 color: Colors.white,
-                                                        //                 fontSize: 12,
-                                                        //                 fontWeight: FontWeight.w400),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //       SizedBox(
-                                                        //         width: 8,
-                                                        //       ),
-                                                        //       Container(
-                                                        //         width: 63,
-                                                        //         height: 24,
-                                                        //         decoration: BoxDecoration(
-                                                        //             color: Color(0xFFFF0000),
-                                                        //             borderRadius:
-                                                        //                 BorderRadius.all(Radius.circular(5))),
-                                                        //         child: Center(
-                                                        //           child: Text(
-                                                        //             "Decline",
-                                                        //             style: TextStyle(
-                                                        //                 fontFamily: 'Rubik',
-                                                        //                 color: Colors.white,
-                                                        //                 fontSize: 12,
-                                                        //                 fontWeight: FontWeight.w400),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //     ],
-                                                        //   ),
-                                                        // )
                                                       ],
                                                     ),
                                                   ),
@@ -1260,17 +1179,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  decoration: BoxDecoration(
-                                                      color: Color(0xFF00AEDB),
-                                                      shape: BoxShape.circle,
-                                                      image: DecorationImage(
-                                                          image: NetworkImage(
+                                                    width: 48,
+                                                    height: 48,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      child: NetworkImageWidget(
+                                                          imageUri:
                                                               _listDaily[i]
-                                                                      .foto ??
-                                                                  "-"))),
-                                                ),
+                                                                  .foto),
+                                                    )),
                                                 const SizedBox(
                                                   width: 16,
                                                 ),
@@ -1280,29 +1199,31 @@ class _HistoryPageState extends State<HistoryPage> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      RichText(
-                                                        text: TextSpan(
-                                                          style:
-                                                              const TextStyle(
-                                                            fontFamily: 'Rubik',
-                                                            fontSize: 16,
-                                                          ),
-                                                          // ignore: prefer_const_literals_to_create_immutables
-                                                          children: <TextSpan>[
-                                                            TextSpan(
-                                                                text: _listDaily[
-                                                                        i]
-                                                                    .nama
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    color: Color(
-                                                                        0xFF00AEDB),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700)),
-                                                            const TextSpan(
-                                                                text:
-                                                                    ' Making E-CM Card',
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.6,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              child: Text(
+                                                                  _listDaily[i]
+                                                                      .nama
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      color: Color(
+                                                                          0xFF00AEDB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                            ),
+                                                            const Text(
+                                                                'Making E-CM Card',
                                                                 style: TextStyle(
                                                                     color: Color(
                                                                         0xFF6C7072))),
@@ -1312,94 +1233,53 @@ class _HistoryPageState extends State<HistoryPage> {
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
-                                                      Text(
-                                                        _listDaily[i]
-                                                            .waktu
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontFamily: 'Rubik',
-                                                            fontSize: 10,
-                                                            color: Color(
-                                                                0xFF979C9E)),
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.6,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.3,
+                                                              child: Text(
+                                                                _listDaily[i]
+                                                                    .problem
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontFamily:
+                                                                        'Rubik',
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: Colors
+                                                                        .black87),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              _listDaily[i]
+                                                                  .waktu
+                                                                  .toString(),
+                                                              style: const TextStyle(
+                                                                  fontFamily:
+                                                                      'Rubik',
+                                                                  fontSize: 10,
+                                                                  color: Color(
+                                                                      0xFF979C9E)),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                      // Container(
-                                                      //   margin: const EdgeInsets.only(top: 22),
-                                                      //   child: Row(
-                                                      //     children: [
-                                                      //       InkWell(
-                                                      //         onTap: () {
-                                                      //           // Navigator.of(context).push(MaterialPageRoute(
-                                                      //           //     builder: (context) => DetailEcm(
-                                                      //           //           notifId: _listDaily[i]
-                                                      //           //               .notifEcmId
-                                                      //           //               .toString(),
-                                                      //           //         )));
-                                                      //           // print("ok");
-                                                      //         },
-                                                      //         child: Container(
-                                                      //           width: 63,
-                                                      //           height: 24,
-                                                      //           decoration: BoxDecoration(
-                                                      //               border: Border.all(
-                                                      //                   color: const Color(0xFF00AEDB)),
-                                                      //               borderRadius: const BorderRadius.all(
-                                                      //                   Radius.circular(5))),
-                                                      //           child: const Center(
-                                                      //             child: Text(
-                                                      //               "Review",
-                                                      //               style: TextStyle(
-                                                      //                   fontFamily: 'Rubik',
-                                                      //                   fontSize: 12,
-                                                      //                   fontWeight: FontWeight.w400),
-                                                      //             ),
-                                                      //           ),
-                                                      //         ),
-                                                      //       ),
-                                                      //       SizedBox(
-                                                      //         width: 8,
-                                                      //       ),
-                                                      //       Container(
-                                                      //         width: 63,
-                                                      //         height: 24,
-                                                      //         decoration: BoxDecoration(
-                                                      //             color: Color(0xFF00AEDB),
-                                                      //             borderRadius:
-                                                      //                 BorderRadius.all(Radius.circular(5))),
-                                                      //         child: Center(
-                                                      //           child: Text(
-                                                      //             "Approve",
-                                                      //             style: TextStyle(
-                                                      //                 fontFamily: 'Rubik',
-                                                      //                 color: Colors.white,
-                                                      //                 fontSize: 12,
-                                                      //                 fontWeight: FontWeight.w400),
-                                                      //           ),
-                                                      //         ),
-                                                      //       ),
-                                                      //       SizedBox(
-                                                      //         width: 8,
-                                                      //       ),
-                                                      //       Container(
-                                                      //         width: 63,
-                                                      //         height: 24,
-                                                      //         decoration: BoxDecoration(
-                                                      //             color: Color(0xFFFF0000),
-                                                      //             borderRadius:
-                                                      //                 BorderRadius.all(Radius.circular(5))),
-                                                      //         child: Center(
-                                                      //           child: Text(
-                                                      //             "Decline",
-                                                      //             style: TextStyle(
-                                                      //                 fontFamily: 'Rubik',
-                                                      //                 color: Colors.white,
-                                                      //                 fontSize: 12,
-                                                      //                 fontWeight: FontWeight.w400),
-                                                      //           ),
-                                                      //         ),
-                                                      //       ),
-                                                      //     ],
-                                                      //   ),
-                                                      // )
                                                     ],
                                                   ),
                                                 ),
