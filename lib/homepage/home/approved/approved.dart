@@ -30,6 +30,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
   String approve = '';
   String decline = '';
   String approved = '';
+  String status = '';
   String yesterday = '';
 
   void setBahasa() async {
@@ -271,6 +272,8 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         ),
                                       ),
                                     ),
+                                   
+                                    
                                   ],
                                 )
                               : _listApproved[i].status == "0"
@@ -315,6 +318,26 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         SizedBox(
                                           width: 8,
                                         ),
+                                         Container(
+                                              width: 63,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xFF00AEDB),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: Center(
+                                                child: Text(
+                                                  "Disetujui",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Rubik',
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ),
                                         // Container(
                                         //   width: 63,
                                         //   height: 24,
@@ -380,26 +403,52 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                                 ),
                                               ),
                                             ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Container(
+                                              width: 63,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                  color: Color.fromARGB(255, 219, 39, 39),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: Center(
+                                                child: Text(
+                                                  "Ditolak",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Rubik',
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         )
-                                      : Container(
-                                          width: 63,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFFF0000),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Center(
-                                            child: Text(
-                                              decline,
-                                              style: TextStyle(
-                                                  fontFamily: 'Rubik',
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
+                                      :Container(
+                                            width: 63,
+                                            height: 24,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: const Color(
+                                                        0xFF00AEDB)),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))),
+                                            child: Center(
+                                              child: Text(
+                                                review,
+                                                style: TextStyle(
+                                                    fontFamily: 'Rubik',
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
                                             ),
                                           ),
-                                        ),
                         )
                       ],
                     ),
