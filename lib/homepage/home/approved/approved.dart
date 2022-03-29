@@ -276,7 +276,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                     
                                   ],
                                 )
-                              : _listApproved[i].status == "0"
+                              : _listApproved[i].status == "1"
                                   ? Row(
                                       children: [
                                         InkWell(
@@ -322,7 +322,7 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                               width: 63,
                                               height: 24,
                                               decoration: BoxDecoration(
-                                                  color: Color(0xFF00AEDB),
+                                                  color: Color.fromARGB(255, 98, 204, 112),
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(5))),
@@ -380,28 +380,43 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                         // ),
                                       ],
                                     )
-                                  : _listApproved[i].status == "1"
+                                  : _listApproved[i].status == "2"
                                       ? Row(
                                           children: [
-                                            Container(
+                                            InkWell(
+                                              onTap: (){
+                                                 Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DetailEcm(
+                                                          isShowButton: true,
+                                                          notifId:
+                                                              _listApproved[i]
+                                                                  .notifEcmId
+                                                                  .toString(),
+                                                        )));
+                                              },
+                                              child: Container(
                                               width: 63,
                                               height: 24,
                                               decoration: BoxDecoration(
-                                                  color: Color(0xFF00AEDB),
+                                                  border: Border.all(
+                                                      color: const Color(
+                                                          0xFF00AEDB)),
                                                   borderRadius:
-                                                      BorderRadius.all(
+                                                      const BorderRadius.all(
                                                           Radius.circular(5))),
                                               child: Center(
                                                 child: Text(
-                                                  approve,
+                                                  review,
                                                   style: TextStyle(
                                                       fontFamily: 'Rubik',
-                                                      color: Colors.white,
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.w400),
                                                 ),
                                               ),
+                                                                                      ),
                                             ),
                                             SizedBox(
                                               width: 8,
@@ -428,27 +443,41 @@ class _ApprovedEcmState extends State<ApprovedEcm> {
                                             ),
                                           ],
                                         )
-                                      :Container(
-                                            width: 63,
-                                            height: 24,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: const Color(
-                                                        0xFF00AEDB)),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(5))),
-                                            child: Center(
-                                              child: Text(
-                                                review,
-                                                style: TextStyle(
-                                                    fontFamily: 'Rubik',
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w400),
+                                      :InkWell(
+                                        onTap: (){
+                                           Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DetailEcm(
+                                                          isShowButton: true,
+                                                          notifId:
+                                                              _listApproved[i]
+                                                                  .notifEcmId
+                                                                  .toString(),
+                                                        )));
+                                        },
+                                        child: Container(
+                                              width: 63,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: const Color(
+                                                          0xFF00AEDB)),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: Center(
+                                                child: Text(
+                                                  review,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Rubik',
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                      ),
                         )
                       ],
                     ),
