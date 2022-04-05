@@ -269,7 +269,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               Navigator.pop(context);
             }),
         title: Text(
-          "Preventive Maintenance",
+          detailEcmModel.klasifikasi.toString(),
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
