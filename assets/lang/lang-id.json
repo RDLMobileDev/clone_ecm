@@ -64,7 +64,8 @@
       "one_month": "1 Bulan lalu",
       "show": "Data bulanan",
       "his_empty": "Tidak ada data",
-      "empty": "Tidak ada data"
+      "empty": "Tidak ada data",
+      "search_history":"Cari riwayat ecm"
     },
     "detail": {
       "preventive": "Preventive Maintenance",
@@ -136,7 +137,8 @@
       "approve": "Setujui",
       "decline": "Tolak",
       "declined": "Ditolak",
-      "approved": "Disetujui"
+      "approved": "Disetujui",
+      "no_notification":"Tidak ada Pemberitahuan"
     },
     "notifikasi_staff": {
       "notification_all": "Pemberitahuan",
@@ -144,7 +146,8 @@
       "mark_as_read": "Semua notifikasi telah dibaca",
       "was_approve": "Telah Menyetujui E-CM Card Anda",
       "a_hour": "1 Jam Lalu",
-      "one_day": "1 Hari Lalu"
+      "one_day": "1 Hari Lalu",
+      "no_notification":"Tidak ada Pemberitahuan"
     },
     "step_8": {
       "copy_to": "Copy to",

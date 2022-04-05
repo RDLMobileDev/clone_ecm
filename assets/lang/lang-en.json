@@ -64,7 +64,8 @@
       "one_month": "1 Month ago",
       "show": "Data monthly",
       "his_empty": "No data",
-      "empty": "No data"
+      "empty": "No data",
+      "search_history":"Search history E-CM"
     },
     "detail": {
       "preventive": "Preventive Maintenance",
@@ -136,7 +137,8 @@
       "approve": "Approve",
       "decline": "Decline",
       "declined": "Declined",
-      "approved": "Approved"
+      "approved": "Approved",
+      "no_notification":"There's no notification"
     },
     "notifikasi_staff": {
       "notification_all": "All Notification",
@@ -144,7 +146,8 @@
       "mark_as_read": "All notification mark as read",
       "was_approve": "Was Approve your E-CM Card",
       "a_hour": "a hour ago",
-      "one_day": "1 Day ago"
+      "one_day": "1 Day ago",
+      "no_notification":"There's no notification"
     },
     "step_8": {
       "copy_to": "Copy to",
