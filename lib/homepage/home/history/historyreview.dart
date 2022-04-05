@@ -230,7 +230,7 @@ class _HistoryReviewState extends State<HistoryReview> {
               Navigator.pop(context);
             }),
         title: Text(
-          "Preventive Maintance",
+          detailEcmModel.klasifikasi.toString(),
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
