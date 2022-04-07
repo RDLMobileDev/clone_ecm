@@ -166,6 +166,15 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   children: [
                     InkWell(
                       onTap: () {
+                        isStepSatuFill.value = true;
+                        isStepDuaFill.value = false;
+                        isStepTigaFill.value = false;
+                        isStepEmpatFill.value = false;
+                        isStepLimaFill.value = false;
+                        isStepEnamFill.value = false;
+                        isStepTujuhFill.value = false;
+                        isStepDelapanFill.value = false;
+
                         Get.off(const Dashboard());
                         // Navigator.pushAndRemoveUntil(
                         //     context,
@@ -431,6 +440,15 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
                   SharedPrefsUtil.clearEcmId();
                   Get.off(Dashboard());
+
+                  isStepSatuFill.value = true;
+                  isStepDuaFill.value = false;
+                  isStepTigaFill.value = false;
+                  isStepEmpatFill.value = false;
+                  isStepLimaFill.value = false;
+                  isStepEnamFill.value = false;
+                  isStepTujuhFill.value = false;
+                  isStepDelapanFill.value = false;
 
                   // Navigator.pushAndRemoveUntil(
                   //     context,
