@@ -45,6 +45,9 @@ class _HistoryPageState extends State<HistoryPage> {
   String show = 'Menampilkan riwayat';
   String his_empty = 'Riwayat ';
   String empty = ' kosong';
+  String search_history = '';
+
+  TextEditingController searchController = TextEditingController();
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -87,6 +90,7 @@ class _HistoryPageState extends State<HistoryPage> {
         show = dataLang['riwayat']['show'];
         his_empty = dataLang['riwayat']['his_empty'];
         empty = dataLang['riwayat']['empty'];
+        search_history = dataLang['riwayat']['search_history'];
       });
     }
   }
@@ -111,6 +115,7 @@ class _HistoryPageState extends State<HistoryPage> {
         show = dataLang['riwayat']['show'];
         his_empty = dataLang['riwayat']['his_empty'];
         empty = dataLang['riwayat']['empty'];
+        search_history = dataLang['riwayat']['search_history'];
       });
     }
   }
@@ -225,6 +230,16 @@ class _HistoryPageState extends State<HistoryPage> {
       }
     } catch (e) {
       print(e);
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Gagal memuat riwayat, sialahkan cek koneksi anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.orangeAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
     }
     return _listDaily;
   }
@@ -271,6 +286,16 @@ class _HistoryPageState extends State<HistoryPage> {
       }
     } catch (e) {
       print(e);
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Gagal memuat riwayat, sialahkan cek koneksi anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.orangeAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
     }
     return _listMontly;
   }
@@ -317,6 +342,16 @@ class _HistoryPageState extends State<HistoryPage> {
       }
     } catch (e) {
       print(e);
+      setState(() {
+        Fluttertoast.showToast(
+            msg: 'Gagal memuat riwayat, sialahkan cek koneksi anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.orangeAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      });
     }
     return _listAll;
   }
@@ -345,9 +380,9 @@ class _HistoryPageState extends State<HistoryPage> {
               textColor: Colors.white,
               fontSize: 16);
         });
-        tabAll = true;
-        tabDaily = true;
-        tabMontly = true;
+        // tabAll = true;
+        // tabDaily = true;
+        // tabMontly = true;
         noDataLayout = false;
       } else {
         setState(() {
@@ -519,6 +554,8 @@ class _HistoryPageState extends State<HistoryPage> {
                         tabDaily = false;
                         tabMontly = false;
                         noDataLayout = false;
+
+                        searchController.clear();
                       });
                     },
                     child: Container(
@@ -563,6 +600,8 @@ class _HistoryPageState extends State<HistoryPage> {
                           tabDaily = true;
                           tabMontly = false;
                           noDataLayout = false;
+
+                          searchController.clear();
                         },
                       );
                     },
@@ -610,6 +649,8 @@ class _HistoryPageState extends State<HistoryPage> {
                         tabDaily = false;
                         tabMontly = true;
                         noDataLayout = false;
+
+                        searchController.clear();
                       });
                     },
                     child: Container(
@@ -662,6 +703,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   ],
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: TextFormField(
+                controller: searchController,
                 onFieldSubmitted: (value) {
                   if (value.isNotEmpty) {
                     getListAllByName(value);
@@ -681,7 +723,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     prefixIcon: Icon(Icons.search_outlined),
-                    hintText: "Cari Riwayat E-CM",
+                    hintText: search_history,
                     hintStyle: TextStyle(
                         color: Colors.black38,
                         fontFamily: 'Poppins',
@@ -1060,7 +1102,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: 50,
-                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 5),
+                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
@@ -1308,7 +1350,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: 50,
-                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 5),
+                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [

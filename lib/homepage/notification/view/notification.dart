@@ -2,9 +2,12 @@
 
 import 'dart:convert';
 
+import 'package:e_cm/homepage/notification/model/notif_model_new.dart';
 import 'package:e_cm/homepage/notification/model/notifmodel.dart';
 import 'package:e_cm/homepage/notification/services/apinotif.dart';
+import 'package:e_cm/homepage/notification/services/get_list_nofit.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
+import 'package:e_cm/widget/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +33,7 @@ class _NotificationMemberState extends State<NotificationMember> {
   String approve_ecm = '';
   String one_hour = '';
   String one_day_ago = '';
-
+  String no_notification = '';
   String sent_you_ecm = '';
   String review = '';
   String approve = '';
@@ -79,6 +82,7 @@ class _NotificationMemberState extends State<NotificationMember> {
         approved = dataLang['notifikasi_tl']['approved'];
         loading = dataLang['notifikasi_tl']['loading'];
         mark_as_read = dataLang['notifikasi_tl']['mark_as_read'];
+        no_notification = dataLang['notifikasi_tl']['no_notification'];
       });
     }
   }
@@ -102,6 +106,7 @@ class _NotificationMemberState extends State<NotificationMember> {
         approved = dataLang['notifikasi_tl']['approved'];
         loading = dataLang['notifikasi_tl']['loading'];
         mark_as_read = dataLang['notifikasi_tl']['mark_as_read'];
+        no_notification = dataLang['notifikasi_tl']['no_notification'];
       });
     }
   }
@@ -121,6 +126,7 @@ class _NotificationMemberState extends State<NotificationMember> {
   }
 
   List<NotificationModel> listNotificationEcm = [];
+  List<NotifModelNew> listNotifNew = [];
 
   Future getListNotif() async {
     final prefs = await _prefs;
@@ -131,6 +137,42 @@ class _NotificationMemberState extends State<NotificationMember> {
         await notifikasiService.getNotificationData(tokenUser, userId);
 
     return notifikasiService.getNotificationData(tokenUser, userId);
+  }
+
+  Future<List<NotifModelNew>> getListNotifNew() async {
+    final SharedPreferences prefs = await _prefs;
+    String tokenUser = SharedPrefsUtil.getTokenUser();
+    String idUser = SharedPrefsUtil.getIdUser();
+    print("idUser = " + idUser.toString());
+    try {
+      var response = await getListNotification(idUser, tokenUser);
+      if (response['response']['status'] == 200) {
+        setStateIfMounted(() {
+          var data = response['data'] as List;
+          listNotifNew = data.map((e) => NotifModelNew.fromJson(e)).toList();
+          print("===== list approved =====");
+          print(data.length);
+          // print(response['data']);
+          print("===== || =====");
+        });
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Periksa jaringan internet anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.white,
+            fontSize: 16);
+      }
+    } catch (e) {
+      print("approved exception $e");
+    }
+    return listNotifNew;
+  }
+
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
   }
 
   // String bahasa = "Bahasa Indonesia";
@@ -216,131 +258,102 @@ class _NotificationMemberState extends State<NotificationMember> {
 
   @override
   void initState() {
-    getListNotif();
     super.initState();
+    // getListNotif();
+    getListNotifNew();
     setBahasa();
     setLang();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 40, 24, 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(all_notification,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 1,
+          backgroundColor: Colors.white,
+          title: Text(all_notification,
+              style: TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 16,
+                  color: Color(0xff404446),
+                  fontWeight: FontWeight.w700)),
+          actions: [
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(
+                  right: 16,
+                ),
+                child: InkWell(
+                  onTap: () => markAsRead(),
+                  child: Text(mark_read,
                       style: TextStyle(
                           fontFamily: 'Rubik',
-                          fontSize: 16,
-                          color: Color(0xff404446),
-                          fontWeight: FontWeight.w700)),
-                  InkWell(
-                    onTap: () {
-                      markAsRead();
-                    },
-                    child: Text(mark_read,
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 12,
-                            color: Color(0xff00AEDB))),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(
-              color: Colors.black54,
-            ),
-            Container(
-              padding: EdgeInsets.all(16),
-              child: FutureBuilder(
-                future: getListNotif(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text(notification);
-                  }
-
-                  return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: listNotificationEcm.length,
-                    itemBuilder: (context, i) {
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(listNotificationEcm[i].foto),
-                            ),
-                            SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.79,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(listNotificationEcm[i].nama,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.blueAccent)),
-                                      Text(approve_ecm,
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.grey))
-                                    ],
-                                  ),
-                                ),
-                                // RichText(
-                                //   textAlign: TextAlign.center,
-                                //   text: TextSpan(
-                                //     style: TextStyle(
-                                //       color: Colors.black,
-                                //       fontSize: 14.0,
-                                //     ),
-                                //     children: [
-                                //       TextSpan(
-                                //         text: listNotificationEcm[i].nama,
-                                //         style: TextStyle(
-                                //             fontSize: 14,
-                                //             fontWeight: FontWeight.bold,
-                                //             color: Colors.blueAccent),
-                                //       ),
-                                //       TextSpan(text: " "),
-                                //       TextSpan(
-                                //         text: approve_ecm,
-                                //         style: TextStyle(
-                                //             fontSize: 14, color: Colors.grey),
-                                //       )
-                                //     ],
-                                //   ),
-                                // ),
-                                Text(
-                                  listNotificationEcm[i].waktu,
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.grey),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
+                          fontSize: 12,
+                          color: Color(0xff00AEDB))),
+                ),
               ),
             ),
           ],
+        ),
+        backgroundColor: Colors.white,
+        body: Container(
+          padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
+          child: listNotifNew.isEmpty
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  child: Text(no_notification))
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: listNotifNew.length,
+                  itemBuilder: (context, i) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: NetworkImageWidget(
+                                  imageUri: listNotifNew[i].photo.toString()),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.79,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(listNotifNew[i].nama.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blueAccent)),
+                                    Text(approve_ecm,
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.grey))
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                listNotifNew[i].waktu.toString(),
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
         ),
       ),
     );
