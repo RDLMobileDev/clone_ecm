@@ -73,8 +73,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
       adminCost = '0';
   bool btnCheck = false;
   String back = '';
-  
-  
+
   String checkKlasifikasiType = "";
 
   void checkKlasifikasiTypeValue() async {
@@ -128,7 +127,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
         breaktime = dataLang['step_6']['breaktime'];
         bm = dataLang['step_6']['bm'];
         in_house = dataLang['step_6']['in_house'];
-        cost = dataLang['step_6']['cost'];
+        cost = dataLang['step_6']['cost_'];
         out_house = dataLang['step_6']['out_house'];
         back = dataLang['step_6']['back'];
       });
@@ -203,7 +202,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
   int _newLineStopH = 0;
   int _lineStopM = 0;
   int _mp = 0;
-  int _costInHouse = 0;
+  double _costInHouse = 0.0;
   int _costOutHouse = 0;
 
   // Future<List<AllUserModel>> getAllUserData() async {
@@ -493,13 +492,39 @@ class _StepFillEnamState extends State<StepFillEnam> {
       //   _newLineStopH = _lineStopH + 1;
       //   _costInHouse = (_newLineStopH * _mp * 60000) + 30000;
       // }
-      _newLineStopH = _lineStopH * 60;
-      _costInHouse = ((_newLineStopH + _lineStopM) * 1000) +
-          int.parse(stepEnamModel.adminCost ?? "0");
-      prefs.setString("costInHouse", _costInHouse.toString());
-      prefs.setString("newLineStopH", (_newLineStopH + _lineStopM).toString());
-      print("===_newLineStopH ===");
-      print(_newLineStopH);
+      debugPrint("clasification type $checkKlasifikasiType for cost In House");
+      if (checkKlasifikasiType != "Breakdown Maintenance") {
+        if (stepEnamModel.hasilRepairH.toString() == "null") {
+          _costInHouse = (double.parse(
+                      (double.parse(stepEnamModel.hasilRepairM.toString()) / 60)
+                          .toStringAsFixed(1))) *
+                  60000 +
+              30000;
+          debugPrint(stepEnamModel.hasilRepairH.toString());
+
+          prefs.setString("costInHouse", _costInHouse.toString());
+        } else {
+          _costInHouse = (double.parse(stepEnamModel.hasilRepairH.toString()) +
+                      double.parse(
+                          (double.parse(stepEnamModel.hasilRepairM.toString()) /
+                                  60)
+                              .toStringAsFixed(1))) *
+                  60000 +
+              30000;
+          debugPrint(stepEnamModel.hasilRepairH.toString());
+
+          prefs.setString("costInHouse", _costInHouse.toString());
+        }
+      } else {
+        _newLineStopH = _lineStopH * 60;
+        _costInHouse = ((_newLineStopH + _lineStopM) * 1000) +
+            double.parse(stepEnamModel.adminCost ?? "0");
+        prefs.setString("costInHouse", _costInHouse.toString());
+        prefs.setString(
+            "newLineStopH", (_newLineStopH + _lineStopM).toString());
+        print("===_newLineStopH ===");
+        print(_newLineStopH);
+      }
     });
   }
 
@@ -701,7 +726,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
     String repair = stepEnamModel.repairH.toString() + ":" + minuteRepair;
     String totalcr =
         stepEnamModel.hasilRepairH.toString() + ":" + minuteTotalCr;
-    String breaks = _counter.toString();
+    String breaks = _counter.toString() + ":" + _counterMinutes.toString();
     String lineStart = stepEnamModel.hasilRepairH.toString() +
         ":" +
         stepEnamModel.hasilRepairM.toString();
@@ -727,7 +752,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
           check,
           repair,
           totalcr,
-          breaks,
+          checkKlasifikasiType != "Breakdown Maintenance" ? "0:0" : breaks,
           lineStart,
           lineStop,
           ttlLineStop,
@@ -806,10 +831,13 @@ class _StepFillEnamState extends State<StepFillEnam> {
     }
   }
 
+  checkKlasifikasi() async {}
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getAllUserData();
     getStep6();
     setBahasa();
@@ -1157,7 +1185,6 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         stepEnamModel.hasilRepairH.toString() == "null"
                             ? "0 H"
                             : stepEnamModel.hasilRepairH.toString() + " H",
-                            
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF979C9E),
@@ -1795,9 +1822,13 @@ class _StepFillEnamState extends State<StepFillEnam> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Center(
                       child: Text(
-                        _newLineStopH == 0
-                            ? "$prefNewLineStop  H"
-                            : "${(((double.parse(stepEnamModel.hasilRepairH.toString()) + double.parse(stepEnamModel.hasilRepairM.toString())/60))).toStringAsFixed(1)} H",
+                        checkKlasifikasiType != "Breakdown Maintenance"
+                            ? stepEnamModel.hasilRepairH.toString() == "null"
+                                ? "${(double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
+                                : "${(double.parse(stepEnamModel.hasilRepairH.toString()) + double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
+                            : _newLineStopH == 0
+                                ? "${(_lineStopM.toDouble() / 60).toStringAsFixed(1)} H"
+                                : "${(_lineStopH.toDouble() + (_lineStopM.toDouble() / 60)).toStringAsFixed(1)} H",
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontSize: 14,
@@ -1901,29 +1932,59 @@ class _StepFillEnamState extends State<StepFillEnam> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF979C9E)),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Center(
-                child: Text(
-                  adminCost == "" || adminCost.isEmpty || adminCost == "0"
-                      ? "Total = Rp. " +
-                          NumberFormat.currency(
-                                  locale: 'id', decimalDigits: 0, symbol: '')
-                              .format(_costInHouse)
-                      : "Total = Rp. " +
-                          NumberFormat.currency(
-                                  locale: 'id', decimalDigits: 0, symbol: '')
-                              .format(int.parse(adminCost)),
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 16,
-                      color: Color(0xFF404446),
-                      fontWeight: FontWeight.w700),
+            InkWell(
+              onTap: () => resultCostInHouse(),
+              child: Container(
+                margin: const EdgeInsets.only(top: 4),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFF979C9E)),
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+                child: Center(
+                  child: Text(
+                    adminCost == "" || adminCost.isEmpty || adminCost == "0"
+                        ? "Total = Rp. " +
+                            NumberFormat.currency(
+                                    locale: 'id', decimalDigits: 0, symbol: '')
+                                .format(_costInHouse)
+                        : "Total = Rp. " +
+                            NumberFormat.currency(
+                                    locale: 'id', decimalDigits: 0, symbol: '')
+                                .format(double.parse(adminCost)),
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        color: Color(0xFF404446),
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: checkKlasifikasiType != "Breakdown Maintenance"
+                  ? true
+                  : false,
+              child: InkWell(
+                onTap: () => resultCostInHouse(),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 6),
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      border: Border.all(color: Colors.blueAccent),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: Center(
+                    child: Text(
+                      "Hitung Cost In-House",
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -2260,17 +2321,22 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                   InkWell(
                     onTap: () {
-                      if (breakTimeFill == true) {
+                      if (checkKlasifikasiType != "Breakdown Maintenance") {
                         postFillEnam();
                       } else {
-                        Fluttertoast.showToast(
-                            msg: 'Waktu istirahat masih kosong',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 2,
-                            backgroundColor: Colors.greenAccent,
-                            textColor: Colors.white,
-                            fontSize: 16);
+                        if (breakTimeFill == true) {
+                          postFillEnam();
+                        } else {
+                          // postFillEnam();
+                          Fluttertoast.showToast(
+                              msg: 'Waktu istirahat masih kosong',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        }
                       }
                     },
                     child: Container(
