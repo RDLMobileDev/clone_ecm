@@ -460,6 +460,15 @@ class _FillNewState extends State<FillNew> {
           MaterialPageRoute(builder: (context) => Dashboard()),
           ModalRoute.withName("/"));
     }
+
+    isStepSatuFill.value = true;
+    isStepDuaFill.value = false;
+    isStepTigaFill.value = false;
+    isStepEmpatFill.value = false;
+    isStepLimaFill.value = false;
+    isStepEnamFill.value = false;
+    isStepTujuhFill.value = false;
+    isStepDelapanFill.value = false;
   }
 
   void removeDataGagalEcm() async {
