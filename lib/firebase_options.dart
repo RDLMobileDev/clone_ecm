@@ -50,11 +50,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAYj3mspk2pYyz2KrfPS_fJwc1tIzlaZbg',
-    appId: '1:814957090307:ios:fde454834b6217ebfa6036',
+    appId: '1:814957090307:ios:8a7c071cbe085e0dfa6036',
     messagingSenderId: '814957090307',
     projectId: 'rdl-e-cm',
     storageBucket: 'rdl-e-cm.appspot.com',
-    iosClientId: '814957090307-iu24n9dnc4u5id9r4rblvvli23m7q923.apps.googleusercontent.com',
-    iosBundleId: 'com.ragdalion.eCm',
+    iosClientId: '814957090307-cik02318tupbshum2sq0k9tsu0f5pg9l.apps.googleusercontent.com',
+    iosBundleId: 'com.rdl.ecm',
   );
 }
