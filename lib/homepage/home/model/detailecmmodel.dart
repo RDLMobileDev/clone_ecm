@@ -20,6 +20,7 @@ class DetailEcmModel {
   String? analisisWhy2;
   String? analisisWhy3;
   String? analisisWhy4;
+  String? analisisWhy5;
   String? analisisHow;
   String? kaizenIdea;
   String? kaizenCheckH;
@@ -62,6 +63,7 @@ class DetailEcmModel {
       this.analisisWhy2,
       this.analisisWhy3,
       this.analisisWhy4,
+      this.analisisWhy5,
       this.analisisHow,
       this.kaizenIdea,
       this.kaizenCheckH,
@@ -105,6 +107,7 @@ class DetailEcmModel {
       analisisWhy2: json['analisis_why2'].toString(),
       analisisWhy3: json['analisis_why3'].toString(),
       analisisWhy4: json['analisis_why4'].toString(),
+      analisisWhy5: json['analisis_why5'].toString(),
       analisisHow: json['analisis_how'].toString(),
       kaizenIdea: json['kaizen_idea'].toString(),
       kaizenCheckH: json['kaizen_check_h'].toString(),
@@ -149,6 +152,7 @@ class DetailEcmModel {
         'analisis_why2': analisisWhy2,
         'analisis_why3': analisisWhy3,
         'analisis_why4': analisisWhy4,
+        'analisis_why5': analisisWhy5,
         'analisis_how': analisisHow,
         'kaizen_idea': kaizenIdea,
         'kaizen_check_h': kaizenCheckH,
