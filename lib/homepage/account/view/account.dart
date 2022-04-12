@@ -377,46 +377,52 @@ class _AccountMemberState extends State<AccountMember> {
                 margin: EdgeInsets.only(bottom: 16),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Icon(
-                        Icons.translate,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
+                    Row(
+                      children: [
                         Container(
-                          margin: EdgeInsets.only(left: 14),
-                          width: MediaQuery.of(context).size.width * 0.595,
-                          child: Text(
-                            bahasa,
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                color: Colors.lightBlue,
-                                fontWeight: FontWeight.bold),
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.lightBlue,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
+                          child: Icon(
+                            Icons.translate,
+                            color: Colors.white,
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 14),
-                          width: MediaQuery.of(context).size.width * 0.595,
-                          child: Text(
-                            bahasa == 'Bahasa Indonesia'
-                                ? "Gunakan bahasa berbeda pada app ini"
-                                : "Use app in another language",
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 12,
-                              color: Colors.grey,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(left: 14),
+                              width: MediaQuery.of(context).size.width * 0.55,
+                              child: Text(
+                                bahasa,
+                                style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    fontSize: 16,
+                                    color: Colors.lightBlue,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
+                            Container(
+                              margin: EdgeInsets.only(left: 14),
+                              width: MediaQuery.of(context).size.width * 0.55,
+                              child: Text(
+                                bahasa == 'Bahasa Indonesia'
+                                    ? "Gunakan bahasa berbeda pada app ini"
+                                    : "Use app in another language",
+                                style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -508,7 +514,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 child: Text(
-                  "App Version 1.0.7",
+                  "App Version 1.0.8",
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Colors.black54,
