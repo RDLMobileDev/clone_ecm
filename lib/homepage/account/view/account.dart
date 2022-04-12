@@ -508,7 +508,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 child: Text(
-                  "App Version 1.0.3",
+                  "App Version 1.0.6",
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Colors.black54,
