@@ -203,12 +203,34 @@ class _StepFillTigaState extends State<StepFillTiga> {
     }
   }
 
+  getDataStep3() async {
+    final prefs = await _prefs;
+
+    if (prefs.getString("why1") != null) {
+      why1Controller.text = prefs.getString("why1").toString();
+    }
+
+    if (prefs.getString("why2") != null) {
+      why2Controller.text = prefs.getString("why2").toString();
+    }
+    if (prefs.getString("why3") != null) {
+      why3Controller.text = prefs.getString("why3").toString();
+    }
+    if (prefs.getString("why4") != null) {
+      why4Controller.text = prefs.getString("why4").toString();
+    }
+    if (prefs.getString("howC") != null) {
+      howController.text = prefs.getString("howC").toString();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getStep3DataForEdit();
     setLang();
     setBahasa();
+    getDataStep3();
   }
 
   @override

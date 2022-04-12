@@ -564,15 +564,15 @@ class _HistoryReviewState extends State<HistoryReview> {
           children: [
             SizedBox(
               width: 100,
-              child: Text("How"),
+              child: Text("Why 5"),
             ),
             Text(" : "),
             Expanded(
               flex: 4,
               child: Text(
-                detailEcmModel.analisisHow.toString() == "null"
+                detailEcmModel.analisisWhy5.toString() == "null"
                     ? " - "
-                    : detailEcmModel.analisisHow.toString(),
+                    : detailEcmModel.analisisWhy5.toString(),
               ),
             )
           ],

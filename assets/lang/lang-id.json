@@ -65,7 +65,8 @@
       "show": "Data bulanan",
       "his_empty": "Tidak ada data",
       "empty": "Tidak ada data",
-      "search_history":"Cari riwayat ecm"
+      "search_history":"Cari riwayat ecm",
+      "connection_lost":"Gagal memuat riwayat, sialahkan cek koneksi anda"
     },
     "detail": {
       "preventive": "Preventive Maintenance",

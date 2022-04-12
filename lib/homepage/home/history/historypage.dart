@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:date_time_format/src/date_time_extension_methods.dart';
 import 'package:e_cm/homepage/home/history/historydetailpage.dart';
@@ -29,7 +31,8 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
-  bool noDataLayout = false;
+  bool noDataLayout = false, dataSearch = false;
+  bool conectionStatus = true;
 
   String history = '';
   String all = 'Semua';
@@ -46,6 +49,7 @@ class _HistoryPageState extends State<HistoryPage> {
   String his_empty = 'Riwayat ';
   String empty = ' kosong';
   String search_history = '';
+  String connectionString = "";
 
   TextEditingController searchController = TextEditingController();
 
@@ -91,6 +95,7 @@ class _HistoryPageState extends State<HistoryPage> {
         his_empty = dataLang['riwayat']['his_empty'];
         empty = dataLang['riwayat']['empty'];
         search_history = dataLang['riwayat']['search_history'];
+        connectionString = dataLang['riwayat']['connection_lost'];
       });
     }
   }
@@ -116,6 +121,7 @@ class _HistoryPageState extends State<HistoryPage> {
         his_empty = dataLang['riwayat']['his_empty'];
         empty = dataLang['riwayat']['empty'];
         search_history = dataLang['riwayat']['search_history'];
+        connectionString = dataLang['riwayat']['connection_lost'];
       });
     }
   }
@@ -138,6 +144,7 @@ class _HistoryPageState extends State<HistoryPage> {
   List<HistoryDaily> _listDaily = [];
   List<HistoryAll> _listAll = [];
   List<HistoryMonthly> _listMontly = [];
+  List<HistoryAll> _listSearch = [];
   DateTime _fromDate = DateTime.now();
   String dateSelected = '';
   String monthSelected = '';
@@ -231,8 +238,9 @@ class _HistoryPageState extends State<HistoryPage> {
     } catch (e) {
       print(e);
       setState(() {
+        conectionStatus = false;
         Fluttertoast.showToast(
-            msg: 'Gagal memuat riwayat, sialahkan cek koneksi anda',
+            msg: connectionString,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -287,8 +295,9 @@ class _HistoryPageState extends State<HistoryPage> {
     } catch (e) {
       print(e);
       setState(() {
+        conectionStatus = false;
         Fluttertoast.showToast(
-            msg: 'Gagal memuat riwayat, sialahkan cek koneksi anda',
+            msg: connectionString,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -343,8 +352,9 @@ class _HistoryPageState extends State<HistoryPage> {
     } catch (e) {
       print(e);
       setState(() {
+        conectionStatus = false;
         Fluttertoast.showToast(
-            msg: 'Gagal memuat riwayat, sialahkan cek koneksi anda',
+            msg: connectionString,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -364,33 +374,39 @@ class _HistoryPageState extends State<HistoryPage> {
       if (response['response']['status'] == 200) {
         setStateIfMounted(() {
           var data = response['data'] as List;
-          _listAll = data.map((e) => HistoryAll.fromJson(e)).toList();
-          print("===== list data all =====");
-          print(data.length);
+          _listSearch = data.map((e) => HistoryAll.fromJson(e)).toList();
+          print("===== list data search =====");
+          print(data);
           // print(response['data']);
           print("===== || =====");
+          dataSearch = true;
+          noDataLayout = false;
+          tabAll = false;
+          tabDaily = false;
+          tabMontly = false;
         });
-        setState(() {
-          Fluttertoast.showToast(
-              msg: 'Showing all of history E-CM Card',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        // setState(() {
+        //   Fluttertoast.showToast(
+        //       msg: 'Showing all of history E-CM Card',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.green,
+        //       textColor: Colors.white,
+        //       fontSize: 16);
+        // });
         // tabAll = true;
         // tabDaily = true;
         // tabMontly = true;
-        noDataLayout = false;
+
       } else {
         setState(() {
           tabAll = false;
           tabDaily = false;
           tabMontly = false;
           noDataLayout = true;
-
+          dataSearch = false;
+          print("===== data search not found =====");
           // Fluttertoast.showToast(
           //     msg: 'E-CM Card history not found',
           //     toastLength: Toast.LENGTH_SHORT,
@@ -741,157 +757,362 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
             Visibility(
+              visible: dataSearch,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SingleChildScrollView(
+                    child: conectionStatus == true
+                        ? Container(
+                            // color: Colors.redAccent,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 8),
+                            child: _listSearch.isEmpty
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    itemCount: _listSearch.isEmpty
+                                        ? 0
+                                        : _listSearch.length,
+                                    itemBuilder: (context, i) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HistoryDetailPage(
+                                                        notifId: _listSearch[i]
+                                                            .tEcmId
+                                                            .toString(),
+                                                        isShowButton: true,
+                                                      )));
+                                        },
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          elevation: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                          width: 48,
+                                                          height: 48,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            child: NetworkImageWidget(
+                                                                imageUri:
+                                                                    _listSearch[
+                                                                            i]
+                                                                        .foto),
+                                                          )),
+                                                      const SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Container(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    child: Text(
+                                                                        _listSearch[i]
+                                                                            .nama
+                                                                            .toString(),
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                Color(0xFF00AEDB),
+                                                                            fontWeight: FontWeight.w700)),
+                                                                  ),
+                                                                  const Text(
+                                                                      'Making E-CM Card',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Color(0xFF6C7072))),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.3,
+                                                                    child: Text(
+                                                                      _listSearch[
+                                                                              i]
+                                                                          .problem
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontFamily:
+                                                                              'Rubik',
+                                                                          fontSize:
+                                                                              10,
+                                                                          color:
+                                                                              Colors.black87),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    _listSearch[
+                                                                            i]
+                                                                        .waktu
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontFamily:
+                                                                            'Rubik',
+                                                                        fontSize:
+                                                                            10,
+                                                                        color: Color(
+                                                                            0xFF979C9E)),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_rounded,
+                                                    color: Colors.black54,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          )
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: Center(
+                              child: Text(connectionString,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 12,
+                                      color: Colors.black87)),
+                            ),
+                          ),
+                  )
+                ],
+              ),
+            ),
+            Visibility(
                 visible: tabAll,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SingleChildScrollView(
-                      child: Container(
-                        // color: Colors.redAccent,
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        width: MediaQuery.of(context).size.width,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                        child: _listAll.isEmpty
-                            ? const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                // physics: NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    _listAll.isEmpty ? 0 : _listAll.length,
-                                itemBuilder: (context, i) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HistoryDetailPage(
-                                                    notifId: _listAll[i]
-                                                        .tEcmId
-                                                        .toString(),
-                                                    isShowButton: true,
-                                                  )));
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      elevation: 2,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
+                      child: conectionStatus == true
+                          ? Container(
+                              // color: Colors.redAccent,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              height: MediaQuery.of(context).size.height * 0.8,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 3, horizontal: 8),
+                              child: _listAll.isEmpty
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      // physics: NeverScrollableScrollPhysics(),
+                                      itemCount: _listAll.isEmpty
+                                          ? 0
+                                          : _listAll.length,
+                                      itemBuilder: (context, i) {
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoryDetailPage(
+                                                          notifId: _listAll[i]
+                                                              .tEcmId
+                                                              .toString(),
+                                                          isShowButton: true,
+                                                        )));
+                                          },
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            elevation: 2,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                      width: 48,
-                                                      height: 48,
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4),
-                                                        child:
-                                                            NetworkImageWidget(
-                                                                imageUri:
-                                                                    _listAll[i]
-                                                                        .foto),
-                                                      )),
-                                                  const SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Container(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                    child: Row(
                                                       children: [
                                                         Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.6,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Container(
-                                                                child: Text(
-                                                                    _listAll[i]
-                                                                        .nama
-                                                                        .toString(),
-                                                                    style: const TextStyle(
-                                                                        color: Color(
-                                                                            0xFF00AEDB),
-                                                                        fontWeight:
-                                                                            FontWeight.w700)),
-                                                              ),
-                                                              const Text(
-                                                                  'Making E-CM Card',
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xFF6C7072))),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                            width: 48,
+                                                            height: 48,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4),
+                                                              child: NetworkImageWidget(
+                                                                  imageUri:
+                                                                      _listAll[
+                                                                              i]
+                                                                          .foto),
+                                                            )),
                                                         const SizedBox(
-                                                          height: 8,
+                                                          width: 16,
                                                         ),
                                                         Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.6,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Container(
                                                                 width: MediaQuery.of(
                                                                             context)
                                                                         .size
                                                                         .width *
-                                                                    0.3,
-                                                                child: Text(
-                                                                  _listAll[i]
-                                                                      .problem
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      fontFamily:
-                                                                          'Rubik',
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Colors
-                                                                          .black87),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
+                                                                    0.6,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      child: Text(
+                                                                          _listAll[i]
+                                                                              .nama
+                                                                              .toString(),
+                                                                          style: const TextStyle(
+                                                                              color: Color(0xFF00AEDB),
+                                                                              fontWeight: FontWeight.w700)),
+                                                                    ),
+                                                                    const Text(
+                                                                        'Making E-CM Card',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Color(0xFF6C7072))),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                              Text(
-                                                                _listAll[i]
-                                                                    .waktu
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    fontFamily:
-                                                                        'Rubik',
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Color(
-                                                                        0xFF979C9E)),
+                                                              const SizedBox(
+                                                                height: 8,
+                                                              ),
+                                                              Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.6,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.3,
+                                                                      child:
+                                                                          Text(
+                                                                        _listAll[i]
+                                                                            .problem
+                                                                            .toString(),
+                                                                        style: const TextStyle(
+                                                                            fontFamily:
+                                                                                'Rubik',
+                                                                            fontSize:
+                                                                                10,
+                                                                            color:
+                                                                                Colors.black87),
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _listAll[
+                                                                              i]
+                                                                          .waktu
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontFamily:
+                                                                              'Rubik',
+                                                                          fontSize:
+                                                                              10,
+                                                                          color:
+                                                                              Color(0xFF979C9E)),
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ],
                                                           ),
@@ -899,23 +1120,32 @@ class _HistoryPageState extends State<HistoryPage> {
                                                       ],
                                                     ),
                                                   ),
+                                                  Container(
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  )
                                                 ],
                                               ),
                                             ),
-                                            Container(
-                                              child: Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                color: Colors.black54,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: Center(
+                                child: Text(connectionString,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 12,
+                                        color: Colors.black87)),
                               ),
-                      ),
+                            ),
                     )
                   ],
                 )),
@@ -925,155 +1155,160 @@ class _HistoryPageState extends State<HistoryPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SingleChildScrollView(
-                      child: Container(
-                        // color: Colors.amberAccent,
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        width: MediaQuery.of(context).size.width,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                        child: _listMontly.isEmpty
-                            ? const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                // physics: NeverScrollableScrollPhysics(),
-                                itemCount: _listMontly.isEmpty
-                                    ? 0
-                                    : _listMontly.length,
-                                itemBuilder: (context, i) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HistoryDetailPage(
-                                                    notifId: _listMontly[i]
-                                                        .tEcmId
-                                                        .toString(),
-                                                    isShowButton: true,
-                                                  )));
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      elevation: 2,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
+                      child: conectionStatus == true
+                          ? Container(
+                              // color: Colors.amberAccent,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 3, horizontal: 8),
+                              child: _listMontly.isEmpty
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      // physics: NeverScrollableScrollPhysics(),
+                                      itemCount: _listMontly.isEmpty
+                                          ? 0
+                                          : _listMontly.length,
+                                      itemBuilder: (context, i) {
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoryDetailPage(
+                                                          notifId:
+                                                              _listMontly[i]
+                                                                  .tEcmId
+                                                                  .toString(),
+                                                          isShowButton: true,
+                                                        )));
+                                          },
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            elevation: 2,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                      width: 48,
-                                                      height: 48,
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4),
-                                                        child:
-                                                            NetworkImageWidget(
-                                                                imageUri:
-                                                                    _listMontly[
-                                                                            i]
-                                                                        .foto),
-                                                      )),
-                                                  const SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Container(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                    child: Row(
                                                       children: [
                                                         Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.6,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Container(
-                                                                child: Text(
-                                                                    _listMontly[
-                                                                            i]
-                                                                        .nama
-                                                                        .toString(),
-                                                                    style: const TextStyle(
-                                                                        color: Color(
-                                                                            0xFF00AEDB),
-                                                                        fontWeight:
-                                                                            FontWeight.w700)),
-                                                              ),
-                                                              const Text(
-                                                                  'Making E-CM Card',
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xFF6C7072))),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                            width: 48,
+                                                            height: 48,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4),
+                                                              child: NetworkImageWidget(
+                                                                  imageUri:
+                                                                      _listMontly[
+                                                                              i]
+                                                                          .foto),
+                                                            )),
                                                         const SizedBox(
-                                                          height: 8,
+                                                          width: 16,
                                                         ),
                                                         Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.6,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Container(
                                                                 width: MediaQuery.of(
                                                                             context)
                                                                         .size
                                                                         .width *
-                                                                    0.3,
-                                                                child: Text(
-                                                                  _listMontly[i]
-                                                                      .problem
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      fontFamily:
-                                                                          'Rubik',
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Colors
-                                                                          .black87),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
+                                                                    0.6,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      child: Text(
+                                                                          _listMontly[i]
+                                                                              .nama
+                                                                              .toString(),
+                                                                          style: const TextStyle(
+                                                                              color: Color(0xFF00AEDB),
+                                                                              fontWeight: FontWeight.w700)),
+                                                                    ),
+                                                                    const Text(
+                                                                        'Making E-CM Card',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Color(0xFF6C7072))),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                              Text(
-                                                                _listMontly[i]
-                                                                    .waktu
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    fontFamily:
-                                                                        'Rubik',
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Color(
-                                                                        0xFF979C9E)),
+                                                              const SizedBox(
+                                                                height: 8,
+                                                              ),
+                                                              Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.6,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.3,
+                                                                      child:
+                                                                          Text(
+                                                                        _listMontly[i]
+                                                                            .problem
+                                                                            .toString(),
+                                                                        style: const TextStyle(
+                                                                            fontFamily:
+                                                                                'Rubik',
+                                                                            fontSize:
+                                                                                10,
+                                                                            color:
+                                                                                Colors.black87),
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _listMontly[
+                                                                              i]
+                                                                          .waktu
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontFamily:
+                                                                              'Rubik',
+                                                                          fontSize:
+                                                                              10,
+                                                                          color:
+                                                                              Color(0xFF979C9E)),
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ],
                                                           ),
@@ -1081,23 +1316,32 @@ class _HistoryPageState extends State<HistoryPage> {
                                                       ],
                                                     ),
                                                   ),
+                                                  Container(
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  )
                                                 ],
                                               ),
                                             ),
-                                            Container(
-                                              child: Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                color: Colors.black54,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: Center(
+                                child: Text(connectionString,
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 12,
+                                        color: Colors.black87)),
                               ),
-                      ),
+                            ),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
@@ -1175,149 +1419,161 @@ class _HistoryPageState extends State<HistoryPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SingleChildScrollView(
-                    child: Container(
-                      // color: Colors.amberAccent,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                      child: _listDaily.isEmpty
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              // physics: NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  _listDaily.isEmpty ? 0 : _listDaily.length,
-                              itemBuilder: (context, i) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                HistoryDetailPage(
-                                                  notifId: _listDaily[i]
-                                                      .tEcmId
-                                                      .toString(),
-                                                  isShowButton: true,
-                                                )));
-                                  },
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    elevation: 2,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
+                    child: conectionStatus == true
+                        ? Container(
+                            // color: Colors.amberAccent,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 8),
+                            child: _listDaily.isEmpty
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    itemCount: _listDaily.isEmpty
+                                        ? 0
+                                        : _listDaily.length,
+                                    itemBuilder: (context, i) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HistoryDetailPage(
+                                                        notifId: _listDaily[i]
+                                                            .tEcmId
+                                                            .toString(),
+                                                        isShowButton: true,
+                                                      )));
+                                        },
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          elevation: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Container(
-                                                    width: 48,
-                                                    height: 48,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                      child: NetworkImageWidget(
-                                                          imageUri:
-                                                              _listDaily[i]
-                                                                  .foto),
-                                                    )),
-                                                const SizedBox(
-                                                  width: 16,
-                                                ),
-                                                Container(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                  child: Row(
                                                     children: [
                                                       Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.6,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Container(
-                                                              child: Text(
-                                                                  _listDaily[i]
-                                                                      .nama
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      color: Color(
-                                                                          0xFF00AEDB),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                            ),
-                                                            const Text(
-                                                                'Making E-CM Card',
-                                                                style: TextStyle(
-                                                                    color: Color(
-                                                                        0xFF6C7072))),
-                                                          ],
-                                                        ),
-                                                      ),
+                                                          width: 48,
+                                                          height: 48,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            child: NetworkImageWidget(
+                                                                imageUri:
+                                                                    _listDaily[
+                                                                            i]
+                                                                        .foto),
+                                                          )),
                                                       const SizedBox(
-                                                        height: 8,
+                                                        width: 16,
                                                       ),
                                                       Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.6,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Container(
                                                               width: MediaQuery.of(
                                                                           context)
                                                                       .size
                                                                       .width *
-                                                                  0.3,
-                                                              child: Text(
-                                                                _listDaily[i]
-                                                                    .problem
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    fontFamily:
-                                                                        'Rubik',
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Colors
-                                                                        .black87),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                                                  0.6,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    child: Text(
+                                                                        _listDaily[i]
+                                                                            .nama
+                                                                            .toString(),
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                Color(0xFF00AEDB),
+                                                                            fontWeight: FontWeight.w700)),
+                                                                  ),
+                                                                  const Text(
+                                                                      'Making E-CM Card',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Color(0xFF6C7072))),
+                                                                ],
                                                               ),
                                                             ),
-                                                            Text(
-                                                              _listDaily[i]
-                                                                  .waktu
-                                                                  .toString(),
-                                                              style: const TextStyle(
-                                                                  fontFamily:
-                                                                      'Rubik',
-                                                                  fontSize: 10,
-                                                                  color: Color(
-                                                                      0xFF979C9E)),
+                                                            const SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.3,
+                                                                    child: Text(
+                                                                      _listDaily[
+                                                                              i]
+                                                                          .problem
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontFamily:
+                                                                              'Rubik',
+                                                                          fontSize:
+                                                                              10,
+                                                                          color:
+                                                                              Colors.black87),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    _listDaily[
+                                                                            i]
+                                                                        .waktu
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontFamily:
+                                                                            'Rubik',
+                                                                        fontSize:
+                                                                            10,
+                                                                        color: Color(
+                                                                            0xFF979C9E)),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -1325,23 +1581,32 @@ class _HistoryPageState extends State<HistoryPage> {
                                                     ],
                                                   ),
                                                 ),
+                                                Container(
+                                                  child: Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_rounded,
+                                                    color: Colors.black54,
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            child: Icon(
-                                              Icons.arrow_forward_ios_rounded,
-                                              color: Colors.black54,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
+                          )
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: Center(
+                              child: Text(connectionString,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 12,
+                                      color: Colors.black87)),
                             ),
-                    ),
+                          ),
                   ),
                   InkWell(
                     onTap: () {

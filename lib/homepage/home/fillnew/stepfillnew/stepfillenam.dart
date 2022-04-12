@@ -1823,7 +1823,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     child: Center(
                       child: Text(
                         checkKlasifikasiType != "Breakdown Maintenance"
-                            ? stepEnamModel.hasilRepairH.toString() == "null"
+                            ? stepEnamModel.hasilRepairH.toString() == "0"
                                 ? "${(double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
                                 : "${(double.parse(stepEnamModel.hasilRepairH.toString()) + double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
                             : _newLineStopH == 0
