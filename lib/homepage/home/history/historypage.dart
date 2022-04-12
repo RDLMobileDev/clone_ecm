@@ -31,7 +31,7 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   String bahasa = "Bahasa Indonesia";
   bool bahasaSelected = false;
-  bool noDataLayout = false;
+  bool noDataLayout = false, dataSearch = false;
   bool conectionStatus = true;
 
   String history = '';
@@ -144,6 +144,7 @@ class _HistoryPageState extends State<HistoryPage> {
   List<HistoryDaily> _listDaily = [];
   List<HistoryAll> _listAll = [];
   List<HistoryMonthly> _listMontly = [];
+  List<HistoryAll> _listSearch = [];
   DateTime _fromDate = DateTime.now();
   String dateSelected = '';
   String monthSelected = '';
@@ -373,33 +374,39 @@ class _HistoryPageState extends State<HistoryPage> {
       if (response['response']['status'] == 200) {
         setStateIfMounted(() {
           var data = response['data'] as List;
-          _listAll = data.map((e) => HistoryAll.fromJson(e)).toList();
-          print("===== list data all =====");
-          print(data.length);
+          _listSearch = data.map((e) => HistoryAll.fromJson(e)).toList();
+          print("===== list data search =====");
+          print(data);
           // print(response['data']);
           print("===== || =====");
+          dataSearch = true;
+          noDataLayout = false;
+          tabAll = false;
+          tabDaily = false;
+          tabMontly = false;
         });
-        setState(() {
-          Fluttertoast.showToast(
-              msg: 'Showing all of history E-CM Card',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16);
-        });
+        // setState(() {
+        //   Fluttertoast.showToast(
+        //       msg: 'Showing all of history E-CM Card',
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.green,
+        //       textColor: Colors.white,
+        //       fontSize: 16);
+        // });
         // tabAll = true;
         // tabDaily = true;
         // tabMontly = true;
-        noDataLayout = false;
+
       } else {
         setState(() {
           tabAll = false;
           tabDaily = false;
           tabMontly = false;
           noDataLayout = true;
-
+          dataSearch = false;
+          print("===== data search not found =====");
           // Fluttertoast.showToast(
           //     msg: 'E-CM Card history not found',
           //     toastLength: Toast.LENGTH_SHORT,
@@ -747,6 +754,204 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: const Center(
                   child: Text("Data not found"),
                 ),
+              ),
+            ),
+            Visibility(
+              visible: dataSearch,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SingleChildScrollView(
+                    child: conectionStatus == true
+                        ? Container(
+                            // color: Colors.redAccent,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 8),
+                            child: _listSearch.isEmpty
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    itemCount: _listSearch.isEmpty
+                                        ? 0
+                                        : _listSearch.length,
+                                    itemBuilder: (context, i) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HistoryDetailPage(
+                                                        notifId: _listSearch[i]
+                                                            .tEcmId
+                                                            .toString(),
+                                                        isShowButton: true,
+                                                      )));
+                                        },
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          elevation: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                          width: 48,
+                                                          height: 48,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            child: NetworkImageWidget(
+                                                                imageUri:
+                                                                    _listSearch[
+                                                                            i]
+                                                                        .foto),
+                                                          )),
+                                                      const SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Container(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    child: Text(
+                                                                        _listSearch[i]
+                                                                            .nama
+                                                                            .toString(),
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                Color(0xFF00AEDB),
+                                                                            fontWeight: FontWeight.w700)),
+                                                                  ),
+                                                                  const Text(
+                                                                      'Making E-CM Card',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Color(0xFF6C7072))),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.3,
+                                                                    child: Text(
+                                                                      _listSearch[
+                                                                              i]
+                                                                          .problem
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontFamily:
+                                                                              'Rubik',
+                                                                          fontSize:
+                                                                              10,
+                                                                          color:
+                                                                              Colors.black87),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    _listSearch[
+                                                                            i]
+                                                                        .waktu
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontFamily:
+                                                                            'Rubik',
+                                                                        fontSize:
+                                                                            10,
+                                                                        color: Color(
+                                                                            0xFF979C9E)),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_rounded,
+                                                    color: Colors.black54,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          )
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: Center(
+                              child: Text(connectionString,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 12,
+                                      color: Colors.black87)),
+                            ),
+                          ),
+                  )
+                ],
               ),
             ),
             Visibility(
