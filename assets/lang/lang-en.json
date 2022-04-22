@@ -65,7 +65,8 @@
       "show": "Data monthly",
       "his_empty": "No data",
       "empty": "No data",
-      "search_history":"Search history E-CM"
+      "search_history":"Search history E-CM",
+      "connection_lost": "Failed to load history, please check your connection"
     },
     "detail": {
       "preventive": "Preventive Maintenance",

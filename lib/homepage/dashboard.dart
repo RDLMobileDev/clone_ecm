@@ -105,6 +105,14 @@ class _DashboardState extends State<Dashboard> {
         decoration: BoxDecoration(
           // ignore: prefer_const_literals_to_create_immutables
           color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
