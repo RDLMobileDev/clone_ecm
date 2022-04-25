@@ -3,7 +3,11 @@
 import 'dart:convert';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilltujuh.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/getstep6model.dart';
 import 'package:e_cm/homepage/home/model/vendorstep6model.dart';
@@ -14,6 +18,7 @@ import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -773,8 +778,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
           backgroundColor: Colors.greenAccent,
         );
 
-        isStepEnamFill.value = false;
-        isStepTujuhFill.value = true;
+        // isStepEnamFill = false;
+        // isStepTujuhFill = true;
+        Get.to(StepFillTujuh());
       } else {
         print(result);
         Fluttertoast.showToast(
@@ -848,938 +854,1248 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                improvement,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  child: RichText(
-                    text: TextSpan(
-                      text: name,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Color(0xFF404446),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                      children: const <TextSpan>[
-                        // TextSpan(
-                        //     text: '*',
-                        //     style: TextStyle(
-                        //         fontFamily: 'Rubik',
-                        //         fontSize: 16,
-                        //         color: Colors.red,
-                        //         fontWeight: FontWeight.w400)),
-                      ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: false,
                     ),
-                  ),
-                ),
-                InkWell(
-                    onTap: () {
-                      clearText();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          color: Colors.red.shade100,
-                          border: Border.all(color: Colors.black12),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        "Hapus Nama",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.red,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    )),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: TextFormField(
-                showCursor: true,
-                readOnly: true,
-                controller: userNameController,
-                onTap: () {
-                  setState(() {
-                    // print(prefs.getString("userName"));
-                    isTapedUserName = !isTapedUserName;
-                  });
-                },
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    suffixIcon: Icon(Icons.search),
-                    hintText: type_name,
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                    hintStyle: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-              ),
-            ),
-            isTapedUserName == true
-                ? Container(
-                    margin: EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    height: 180,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: _listAllUser.isEmpty ? 0 : _listAllUser.length,
-                      itemBuilder: (context, i) {
-                        return InkWell(
-                            onTap: () async {
-                              setState(() {
-                                idUsernameIdea =
-                                    _listAllUser[i].userId.toString();
-                                userNameController = TextEditingController(
-                                    text: _listAllUser[i].userFullName);
-                                isTapedUserName = !isTapedUserName;
-                              });
-
-                              // final SharedPreferences prefs = await _prefs;
-                              // prefs.setString("userName",
-                              //     _listAllUser[i].userId.toString());
-                              // prefs.setString("namaImprovement",
-                              //     _listAllUser[i].userFullName!);
-                              // prefs.setString("userNameBool", "1");
-                              // setState(() {
-                              //   userNameController = TextEditingController(
-                              //       text: _listAllUser[i].userFullName);
-                              // });
-                              // getMachineNumberbyId(_listAllUser[i].idMesin);
-                              // print("id mesin: $machineIdSelected");
-                            },
-                            child: Container(
-                                margin: EdgeInsets.only(bottom: 8, top: 8),
-                                child: Text(
-                                  (_listAllUser[i].userFullName).toString(),
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
-                                )));
-                      },
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
                     ),
-                  )
-                : Container(),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              width: MediaQuery.of(context).size.width,
-              child: RichText(
-                text: TextSpan(
-                  text: idea,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    // TextSpan(
-                    //     text: '*',
-                    //     style: TextStyle(
-                    //         fontFamily: 'Rubik',
-                    //         fontSize: 16,
-                    //         color: Colors.red,
-                    //         fontWeight: FontWeight.w400)),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: true,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: false,
+                    ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF979C9E)),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: TextFormField(
-                controller: ideaController,
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-                maxLines: 5,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: type_idea,
-                    contentPadding: const EdgeInsets.only(top: 5, left: 5),
-                    hintStyle: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Text(
+                  improvement,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 24),
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                working_time,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  Container(
-                    child: Text(
-                      repair,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.checkH.toString() == "null"
-                            ? "0 H"
-                            : stepEnamModel.checkH.toString() + " H",
+                    margin: const EdgeInsets.only(top: 16),
+                    child: RichText(
+                      text: TextSpan(
+                        text: name,
                         style: TextStyle(
                             fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
+                            color: Color(0xFF404446),
+                            fontSize: 16,
                             fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          // TextSpan(
+                          //     text: '*',
+                          //     style: TextStyle(
+                          //         fontFamily: 'Rubik',
+                          //         fontSize: 16,
+                          //         color: Colors.red,
+                          //         fontWeight: FontWeight.w400)),
+                        ],
                       ),
                     ),
                   ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.checkM.toString() == "null"
-                            ? "0 M"
-                            : stepEnamModel.checkM.toString() + " M",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "+",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.repairH.toString() == "null"
-                            ? "0 H"
-                            : stepEnamModel.repairH.toString() + " H",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.repairM.toString() == "null"
-                            ? "0 M"
-                            : stepEnamModel.repairM.toString() + " M",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "=",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.hasilRepairH.toString() == "null"
-                            ? "0 H"
-                            : stepEnamModel.hasilRepairH.toString() + " H",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.hasilRepairM.toString() == "null"
-                            ? "0 M"
-                            : stepEnamModel.hasilRepairM.toString() + " M",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
+                  InkWell(
+                      onTap: () {
+                        clearText();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            color: Colors.red.shade100,
+                            border: Border.all(color: Colors.black12),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          "Hapus Nama",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Colors.red,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      )),
                 ],
               ),
-            ),
-            // ini
-            checkKlasifikasiType != "Breakdown Maintenance"
-                ? Container()
-                : Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 16),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: breaktime,
-                                style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    color: Color(0xFF404446),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400),
-                                children: const <TextSpan>[
-                                  TextSpan(
-                                      text: ' (H)',
-                                      style: TextStyle(
-                                          fontFamily: 'Rubik',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400)),
-                                  TextSpan(
-                                      text: ' *',
-                                      style: TextStyle(
-                                          fontFamily: 'Rubik',
-                                          fontSize: 16,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.w400)),
-                                  TextSpan(
-                                      text: ':',
-                                      style: TextStyle(
-                                          fontFamily: 'Rubik',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400)),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 150,
-                              height: 50,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 60, vertical: 4),
-                              child: TextFormField(
-                                controller: breakHoursController,
-                                keyboardType: TextInputType.number,
-                                maxLength: 2,
-                                // onChanged: (value) async {
-                                //   _incrementCounter(value);
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.all(5),
+                height: 40,
+                decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF979C9E)),
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                child: TextFormField(
+                  showCursor: true,
+                  readOnly: true,
+                  controller: userNameController,
+                  onTap: () {
+                    setState(() {
+                      // print(prefs.getString("userName"));
+                      isTapedUserName = !isTapedUserName;
+                    });
+                  },
+                  style: const TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
+                      suffixIcon: Icon(Icons.search),
+                      hintText: type_name,
+                      contentPadding: const EdgeInsets.only(top: 5, left: 5),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400)),
+                ),
+              ),
+              isTapedUserName == true
+                  ? Container(
+                      margin: EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      height: 180,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
+                        itemCount:
+                            _listAllUser.isEmpty ? 0 : _listAllUser.length,
+                        itemBuilder: (context, i) {
+                          return InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  idUsernameIdea =
+                                      _listAllUser[i].userId.toString();
+                                  userNameController = TextEditingController(
+                                      text: _listAllUser[i].userFullName);
+                                  isTapedUserName = !isTapedUserName;
+                                });
 
-                                //   String minuteLineStop =
-                                //       _lineStopM.toString().length == 1
-                                //           ? "0" + _lineStopM.toString()
-                                //           : _lineStopM.toString();
-                                //   final SharedPreferences prefs = await _prefs;
-                                //   prefs.setString(
-                                //       "lineStop", _counter.toString() + ":00");
-                                //   prefs.setString("ttlLineStop",
-                                //       _lineStopH.toString() + ":" + minuteLineStop);
-                                //   prefs.setString("costH", _newLineStopH.toString());
-                                //   prefs.setString("costMp", stepEnamModel.mP.toString());
-                                //   prefs.setString("costTotal", _costInHouse.toString());
-                                //   prefs.setString("breakHours", value);
-                                //   prefs.setString("breakTimeBool", "1");
-                                // },
-                                decoration: InputDecoration(
-                                  counter: Offstage(),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 8),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(40))),
-                            )
-                            // Container(
-                            //   width: 150,
-                            //   height: 40,
-                            //   decoration: BoxDecoration(
-                            //       border: Border.all(color: Color(0xFF979C9E)),
-                            //       borderRadius: BorderRadius.all(Radius.circular(40))),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       SizedBox(
-                            //         width: 40,
-                            //         height: 40,
-                            //         child: IconButton(
-                            //           onPressed: () async {
-                            //             _decreamentCounter();
-                            //             String minuteLineStop =
-                            //                 _lineStopM.toString().length == 1
-                            //                     ? "0" + _lineStopM.toString()
-                            //                     : _lineStopM.toString();
-                            //             final SharedPreferences prefs = await _prefs;
-                            //             prefs.setString(
-                            //                 "lineStop", _counter.toString() + ":00");
-                            //             prefs.setString("ttlLineStop",
-                            //                 _lineStopH.toString() + ":" + minuteLineStop);
-                            //             prefs.setString(
-                            //                 "costH", _newLineStopH.toString());
-                            //             prefs.setString(
-                            //                 "costMp", stepEnamModel.mP.toString());
-                            //             prefs.setString(
-                            //                 "costTotal", _costInHouse.toString());
-                            //             prefs.setString("breakTimeBool", "1");
-                            //           },
-                            //           icon: Icon(
-                            //             Icons.remove,
-                            //             color: _counter == 0
-                            //                 ? Color(0xFF979C9E)
-                            //                 : Color(0xFF20519F),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       Text("$_counter"),
-                            //       SizedBox(
-                            //         width: 40,
-                            //         height: 40,
-                            //         child: IconButton(
-                            //           onPressed: () async {
-                            //             _incrementCounter();
-
-                            //             String minuteLineStop =
-                            //                 _lineStopM.toString().length == 1
-                            //                     ? "0" + _lineStopM.toString()
-                            //                     : _lineStopM.toString();
-                            //             final SharedPreferences prefs = await _prefs;
-                            //             prefs.setString(
-                            //                 "lineStop", _counter.toString() + ":00");
-                            //             prefs.setString("ttlLineStop",
-                            //                 _lineStopH.toString() + ":" + minuteLineStop);
-                            //             prefs.setString(
-                            //                 "costH", _newLineStopH.toString());
-                            //             prefs.setString(
-                            //                 "costMp", stepEnamModel.mP.toString());
-                            //             prefs.setString(
-                            //                 "costTotal", _costInHouse.toString());
-                            //             prefs.setString("breakTimeBool", "1");
-                            //           },
-                            //           icon: Icon(
-                            //             Icons.add,
-                            //             color: Color(0xFF20519F),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // )
-                          ],
+                                // final SharedPreferences prefs = await _prefs;
+                                // prefs.setString("userName",
+                                //     _listAllUser[i].userId.toString());
+                                // prefs.setString("namaImprovement",
+                                //     _listAllUser[i].userFullName!);
+                                // prefs.setString("userNameBool", "1");
+                                // setState(() {
+                                //   userNameController = TextEditingController(
+                                //       text: _listAllUser[i].userFullName);
+                                // });
+                                // getMachineNumberbyId(_listAllUser[i].idMesin);
+                                // print("id mesin: $machineIdSelected");
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.only(bottom: 8, top: 8),
+                                  child: Text(
+                                    (_listAllUser[i].userFullName).toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  )));
+                        },
+                      ),
+                    )
+                  : Container(),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  text: TextSpan(
+                    text: idea,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      // TextSpan(
+                      //     text: '*',
+                      //     style: TextStyle(
+                      //         fontFamily: 'Rubik',
+                      //         fontSize: 16,
+                      //         color: Colors.red,
+                      //         fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF979C9E)),
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                child: TextFormField(
+                  controller: ideaController,
+                  style: const TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
+                      hintText: type_idea,
+                      contentPadding: const EdgeInsets.only(top: 5, left: 5),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400)),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 24),
+                width: MediaQuery.of(context).size.width,
+                child: Text(
+                  working_time,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  children: [
+                    Container(
+                      child: Text(
+                        repair,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.checkH.toString() == "null"
+                              ? "0 H"
+                              : stepEnamModel.checkH.toString() + " H",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 16),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  breaktime + " (M)",
+                    ),
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.checkM.toString() == "null"
+                              ? "0 M"
+                              : stepEnamModel.checkM.toString() + " M",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "+",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.repairH.toString() == "null"
+                              ? "0 H"
+                              : stepEnamModel.repairH.toString() + " H",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.repairM.toString() == "null"
+                              ? "0 M"
+                              : stepEnamModel.repairM.toString() + " M",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "=",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.hasilRepairH.toString() == "null"
+                              ? "0 H"
+                              : stepEnamModel.hasilRepairH.toString() + " H",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.hasilRepairM.toString() == "null"
+                              ? "0 M"
+                              : stepEnamModel.hasilRepairM.toString() + " M",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // ini
+              checkKlasifikasiType != "Breakdown Maintenance"
+                  ? Container()
+                  : Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 16),
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  text: breaktime,
+                                  style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF404446),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                  children: const <TextSpan>[
+                                    TextSpan(
+                                        text: ' (H)',
+                                        style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400)),
+                                    TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontSize: 16,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w400)),
+                                    TextSpan(
+                                        text: ':',
+                                        style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400)),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 150,
+                                height: 50,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 60, vertical: 4),
+                                child: TextFormField(
+                                  controller: breakHoursController,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 2,
+                                  // onChanged: (value) async {
+                                  //   _incrementCounter(value);
+
+                                  //   String minuteLineStop =
+                                  //       _lineStopM.toString().length == 1
+                                  //           ? "0" + _lineStopM.toString()
+                                  //           : _lineStopM.toString();
+                                  //   final SharedPreferences prefs = await _prefs;
+                                  //   prefs.setString(
+                                  //       "lineStop", _counter.toString() + ":00");
+                                  //   prefs.setString("ttlLineStop",
+                                  //       _lineStopH.toString() + ":" + minuteLineStop);
+                                  //   prefs.setString("costH", _newLineStopH.toString());
+                                  //   prefs.setString("costMp", stepEnamModel.mP.toString());
+                                  //   prefs.setString("costTotal", _costInHouse.toString());
+                                  //   prefs.setString("breakHours", value);
+                                  //   prefs.setString("breakTimeBool", "1");
+                                  // },
+                                  decoration: InputDecoration(
+                                    counter: Offstage(),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 8),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.blueAccent),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40))),
+                              )
+                              // Container(
+                              //   width: 150,
+                              //   height: 40,
+                              //   decoration: BoxDecoration(
+                              //       border: Border.all(color: Color(0xFF979C9E)),
+                              //       borderRadius: BorderRadius.all(Radius.circular(40))),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //     children: [
+                              //       SizedBox(
+                              //         width: 40,
+                              //         height: 40,
+                              //         child: IconButton(
+                              //           onPressed: () async {
+                              //             _decreamentCounter();
+                              //             String minuteLineStop =
+                              //                 _lineStopM.toString().length == 1
+                              //                     ? "0" + _lineStopM.toString()
+                              //                     : _lineStopM.toString();
+                              //             final SharedPreferences prefs = await _prefs;
+                              //             prefs.setString(
+                              //                 "lineStop", _counter.toString() + ":00");
+                              //             prefs.setString("ttlLineStop",
+                              //                 _lineStopH.toString() + ":" + minuteLineStop);
+                              //             prefs.setString(
+                              //                 "costH", _newLineStopH.toString());
+                              //             prefs.setString(
+                              //                 "costMp", stepEnamModel.mP.toString());
+                              //             prefs.setString(
+                              //                 "costTotal", _costInHouse.toString());
+                              //             prefs.setString("breakTimeBool", "1");
+                              //           },
+                              //           icon: Icon(
+                              //             Icons.remove,
+                              //             color: _counter == 0
+                              //                 ? Color(0xFF979C9E)
+                              //                 : Color(0xFF20519F),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //       Text("$_counter"),
+                              //       SizedBox(
+                              //         width: 40,
+                              //         height: 40,
+                              //         child: IconButton(
+                              //           onPressed: () async {
+                              //             _incrementCounter();
+
+                              //             String minuteLineStop =
+                              //                 _lineStopM.toString().length == 1
+                              //                     ? "0" + _lineStopM.toString()
+                              //                     : _lineStopM.toString();
+                              //             final SharedPreferences prefs = await _prefs;
+                              //             prefs.setString(
+                              //                 "lineStop", _counter.toString() + ":00");
+                              //             prefs.setString("ttlLineStop",
+                              //                 _lineStopH.toString() + ":" + minuteLineStop);
+                              //             prefs.setString(
+                              //                 "costH", _newLineStopH.toString());
+                              //             prefs.setString(
+                              //                 "costMp", stepEnamModel.mP.toString());
+                              //             prefs.setString(
+                              //                 "costTotal", _costInHouse.toString());
+                              //             prefs.setString("breakTimeBool", "1");
+                              //           },
+                              //           icon: Icon(
+                              //             Icons.add,
+                              //             color: Color(0xFF20519F),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 16),
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    breaktime + " (M)",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Text(" *",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontFamily: 'Rubik',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400)),
+                                  Text(":",
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400))
+                                ],
+                              ),
+                              Container(
+                                width: 150,
+                                height: 50,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 60, vertical: 4),
+                                child: TextFormField(
+                                  controller: breakMinutesController,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 2,
+                                  // onChanged: (value) async {
+                                  //   _incrementCounterMinutes(value);
+                                  //   String minuteLineStop =
+                                  //       _lineStopM.toString().length == 1
+                                  //           ? "0" + _lineStopM.toString()
+                                  //           : _lineStopM.toString();
+                                  //   final SharedPreferences prefs = await _prefs;
+                                  //   prefs.setString(
+                                  //       "lineStop", _counter.toString() + ":00");
+                                  //   prefs.setString("ttlLineStop",
+                                  //       _lineStopH.toString() + ":" + minuteLineStop);
+                                  //   prefs.setString("costH", _newLineStopH.toString());
+                                  //   prefs.setString("costMp", stepEnamModel.mP.toString());
+                                  //   prefs.setString("costTotal", _costInHouse.toString());
+                                  //   prefs.setString("breakMinutes", value);
+                                  //   prefs.setString("breakTimeBool", "1");
+                                  // },
+                                  decoration: InputDecoration(
+                                    counter: Offstage(),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 8),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.blueAccent),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40))),
+                              )
+                              // Container(
+                              //   width: 150,
+                              //   height: 40,
+                              //   decoration: BoxDecoration(
+                              //       border: Border.all(color: Color(0xFF979C9E)),
+                              //       borderRadius: BorderRadius.all(Radius.circular(40))),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //     children: [
+                              //       SizedBox(
+                              //         width: 40,
+                              //         height: 40,
+                              //         child: IconButton(
+                              //           onPressed: () async {
+                              //             _decreamentCounterMinutes();
+                              //             String minuteLineStop =
+                              //                 _lineStopM.toString().length == 1
+                              //                     ? "0" + _lineStopM.toString()
+                              //                     : _lineStopM.toString();
+                              //             final SharedPreferences prefs = await _prefs;
+                              //             prefs.setString(
+                              //                 "lineStop", _counter.toString() + ":00");
+                              //             prefs.setString("ttlLineStop",
+                              //                 _lineStopH.toString() + ":" + minuteLineStop);
+                              //             prefs.setString(
+                              //                 "costH", _newLineStopH.toString());
+                              //             prefs.setString(
+                              //                 "costMp", stepEnamModel.mP.toString());
+                              //             prefs.setString(
+                              //                 "costTotal", _costInHouse.toString());
+                              //             prefs.setString("breakTimeBool", "1");
+                              //           },
+                              //           icon: Icon(
+                              //             Icons.remove,
+                              //             color: _counterMinutes == 0
+                              //                 ? Color(0xFF979C9E)
+                              //                 : Color(0xFF20519F),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //       Text("$_counterMinutes"),
+                              //       SizedBox(
+                              //         width: 40,
+                              //         height: 40,
+                              //         child: IconButton(
+                              //           onPressed: () async {
+                              //             _incrementCounterMinutes();
+
+                              //             String minuteLineStop =
+                              //                 _lineStopM.toString().length == 1
+                              //                     ? "0" + _lineStopM.toString()
+                              //                     : _lineStopM.toString();
+                              //             final SharedPreferences prefs = await _prefs;
+                              //             prefs.setString(
+                              //                 "lineStop", _counter.toString() + ":00");
+                              //             prefs.setString("ttlLineStop",
+                              //                 _lineStopH.toString() + ":" + minuteLineStop);
+                              //             prefs.setString(
+                              //                 "costH", _newLineStopH.toString());
+                              //             prefs.setString(
+                              //                 "costMp", stepEnamModel.mP.toString());
+                              //             prefs.setString(
+                              //                 "costTotal", _costInHouse.toString());
+                              //             prefs.setString("breakTimeBool", "1");
+                              //           },
+                              //           icon: Icon(
+                              //             Icons.add,
+                              //             color: Color(0xFF20519F),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // )
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            hitungLineStop();
+                            String minuteLineStop =
+                                _lineStopM.toString().length == 1
+                                    ? "0" + _lineStopM.toString()
+                                    : _lineStopM.toString();
+                            final SharedPreferences prefs = await _prefs;
+                            prefs.setString(
+                                "lineStop", _counter.toString() + ":00");
+
+                            prefs.setString("costH", _newLineStopH.toString());
+                            prefs.setString(
+                                "costMp", stepEnamModel.mP.toString());
+                            // prefs.setString("costTotal", _costInHouse.toString());
+                            prefs.setString(
+                                "breakHours", breakHoursController.text);
+                            prefs.setString(
+                                "breakMinutes", breakMinutesController.text);
+
+                            setFormValueStep6AfterChoosing();
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 150,
+                                height: 50,
+                                // padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
+                                child: Center(
+                                  child: Text(
+                                    "Hitung Line Stop",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Rubik'),
+                                  ),
+                                ),
+                                //   child: TextFormField(
+                                //     controller: breakHoursController,
+                                //     keyboardType: TextInputType.number,
+                                //     maxLength: 2,
+                                //     onChanged: (value) async {
+                                //       _incrementCounter(value);
+
+                                //       String minuteLineStop =
+                                //           _lineStopM.toString().length == 1
+                                //               ? "0" + _lineStopM.toString()
+                                //               : _lineStopM.toString();
+                                //       final SharedPreferences prefs = await _prefs;
+                                //       prefs.setString(
+                                //           "lineStop", _counter.toString() + ":00");
+                                //       prefs.setString("ttlLineStop",
+                                //           _lineStopH.toString() + ":" + minuteLineStop);
+                                //       prefs.setString("costH", _newLineStopH.toString());
+                                //       prefs.setString("costMp", stepEnamModel.mP.toString());
+                                //       prefs.setString("costTotal", _costInHouse.toString());
+                                //       prefs.setString("breakHours", value);
+                                //       prefs.setString("breakTimeBool", "1");
+                                //     },
+                                //     decoration: InputDecoration(
+                                //       counter: Offstage(),
+                                //       contentPadding: EdgeInsets.symmetric(vertical: 8),
+                                //       border: OutlineInputBorder(borderSide: BorderSide.none),
+                                //     ),
+                                //   ),
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    // border: Border.all(color: Colors.blueAccent),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40))),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 115,
+                                child: Text(
+                                  "Line Stop",
                                   style: TextStyle(
                                       fontFamily: 'Rubik',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400),
                                 ),
-                                Text(" *",
-                                    style: TextStyle(
-                                        color: Colors.red,
-                                        fontFamily: 'Rubik',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400)),
-                                Text(":",
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400))
-                              ],
-                            ),
-                            Container(
-                              width: 150,
-                              height: 50,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 60, vertical: 4),
-                              child: TextFormField(
-                                controller: breakMinutesController,
-                                keyboardType: TextInputType.number,
-                                maxLength: 2,
-                                // onChanged: (value) async {
-                                //   _incrementCounterMinutes(value);
-                                //   String minuteLineStop =
-                                //       _lineStopM.toString().length == 1
-                                //           ? "0" + _lineStopM.toString()
-                                //           : _lineStopM.toString();
-                                //   final SharedPreferences prefs = await _prefs;
-                                //   prefs.setString(
-                                //       "lineStop", _counter.toString() + ":00");
-                                //   prefs.setString("ttlLineStop",
-                                //       _lineStopH.toString() + ":" + minuteLineStop);
-                                //   prefs.setString("costH", _newLineStopH.toString());
-                                //   prefs.setString("costMp", stepEnamModel.mP.toString());
-                                //   prefs.setString("costTotal", _costInHouse.toString());
-                                //   prefs.setString("breakMinutes", value);
-                                //   prefs.setString("breakTimeBool", "1");
-                                // },
-                                decoration: InputDecoration(
-                                  counter: Offstage(),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 8),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none),
-                                ),
                               ),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(40))),
-                            )
-                            // Container(
-                            //   width: 150,
-                            //   height: 40,
-                            //   decoration: BoxDecoration(
-                            //       border: Border.all(color: Color(0xFF979C9E)),
-                            //       borderRadius: BorderRadius.all(Radius.circular(40))),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       SizedBox(
-                            //         width: 40,
-                            //         height: 40,
-                            //         child: IconButton(
-                            //           onPressed: () async {
-                            //             _decreamentCounterMinutes();
-                            //             String minuteLineStop =
-                            //                 _lineStopM.toString().length == 1
-                            //                     ? "0" + _lineStopM.toString()
-                            //                     : _lineStopM.toString();
-                            //             final SharedPreferences prefs = await _prefs;
-                            //             prefs.setString(
-                            //                 "lineStop", _counter.toString() + ":00");
-                            //             prefs.setString("ttlLineStop",
-                            //                 _lineStopH.toString() + ":" + minuteLineStop);
-                            //             prefs.setString(
-                            //                 "costH", _newLineStopH.toString());
-                            //             prefs.setString(
-                            //                 "costMp", stepEnamModel.mP.toString());
-                            //             prefs.setString(
-                            //                 "costTotal", _costInHouse.toString());
-                            //             prefs.setString("breakTimeBool", "1");
-                            //           },
-                            //           icon: Icon(
-                            //             Icons.remove,
-                            //             color: _counterMinutes == 0
-                            //                 ? Color(0xFF979C9E)
-                            //                 : Color(0xFF20519F),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       Text("$_counterMinutes"),
-                            //       SizedBox(
-                            //         width: 40,
-                            //         height: 40,
-                            //         child: IconButton(
-                            //           onPressed: () async {
-                            //             _incrementCounterMinutes();
-
-                            //             String minuteLineStop =
-                            //                 _lineStopM.toString().length == 1
-                            //                     ? "0" + _lineStopM.toString()
-                            //                     : _lineStopM.toString();
-                            //             final SharedPreferences prefs = await _prefs;
-                            //             prefs.setString(
-                            //                 "lineStop", _counter.toString() + ":00");
-                            //             prefs.setString("ttlLineStop",
-                            //                 _lineStopH.toString() + ":" + minuteLineStop);
-                            //             prefs.setString(
-                            //                 "costH", _newLineStopH.toString());
-                            //             prefs.setString(
-                            //                 "costMp", stepEnamModel.mP.toString());
-                            //             prefs.setString(
-                            //                 "costTotal", _costInHouse.toString());
-                            //             prefs.setString("breakTimeBool", "1");
-                            //           },
-                            //           icon: Icon(
-                            //             Icons.add,
-                            //             color: Color(0xFF20519F),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // )
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () async {
-                          hitungLineStop();
-                          String minuteLineStop =
-                              _lineStopM.toString().length == 1
-                                  ? "0" + _lineStopM.toString()
-                                  : _lineStopM.toString();
-                          final SharedPreferences prefs = await _prefs;
-                          prefs.setString(
-                              "lineStop", _counter.toString() + ":00");
-
-                          prefs.setString("costH", _newLineStopH.toString());
-                          prefs.setString(
-                              "costMp", stepEnamModel.mP.toString());
-                          // prefs.setString("costTotal", _costInHouse.toString());
-                          prefs.setString(
-                              "breakHours", breakHoursController.text);
-                          prefs.setString(
-                              "breakMinutes", breakMinutesController.text);
-
-                          setFormValueStep6AfterChoosing();
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              width: 150,
-                              height: 50,
-                              // padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
-                              child: Center(
-                                child: Text(
-                                  "Hitung Line Stop",
-                                  style: TextStyle(
-                                      color: Colors.white, fontFamily: 'Rubik'),
-                                ),
-                              ),
-                              //   child: TextFormField(
-                              //     controller: breakHoursController,
-                              //     keyboardType: TextInputType.number,
-                              //     maxLength: 2,
-                              //     onChanged: (value) async {
-                              //       _incrementCounter(value);
-
-                              //       String minuteLineStop =
-                              //           _lineStopM.toString().length == 1
-                              //               ? "0" + _lineStopM.toString()
-                              //               : _lineStopM.toString();
-                              //       final SharedPreferences prefs = await _prefs;
-                              //       prefs.setString(
-                              //           "lineStop", _counter.toString() + ":00");
-                              //       prefs.setString("ttlLineStop",
-                              //           _lineStopH.toString() + ":" + minuteLineStop);
-                              //       prefs.setString("costH", _newLineStopH.toString());
-                              //       prefs.setString("costMp", stepEnamModel.mP.toString());
-                              //       prefs.setString("costTotal", _costInHouse.toString());
-                              //       prefs.setString("breakHours", value);
-                              //       prefs.setString("breakTimeBool", "1");
-                              //     },
-                              //     decoration: InputDecoration(
-                              //       counter: Offstage(),
-                              //       contentPadding: EdgeInsets.symmetric(vertical: 8),
-                              //       border: OutlineInputBorder(borderSide: BorderSide.none),
-                              //     ),
-                              //   ),
-                              decoration: BoxDecoration(
-                                  color: Colors.blueAccent,
-                                  // border: Border.all(color: Colors.blueAccent),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(40))),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 115,
-                              child: Text(
-                                "Line Stop",
+                              Text(
+                                ":",
                                 style: TextStyle(
                                     fontFamily: 'Rubik',
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400),
                               ),
-                            ),
-                            Text(
-                              ":",
-                              style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFF979C9E)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Center(
-                                child: Text(
-                                  stepEnamModel.hasilRepairH.toString() ==
-                                          "null"
-                                      ? "0 H"
-                                      : stepEnamModel.hasilRepairH.toString() +
-                                          " H",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
+                        Container(
+                          margin: const EdgeInsets.only(top: 4),
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xFF979C9E)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Center(
+                                  child: Text(
+                                    stepEnamModel.hasilRepairH.toString() ==
+                                            "null"
+                                        ? "0 H"
+                                        : stepEnamModel.hasilRepairH
+                                                .toString() +
+                                            " H",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFF979C9E)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Center(
-                                child: Text(
-                                  stepEnamModel.hasilRepairM.toString() ==
-                                          "null"
-                                      ? "0 M"
-                                      : stepEnamModel.hasilRepairM.toString() +
-                                          " M",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
+                              Container(
+                                width: 44,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xFF979C9E)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Center(
+                                  child: Text(
+                                    stepEnamModel.hasilRepairM.toString() ==
+                                            "null"
+                                        ? "0 M"
+                                        : stepEnamModel.hasilRepairM
+                                                .toString() +
+                                            " M",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              child: Center(
-                                child: Text(
-                                  "-",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700),
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    "-",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFF979C9E)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Center(
-                                child: Text(
-                                  "$_counter H",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
+                              Container(
+                                width: 44,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xFF979C9E)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Center(
+                                  child: Text(
+                                    "$_counter H",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFF979C9E)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Center(
-                                child: Text(
-                                  "$_counterMinutes M",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
+                              Container(
+                                width: 44,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xFF979C9E)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Center(
+                                  child: Text(
+                                    "$_counterMinutes M",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              child: Center(
-                                child: Text(
-                                  "=",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700),
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    "=",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFF979C9E)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Center(
-                                child: Text(
-                                  _lineStopH == 0
-                                      ? "$prefLineStopH H"
-                                      : "$_lineStopH H",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
+                              Container(
+                                width: 44,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xFF979C9E)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Center(
+                                  child: Text(
+                                    _lineStopH == 0
+                                        ? "$prefLineStopH H"
+                                        : "$_lineStopH H",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFF979C9E)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Center(
-                                child: Text(
-                                  _lineStopM == 0
-                                      ? "$prefLineStopM M"
-                                      : "$_lineStopM M",
-                                  style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF979C9E),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
+                              Container(
+                                width: 44,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xFF979C9E)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Center(
+                                  child: Text(
+                                    _lineStopM == 0
+                                        ? "$prefLineStopM M"
+                                        : "$_lineStopM M",
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF979C9E),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+
+                        // sampe sini
+                      ],
+                    ),
+
+              Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  width: MediaQuery.of(context).size.width,
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
                       ),
-
-                      // sampe sini
-                    ],
-                  ),
-
-            Container(
-                margin: const EdgeInsets.only(top: 24),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: cost,
+                            style: TextStyle(color: Color(0xFF404446))),
+                        TextSpan(
+                            text: ' * ', style: TextStyle(color: Colors.red)),
+                        TextSpan(
+                            text: ':',
+                            style: TextStyle(color: Color(0xFF404446))),
+                      ],
+                    ),
+                  )),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: Text(
+                  in_house,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
                 width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          checkKlasifikasiType != "Breakdown Maintenance"
+                              ? stepEnamModel.hasilRepairH.toString() == "0"
+                                  ? "${(double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
+                                  : "${(double.parse(stepEnamModel.hasilRepairH == null ? '0' : stepEnamModel.hasilRepairH.toString()) + double.parse(stepEnamModel.hasilRepairM == null ? '0' : stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
+                              : _newLineStopH == 0
+                                  ? "${(_lineStopM.toDouble() / 60).toStringAsFixed(1)} H"
+                                  : "${(_lineStopH.toDouble() + (_lineStopM.toDouble() / 60)).toStringAsFixed(1)} H",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Color(0xFF979C9E),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 50,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.mP.toString() == "null"
+                              ? "0 M/P"
+                              : stepEnamModel.mP.toString() + " M/P",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Color(0xFF979C9E),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 67,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.inHouseCost ?? "0",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Color(0xFF979C9E),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "+",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 67,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          stepEnamModel.adminCost ?? "0",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Color(0xFF979C9E),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () => resultCostInHouse(),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 4),
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF979C9E)),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: Center(
+                    child: Text(
+                      adminCost == "" || adminCost.isEmpty || adminCost == "0"
+                          ? "Total = Rp. " +
+                              NumberFormat.currency(
+                                      locale: 'id',
+                                      decimalDigits: 0,
+                                      symbol: '')
+                                  .format(_costInHouse)
+                          : "Total = Rp. " +
+                              NumberFormat.currency(
+                                      locale: 'id',
+                                      decimalDigits: 0,
+                                      symbol: '')
+                                  .format(double.parse(adminCost)),
+                      style: TextStyle(
+                          fontFamily: 'Rubik',
+                          fontSize: 16,
+                          color: Color(0xFF404446),
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: checkKlasifikasiType != "Breakdown Maintenance"
+                    ? true
+                    : false,
+                child: InkWell(
+                  onTap: () => resultCostInHouse(),
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        border: Border.all(color: Colors.blueAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Center(
+                      child: Text(
+                        "Hitung Cost In-House",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
                 child: RichText(
                   text: TextSpan(
                     style: TextStyle(
@@ -1788,153 +2104,274 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                          text: cost,
+                          text: out_house,
                           style: TextStyle(color: Color(0xFF404446))),
-                      TextSpan(
-                          text: ' * ', style: TextStyle(color: Colors.red)),
+                      // TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
                       TextSpan(
                           text: ':',
                           style: TextStyle(color: Color(0xFF404446))),
                     ],
                   ),
-                )),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: Text(
-                in_house,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 44,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        checkKlasifikasiType != "Breakdown Maintenance"
-                            ? stepEnamModel.hasilRepairH.toString() == "0"
-                                ? "${(double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
-                                : "${(double.parse(stepEnamModel.hasilRepairH.toString()) + double.parse(stepEnamModel.hasilRepairM.toString()) / 60).toStringAsFixed(1)} H"
-                            : _newLineStopH == 0
-                                ? "${(_lineStopM.toDouble() / 60).toStringAsFixed(1)} H"
-                                : "${(_lineStopH.toDouble() + (_lineStopM.toDouble() / 60)).toStringAsFixed(1)} H",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Color(0xFF979C9E),
-                            fontWeight: FontWeight.w400),
+              Container(
+                  margin: const EdgeInsets.only(top: 16, bottom: 10),
+                  height: 40,
+                  child: TextFormField(
+                    controller: vendorPriceController,
+                    readOnly: true,
+                    showCursor: true,
+                    onTap: () {
+                      setState(() {
+                        isTapVendor = !isTapVendor;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        hintText: "Pilih vendor",
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                        suffixIcon: Icon(Icons.arrow_drop_down),
+                        border: OutlineInputBorder()),
+                  )),
+              isTapVendor == false
+                  ? Container()
+                  : Container(
+                      height: 150,
+                      padding: EdgeInsets.all(8),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: listVendor.map((e) {
+                          return InkWell(
+                              onTap: () async {
+                                // final prefs = await _prefs;
+                                setState(() {
+                                  vendorPriceController =
+                                      TextEditingController(text: e.vendorName);
+                                  costOutHouseController =
+                                      TextEditingController(
+                                          text: e.vendorPrice);
+                                  // prefs.setString("outHouseCost", e.vendorPrice!);
+                                  // prefs.setString("vendorName", e.vendorName!);
+                                  isTapVendor = !isTapVendor;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(e.vendorName!),
+                              ));
+                        }).toList(),
                       ),
                     ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "X",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 50,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 20,
+                              // height: 20,
+                              child: TextFormField(
+                                  maxLength: 2,
+                                  onChanged: (text) async {
+                                    resultHOutHouse(text);
+                                    // final prefs = await _prefs;
+                                    // prefs.setString("outHouseH", text);
+                                    // prefs.setString("outHouseHBool", "1");
+                                    // setFormValueStep6AfterChoosing();
+                                  },
+                                  controller: outHouseHController,
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
+                                      counter: Offstage(),
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      hintText: '0',
+                                      hintStyle: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400))),
+                            ),
+                            Text(
+                              " H",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.mP.toString() == "null"
-                            ? "0 M/P"
-                            : stepEnamModel.mP.toString() + " M/P",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Color(0xFF979C9E),
-                            fontWeight: FontWeight.w400),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "X",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
+                    Container(
+                      width: 80,
+                      height: 50,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 20,
+                              // height: 20,
+                              child: TextFormField(
+                                  maxLength: 2,
+                                  onChanged: (text) async {
+                                    resultMpOutHouse(text);
+                                    // final SharedPreferences prefs = await _prefs;
+                                    // prefs.setString("outHouseMp", text);
+                                    // prefs.setString("outHouseMpBool", "1");
+                                    // setFormValueStep6AfterChoosing();
+                                  },
+                                  controller: outHouseMpController,
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
+                                      counter: Offstage(),
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      hintText: '0',
+                                      hintStyle: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400))),
+                            ),
+                            Text(
+                              " M/P",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 67,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.inHouseCost ?? "0",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Color(0xFF979C9E),
-                            fontWeight: FontWeight.w400),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Color(0xFF979C9E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "+",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
+                    Container(
+                      width: 140,
+                      height: 50,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          border: Border.all(color: Color(0xFF979C9E)),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Rp. ",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Container(
+                              width: 70,
+                              // height: 20,
+                              child: TextFormField(
+                                  onChanged: (text) async {
+                                    resultCostOutHouse(text);
+                                    final SharedPreferences prefs =
+                                        await _prefs;
+                                    prefs.setString("outHouseCost",
+                                        text.replaceAll(".", ""));
+                                    prefs.setString("outHouseCostBool", "1");
+                                  },
+                                  controller: costOutHouseController,
+                                  readOnly: true,
+                                  maxLength: 9,
+                                  inputFormatters: <TextInputFormatter>[
+                                    CurrencyTextInputFormatter(
+                                      locale: 'IDN',
+                                      decimalDigits: 0,
+                                      symbol: '',
+                                    ),
+                                  ],
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      counterText: "",
+                                      hintText: '0',
+                                      hintStyle: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400))),
+                            ),
+                            Text(
+                              " /H",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 67,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Text(
-                        stepEnamModel.adminCost ?? "0",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 14,
-                            color: Color(0xFF979C9E),
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            InkWell(
-              onTap: () => resultCostInHouse(),
-              child: Container(
+              SizedBox(
+                height: 10,
+              ),
+              Container(
                 margin: const EdgeInsets.only(top: 4),
                 width: MediaQuery.of(context).size.width,
                 height: 40,
@@ -1943,15 +2380,17 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: Center(
                   child: Text(
-                    adminCost == "" || adminCost.isEmpty || adminCost == "0"
+                    prefOutHouse == "" ||
+                            prefOutHouse.isEmpty ||
+                            prefOutHouse == "0"
                         ? "Total = Rp. " +
                             NumberFormat.currency(
                                     locale: 'id', decimalDigits: 0, symbol: '')
-                                .format(_costInHouse)
+                                .format(_costOutHouse)
                         : "Total = Rp. " +
                             NumberFormat.currency(
                                     locale: 'id', decimalDigits: 0, symbol: '')
-                                .format(double.parse(adminCost)),
+                                .format(int.parse(prefOutHouse)),
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
@@ -1960,405 +2399,77 @@ class _StepFillEnamState extends State<StepFillEnam> {
                   ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: checkKlasifikasiType != "Breakdown Maintenance"
-                  ? true
-                  : false,
-              child: InkWell(
-                onTap: () => resultCostInHouse(),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 6),
-                  width: MediaQuery.of(context).size.width,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      border: Border.all(color: Colors.blueAccent),
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: Center(
-                    child: Text(
-                      "Hitung Cost In-House",
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: out_house,
-                        style: TextStyle(color: Color(0xFF404446))),
-                    // TextSpan(text: ' * ', style: TextStyle(color: Colors.red)),
-                    TextSpan(
-                        text: ':', style: TextStyle(color: Color(0xFF404446))),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-                margin: const EdgeInsets.only(top: 16, bottom: 10),
-                height: 40,
-                child: TextFormField(
-                  controller: vendorPriceController,
-                  readOnly: true,
-                  showCursor: true,
-                  onTap: () {
-                    setState(() {
-                      isTapVendor = !isTapVendor;
-                    });
-                  },
-                  decoration: InputDecoration(
-                      hintText: "Pilih vendor",
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      suffixIcon: Icon(Icons.arrow_drop_down),
-                      border: OutlineInputBorder()),
-                )),
-            isTapVendor == false
-                ? Container()
-                : Container(
-                    height: 150,
-                    padding: EdgeInsets.all(8),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: listVendor.map((e) {
-                        return InkWell(
-                            onTap: () async {
-                              // final prefs = await _prefs;
-                              setState(() {
-                                vendorPriceController =
-                                    TextEditingController(text: e.vendorName);
-                                costOutHouseController =
-                                    TextEditingController(text: e.vendorPrice);
-                                // prefs.setString("outHouseCost", e.vendorPrice!);
-                                // prefs.setString("vendorName", e.vendorName!);
-                                isTapVendor = !isTapVendor;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(e.vendorName!),
-                            ));
-                      }).toList(),
-                    ),
-                  ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 60,
-                    height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 20,
-                            // height: 20,
-                            child: TextFormField(
-                                maxLength: 2,
-                                onChanged: (text) async {
-                                  resultHOutHouse(text);
-                                  // final prefs = await _prefs;
-                                  // prefs.setString("outHouseH", text);
-                                  // prefs.setString("outHouseHBool", "1");
-                                  // setFormValueStep6AfterChoosing();
-                                },
-                                controller: outHouseHController,
-                                keyboardType: TextInputType.number,
-                                style: const TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400),
-                                decoration: const InputDecoration(
-                                    counter: Offstage(),
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    hintText: '0',
-                                    hintStyle: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400))),
-                          ),
-                          Text(
-                            " H",
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // isStepEnamFill = false;
+                        // isStepLimaFill = true;
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: Center(
+                          child: Text(
+                            "Kembali",
                             style: TextStyle(
                                 fontFamily: 'Rubik',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "X",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 80,
-                    height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 20,
-                            // height: 20,
-                            child: TextFormField(
-                                maxLength: 2,
-                                onChanged: (text) async {
-                                  resultMpOutHouse(text);
-                                  // final SharedPreferences prefs = await _prefs;
-                                  // prefs.setString("outHouseMp", text);
-                                  // prefs.setString("outHouseMpBool", "1");
-                                  // setFormValueStep6AfterChoosing();
-                                },
-                                controller: outHouseMpController,
-                                keyboardType: TextInputType.number,
-                                style: const TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400),
-                                decoration: const InputDecoration(
-                                    counter: Offstage(),
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    hintText: '0',
-                                    hintStyle: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400))),
-                          ),
-                          Text(
-                            " M/P",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "X",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Color(0xFF979C9E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 140,
-                    height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border: Border.all(color: Color(0xFF979C9E)),
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Rp. ",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 14,
+                                color: Color(0xFF00AEDB),
+                                fontSize: 16,
                                 fontWeight: FontWeight.w400),
                           ),
-                          Container(
-                            width: 70,
-                            // height: 20,
-                            child: TextFormField(
-                                onChanged: (text) async {
-                                  resultCostOutHouse(text);
-                                  final SharedPreferences prefs = await _prefs;
-                                  prefs.setString(
-                                      "outHouseCost", text.replaceAll(".", ""));
-                                  prefs.setString("outHouseCostBool", "1");
-                                },
-                                controller: costOutHouseController,
-                                readOnly: true,
-                                maxLength: 9,
-                                inputFormatters: <TextInputFormatter>[
-                                  CurrencyTextInputFormatter(
-                                    locale: 'IDN',
-                                    decimalDigits: 0,
-                                    symbol: '',
-                                  ),
-                                ],
-                                keyboardType: TextInputType.number,
-                                style: const TextStyle(
-                                    fontFamily: 'Rubik',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400),
-                                decoration: const InputDecoration(
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    counterText: "",
-                                    hintText: '0',
-                                    hintStyle: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400))),
-                          ),
-                          Text(
-                            " /H",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF979C9E)),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Center(
-                child: Text(
-                  prefOutHouse == "" ||
-                          prefOutHouse.isEmpty ||
-                          prefOutHouse == "0"
-                      ? "Total = Rp. " +
-                          NumberFormat.currency(
-                                  locale: 'id', decimalDigits: 0, symbol: '')
-                              .format(_costOutHouse)
-                      : "Total = Rp. " +
-                          NumberFormat.currency(
-                                  locale: 'id', decimalDigits: 0, symbol: '')
-                              .format(int.parse(prefOutHouse)),
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 16,
-                      color: Color(0xFF404446),
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 26),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      isStepEnamFill.value = false;
-                      isStepLimaFill.value = true;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Color(0xFF00AEDB))),
-                      child: Center(
-                        child: Text(
-                          "Kembali",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Color(0xFF00AEDB),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (checkKlasifikasiType != "Breakdown Maintenance") {
-                        postFillEnam();
-                      } else {
-                        if (breakTimeFill == true) {
+                    InkWell(
+                      onTap: () {
+                        if (checkKlasifikasiType != "Breakdown Maintenance") {
                           postFillEnam();
                         } else {
-                          // postFillEnam();
-                          Fluttertoast.showToast(
-                              msg: 'Waktu istirahat masih kosong',
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.greenAccent,
-                              textColor: Colors.white,
-                              fontSize: 16);
+                          if (breakTimeFill == true) {
+                            postFillEnam();
+                          } else {
+                            // postFillEnam();
+                            Fluttertoast.showToast(
+                                msg: 'Waktu istirahat masih kosong',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.greenAccent,
+                                textColor: Colors.white,
+                                fontSize: 16);
+                          }
                         }
-                      }
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Color(0xFF00AEDB)),
-                      child: Center(
-                        child: Text("Lanjut 7/8",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400)),
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: Center(
+                          child: Text("Lanjut 7/8",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

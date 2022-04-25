@@ -8,6 +8,7 @@ import 'package:e_cm/baseurl/baseurl.dart';
 import 'package:e_cm/homepage/dashboard.dart';
 import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
 import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
+import 'package:e_cm/homepage/home/fillnew/interface/stepper_switch.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
@@ -28,14 +29,14 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-var isStepSatuFill = true.obs,
-    isStepDuaFill = false.obs,
-    isStepTigaFill = false.obs,
-    isStepEmpatFill = false.obs,
-    isStepLimaFill = false.obs,
-    isStepEnamFill = false.obs,
-    isStepTujuhFill = false.obs,
-    isStepDelapanFill = false.obs;
+var isStepSatuFill = true,
+    isStepDuaFill = false,
+    isStepTigaFill = false,
+    isStepEmpatFill = false,
+    isStepLimaFill = false,
+    isStepEnamFill = false,
+    isStepTujuhFill = false,
+    isStepDelapanFill = false;
 
 class FillNew extends StatefulWidget {
   final String? ecmId;
@@ -461,14 +462,14 @@ class _FillNewState extends State<FillNew> {
           ModalRoute.withName("/"));
     }
 
-    isStepSatuFill.value = true;
-    isStepDuaFill.value = false;
-    isStepTigaFill.value = false;
-    isStepEmpatFill.value = false;
-    isStepLimaFill.value = false;
-    isStepEnamFill.value = false;
-    isStepTujuhFill.value = false;
-    isStepDelapanFill.value = false;
+    isStepSatuFill = true;
+    isStepDuaFill = false;
+    isStepTigaFill = false;
+    isStepEmpatFill = false;
+    isStepLimaFill = false;
+    isStepEnamFill = false;
+    isStepTujuhFill = false;
+    isStepDelapanFill = false;
   }
 
   void removeDataGagalEcm() async {
@@ -658,84 +659,83 @@ class _FillNewState extends State<FillNew> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: 50,
-                  child: Obx(() => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          StepperNumber(
-                            numberStep: "1",
-                            isFilled: isStepSatuFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "2",
-                            isFilled: isStepDuaFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "3",
-                            isFilled: isStepTigaFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "4",
-                            isFilled: isStepEmpatFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "5",
-                            isFilled: isStepLimaFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "6",
-                            isFilled: isStepEnamFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "7",
-                            isFilled: isStepTujuhFill.value,
-                          ),
-                          LineStepper(),
-                          StepperNumber(
-                            numberStep: "8",
-                            isFilled: isStepDelapanFill.value,
-                          ),
-                        ],
-                      )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StepperNumber(
+                        numberStep: "1",
+                        isFilled: isStepSatuFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "2",
+                        isFilled: isStepDuaFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "3",
+                        isFilled: isStepTigaFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "4",
+                        isFilled: isStepEmpatFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "5",
+                        isFilled: isStepLimaFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "6",
+                        isFilled: isStepEnamFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "7",
+                        isFilled: isStepTujuhFill,
+                      ),
+                      LineStepper(),
+                      StepperNumber(
+                        numberStep: "8",
+                        isFilled: isStepDelapanFill,
+                      ),
+                    ],
+                  ),
                 ),
-                Obx(() => Visibility(
-                    visible: isStepSatuFill.value,
+                Visibility(
+                    visible: isStepSatuFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillSatu()))),
-                Obx(() => Visibility(
-                    visible: isStepDuaFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillSatu())),
+                Visibility(
+                    visible: isStepDuaFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillDua()))),
-                Obx(() => Visibility(
-                    visible: isStepTigaFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillDua())),
+                Visibility(
+                    visible: isStepTigaFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillTiga()))),
-                Obx(() => Visibility(
-                    visible: isStepEmpatFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillTiga())),
+                Visibility(
+                    visible: isStepEmpatFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillEmpat()))),
-                Obx(() => Visibility(
-                    visible: isStepLimaFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillEmpat())),
+                Visibility(
+                    visible: isStepLimaFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillLima()))),
-                Obx(() => Visibility(
-                    visible: isStepEnamFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillLima())),
+                Visibility(
+                    visible: isStepEnamFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillEnam()))),
-                Obx(() => Visibility(
-                    visible: isStepTujuhFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillEnam())),
+                Visibility(
+                    visible: isStepTujuhFill,
                     child: Container(
-                        padding: EdgeInsets.all(15), child: StepFillTujuh()))),
-                Obx(() => Visibility(
-                    visible: isStepDelapanFill.value,
+                        padding: EdgeInsets.all(15), child: StepFillTujuh())),
+                Visibility(
+                    visible: isStepDelapanFill,
                     child: Container(
-                        padding: EdgeInsets.all(15),
-                        child: StepFillDelapan()))),
+                        padding: EdgeInsets.all(15), child: StepFillDelapan())),
               ],
             ),
           ),

@@ -3,7 +3,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldelapan.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/services.dart';
 // import 'package:intl/intl.dart';
@@ -12,6 +16,7 @@ import 'package:e_cm/homepage/home/model/partitemmachinesavedmodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillTujuh extends StatefulWidget {
@@ -337,262 +342,351 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.58,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Text(sparepart,
-                  style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                  )),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: StreamBuilder(
-                stream: streamController.stream,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: [
-                          Center(
-                            child: Text("Loading spare part...",
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF00AEDB),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return _listDataPartSaved.isEmpty
-                      ? Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                "assets/images/empty.png",
-                                width: 250,
-                              ),
-                              Center(
-                                child: Text(no_sparepart,
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Color(0xFF00AEDB),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    )),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Container(
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _listDataPartSaved.length,
-                            itemBuilder: (context, i) {
-                              print(_listDataPartSaved[i].ecmPartId);
-                              return Container(
-                                padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                                width: MediaQuery.of(context).size.width,
-                                margin:
-                                    const EdgeInsets.only(top: 8, bottom: 8),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF00AEDB),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Column(
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(_listDataPartSaved[i].partItemNama,
-                                        style: TextStyle(
-                                          fontFamily: 'Rubik',
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                        )),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          child: Text(
-                                              "$cost_ ${_listDataPartSaved[i].totalHarga}",
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14,
-                                              )),
-                                        ),
-                                        Container(
-                                          width: 60,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              // InkWell(
-                                              //   onTap: () {
-                                              //     Navigator.of(context).push(
-                                              //         MaterialPageRoute(
-                                              //             builder: (context) =>
-                                              //                 AddItemFillTujuh(
-                                              //                   isFromUpdate:
-                                              //                       true,
-                                              //                   partIdEcm:
-                                              //                       _listDataPartSaved[
-                                              //                               i]
-                                              //                           .ecmPartId,
-                                              //                 )));
-                                              //   },
-                                              //   child: Image.asset(
-                                              //     "assets/icons/akar-icons_edit.png",
-                                              //     width: 20,
-                                              //   ),
-                                              // ),
-                                              InkWell(
-                                                onTap: () {
-                                                  confirmDelete(i);
-                                                },
-                                                child: Image.asset(
-                                                  "assets/icons/trash.png",
-                                                  width: 20,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                },
-              ),
-            ),
-            InkWell(
-              onTap: _listDataPartSaved.length == 7
-                  ? () {
-                      Fluttertoast.showToast(
-                          msg: 'Item sudah maksimal 7',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: Colors.greenAccent,
-                          textColor: Colors.white,
-                          fontSize: 16);
-                    }
-                  : () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AddItemFillTujuh(
-                                isFromUpdate: false,
-                              )));
-                    },
-              child: Container(
-                margin: EdgeInsets.only(top: 10),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
                 width: MediaQuery.of(context).size.width,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Color(0xFF00AEDB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        add_item,
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: true,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: false,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Text(sparepart,
+                    style: TextStyle(
+                      fontFamily: 'Rubik',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                    )),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: StreamBuilder(
+                  stream: streamController.stream,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Center(
+                              child: Text("Loading spare part...",
+                                  style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFF00AEDB),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return _listDataPartSaved.isEmpty
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/empty.png",
+                                  width: 250,
+                                ),
+                                Center(
+                                  child: Text(no_sparepart,
+                                      style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Color(0xFF00AEDB),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(
+                            child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: _listDataPartSaved.length,
+                              itemBuilder: (context, i) {
+                                print(_listDataPartSaved[i].ecmPartId);
+                                return Container(
+                                  padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                  width: MediaQuery.of(context).size.width,
+                                  margin:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF00AEDB),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  child: Column(
+                                    // ignore: prefer_const_literals_to_create_immutables
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(_listDataPartSaved[i].partItemNama,
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                          )),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                                "$cost_ ${_listDataPartSaved[i].totalHarga}",
+                                                style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 14,
+                                                )),
+                                          ),
+                                          Container(
+                                            width: 60,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                // InkWell(
+                                                //   onTap: () {
+                                                //     Navigator.of(context).push(
+                                                //         MaterialPageRoute(
+                                                //             builder: (context) =>
+                                                //                 AddItemFillTujuh(
+                                                //                   isFromUpdate:
+                                                //                       true,
+                                                //                   partIdEcm:
+                                                //                       _listDataPartSaved[
+                                                //                               i]
+                                                //                           .ecmPartId,
+                                                //                 )));
+                                                //   },
+                                                //   child: Image.asset(
+                                                //     "assets/icons/akar-icons_edit.png",
+                                                //     width: 20,
+                                                //   ),
+                                                // ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    confirmDelete(i);
+                                                  },
+                                                  child: Image.asset(
+                                                    "assets/icons/trash.png",
+                                                    width: 20,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                  },
+                ),
+              ),
+              InkWell(
+                onTap: _listDataPartSaved.length == 7
+                    ? () {
+                        Fluttertoast.showToast(
+                            msg: 'Item sudah maksimal 7',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.greenAccent,
+                            textColor: Colors.white,
+                            fontSize: 16);
+                      }
+                    : () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddItemFillTujuh(
+                                  isFromUpdate: false,
+                                )));
+                      },
+                child: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  width: MediaQuery.of(context).size.width,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Color(0xFF00AEDB),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          add_item,
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 26),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      isStepTujuhFill.value = false;
-                      isStepEnamFill.value = true;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Color(0xFF00AEDB))),
-                      child: Center(
-                        child: Text(
-                          "Kembali",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Color(0xFF00AEDB),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // isStepTujuhFill = false;
+                        // isStepEnamFill = true;
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: Center(
+                          child: Text(
+                            "Kembali",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Color(0xFF00AEDB),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      isStepTujuhFill.value = false;
-                      isStepDelapanFill.value = true;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Color(0xFF00AEDB)),
-                      child: Center(
-                        child: Text("Lanjut 8/8",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400)),
+                    InkWell(
+                      onTap: () {
+                        // isStepTujuhFill = false;
+                        // isStepDelapanFill = true;
+                        Get.to(StepFillDelapan());
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: Center(
+                          child: Text("Lanjut 8/8",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

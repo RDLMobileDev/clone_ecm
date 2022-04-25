@@ -5,8 +5,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
-import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/model/step_fill_satu_model.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
 import 'package:e_cm/homepage/home/model/classificationmodel.dart';
 import 'package:e_cm/homepage/home/model/groupareamodel.dart';
 import 'package:e_cm/homepage/home/model/locationmodel.dart';
@@ -19,16 +20,16 @@ import 'package:e_cm/homepage/home/services/locationservice.dart';
 import 'package:e_cm/homepage/home/services/machinenameservice.dart';
 import 'package:e_cm/homepage/home/services/machinenumberservice.dart';
 import 'package:e_cm/homepage/home/services/membernameservice.dart';
-import 'package:e_cm/homepage/notification/model/response_review_model.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_time_format/date_time_format.dart';
+
+import '../../component/widget_fill_new.dart';
+import '../../component/widget_line_stepper.dart';
 
 class StepFillSatu extends StatefulWidget {
   const StepFillSatu({
@@ -245,9 +246,6 @@ class StepFillSatuState extends State<StepFillSatu> {
         print(result);
 
         SharedPrefsUtil.setIdMesinRes(result['data']['id_machine'].toString());
-
-        isStepSatuFill.value = false;
-        isStepDuaFill.value = true;
       } else {
         Fluttertoast.showToast(
             msg: 'Kesalahan jaringan. Data gagal diperbarui.',
@@ -306,9 +304,7 @@ class StepFillSatuState extends State<StepFillSatu> {
               textColor: Colors.white,
               fontSize: 16);
           print(result);
-
-          isStepSatuFill.value = false;
-          isStepDuaFill.value = true;
+          Get.to(StepFillDua());
         } else {
           Fluttertoast.showToast(
               msg: 'Kesalahan jaringan. Data gagal disimpan.',
@@ -482,190 +478,102 @@ class StepFillSatuState extends State<StepFillSatu> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
                 width: MediaQuery.of(context).size.width,
-                child: RichText(
-                  text: TextSpan(
-                    text: classification,
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        color: Color(0xFF404446),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                    children: const <TextSpan>[
-                      TextSpan(
-                          text: '*',
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                )),
-            // ini
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              width: MediaQuery.of(context).size.width,
-              height: 70,
-              child: FutureBuilder(
-                future: getClassificationData(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text("Memuat Klasifikasi"),
-                    );
-                  }
-                  return _listClassification.isEmpty
-                      ? Container(
-                          child: Center(
-                            child: Text("No data classifications"),
-                          ),
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _listClassification.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                              onTap: () async {
-                                final prefs = await _prefs;
-                                setState(() {
-                                  mapClass.updateAll((key, value) => false);
-                                  if (mapClass[i] != null) {
-                                    mapClass[i] = true;
-                                  }
-
-                                  classificationIdSelected =
-                                      _listClassification[i].id;
-
-                                  SharedPrefsUtil.setNamaKlasifikasi(
-                                      _listClassification[i].nama);
-
-                                  // print("map values -> $mapClass");
-                                  // prefs.setString("idClassification",
-                                  //     _listClassification[i].id);
-                                  // prefs.setString("namaKlasifikasi",
-                                  //     _listClassification[i].nama);
-                                  // prefs.setString("classBool", "1");
-                                });
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.27,
-                                height: 50,
-                                margin: EdgeInsets.only(right: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)),
-                                    border: Border.all(
-                                        color: mapClass[i] == false
-                                            ? Colors.white
-                                            : Color(0xFF00AEDB)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 1,
-                                        blurRadius: 1,
-                                        offset: Offset(
-                                            0, 1), // changes position of shadow
-                                      ),
-                                    ]),
-                                child: Center(
-                                  child: Text(
-                                    _listClassification[i].nama,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        color: mapClass[i] == false
-                                            ? Color(0xFF404446)
-                                            : Color(0xFF00AEDB),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                },
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: tanggal,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () => getDateFromDialog(),
-              child: Container(
-                margin: const EdgeInsets.only(top: 4),
-                padding: const EdgeInsets.all(5),
-                height: 40,
-                decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF979C9E)),
-                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                height: 50,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // ignore: prefer_const_literals_to_create_immutables
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: Icon(Icons.calendar_today)),
-                          Text(
-                            dateSelected,
-                            style: const TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: true,
                     ),
-                    const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Icon(Icons.arrow_drop_down))
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: false,
+                    ),
                   ],
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
+
+              Container(
+                  width: MediaQuery.of(context).size.width,
                   child: RichText(
                     text: TextSpan(
-                      text: t_m,
+                      text: classification,
                       style: TextStyle(
                           fontFamily: 'Rubik',
                           color: Color(0xFF404446),
@@ -681,115 +589,304 @@ class StepFillSatuState extends State<StepFillSatu> {
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
-                  ),
-                ),
-                InkWell(
-                    onTap: () {
-                      clearText();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          color: Colors.red.shade100,
-                          border: Border.all(color: Colors.black12),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        "Hapus Team Member",
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            color: Colors.red,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    )),
-              ],
-            ),
-            TextFormField(
-              controller: teamMemberController,
-              showCursor: true,
-              readOnly: true,
-              onTap: () {
-                setState(() {
-                  isTappedTeamMember = !isTappedTeamMember;
-                  print(teamMemberController);
-                });
-              },
-              style: const TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400),
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: const Color(0xFF979C9E))),
-                  suffixIcon: Icon(Icons.search),
-                  hintText: 'Pilih member',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: -5, horizontal: 10),
-                  hintStyle: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
-            ),
-            isTappedTeamMember == false
-                ? Container()
-                : Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    child: FutureBuilder(
-                      future: getListMemberName(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: Text("Memuat member"),
-                          );
-                        }
-
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          // physics: NeverScrollableScrollPhysics(),
-                          itemCount: listNamaMember.isEmpty
-                              ? 0
-                              : listNamaMember.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                              onTap: () async {
-                                final prefs = await _prefs;
-                                if (listTeamMember.length != 6) {
-                                  if (!listTeamMember
-                                      .contains(listNamaMember[i].id)) {
-                                    if (members.isEmpty) {
-                                      setState(() {
-                                        members = listNamaMember[i].name + ', ';
-                                      });
-                                      teamMemberController =
-                                          TextEditingController(text: members);
-                                      // listTeamMember.add(listNamaMember[i].id);
-                                    } else {
-                                      setState(() {
-                                        members +=
-                                            listNamaMember[i].name + ', ';
-                                      });
-                                      teamMemberController =
-                                          TextEditingController(text: members);
-                                      // listTeamMember.add(listNamaMember[i].id);
+                  )),
+              // ini
+              Container(
+                margin: const EdgeInsets.only(top: 8),
+                width: MediaQuery.of(context).size.width,
+                height: 70,
+                child: FutureBuilder(
+                  future: getClassificationData(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: Text("Memuat Klasifikasi"),
+                      );
+                    }
+                    return _listClassification.isEmpty
+                        ? Container(
+                            child: Center(
+                              child: Text("No data classifications"),
+                            ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _listClassification.length,
+                            itemBuilder: (context, i) {
+                              return InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  setState(() {
+                                    mapClass.updateAll((key, value) => false);
+                                    if (mapClass[i] != null) {
+                                      mapClass[i] = true;
                                     }
 
-                                    listTeamMember.add(listNamaMember[i].id);
-                                    print(listTeamMember);
-                                    // prefs.setStringList(
-                                    //     "teamMember", listTeamMember);
-                                    // prefs.setString("namaMember", members);
+                                    classificationIdSelected =
+                                        _listClassification[i].id;
 
-                                    // prefs.setString("teamMemberBool", "1");
-                                    setState(() {
-                                      isTappedTeamMember = !isTappedTeamMember;
-                                    });
+                                    SharedPrefsUtil.setNamaKlasifikasi(
+                                        _listClassification[i].nama);
+
+                                    // print("map values -> $mapClass");
+                                    // prefs.setString("idClassification",
+                                    //     _listClassification[i].id);
+                                    // prefs.setString("namaKlasifikasi",
+                                    //     _listClassification[i].nama);
+                                    // prefs.setString("classBool", "1");
+                                  });
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.27,
+                                  height: 50,
+                                  margin: EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8)),
+                                      border: Border.all(
+                                          color: mapClass[i] == false
+                                              ? Colors.white
+                                              : Color(0xFF00AEDB)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                          offset: Offset(0,
+                                              1), // changes position of shadow
+                                        ),
+                                      ]),
+                                  child: Center(
+                                    child: Text(
+                                      _listClassification[i].nama,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          color: mapClass[i] == false
+                                              ? Color(0xFF404446)
+                                              : Color(0xFF00AEDB),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: RichText(
+                  text: TextSpan(
+                    text: tanggal,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () => getDateFromDialog(),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.all(5),
+                  height: 40,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: const Color(0xFF979C9E)),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: Icon(Icons.calendar_today)),
+                            Text(
+                              dateSelected,
+                              style: const TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.arrow_drop_down))
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    child: RichText(
+                      text: TextSpan(
+                        text: t_m,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        clearText();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            color: Colors.red.shade100,
+                            border: Border.all(color: Colors.black12),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          "Hapus Team Member",
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              color: Colors.red,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      )),
+                ],
+              ),
+              TextFormField(
+                controller: teamMemberController,
+                showCursor: true,
+                readOnly: true,
+                onTap: () {
+                  setState(() {
+                    isTappedTeamMember = !isTappedTeamMember;
+                    print(teamMemberController);
+                  });
+                },
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: const Color(0xFF979C9E))),
+                    suffixIcon: Icon(Icons.search),
+                    hintText: 'Pilih member',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: -5, horizontal: 10),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
+              isTappedTeamMember == false
+                  ? Container()
+                  : Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      width: MediaQuery.of(context).size.width,
+                      height: 180,
+                      child: FutureBuilder(
+                        future: getListMemberName(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: Text("Memuat member"),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            // physics: NeverScrollableScrollPhysics(),
+                            itemCount: listNamaMember.isEmpty
+                                ? 0
+                                : listNamaMember.length,
+                            itemBuilder: (context, i) {
+                              return InkWell(
+                                onTap: () async {
+                                  final prefs = await _prefs;
+                                  if (listTeamMember.length != 6) {
+                                    if (!listTeamMember
+                                        .contains(listNamaMember[i].id)) {
+                                      if (members.isEmpty) {
+                                        setState(() {
+                                          members =
+                                              listNamaMember[i].name + ', ';
+                                        });
+                                        teamMemberController =
+                                            TextEditingController(
+                                                text: members);
+                                        // listTeamMember.add(listNamaMember[i].id);
+                                      } else {
+                                        setState(() {
+                                          members +=
+                                              listNamaMember[i].name + ', ';
+                                        });
+                                        teamMemberController =
+                                            TextEditingController(
+                                                text: members);
+                                        // listTeamMember.add(listNamaMember[i].id);
+                                      }
+
+                                      listTeamMember.add(listNamaMember[i].id);
+                                      print(listTeamMember);
+                                      // prefs.setStringList(
+                                      //     "teamMember", listTeamMember);
+                                      // prefs.setString("namaMember", members);
+
+                                      // prefs.setString("teamMemberBool", "1");
+                                      setState(() {
+                                        isTappedTeamMember =
+                                            !isTappedTeamMember;
+                                      });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              'Tidak boleh pilih nama yang sama',
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 2,
+                                          backgroundColor: Colors.greenAccent,
+                                          textColor: Colors.white,
+                                          fontSize: 16);
+                                    }
                                   } else {
                                     Fluttertoast.showToast(
-                                        msg: 'Tidak boleh pilih nama yang sama',
+                                        msg: 'Member maksimal 6',
                                         toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.BOTTOM,
                                         timeInSecForIosWeb: 2,
@@ -797,502 +894,497 @@ class StepFillSatuState extends State<StepFillSatu> {
                                         textColor: Colors.white,
                                         fontSize: 16);
                                   }
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: 'Member maksimal 6',
-                                      toastLength: Toast.LENGTH_LONG,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: Colors.greenAccent,
-                                      textColor: Colors.white,
-                                      fontSize: 16);
-                                }
-                              },
-                              child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(listNamaMember[i].name)),
+                                },
+                                child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Text(listNamaMember[i].name)),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: RichText(
+                  text: TextSpan(
+                    text: factory,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                ),
+              ),
+              TextFormField(
+                readOnly: true,
+                showCursor: true,
+                controller: factoryNameController,
+                onTap: () {
+                  setState(() {
+                    isTappedFactory = !isTappedFactory;
+                  });
+                },
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF979C9E))),
+                    hintText: select_factory,
+                    suffixIcon: Icon(Icons.arrow_drop_down),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: -5, horizontal: 10),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
+              isTappedFactory == false
+                  ? Container()
+                  : Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      width: MediaQuery.of(context).size.width,
+                      height: 180,
+                      child: FutureBuilder(
+                        future: getListLocation(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: Text("Memuat data factory"),
                             );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: factory,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            TextFormField(
-              readOnly: true,
-              showCursor: true,
-              controller: factoryNameController,
-              onTap: () {
-                setState(() {
-                  isTappedFactory = !isTappedFactory;
-                });
-              },
-              style: const TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: select_factory,
-                  suffixIcon: Icon(Icons.arrow_drop_down),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
-                  hintStyle: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
-            ),
-            isTappedFactory == false
-                ? Container()
-                : Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    child: FutureBuilder(
-                      future: getListLocation(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: Text("Memuat data factory"),
-                          );
-                        }
+                          }
 
-                        return ListView.builder(
-                          // physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _listLocation.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                                onTap: () async {
-                                  final prefs = await _prefs;
-                                  setState(() {
-                                    locationIdSelected =
-                                        _listLocation[i].enumId;
-                                    factoryNameController =
-                                        TextEditingController(
-                                            text:
-                                                _listLocation[i].valueFactory);
-                                    isTappedFactory = !isTappedFactory;
-                                  });
-                                  // getMachineNumberbyId(machineIdSelected);
-                                  // prefs.setString(
-                                  //     "locationId", locationIdSelected);
-                                  // prefs.setString("namaLokasi",
-                                  //     _listLocation[i].valueFactory);
-                                  // prefs.setString("locationBool", "1");
-                                  // print("id lokasi: $locationIdSelected");
-
-                                  // prefs.remove("locationIdGroup");
-                                  // prefs.remove("machineId");
-                                  // prefs.remove("machineDetailId");
-                                  // prefs.remove("machineNameBool");
-                                  // prefs.remove("machineDetailBool");
-                                  // prefs.remove("namaGroupLokasi");
-                                  // prefs.remove("namaMesin");
-                                  // prefs.remove("nomorMesinDetail");
-
-                                  factoryNameGroupController.clear();
-                                  machineNameController.clear();
-                                  machineNumberController.clear();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(_listLocation[i].valueFactory),
-                                ));
-                          },
-                        );
-                      },
-                    ),
-                  ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: group_area,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            TextFormField(
-              showCursor: true,
-              readOnly: true,
-              controller: factoryNameGroupController,
-              onTap: () {
-                setState(() {
-                  isTappedFactoryGroup = !isTappedFactoryGroup;
-                });
-              },
-              style: const TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: select_factory_group,
-                  suffixIcon: Icon(Icons.arrow_drop_down),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
-                  hintStyle: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
-            ),
-            isTappedFactoryGroup == false
-                ? Container()
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    child: FutureBuilder(
-                      future: getListAreaGroup(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: Text("Memuat data factory group"),
-                          );
-                        }
-
-                        return ListView.builder(
-                          // physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _listGroupArea.length,
-                          itemBuilder: (context, i) {
-                            return InkWell(
-                                onTap: () async {
-                                  final prefs = await _prefs;
-                                  setState(() {
-                                    locationIdGroupSelected =
-                                        _listGroupArea[i].enumId;
-                                    factoryNameGroupController =
-                                        TextEditingController(
-                                            text: _listGroupArea[i].valueGroup);
-                                    isTappedFactoryGroup =
-                                        !isTappedFactoryGroup;
-                                  });
-                                  // getMachineNumberbyId(machineIdSelected);
-                                  // prefs.setString("locationIdGroup",
-                                  //     locationIdGroupSelected);
-                                  // prefs.setString("namaGroupLokasi",
-                                  //     _listGroupArea[i].valueGroup);
-                                  // prefs.setString("locationGroupBool", "1");
-                                  // print("id lokasi: $locationIdGroupSelected");
-
-                                  // prefs.remove("machineId");
-                                  // prefs.remove("machineDetailId");
-                                  // prefs.remove("machineNameBool");
-                                  // prefs.remove("machineDetailBool");
-                                  // prefs.remove("namaMesin");
-                                  // prefs.remove("nomorMesinDetail");
-
-                                  machineNameController.clear();
-                                  machineNumberController.clear();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(_listGroupArea[i].valueGroup),
-                                ));
-                          },
-                        );
-                      },
-                    ),
-                  ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: machine_name,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            TextFormField(
-              readOnly: true,
-              showCursor: true,
-              controller: machineNameController,
-              onTap: () {
-                setState(() {
-                  isTapedMachineName = !isTapedMachineName;
-                });
-              },
-              onChanged: (value) async {
-                final prefs = await _prefs;
-                // prefs.setString("machineId", value);
-                prefs.setString("machineNameBool", "1");
-              },
-              style: const TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: type_machine,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
-                  hintStyle: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
-            ),
-            isTapedMachineName == false
-                ? Container()
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    padding: EdgeInsets.all(8),
-                    child: FutureBuilder(
-                      future: getMachineName(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
                           return ListView.builder(
                             // physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _listMachineName.length,
+                            itemCount: _listLocation.length,
                             itemBuilder: (context, i) {
                               return InkWell(
                                   onTap: () async {
-                                    // final prefs = await _prefs;
-                                    // prefs.setString("machineId",
-                                    //     _listMachineName[i].idMesin);
-                                    // prefs.setString(
-                                    //     "namaMesin", _listMachineName[i].nama);
-                                    // prefs.setString("machineNameBool", "1");
+                                    final prefs = await _prefs;
                                     setState(() {
-                                      idMachineFromName =
-                                          _listMachineName[i].idMesin;
-                                      machineNameController =
+                                      locationIdSelected =
+                                          _listLocation[i].enumId;
+                                      factoryNameController =
                                           TextEditingController(
-                                              text: _listMachineName[i].nama);
-                                      isTapedMachineName = !isTapedMachineName;
-                                      machineIdSelected =
-                                          _listMachineName[i].idMesin;
+                                              text: _listLocation[i]
+                                                  .valueFactory);
+                                      isTappedFactory = !isTappedFactory;
                                     });
+                                    // getMachineNumberbyId(machineIdSelected);
+                                    // prefs.setString(
+                                    //     "locationId", locationIdSelected);
+                                    // prefs.setString("namaLokasi",
+                                    //     _listLocation[i].valueFactory);
+                                    // prefs.setString("locationBool", "1");
+                                    // print("id lokasi: $locationIdSelected");
+
+                                    // prefs.remove("locationIdGroup");
+                                    // prefs.remove("machineId");
                                     // prefs.remove("machineDetailId");
+                                    // prefs.remove("machineNameBool");
                                     // prefs.remove("machineDetailBool");
+                                    // prefs.remove("namaGroupLokasi");
+                                    // prefs.remove("namaMesin");
                                     // prefs.remove("nomorMesinDetail");
 
+                                    factoryNameGroupController.clear();
+                                    machineNameController.clear();
                                     machineNumberController.clear();
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 15),
-                                    child: Text(_listMachineName[i].nama),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Text(_listLocation[i].valueFactory),
                                   ));
                             },
                           );
-                        }
-
-                        return Center(
-                          child: Text("Memuat nama mesin"),
-                        );
-                      },
+                        },
+                      ),
                     ),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: RichText(
+                  text: TextSpan(
+                    text: group_area,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
                   ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: RichText(
-                text: TextSpan(
-                  text: 'Nomor Mesin ',
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: '*',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
                 ),
               ),
-            ),
-            TextFormField(
-              readOnly: true,
-              showCursor: true,
-              controller: machineNumberController,
-              onTap: () {
-                setState(() {
-                  isTappedMachineNumber = !isTappedMachineNumber;
-                });
-              },
-              onChanged: (value) async {
-                final prefs = await _prefs;
-                // prefs.setString("machineDetailId", value);
-                prefs.setString("machineDetailBool", "1");
-              },
-              style: const TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF979C9E))),
-                  hintText: type_machine_number,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: -5, horizontal: 10),
-                  hintStyle: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
-            ),
-            isTappedMachineNumber == false
-                ? Container()
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    padding: EdgeInsets.all(8),
-                    child: FutureBuilder(
-                      future: getMachineNumberbyId(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
+              TextFormField(
+                showCursor: true,
+                readOnly: true,
+                controller: factoryNameGroupController,
+                onTap: () {
+                  setState(() {
+                    isTappedFactoryGroup = !isTappedFactoryGroup;
+                  });
+                },
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF979C9E))),
+                    hintText: select_factory_group,
+                    suffixIcon: Icon(Icons.arrow_drop_down),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: -5, horizontal: 10),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
+              isTappedFactoryGroup == false
+                  ? Container()
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 180,
+                      child: FutureBuilder(
+                        future: getListAreaGroup(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: Text("Memuat data factory group"),
+                            );
+                          }
+
                           return ListView.builder(
                             // physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _listMachineNumber.length,
+                            itemCount: _listGroupArea.length,
                             itemBuilder: (context, i) {
                               return InkWell(
                                   onTap: () async {
-                                    // final prefs = await _prefs;
-                                    // prefs.setString("machineDetailId",
-                                    //     _listMachineNumber[i].id);
-                                    // prefs.setString("nomorMesinDetail",
-                                    //     _listMachineNumber[i].numberOfMachine);
-                                    // prefs.setString("machineDetailBool", "1");
-
+                                    final prefs = await _prefs;
                                     setState(() {
-                                      // idMachineFromName =
-                                      //     _listMachineName[i].idMesin;
-                                      machineNumberController =
+                                      locationIdGroupSelected =
+                                          _listGroupArea[i].enumId;
+                                      factoryNameGroupController =
                                           TextEditingController(
-                                              text: _listMachineNumber[i]
-                                                  .numberOfMachine);
-                                      isTappedMachineNumber =
-                                          !isTappedMachineNumber;
-                                      machineDetailIdSelected =
-                                          _listMachineNumber[i].id;
+                                              text:
+                                                  _listGroupArea[i].valueGroup);
+                                      isTappedFactoryGroup =
+                                          !isTappedFactoryGroup;
                                     });
+                                    // getMachineNumberbyId(machineIdSelected);
+                                    // prefs.setString("locationIdGroup",
+                                    //     locationIdGroupSelected);
+                                    // prefs.setString("namaGroupLokasi",
+                                    //     _listGroupArea[i].valueGroup);
+                                    // prefs.setString("locationGroupBool", "1");
+                                    // print("id lokasi: $locationIdGroupSelected");
+
+                                    // prefs.remove("machineId");
+                                    // prefs.remove("machineDetailId");
+                                    // prefs.remove("machineNameBool");
+                                    // prefs.remove("machineDetailBool");
+                                    // prefs.remove("namaMesin");
+                                    // prefs.remove("nomorMesinDetail");
+
+                                    machineNameController.clear();
+                                    machineNumberController.clear();
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 15),
-                                    child: Text(
-                                        _listMachineNumber[i].numberOfMachine),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Text(_listGroupArea[i].valueGroup),
                                   ));
                             },
                           );
-                        }
-
-                        return Center(
-                          child: Text("Memuat nomor mesin"),
-                        );
-                      },
+                        },
+                      ),
                     ),
-                  ),
-            Container(
-              margin: EdgeInsets.only(top: 26),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      if (ecmIdEdit.isNotEmpty || ecmIdEdit != "") {
-                        SharedPrefsUtil.clearEcmIdEdit();
-                      }
-                      Get.back();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Color(0xFF00AEDB))),
-                      child: Center(
-                        child: Text(
-                          "Batal",
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: RichText(
+                  text: TextSpan(
+                    text: machine_name,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
                           style: TextStyle(
                               fontFamily: 'Rubik',
-                              color: Color(0xFF00AEDB),
                               fontSize: 16,
-                              fontWeight: FontWeight.w400),
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                ),
+              ),
+              TextFormField(
+                readOnly: true,
+                showCursor: true,
+                controller: machineNameController,
+                onTap: () {
+                  setState(() {
+                    isTapedMachineName = !isTapedMachineName;
+                  });
+                },
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  // prefs.setString("machineId", value);
+                  prefs.setString("machineNameBool", "1");
+                },
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF979C9E))),
+                    hintText: type_machine,
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: -5, horizontal: 10),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
+              isTapedMachineName == false
+                  ? Container()
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 180,
+                      padding: EdgeInsets.all(8),
+                      child: FutureBuilder(
+                        future: getMachineName(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              // physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: _listMachineName.length,
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                    onTap: () async {
+                                      // final prefs = await _prefs;
+                                      // prefs.setString("machineId",
+                                      //     _listMachineName[i].idMesin);
+                                      // prefs.setString(
+                                      //     "namaMesin", _listMachineName[i].nama);
+                                      // prefs.setString("machineNameBool", "1");
+                                      setState(() {
+                                        idMachineFromName =
+                                            _listMachineName[i].idMesin;
+                                        machineNameController =
+                                            TextEditingController(
+                                                text: _listMachineName[i].nama);
+                                        isTapedMachineName =
+                                            !isTapedMachineName;
+                                        machineIdSelected =
+                                            _listMachineName[i].idMesin;
+                                      });
+                                      // prefs.remove("machineDetailId");
+                                      // prefs.remove("machineDetailBool");
+                                      // prefs.remove("nomorMesinDetail");
+
+                                      machineNumberController.clear();
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+                                      child: Text(_listMachineName[i].nama),
+                                    ));
+                              },
+                            );
+                          }
+
+                          return Center(
+                            child: Text("Memuat nama mesin"),
+                          );
+                        },
+                      ),
+                    ),
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Nomor Mesin ',
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                ),
+              ),
+              TextFormField(
+                readOnly: true,
+                showCursor: true,
+                controller: machineNumberController,
+                onTap: () {
+                  setState(() {
+                    isTappedMachineNumber = !isTappedMachineNumber;
+                  });
+                },
+                onChanged: (value) async {
+                  final prefs = await _prefs;
+                  // prefs.setString("machineDetailId", value);
+                  prefs.setString("machineDetailBool", "1");
+                },
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF979C9E))),
+                    hintText: type_machine_number,
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: -5, horizontal: 10),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
+              isTappedMachineNumber == false
+                  ? Container()
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 180,
+                      padding: EdgeInsets.all(8),
+                      child: FutureBuilder(
+                        future: getMachineNumberbyId(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              // physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: _listMachineNumber.length,
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                    onTap: () async {
+                                      // final prefs = await _prefs;
+                                      // prefs.setString("machineDetailId",
+                                      //     _listMachineNumber[i].id);
+                                      // prefs.setString("nomorMesinDetail",
+                                      //     _listMachineNumber[i].numberOfMachine);
+                                      // prefs.setString("machineDetailBool", "1");
+
+                                      setState(() {
+                                        // idMachineFromName =
+                                        //     _listMachineName[i].idMesin;
+                                        machineNumberController =
+                                            TextEditingController(
+                                                text: _listMachineNumber[i]
+                                                    .numberOfMachine);
+                                        isTappedMachineNumber =
+                                            !isTappedMachineNumber;
+                                        machineDetailIdSelected =
+                                            _listMachineNumber[i].id;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+                                      child: Text(_listMachineNumber[i]
+                                          .numberOfMachine),
+                                    ));
+                              },
+                            );
+                          }
+
+                          return Center(
+                            child: Text("Memuat nomor mesin"),
+                          );
+                        },
+                      ),
+                    ),
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (ecmIdEdit.isNotEmpty || ecmIdEdit != "") {
+                          SharedPrefsUtil.clearEcmIdEdit();
+                        }
+                        Get.back();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: Center(
+                          child: Text(
+                            "Batal",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Color(0xFF00AEDB),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () => ecmIdEdit.isEmpty || ecmIdEdit == ""
-                        ? saveFillNewSatu()
-                        : updateFillNewSatu(),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Color(0xFF00AEDB)),
-                      child: Center(
-                        child: Text("Lanjut 2/8",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400)),
+                    InkWell(
+                      onTap: () => ecmIdEdit.isEmpty || ecmIdEdit == ""
+                          ? saveFillNewSatu()
+                          : updateFillNewSatu(),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: Center(
+                          child: Text("Lanjut 2/8",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -4,8 +4,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/stepfillempatinput.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilllima.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatdelete.dart';
 import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
@@ -422,258 +426,256 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: item_checking,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Color(0xFF404446),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                      children: const <TextSpan>[
-                        TextSpan(
-                            text: '*',
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w400)),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        Timer(
-                            Duration(seconds: 3), () => getDataItemChecking());
-                      },
-                      icon: Icon(Icons.refresh))
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 16.0,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                child: _listItemChecking.isEmpty
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              "assets/images/checking.png",
-                              width: 250,
-                            ),
-                            Center(
-                              child: Text(validation_checked,
-                                  style: TextStyle(
-                                    fontFamily: 'Rubik',
-                                    color: Color(0xFF00AEDB),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                  )),
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: _listItemChecking.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_listItemChecking[i].partNama ?? "-",
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    )),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                          "$checking_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
-                                          style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                    Container(
-                                      width: 60,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              bool isInputted = await Navigator
-                                                      .of(context)
-                                                  .push(MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          StepFillEmpatInput(
-                                                            ecmItemId:
-                                                                _listItemChecking[
-                                                                        i]
-                                                                    .ecmitemId
-                                                                    .toString(),
-                                                          )));
-
-                                              if (isInputted) {
-                                                // setState(() => );
-                                                getDataItemChecking();
-                                              }
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/akar-icons_edit.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              confirmDelete(_listItemChecking[i]
-                                                  .ecmitemId
-                                                  .toString());
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/trash.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ),
-            InkWell(
-              onTap: _listItemChecking.length == 6
-                  ? () {
-                      Fluttertoast.showToast(
-                          msg: 'Item cek sudah maksimal 6',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: Colors.greenAccent,
-                          textColor: Colors.white,
-                          fontSize: 16);
-                    }
-                  : () async {
-                      // final prefs = await _prefs;
-                      bool isInputted = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => StepFillEmpatInput()));
-
-                      if (isInputted) {
-                        // setState(() => getDataItemChecking());
-                        // prefs.setString("itemStep4Bool", "1");
-                        getDataItemChecking();
-                      }
-                    },
-              child: Container(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.only(top: 10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Color(0xFF00AEDB)),
+                height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 5),
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                  children: [
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: false,
                     ),
-                    Text(
-                      add_item_,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: true,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: false,
                     ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 26),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      isStepEmpatFill.value = false;
-                      isStepTigaFill.value = true;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Color(0xFF00AEDB))),
-                      child: Center(
-                        child: Text(
-                          "Kembali",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Color(0xFF00AEDB),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: item_checking,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (_listItemChecking.isNotEmpty) {
-                        isStepEmpatFill.value = false;
-                        isStepLimaFill.value = true;
-                      } else {
+                    IconButton(
+                        onPressed: () {
+                          Timer(Duration(seconds: 3),
+                              () => getDataItemChecking());
+                        },
+                        icon: Icon(Icons.refresh))
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  child: _listItemChecking.isEmpty
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/images/checking.png",
+                                width: 250,
+                              ),
+                              Center(
+                                child: Text(validation_checked,
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      color: Color(0xFF00AEDB),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _listItemChecking.length,
+                          itemBuilder: (context, i) {
+                            return Container(
+                              padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                              margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF00AEDB),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              child: Column(
+                                // ignore: prefer_const_literals_to_create_immutables
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_listItemChecking[i].partNama ?? "-",
+                                      style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                      )),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                            "$checking_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
+                                            style: TextStyle(
+                                              fontFamily: 'Rubik',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                            )),
+                                      ),
+                                      Container(
+                                        width: 60,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              onTap: () async {
+                                                bool isInputted = await Navigator
+                                                        .of(context)
+                                                    .push(MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            StepFillEmpatInput(
+                                                              ecmItemId:
+                                                                  _listItemChecking[
+                                                                          i]
+                                                                      .ecmitemId
+                                                                      .toString(),
+                                                            )));
+
+                                                if (isInputted) {
+                                                  // setState(() => );
+                                                  getDataItemChecking();
+                                                }
+                                              },
+                                              child: Image.asset(
+                                                "assets/icons/akar-icons_edit.png",
+                                                width: 20,
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                confirmDelete(
+                                                    _listItemChecking[i]
+                                                        .ecmitemId
+                                                        .toString());
+                                              },
+                                              child: Image.asset(
+                                                "assets/icons/trash.png",
+                                                width: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ),
+              InkWell(
+                onTap: _listItemChecking.length == 6
+                    ? () {
                         Fluttertoast.showToast(
-                            msg: 'Anda belum menambahkan item',
+                            msg: 'Item cek sudah maksimal 6',
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 2,
@@ -681,29 +683,119 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                             textColor: Colors.white,
                             fontSize: 16);
                       }
-                      // isStepEmpatFill.value = false;
-                      // isStepLimaFill.value = true;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Color(0xFF00AEDB)),
-                      child: Center(
-                        child: Text("Lanjut 5/8",
+                    : () async {
+                        // final prefs = await _prefs;
+                        bool isInputted = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => StepFillEmpatInput()));
+
+                        if (isInputted) {
+                          // setState(() => getDataItemChecking());
+                          // prefs.setString("itemStep4Bool", "1");
+                          getDataItemChecking();
+                        }
+                      },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(5),
+                  margin: EdgeInsets.only(top: 10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color(0xFF00AEDB)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      Text(
+                        add_item_,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.white,
+                            fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // isStepEmpatFill = false;
+                        // isStepTigaFill = true;
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: Center(
+                          child: Text(
+                            "Kembali",
                             style: TextStyle(
                                 fontFamily: 'Rubik',
-                                color: Colors.white,
+                                color: Color(0xFF00AEDB),
                                 fontSize: 16,
-                                fontWeight: FontWeight.w400)),
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
                       ),
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    InkWell(
+                      onTap: () {
+                        if (_listItemChecking.isNotEmpty) {
+                          // isStepEmpatFill = false;
+                          // isStepLimaFill = true;
+                          Get.to(StepFillLima());
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Anda belum menambahkan item',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        }
+                        // isStepEmpatFill.value = false;
+                        // isStepLimaFill.value = true;
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: Center(
+                          child: Text("Lanjut 5/8",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
