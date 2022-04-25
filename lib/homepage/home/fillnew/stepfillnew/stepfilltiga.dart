@@ -4,11 +4,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillempat.dart';
 import 'package:e_cm/homepage/home/services/apifillnewtiga.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../fillnew.dart';
@@ -142,8 +147,9 @@ class _StepFillTigaState extends State<StepFillTiga> {
               textColor: Colors.white,
               fontSize: 16);
 
-          isStepTigaFill.value = false;
-          isStepEmpatFill.value = true;
+          // isStepTigaFill = false;
+          // isStepEmpatFill = true;
+          Get.to(StepFillEmpat());
         } else {
           Fluttertoast.showToast(
               msg: 'Terjadi kesalahan, Data gagal disimpan',
@@ -235,259 +241,349 @@ class _StepFillTigaState extends State<StepFillTiga> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: RichText(
-              text: TextSpan(
-                text: why_analysis,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-                children: const <TextSpan>[],
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        child: SingleChildScrollView(
+          child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 10, top: 10),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: true,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: false,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
                 child: RichText(
                   text: TextSpan(
-                    text: why,
+                    text: why_analysis,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                    children: const <TextSpan>[
-                      TextSpan(
-                          text: '*',
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w400)),
-                    ],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
+                    children: const <TextSpan>[],
                   ),
                 ),
               ),
-              TextFormField(
-                maxLength: 500,
-                controller: why1Controller,
-                onChanged: (value) async {
-                  final prefs = await _prefs;
-                  setState(() {
-                    prefs.setString("why1", value);
-                    prefs.setString("whyBool1", "1");
-                  });
-                },
-                decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    hintText: type_message),
-                maxLines: 5,
-              )
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 10, top: 10),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Why 2',
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                    children: const <TextSpan>[
-                      TextSpan(
-                          text: '*',
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                ),
-              ),
-              TextFormField(
-                maxLength: 500,
-                onChanged: (value) async {
-                  final prefs = await _prefs;
-                  setState(() {
-                    prefs.setString("why2", value);
-                    prefs.setString("whyBool2", "1");
-                  });
-                },
-                controller: why2Controller,
-                decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    hintText: type_message),
-                maxLines: 5,
-              )
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 10, top: 10),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Why 3 (Optional)',
-                    style: TextStyle(
-                        fontFamily: 'Rubik',
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ),
-              ),
-              TextFormField(
-                maxLength: 500,
-                controller: why3Controller,
-                onChanged: (value) async {
-                  final prefs = await _prefs;
-                  setState(() {
-                    prefs.setString("why3", value);
-                    prefs.setString("whyBool3", "0");
-                  });
-                },
-                decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    hintText: type_message),
-                maxLines: 5,
-              )
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 10, top: 10),
-                child: Text(
-                  'Why 4 (Optional)',
-                  style: TextStyle(
-                      color: Colors.black, fontFamily: 'Rubik', fontSize: 14),
-                ),
-              ),
-              TextFormField(
-                maxLength: 500,
-                controller: why4Controller,
-                onChanged: (value) async {
-                  final prefs = await _prefs;
-                  setState(() {
-                    prefs.setString("why4", value);
-                  });
-                },
-                decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    hintText: type_message),
-                maxLines: 5,
-              )
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: RichText(
-              text: TextSpan(
-                text: "Why 5 (Optional)",
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-          ),
-          Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 10),
-              child: TextFormField(
-                maxLength: 500,
-                controller: howController,
-                onChanged: (value) async {
-                  final prefs = await _prefs;
-                  setState(() {
-                    prefs.setString("howC", value);
-                    // prefs.setString("howBool", "0");
-                  });
-                },
-                decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    hintText: type_message),
-                maxLines: 5,
-              )),
-          Container(
-            margin: EdgeInsets.only(top: 26),
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    isStepDuaFill.value = true;
-                    isStepTigaFill.value = false;
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        border: Border.all(color: Color(0xFF00AEDB))),
-                    child: Center(
-                      child: Text(
-                        "Kembali",
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10, top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: why,
                         style: TextStyle(
                             fontFamily: 'Rubik',
-                            color: Color(0xFF00AEDB),
-                            fontSize: 16,
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    maxLength: 500,
+                    controller: why1Controller,
+                    onChanged: (value) async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        prefs.setString("why1", value);
+                        prefs.setString("whyBool1", "1");
+                      });
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        hintText: type_message),
+                    maxLines: 5,
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10, top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Why 2',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    maxLength: 500,
+                    onChanged: (value) async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        prefs.setString("why2", value);
+                        prefs.setString("whyBool2", "1");
+                      });
+                    },
+                    controller: why2Controller,
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        hintText: type_message),
+                    maxLines: 5,
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10, top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Why 3 (Optional)',
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.black,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400),
                       ),
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () => saveStepFillTiga(),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Color(0xFF00AEDB)),
-                    child: Center(
-                      child: Text("Lanjut 4/8",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400)),
+                  TextFormField(
+                    maxLength: 500,
+                    controller: why3Controller,
+                    onChanged: (value) async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        prefs.setString("why3", value);
+                        prefs.setString("whyBool3", "0");
+                      });
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        hintText: type_message),
+                    maxLines: 5,
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10, top: 10),
+                    child: Text(
+                      'Why 4 (Optional)',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Rubik',
+                          fontSize: 14),
                     ),
                   ),
-                )
-              ],
-            ),
-          )
-        ],
+                  TextFormField(
+                    maxLength: 500,
+                    controller: why4Controller,
+                    onChanged: (value) async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        prefs.setString("why4", value);
+                      });
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        hintText: type_message),
+                    maxLines: 5,
+                  )
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  text: TextSpan(
+                    text: "Why 5 (Optional)",
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(top: 10),
+                  child: TextFormField(
+                    maxLength: 500,
+                    controller: howController,
+                    onChanged: (value) async {
+                      final prefs = await _prefs;
+                      setState(() {
+                        prefs.setString("howC", value);
+                        // prefs.setString("howBool", "0");
+                      });
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        hintText: type_message),
+                    maxLines: 5,
+                  )),
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // isStepDuaFill = true;
+                        // isStepTigaFill = false;
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: Center(
+                          child: Text(
+                            "Kembali",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Color(0xFF00AEDB),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => saveStepFillTiga(),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: Center(
+                          child: Text("Lanjut 4/8",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

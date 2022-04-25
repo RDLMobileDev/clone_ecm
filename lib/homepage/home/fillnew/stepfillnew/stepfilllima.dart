@@ -4,8 +4,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/additionpage/formstepfilllima.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillenam.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_get.dart';
 import 'package:e_cm/homepage/home/services/apideletefillnewlima.dart';
@@ -14,6 +18,7 @@ import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillLima extends StatefulWidget {
@@ -360,276 +365,242 @@ class _StepFillLimaState extends State<StepFillLima> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.58,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: RichText(
-                text: TextSpan(
-                  text: item_repairing,
-                  style: TextStyle(
-                      fontFamily: 'Rubik',
-                      color: Color(0xFF404446),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                  children: const <TextSpan>[
-                    TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16.0,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: _listItemChecking.isEmpty
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/images/repair.png",
-                            width: 250,
-                          ),
-                          Center(
-                            child: Text(validation_repair,
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  color: Color(0xFF00AEDB),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: _listItemChecking.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF00AEDB),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_listItemChecking[i].partNama ?? "-",
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    )),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                          "$repair_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
-                                          style: TextStyle(
-                                            fontFamily: 'Rubik',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                    Container(
-                                      width: 60,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              final result =
-                                                  await Navigator.of(context)
-                                                      .push(MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              FormStepFilllima(
-                                                                idEcmItem:
-                                                                    _listItemChecking[
-                                                                            i]
-                                                                        .ecmitemId
-                                                                        .toString(),
-                                                                isUpdate: true,
-                                                              )));
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/akar-icons_edit.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              confirmDelete(_listItemChecking[i]
-                                                  .ecmitemId
-                                                  .toString());
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/trash.png",
-                                              width: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-            ),
-            InkWell(
-              onTap: _listItemChecking.length == 6
-                  ? () {
-                      Fluttertoast.showToast(
-                          msg: 'Item sudah maksimal 6',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: Colors.greenAccent,
-                          textColor: Colors.white,
-                          fontSize: 16);
-                    }
-                  : () async {
-                      final prefs = await _prefs;
-                      try {
-                        bool isInputted =
-                            await Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => FormStepFilllima(
-                                      isUpdate: false,
-                                    )));
-
-                        if (isInputted) {
-                          prefs.setString("itemRepairBool", "1");
-                          getDataItemRepairing();
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-              child: Container(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        height: MediaQuery.of(context).size.height * 0.58,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.only(top: 10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Color(0xFF00AEDB)),
+                height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 5),
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                  children: [
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: false,
                     ),
-                    Text(
-                      add_item,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.white,
-                          fontSize: 12),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: true,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: false,
                     ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Divider(
-                    color: Color(0xFFCDCFD0),
-                    thickness: 2,
-                    height: 16,
-                  ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //       'Total Checking Time :',
-                  //       style: TextStyle(
-                  //         fontFamily: 'Rubik',
-                  //         fontWeight: FontWeight.w700,
-                  //         fontStyle: FontStyle.normal,
-                  //         fontSize: 16,
-                  //       ),
-                  //     ),
-                  //     Text('0 H : 0 M'),
-                  //   ],
-                  // ),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 26),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      isStepEmpatFill.value = true;
-                      isStepLimaFill.value = false;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Color(0xFF00AEDB))),
-                      child: Center(
-                        child: Text(
-                          "Kembali",
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  text: TextSpan(
+                    text: item_repairing,
+                    style: TextStyle(
+                        fontFamily: 'Rubik',
+                        color: Color(0xFF404446),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: ' *',
                           style: TextStyle(
                               fontFamily: 'Rubik',
-                              color: Color(0xFF00AEDB),
                               fontSize: 16,
-                              fontWeight: FontWeight.w400),
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: _listItemChecking.isEmpty
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "assets/images/repair.png",
+                              width: 250,
+                            ),
+                            Center(
+                              child: Text(validation_repair,
+                                  style: TextStyle(
+                                    fontFamily: 'Rubik',
+                                    color: Color(0xFF00AEDB),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _listItemChecking.length,
+                          itemBuilder: (context, i) {
+                            return Container(
+                              padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                              margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF00AEDB),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              child: Column(
+                                // ignore: prefer_const_literals_to_create_immutables
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_listItemChecking[i].partNama ?? "-",
+                                      style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                      )),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                            "$repair_time ${_listItemChecking[i].waktuJam}H : ${_listItemChecking[i].waktuMenit}M",
+                                            style: TextStyle(
+                                              fontFamily: 'Rubik',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                            )),
+                                      ),
+                                      Container(
+                                        width: 60,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              onTap: () async {
+                                                final result = await Navigator
+                                                        .of(context)
+                                                    .push(MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            FormStepFilllima(
+                                                              idEcmItem:
+                                                                  _listItemChecking[
+                                                                          i]
+                                                                      .ecmitemId
+                                                                      .toString(),
+                                                              isUpdate: true,
+                                                            )));
+                                              },
+                                              child: Image.asset(
+                                                "assets/icons/akar-icons_edit.png",
+                                                width: 20,
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                confirmDelete(
+                                                    _listItemChecking[i]
+                                                        .ecmitemId
+                                                        .toString());
+                                              },
+                                              child: Image.asset(
+                                                "assets/icons/trash.png",
+                                                width: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (_listItemChecking.isNotEmpty) {
-                        isStepLimaFill.value = false;
-                        isStepEnamFill.value = true;
-                      } else {
+              ),
+              InkWell(
+                onTap: _listItemChecking.length == 6
+                    ? () {
                         Fluttertoast.showToast(
-                            msg: 'Anda belum menambahkan item',
+                            msg: 'Item sudah maksimal 6',
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 2,
@@ -637,27 +608,149 @@ class _StepFillLimaState extends State<StepFillLima> {
                             textColor: Colors.white,
                             fontSize: 16);
                       }
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Color(0xFF00AEDB)),
-                      child: Center(
-                        child: Text("Lanjut 6/8",
+                    : () async {
+                        final prefs = await _prefs;
+                        try {
+                          bool isInputted = await Navigator.of(context)
+                              .push(MaterialPageRoute(
+                                  builder: (context) => FormStepFilllima(
+                                        isUpdate: false,
+                                      )));
+
+                          if (isInputted) {
+                            prefs.setString("itemRepairBool", "1");
+                            getDataItemRepairing();
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(5),
+                  margin: EdgeInsets.only(top: 10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color(0xFF00AEDB)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      Text(
+                        add_item,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.white,
+                            fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Divider(
+                      color: Color(0xFFCDCFD0),
+                      thickness: 2,
+                      height: 16,
+                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       'Total Checking Time :',
+                    //       style: TextStyle(
+                    //         fontFamily: 'Rubik',
+                    //         fontWeight: FontWeight.w700,
+                    //         fontStyle: FontStyle.normal,
+                    //         fontSize: 16,
+                    //       ),
+                    //     ),
+                    //     Text('0 H : 0 M'),
+                    //   ],
+                    // ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // isStepEmpatFill = true;
+                        // isStepLimaFill = false;
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: Center(
+                          child: Text(
+                            "Kembali",
                             style: TextStyle(
                                 fontFamily: 'Rubik',
-                                color: Colors.white,
+                                color: Color(0xFF00AEDB),
                                 fontSize: 16,
-                                fontWeight: FontWeight.w400)),
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
                       ),
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    InkWell(
+                      onTap: () {
+                        if (_listItemChecking.isNotEmpty) {
+                          // isStepLimaFill = false;
+                          // isStepEnamFill = true;
+                          Get.to(StepFillEnam());
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Anda belum menambahkan item',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.greenAccent,
+                              textColor: Colors.white,
+                              fontSize: 16);
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: Center(
+                          child: Text("Lanjut 6/8",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

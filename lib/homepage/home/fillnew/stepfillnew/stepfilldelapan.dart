@@ -5,6 +5,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/dashboard.dart';
+import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
+import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
+import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/model/summaryapprovemodel.dart';
 // import 'package:e_cm/homepage/home/fillnew/additionpage/approvestepdelapan.dart';
@@ -166,14 +169,14 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   children: [
                     InkWell(
                       onTap: () {
-                        isStepSatuFill.value = true;
-                        isStepDuaFill.value = false;
-                        isStepTigaFill.value = false;
-                        isStepEmpatFill.value = false;
-                        isStepLimaFill.value = false;
-                        isStepEnamFill.value = false;
-                        isStepTujuhFill.value = false;
-                        isStepDelapanFill.value = false;
+                        // isStepSatuFill = true;
+                        // isStepDuaFill = false;
+                        // isStepTigaFill = false;
+                        // isStepEmpatFill = false;
+                        // isStepLimaFill = false;
+                        // isStepEnamFill = false;
+                        // isStepTujuhFill = false;
+                        // isStepDelapanFill = false;
 
                         Get.off(const Dashboard());
                         // Navigator.pushAndRemoveUntil(
@@ -441,14 +444,14 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   SharedPrefsUtil.clearEcmId();
                   Get.off(Dashboard());
 
-                  isStepSatuFill.value = true;
-                  isStepDuaFill.value = false;
-                  isStepTigaFill.value = false;
-                  isStepEmpatFill.value = false;
-                  isStepLimaFill.value = false;
-                  isStepEnamFill.value = false;
-                  isStepTujuhFill.value = false;
-                  isStepDelapanFill.value = false;
+                  // isStepSatuFill = true;
+                  // isStepDuaFill = false;
+                  // isStepTigaFill = false;
+                  // isStepEmpatFill = false;
+                  // isStepLimaFill = false;
+                  // isStepEnamFill = false;
+                  // isStepTujuhFill = false;
+                  // isStepDelapanFill = false;
 
                   // Navigator.pushAndRemoveUntil(
                   //     context,
@@ -730,309 +733,393 @@ class StepFillDelapanState extends State<StepFillDelapan> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.58,
-      width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Container(
-            //   width: MediaQuery.of(context).size.width,
-            //   child: const Text("E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Color(0xFF404446), fontSize: 16, fontWeight: FontWeight.w400 ),),
-            // ),
-            // InkWell(
-            //   onTap: (){
-            //       Navigator.of(context).push(
-            //         MaterialPageRoute(builder: (context) => const ApproveStepDelapan())
-            //       );
-            //     },
-            //   child: Container(
-            //     margin: const EdgeInsets.only(top: 16),
-            //     width: MediaQuery.of(context).size.width,
-            //     height: 40,
-            //     decoration: const BoxDecoration(
-            //       color: Color(0XFF00AEDB),
-            //       borderRadius: BorderRadius.all(Radius.circular(5))
-            //     ),
-            //     child: Row(
-            //       // ignore: prefer_const_literals_to_create_immutables
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       // ignore: prefer_const_literals_to_create_immutables
-            //       children: [
-            //         const Icon(Icons.add_circle_outline, color: Colors.white,),
-            //         const SizedBox(width: 10,),
-            //         const Text("Add E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400 ),),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            Container(
-              child: Text(
-                copy_to,
-                style: TextStyle(
-                    fontFamily: 'Rubik',
-                    color: Color(0xFF404446),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00AEDB),
+        elevation: 1,
+        title: Text(
+          "E-CM Card",
+          style: TextStyle(
+              fontFamily: 'Rubik',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await confirmBackToHome(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  showCustomDialog(context);
+                });
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(8),
+        height: MediaQuery.of(context).size.height * 0.58,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StepperNumber(
+                      numberStep: "1",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "2",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "3",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "4",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "5",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "6",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "7",
+                      isFilled: false,
+                    ),
+                    LineStepper(),
+                    StepperNumber(
+                      numberStep: "8",
+                      isFilled: true,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      // final SharedPreferences prefs = await _prefs;
-                      setState(() {
-                        engineerTo = '1';
-                        productTo = '0';
-                        othersTo = '0';
-                        copyToGroup = '1';
-                        setCopyTo();
-                      });
-                      // prefs.setString("engineerTo", engineerTo);
-                      // prefs.setString("productTo", productTo);
-                      // prefs.setString("othersTo", othersTo);
-                      // prefs.setString("copyToBool", "1");
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.28,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Radio(
-                                  groupValue: copyToGroup,
-                                  value: '1',
-                                  onChanged: (value) async {
-                                    // final SharedPreferences prefs =
-                                    //     await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        copyToGroup = value as String;
-                                        engineerTo = '1';
-                                        productTo = '0';
-                                        othersTo = '0';
-                                        setCopyTo();
-                                      });
-                                      // prefs.setString("engineerTo", engineerTo);
-                                      // prefs.setString("productTo", productTo);
-                                      // prefs.setString("othersTo", othersTo);
-                                      // prefs.setString("copyToBool", "1");
-                                    }
-                                  })),
-                          Text(engineer)
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      // final SharedPreferences prefs = await _prefs;
-                      setState(() {
-                        engineerTo = '0';
-                        productTo = '1';
-                        othersTo = '0';
-                        copyToGroup = '2';
-                        setCopyTo();
-                      });
-                      // prefs.setString("engineerTo", engineerTo);
-                      // prefs.setString("productTo", productTo);
-                      // prefs.setString("othersTo", othersTo);
-                      // prefs.setString("copyToBool", "1");
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.28,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Radio(
-                                  groupValue: copyToGroup,
-                                  value: '2',
-                                  onChanged: (value) async {
-                                    final SharedPreferences prefs =
-                                        await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        copyToGroup = value as String;
-                                        engineerTo = '0';
-                                        productTo = '1';
-                                        othersTo = '0';
-                                        setCopyTo();
-                                      });
-                                      // prefs.setString("engineerTo", engineerTo);
-                                      // prefs.setString("productTo", productTo);
-                                      // prefs.setString("othersTo", othersTo);
-                                      // prefs.setString("copyToBool", "1");
-                                    }
-                                  })),
-                          Text(product)
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      // final SharedPreferences prefs = await _prefs;
-                      setState(() {
-                        engineerTo = '0';
-                        productTo = '0';
-                        othersTo = '1';
-                        copyToGroup = '3';
-                        setCopyTo();
-                      });
-                      // prefs.setString("engineerTo", engineerTo);
-                      // prefs.setString("productTo", productTo);
-                      // prefs.setString("othersTo", othersTo);
-                      // prefs.setString("copyToBool", "1");
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.28,
-                      height: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF979C9E)),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Radio(
-                                  groupValue: copyToGroup,
-                                  value: '3',
-                                  onChanged: (value) async {
-                                    final SharedPreferences prefs =
-                                        await _prefs;
-                                    if (value != null) {
-                                      setState(() {
-                                        copyToGroup = value as String;
-                                        engineerTo = '0';
-                                        productTo = '0';
-                                        othersTo = '1';
-                                      });
-                                      // prefs.setString("engineerTo", engineerTo);
-                                      // prefs.setString("productTo", productTo);
-                                      // prefs.setString("othersTo", othersTo);
-                                      // prefs.setString("copyToBool", "1");
-                                    }
-                                  })),
-                          Text(others)
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   child: const Text("E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Color(0xFF404446), fontSize: 16, fontWeight: FontWeight.w400 ),),
+              // ),
+              // InkWell(
+              //   onTap: (){
+              //       Navigator.of(context).push(
+              //         MaterialPageRoute(builder: (context) => const ApproveStepDelapan())
+              //       );
+              //     },
+              //   child: Container(
+              //     margin: const EdgeInsets.only(top: 16),
+              //     width: MediaQuery.of(context).size.width,
+              //     height: 40,
+              //     decoration: const BoxDecoration(
+              //       color: Color(0XFF00AEDB),
+              //       borderRadius: BorderRadius.all(Radius.circular(5))
+              //     ),
+              //     child: Row(
+              //       // ignore: prefer_const_literals_to_create_immutables
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       // ignore: prefer_const_literals_to_create_immutables
+              //       children: [
+              //         const Icon(Icons.add_circle_outline, color: Colors.white,),
+              //         const SizedBox(width: 10,),
+              //         const Text("Add E-Sign", style: TextStyle(fontFamily: 'Rubik', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400 ),),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              Container(
+                child: Text(
+                  copy_to,
+                  style: TextStyle(
+                      fontFamily: 'Rubik',
+                      color: Color(0xFF404446),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
-            ),
-            // Container(
-            //   margin: const EdgeInsets.only(top: 16),
-            //   child: const Text(
-            //     "Approved by",
-            //     style: TextStyle(
-            //         fontFamily: 'Rubik',
-            //         color: Color(0xFF404446),
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.w400),
-            //   ),
-            // ),
-            // Container(
-            //   margin: const EdgeInsets.only(top: 4),
-            //   padding: const EdgeInsets.all(5),
-            //   height: 40,
-            //   decoration: BoxDecoration(
-            //       border: Border.all(color: const Color(0xFF979C9E)),
-            //       borderRadius: const BorderRadius.all(Radius.circular(5))),
-            //   child: TextFormField(
-            //     style: const TextStyle(
-            //         fontFamily: 'Rubik',
-            //         fontSize: 14,
-            //         fontWeight: FontWeight.w400),
-            //     decoration: const InputDecoration(
-            //         border: OutlineInputBorder(borderSide: BorderSide.none),
-            //         suffixIcon: Icon(Icons.search),
-            //         hintText: 'Type name',
-            //         contentPadding: const EdgeInsets.only(top: 5, left: 5),
-            //         hintStyle: TextStyle(
-            //             fontFamily: 'Rubik',
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.w400)),
-            //   ),
-            // ),
-            Container(
-              margin: EdgeInsets.only(top: 26),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      isStepDelapanFill.value = false;
-                      isStepTujuhFill.value = true;
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Color(0xFF00AEDB))),
-                      child: const Center(
-                        child: Text(
-                          "Kembali",
-                          style: TextStyle(
-                              fontFamily: 'Rubik',
-                              color: Color(0xFF00AEDB),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        // final SharedPreferences prefs = await _prefs;
+                        setState(() {
+                          engineerTo = '1';
+                          productTo = '0';
+                          othersTo = '0';
+                          copyToGroup = '1';
+                          setCopyTo();
+                        });
+                        // prefs.setString("engineerTo", engineerTo);
+                        // prefs.setString("productTo", productTo);
+                        // prefs.setString("othersTo", othersTo);
+                        // prefs.setString("copyToBool", "1");
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        height: 40,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF979C9E)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Radio(
+                                    groupValue: copyToGroup,
+                                    value: '1',
+                                    onChanged: (value) async {
+                                      // final SharedPreferences prefs =
+                                      //     await _prefs;
+                                      if (value != null) {
+                                        setState(() {
+                                          copyToGroup = value as String;
+                                          engineerTo = '1';
+                                          productTo = '0';
+                                          othersTo = '0';
+                                          setCopyTo();
+                                        });
+                                        // prefs.setString("engineerTo", engineerTo);
+                                        // prefs.setString("productTo", productTo);
+                                        // prefs.setString("othersTo", othersTo);
+                                        // prefs.setString("copyToBool", "1");
+                                      }
+                                    })),
+                            Text(engineer)
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      await postStepDelapan();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Color(0xFF00AEDB)),
-                      child: const Center(
-                        child: Text("Akhiri",
-                            style: TextStyle(
-                                fontFamily: 'Rubik',
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400)),
+                    InkWell(
+                      onTap: () async {
+                        // final SharedPreferences prefs = await _prefs;
+                        setState(() {
+                          engineerTo = '0';
+                          productTo = '1';
+                          othersTo = '0';
+                          copyToGroup = '2';
+                          setCopyTo();
+                        });
+                        // prefs.setString("engineerTo", engineerTo);
+                        // prefs.setString("productTo", productTo);
+                        // prefs.setString("othersTo", othersTo);
+                        // prefs.setString("copyToBool", "1");
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        height: 40,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF979C9E)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Radio(
+                                    groupValue: copyToGroup,
+                                    value: '2',
+                                    onChanged: (value) async {
+                                      final SharedPreferences prefs =
+                                          await _prefs;
+                                      if (value != null) {
+                                        setState(() {
+                                          copyToGroup = value as String;
+                                          engineerTo = '0';
+                                          productTo = '1';
+                                          othersTo = '0';
+                                          setCopyTo();
+                                        });
+                                        // prefs.setString("engineerTo", engineerTo);
+                                        // prefs.setString("productTo", productTo);
+                                        // prefs.setString("othersTo", othersTo);
+                                        // prefs.setString("copyToBool", "1");
+                                      }
+                                    })),
+                            Text(product)
+                          ],
+                        ),
                       ),
                     ),
-                  )
-                ],
+                    InkWell(
+                      onTap: () async {
+                        // final SharedPreferences prefs = await _prefs;
+                        setState(() {
+                          engineerTo = '0';
+                          productTo = '0';
+                          othersTo = '1';
+                          copyToGroup = '3';
+                          setCopyTo();
+                        });
+                        // prefs.setString("engineerTo", engineerTo);
+                        // prefs.setString("productTo", productTo);
+                        // prefs.setString("othersTo", othersTo);
+                        // prefs.setString("copyToBool", "1");
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        height: 40,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF979C9E)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Radio(
+                                    groupValue: copyToGroup,
+                                    value: '3',
+                                    onChanged: (value) async {
+                                      final SharedPreferences prefs =
+                                          await _prefs;
+                                      if (value != null) {
+                                        setState(() {
+                                          copyToGroup = value as String;
+                                          engineerTo = '0';
+                                          productTo = '0';
+                                          othersTo = '1';
+                                        });
+                                        // prefs.setString("engineerTo", engineerTo);
+                                        // prefs.setString("productTo", productTo);
+                                        // prefs.setString("othersTo", othersTo);
+                                        // prefs.setString("copyToBool", "1");
+                                      }
+                                    })),
+                            Text(others)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
+              // Container(
+              //   margin: const EdgeInsets.only(top: 16),
+              //   child: const Text(
+              //     "Approved by",
+              //     style: TextStyle(
+              //         fontFamily: 'Rubik',
+              //         color: Color(0xFF404446),
+              //         fontSize: 16,
+              //         fontWeight: FontWeight.w400),
+              //   ),
+              // ),
+              // Container(
+              //   margin: const EdgeInsets.only(top: 4),
+              //   padding: const EdgeInsets.all(5),
+              //   height: 40,
+              //   decoration: BoxDecoration(
+              //       border: Border.all(color: const Color(0xFF979C9E)),
+              //       borderRadius: const BorderRadius.all(Radius.circular(5))),
+              //   child: TextFormField(
+              //     style: const TextStyle(
+              //         fontFamily: 'Rubik',
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w400),
+              //     decoration: const InputDecoration(
+              //         border: OutlineInputBorder(borderSide: BorderSide.none),
+              //         suffixIcon: Icon(Icons.search),
+              //         hintText: 'Type name',
+              //         contentPadding: const EdgeInsets.only(top: 5, left: 5),
+              //         hintStyle: TextStyle(
+              //             fontFamily: 'Rubik',
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.w400)),
+              //   ),
+              // ),
+              Container(
+                margin: EdgeInsets.only(top: 26),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(color: Color(0xFF00AEDB))),
+                        child: const Center(
+                          child: Text(
+                            "Kembali",
+                            style: TextStyle(
+                                fontFamily: 'Rubik',
+                                color: Color(0xFF00AEDB),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        await postStepDelapan();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Color(0xFF00AEDB)),
+                        child: const Center(
+                          child: Text("Akhiri",
+                              style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -3,8 +3,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/services/api_cek_ecm_rejected.dart';
-import 'package:e_cm/homepage/home/services/api_remove_cache.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:http/http.dart' as http;
@@ -13,12 +13,9 @@ import 'package:e_cm/homepage/home/component/sliderhistory.dart';
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/history/historydetailpage.dart';
 import 'package:e_cm/homepage/home/history/historypage.dart';
-import 'package:e_cm/homepage/home/history/historyreview.dart';
 import 'package:e_cm/homepage/home/listname/listname.dart';
 import 'package:e_cm/homepage/home/model/historyecmmodel.dart';
 import 'package:e_cm/homepage/home/services/historyecmservice.dart';
-import 'package:e_cm/language/model/lang_model.dart';
-import 'package:e_cm/language/service/lang_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -599,7 +596,9 @@ class _HomeState extends State<Home> {
                       //add ecm
                       child: InkWell(
                         onTap: () {
-                          Navigator.of(context).push(routeToFillNew());
+                          // Navigator.of(context).push(routeToFillNew());
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => StepFillSatu()));
                         },
                         child: Container(
                           margin: const EdgeInsets.only(
