@@ -16,8 +16,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../fillnew.dart';
-
 class StepFillDua extends StatefulWidget {
   final StepFillDuaState stepFillDuaState = StepFillDuaState();
 
@@ -247,7 +245,7 @@ class StepFillDuaState extends State<StepFillDua> {
     // final prefs = await _prefs;
     if (imageFileList!.length < 4) {
       try {
-        final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+        final selectedImages = await imagePicker.pickMultiImage();
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
           setState(() {
             imageFileList!.addAll(selectedImages);
@@ -1772,22 +1770,24 @@ class StepFillDuaState extends State<StepFillDua> {
                           ),
                           InkWell(
                             onTap: () {
-                              imageFileList!.length != 4
-                                  ? showBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return optionPickImage(context);
-                                      })
-                                  : () {
-                                      Fluttertoast.showToast(
-                                          msg: "Foto sudah ada 4",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Color(0xFF00AEDB),
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    };
+                              if (imageFileList!.length >= 4) {
+                                Fluttertoast.showToast(
+                                    msg: "Foto sudah ada 4",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Color(0xFF00AEDB),
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                return;
+                              }
+
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (bottomContext) {
+                                  return optionPickImage(bottomContext);
+                                },
+                              );
                               print("panjang = " +
                                   imageFileList!.length.toString());
                               print("gambar = " +
