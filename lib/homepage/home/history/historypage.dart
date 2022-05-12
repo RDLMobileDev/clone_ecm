@@ -213,16 +213,6 @@ class _HistoryPageState extends State<HistoryPage> {
           // print(response['data']);
           print("===== || =====");
         });
-        setState(() {
-          // Fluttertoast.showToast(
-          //     msg: show + dateSelected + "ss",
-          //     toastLength: Toast.LENGTH_SHORT,
-          //     gravity: ToastGravity.BOTTOM,
-          //     timeInSecForIosWeb: 2,
-          //     backgroundColor: Colors.green,
-          //     textColor: Colors.white,
-          //     fontSize: 16);
-        });
       } else {
         setState(() {
           Fluttertoast.showToast(

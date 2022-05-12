@@ -236,7 +236,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
     getStep3DataForEdit();
     setLang();
     setBahasa();
-    getDataStep3();
+    // getDataStep3();
   }
 
   @override
