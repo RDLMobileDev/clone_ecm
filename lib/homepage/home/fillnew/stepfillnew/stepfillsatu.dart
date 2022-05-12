@@ -246,6 +246,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         print(result);
 
         SharedPrefsUtil.setIdMesinRes(result['data']['id_machine'].toString());
+        Get.to(StepFillDua());
       } else {
         Fluttertoast.showToast(
             msg: 'Kesalahan jaringan. Data gagal diperbarui.',
