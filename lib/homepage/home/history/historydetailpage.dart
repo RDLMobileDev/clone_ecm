@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
+import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
 import 'package:e_cm/homepage/home/model/detailesignmodel.dart';
 import 'package:e_cm/homepage/home/model/detailitemcheckmodel.dart';
@@ -346,9 +347,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                             onTap: () {
                               SharedPrefsUtil.setEcmIdForEdit(
                                   widget.ecmId ?? "0");
-                              Get.to(FillNew(
-                                ecmId: widget.ecmId,
-                              ));
+                              Get.to(StepFillSatu());
+
+                              // FillNew( ecmId: widget.ecmId, )
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) => ));
                             },
@@ -971,34 +972,38 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
             )
           ],
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: 100,
-              child: Text("Line stop"),
-            ),
-            Text(" : "),
-            Expanded(
-              flex: 4,
-              child: Text(
-                detailEcmModel.kaizenLinestarH.toString() +
-                    " H " +
-                    detailEcmModel.kaizenLinestarM.toString() +
-                    " M - " +
-                    detailEcmModel.kaizenLinestopH.toString() +
-                    " H " +
-                    detailEcmModel.kaizenLinestopM.toString() +
-                    " M = " +
-                    detailEcmModel.kaizenTotallinestopH.toString() +
-                    " H " +
-                    detailEcmModel.kaizenTotallinestopM.toString() +
-                    " M",
+        detailEcmModel.klasifikasi.toString() == "Preventive Maintenance" ||
+                detailEcmModel.klasifikasi.toString() ==
+                    "Information Maintenance"
+            ? Container()
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: Text("Line stop"),
+                  ),
+                  Text(" : "),
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      detailEcmModel.kaizenLinestarH.toString() +
+                          " H " +
+                          detailEcmModel.kaizenLinestarM.toString() +
+                          " M - " +
+                          detailEcmModel.kaizenLinestopH.toString() +
+                          " H " +
+                          detailEcmModel.kaizenLinestopM.toString() +
+                          " M = " +
+                          detailEcmModel.kaizenTotallinestopH.toString() +
+                          " H " +
+                          detailEcmModel.kaizenTotallinestopM.toString() +
+                          " M",
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
       ],
     ));
   }
