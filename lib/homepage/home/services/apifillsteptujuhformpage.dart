@@ -29,6 +29,8 @@ Future saveDataPartMachine(
       'ecmpart_harga': harga,
     });
 
+    print("berhasil input item step 7");
+
     return json.decode(response.body);
   } on SocketException catch (e) {
     print(e);

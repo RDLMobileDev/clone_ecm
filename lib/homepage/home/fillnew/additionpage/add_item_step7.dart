@@ -238,23 +238,26 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
             qtyUsed,
             "0");
 
-        print(result);
-        if (result['response']['status'] == 200) {
-          Fluttertoast.showToast(
-            msg: 'Data item step 7 disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.greenAccent,
-          );
-          Navigator.of(context).pop();
-        } else {
-          Fluttertoast.showToast(
-            msg: 'Data gagal disimpan',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.greenAccent,
-          );
-        }
+        print("ini id ecm " + ecmIdNewOrEdit);
+        print("ini id mesin " + idMesin);
+
+        // print("hasil step 7 item: " + result);
+        // if (result['response']['status'] == 200) {
+        //   Fluttertoast.showToast(
+        //     msg: 'Data item step 7 disimpan',
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     backgroundColor: Colors.greenAccent,
+        //   );
+        //   Navigator.of(context).pop();
+        // } else {
+        //   Fluttertoast.showToast(
+        //     msg: 'Data gagal disimpan',
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     backgroundColor: Colors.greenAccent,
+        //   );
+        // }
         // if ((int.parse(qtyUsed) <= qtyStock) |
         //     (int.parse(qtyUsed) >= qtyStock)) {
 
@@ -275,6 +278,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
         backgroundColor: Colors.greenAccent,
       );
     } catch (e) {
+      print(e);
       Fluttertoast.showToast(
         msg: 'Terjadi kesalahan, periksa koneksi Anda',
         toastLength: Toast.LENGTH_SHORT,
