@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillDua extends StatefulWidget {
@@ -475,8 +476,10 @@ class StepFillDuaState extends State<StepFillDua> {
               }
 
               // set value for date
-              timePickController =
-                  TextEditingController(text: dataStepDua['t_ecm_time']);
+              final parseTime =
+                  DateFormat("HH:mm").parse(dataStepDua['t_ecm_time']);
+              timePickController = TextEditingController(
+                  text: DateFormat("HH:mm").format(parseTime));
               timePickState = dataStepDua['t_ecm_time'];
 
               // set value for field input problem
