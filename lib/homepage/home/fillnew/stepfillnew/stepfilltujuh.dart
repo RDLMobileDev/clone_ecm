@@ -35,7 +35,7 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
   String tokenUser = SharedPrefsUtil.getTokenUser();
   String idEcmKey = SharedPrefsUtil.getEcmId();
-  String idEcmEdit = SharedPrefsUtil.getEcmId();
+  String idEcmEdit = SharedPrefsUtil.getEcmIdEdit();
 
   String sparepart = "";
   String no_sparepart = "";
@@ -146,12 +146,12 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
 
     _listDataPartSaved = await partItemMachineSaveService
         .getPartItemMachineSaveData(tokenUser, ecmIdNewOrEdit);
-    print("total data: $idEcmKey");
+    print("total data: $ecmIdNewOrEdit");
 
     streamController.add(_listDataPartSaved);
 
     return await partItemMachineSaveService.getPartItemMachineSaveData(
-        tokenUser, idEcmKey);
+        tokenUser, ecmIdNewOrEdit);
   }
 
   void deletePartMachineSaved(String idEcmData) async {
