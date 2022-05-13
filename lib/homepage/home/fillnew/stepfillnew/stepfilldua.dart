@@ -359,6 +359,7 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void saveStepFillDua() async {
+    late BuildContext progressContext;
     String idEcmSendtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     if (timePickState.isNotEmpty &&
@@ -368,6 +369,18 @@ class StepFillDuaState extends State<StepFillDua> {
       if (Uri.parse(imageProblemPath.first).isAbsolute) {
         goToStepFillTiga('Anda harus mengganti foto & upload ulang');
       } else {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              progressContext = context;
+              return Container(
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            });
+
         var result = await fillNewDua(
           token: token,
           shiftA: shiftA,
@@ -387,6 +400,8 @@ class StepFillDuaState extends State<StepFillDua> {
           ecmId: idEcmSendtoApi,
           imagesPath: imageProblemPath,
         );
+
+        Navigator.pop(progressContext);
 
         print("data step 2 edit");
         print(result);
@@ -1993,5 +2008,18 @@ class StepFillDuaState extends State<StepFillDua> {
         ],
       ),
     );
+  }
+
+  void showProgressDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        });
   }
 }
