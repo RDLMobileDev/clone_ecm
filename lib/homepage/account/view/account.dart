@@ -328,11 +328,14 @@ class _AccountMemberState extends State<AccountMember> {
             children: [
               Container(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: 74,
                       height: 74,
                       decoration: BoxDecoration(
+                          color: Colors.white,
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               image: NetworkImage(photoUserLink))),
@@ -350,7 +353,16 @@ class _AccountMemberState extends State<AccountMember> {
                               color: Color(0xFF404446)),
                         ),
                         Text(
-                          emailName + " - (" + roleName + ")",
+                          emailName,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF979C9E)),
+                        ),
+                        Text(
+                          "(" + roleName + ")",
                           overflow: TextOverflow.fade,
                           style: TextStyle(
                               fontFamily: 'Rubik',

@@ -270,7 +270,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
               Navigator.pop(context);
             }),
         title: Text(
-          detailEcmModel.klasifikasi.toString(),
+          detailEcmModel.klasifikasi.toString() == "null"
+              ? ""
+              : detailEcmModel.klasifikasi.toString(),
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
