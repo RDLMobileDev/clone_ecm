@@ -541,6 +541,15 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                     ),
                     IconButton(
                         onPressed: () {
+                          Fluttertoast.showToast(
+                            msg: "Refresh data",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.greenAccent,
+                            textColor: Colors.white,
+                            fontSize: 16,
+                          );
                           Timer(Duration(seconds: 3),
                               () => getDataItemChecking());
                         },

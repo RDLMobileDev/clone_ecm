@@ -404,23 +404,23 @@ class StepFillDuaState extends State<StepFillDua> {
 
         Navigator.pop(progressContext);
 
-        print("data step 2 edit");
+        print("data tahap 2 edit");
         print(result);
 
         if (result['response']['status'] == 200) {
-          goToStepFillTiga('Data step 2 berhasil diubah');
+          goToStepFillTiga('data tahap 2 berhasil diubah');
           Get.to(StepFillTiga());
         } else {
-          goToStepFillTiga('Data step 2 gagal diubah');
+          goToStepFillTiga('data tahap 2 gagal diubah');
         }
 
         // if (result['response']['status'] == 200) {
         //   ecmId.isNotEmpty || ecmId != ""
-        // ? goToStepFillTiga('Data Step 2 disimpan')
-        //       : goToStepFillTiga('Data Step 2 diperbarui');
+        // ? goToStepFillTiga('data tahap 2 disimpan')
+        //       : goToStepFillTiga('data tahap 2 diperbarui');
 
         // } else {
-        //   goToStepFillTiga('Data Step 2 gagal diperbarui');
+        //   goToStepFillTiga('data tahap 2 gagal diperbarui');
         // }
       }
     } else {
@@ -428,7 +428,7 @@ class StepFillDuaState extends State<StepFillDua> {
     }
     try {} catch (e) {
       print(e);
-      goToStepFillTiga('Data Step 2 gagal diperbarui');
+      goToStepFillTiga('data tahap 2 gagal diperbarui');
     }
   }
 

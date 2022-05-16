@@ -57,6 +57,7 @@ class _AccountMemberState extends State<AccountMember> {
   String confirm_logout = '';
   String cancel = '';
   String leave = '';
+  String app_version = '';
 
   void confirmLogout() {
     showDialog(
@@ -132,7 +133,7 @@ class _AccountMemberState extends State<AccountMember> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            "Cancel",
+                            cancel,
                             style: TextStyle(
                                 color: Color(0xFF00AEDB),
                                 fontFamily: 'Rubik',
@@ -154,7 +155,7 @@ class _AccountMemberState extends State<AccountMember> {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            "Logout",
+                            logoutName,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Rubik',
@@ -202,6 +203,7 @@ class _AccountMemberState extends State<AccountMember> {
         confirm = dataLang['account']['confirm'];
         confirm_logout = dataLang['account']['confirm_logout'];
         cancel = dataLang['account']['cancel'];
+        app_version = dataLang['account']['app_version'];
       });
     }
   }
@@ -217,6 +219,7 @@ class _AccountMemberState extends State<AccountMember> {
         confirm = dataLang['account']['confirm'];
         confirm_logout = dataLang['account']['confirm_logout'];
         cancel = dataLang['account']['cancel'];
+        app_version = dataLang['account']['app_version'];
       });
     }
   }
@@ -526,7 +529,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 child: Text(
-                  "App Version 1.0.11",
+                  "$app_version 1.0.11",
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Colors.black54,
