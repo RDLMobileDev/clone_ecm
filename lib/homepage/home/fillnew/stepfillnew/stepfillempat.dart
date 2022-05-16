@@ -696,9 +696,11 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                       }
                     : () async {
                         // final prefs = await _prefs;
-                        bool isInputted = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => StepFillEmpatInput()));
+                        bool isInputted =
+                            await Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => StepFillEmpatInput(
+                                      ecmItemId: '0',
+                                    )));
 
                         if (isInputted) {
                           // setState(() => getDataItemChecking());

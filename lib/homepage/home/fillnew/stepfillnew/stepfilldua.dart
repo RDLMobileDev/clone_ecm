@@ -368,13 +368,6 @@ class StepFillDuaState extends State<StepFillDua> {
         imageProblemPath.isNotEmpty) {
       //  check if image path contain Uri or not
 
-      // if (Uri.parse(imageProblemPath.first).isAbsolute) {
-      //   print(imageProblemPath);
-      //   goToStepFillTiga('Anda harus mengganti foto & upload ulang');
-      // } else {
-
-      // }
-
       // if (result['response']['status'] == 200) {
       //   ecmId.isNotEmpty || ecmId != ""
       // ? goToStepFillTiga('Data Step 2 disimpan')
@@ -384,41 +377,47 @@ class StepFillDuaState extends State<StepFillDua> {
       //   goToStepFillTiga('Data Step 2 gagal diperbarui');
       // }
 
-      var result = await fillNewDua(
-        token: token,
-        shiftA: shiftA,
-        shiftB: shiftB,
-        shiftNs: shiftC,
-        time: timePickState,
-        problem: problemTypeState,
-        safety: safetyOpt,
-        quality: qualityOpt,
-        delivery: deliveryOpt,
-        cost: costOpt,
-        molding: moldingOpt,
-        utility: utilityOpt,
-        production: productionOpt,
-        engineering: engineerOpt,
-        other: otherOpt,
-        ecmId: idEcmSendtoApi,
-        imagesPath: imageProblemPath,
-      );
-
-      print("data tahap 2 edit");
-      print(result);
-
-      if (result['response']['status'] == 200) {
-        goToStepFillTiga('Data tahap 2 berhasil diubah');
-        Get.to(StepFillTiga());
+      if (Uri.parse(imageProblemPath.first).isAbsolute) {
+        print(imageProblemPath);
+        goToStepFillTiga('Anda harus mengganti foto & upload ulang');
       } else {
-        goToStepFillTiga('Data tahap 2 gagal diubah');
+        // print("safety " + safetyOpt);
+        // print("quality " + qualityOpt);
+        // print("delivery " + deliveryOpt);
+        // print("cost " + costOpt);
+
+        try {
+          var result = await fillNewDua(
+            token: token,
+            shiftA: shiftA,
+            shiftB: shiftB,
+            shiftNs: shiftC,
+            time: timePickState,
+            problem: problemTypeState,
+            safety: safetyOpt,
+            quality: qualityOpt,
+            delivery: deliveryOpt,
+            cost: costOpt,
+            molding: moldingOpt,
+            utility: utilityOpt,
+            production: productionOpt,
+            engineering: engineerOpt,
+            other: otherOpt,
+            ecmId: idEcmSendtoApi,
+            imagesPath: imageProblemPath,
+          );
+
+          print("data step 2 edit");
+          print(result);
+          goToStepFillTiga('Data step 2 berhasil disimpan');
+          Get.to(StepFillTiga());
+        } catch (e) {
+          print(e);
+          goToStepFillTiga('Data Step 2 gagal diperbarui');
+        }
       }
     } else {
       goToStepFillTiga('Data gagal disimpan, cek semua input field');
-    }
-    try {} catch (e) {
-      print(e);
-      goToStepFillTiga('data tahap 2 gagal diperbarui');
     }
   }
 
@@ -438,6 +437,8 @@ class StepFillDuaState extends State<StepFillDua> {
         (ecmId.isNotEmpty || ecmId != "")) {
       List<String> fotoStep2forEdit = [];
 
+      print(ecmIdEdit);
+
       try {
         var result = await getStepDuaDataForEdit(ecmIdEdit, token);
 
@@ -445,6 +446,9 @@ class StepFillDuaState extends State<StepFillDua> {
           if (result['data'] != null) {
             print("getttt step 2 update");
             var dataStepDua = result['data'];
+
+            print("Data step 2");
+            print(dataStepDua);
 
             setState(() {
               // set value for shift group
@@ -478,48 +482,48 @@ class StepFillDuaState extends State<StepFillDua> {
               problemTypeState = dataStepDua['t_ecm_problem'];
 
               // set value for type of problem (safety and others)
-              if (dataStepDua['t_ecm_safety'] != null) {
+              if (dataStepDua['t_ecm_safety'] == 1) {
                 isSafety = !isSafety;
                 safetyOpt = dataStepDua['t_ecm_safety'].toString();
               }
 
-              if (dataStepDua['t_ecm_quality'] != null) {
+              if (dataStepDua['t_ecm_quality'] == 1) {
                 isQuality = !isQuality;
                 qualityOpt = dataStepDua['t_ecm_quality'].toString();
               }
 
-              if (dataStepDua['t_ecm_delivery'] != null) {
+              if (dataStepDua['t_ecm_delivery'] == 1) {
                 isDelivery = !isDelivery;
                 deliveryOpt = dataStepDua['t_ecm_delivery'].toString();
               }
 
-              if (dataStepDua['t_ecm_cost'] != null) {
+              if (dataStepDua['t_ecm_cost'] == 1) {
                 isCost = !isCost;
                 costOpt = dataStepDua['t_ecm_cost'].toString();
               }
 
               // set value for PERCENTAGE MISTAKE
-              if (dataStepDua['t_ecm_molding'] != null) {
+              if (dataStepDua['t_ecm_molding'] == 1) {
                 isMolding = !isMolding;
                 moldingOpt = dataStepDua['t_ecm_molding'].toString();
               }
 
-              if (dataStepDua['t_ecm_utility'] != null) {
+              if (dataStepDua['t_ecm_utility'] == 1) {
                 isUtility = !isUtility;
                 utilityOpt = dataStepDua['t_ecm_utility'].toString();
               }
 
-              if (dataStepDua['t_ecm_production'] != null) {
+              if (dataStepDua['t_ecm_production'] == 1) {
                 isProduction = !isProduction;
                 productionOpt = dataStepDua['t_ecm_production'].toString();
               }
 
-              if (dataStepDua['t_ecm_engineering'] != null) {
+              if (dataStepDua['t_ecm_engineering'] == 1) {
                 isEngineering = !isEngineering;
                 engineerOpt = dataStepDua['t_ecm_engineering'].toString();
               }
 
-              if (dataStepDua['t_ecm_other'] != null) {
+              if (dataStepDua['t_ecm_other'] == 1) {
                 isOther = !isOther;
                 otherOpt = dataStepDua['t_ecm_other'].toString();
               }
@@ -1865,6 +1869,19 @@ class StepFillDuaState extends State<StepFillDua> {
                             ],
                           )),
                     ),
+              ecmIdEdit != "" || ecmIdEdit.isNotEmpty
+                  ? Container(
+                      margin: EdgeInsets.only(top: 5),
+                      child: Text(
+                        "Jika sedang edit data E-CM, harap hapus & upload ulang foto",
+                        style: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Color(0xFF404446),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )
+                  : Container(),
               Container(
                 margin: EdgeInsets.only(top: 26),
                 width: MediaQuery.of(context).size.width,

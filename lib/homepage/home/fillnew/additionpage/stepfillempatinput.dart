@@ -21,8 +21,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StepFillEmpatInput extends StatefulWidget {
-  const StepFillEmpatInput({Key? key, this.ecmItemId}) : super(key: key);
-  final String? ecmItemId;
+  const StepFillEmpatInput({Key? key, required this.ecmItemId})
+      : super(key: key);
+  final String ecmItemId;
 
   @override
   _StepFillEmpatInputState createState() => _StepFillEmpatInputState();
@@ -49,7 +50,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   String idUser = SharedPrefsUtil.getIdUser();
   String userName = SharedPrefsUtil.getIdUserChecker();
   String userNameField = SharedPrefsUtil.getNameUserChecker();
-  String ecmItemId = SharedPrefsUtil.getIdEcmItem();
+  // String ecmItemId = SharedPrefsUtil.getIdEcmItem();
   String ecmId = SharedPrefsUtil.getEcmId();
   String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
   String idMachineRes = SharedPrefsUtil.getIdMesinRes();
@@ -194,84 +195,86 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void getStepEmpatData() async {
-    String idItemEcmEdit = widget.ecmItemId ?? "0";
+    String idItemEcmEdit = widget.ecmItemId;
     try {
-      var result = await getIdFillNewEmpat(idItemEcmEdit, idUser, tokenUser);
-      print("Data step 4 for update");
-      print(result);
+      if (idItemEcmEdit != "0") {
+        var result = await getIdFillNewEmpat(idItemEcmEdit, idUser, tokenUser);
+        print("Data step 4 for update");
+        print(result);
 
-      switch (result['response']['status']) {
-        case 200:
-          var data = (result['data'] as List)
-              .map((e) => ItemCheckingDetail.fromJson(e))
-              .toList();
+        switch (result['response']['status']) {
+          case 200:
+            var data = (result['data'] as List)
+                .map((e) => ItemCheckingDetail.fromJson(e))
+                .toList();
 
-          setState(() {
-            tecName = TextEditingController(text: data[0].partNama);
-            formValue = {
-              "item": data[0].partNama ?? "-",
-              "standard": data[0].partStandard ?? "-",
-              "actual": data[0].actual ?? "-",
-              "note": data[0].note ?? "-",
-              "start": data[0].tEcmitemStart ?? "-",
-              "end": data[0].tEcmitemEnd ?? "-",
-              "name": data[0].userName ?? "-",
-            };
+            setState(() {
+              tecName = TextEditingController(text: data[0].partNama);
+              formValue = {
+                "item": data[0].partNama ?? "-",
+                "standard": data[0].partStandard ?? "-",
+                "actual": data[0].actual ?? "-",
+                "note": data[0].note ?? "-",
+                "start": data[0].tEcmitemStart ?? "-",
+                "end": data[0].tEcmitemEnd ?? "-",
+                "name": data[0].userName ?? "-",
+              };
 
-            _initialPartName = data[0].partNama ?? "-";
-            getUserNameById(data[0].userName ?? "-", tokenUser).then((value) {
-              if (value['response']['status'] != 200) {
-                Fluttertoast.showToast(
-                    msg: "Username tidak ditemukan",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 2,
-                    backgroundColor: Colors.greenAccent,
-                    textColor: Colors.white,
-                    fontSize: 16);
-                return;
+              _initialPartName = data[0].partNama ?? "-";
+              getUserNameById(data[0].userName ?? "-", tokenUser).then((value) {
+                if (value['response']['status'] != 200) {
+                  Fluttertoast.showToast(
+                      msg: "Username tidak ditemukan",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: Colors.greenAccent,
+                      textColor: Colors.white,
+                      fontSize: 16);
+                  return;
+                }
+
+                setState(() {
+                  formValue['name'] = value['data']['id'].toString();
+                  _initialUser = value['data']['username'] ?? "-";
+                });
+              });
+
+              tecItem = TextEditingController(text: formValue["item"]);
+              tecStandard = TextEditingController(text: formValue["standard"]);
+              tecActual = TextEditingController(text: formValue["actual"]);
+              startTimePickController =
+                  TextEditingController(text: formValue["start"]);
+              endTimePickController =
+                  TextEditingController(text: formValue["end"]);
+              tecMemberName = TextEditingController(text: _users[0].userName);
+
+              switch (formValue["note"]) {
+                case "ok":
+                  noteOptions["ok"] = true;
+                  break;
+                case "limit":
+                  noteOptions["limit"] = true;
+                  break;
+                case "ng":
+                  noteOptions["ng"] = true;
+                  break;
               }
 
-              setState(() {
-                formValue['name'] = value['data']['id'].toString();
-                _initialUser = value['data']['username'] ?? "-";
-              });
+              formValidations.updateAll((key, value) => true);
             });
-
-            tecItem = TextEditingController(text: formValue["item"]);
-            tecStandard = TextEditingController(text: formValue["standard"]);
-            tecActual = TextEditingController(text: formValue["actual"]);
-            startTimePickController =
-                TextEditingController(text: formValue["start"]);
-            endTimePickController =
-                TextEditingController(text: formValue["end"]);
-            tecMemberName = TextEditingController(text: _users[0].userName);
-
-            switch (formValue["note"]) {
-              case "ok":
-                noteOptions["ok"] = true;
-                break;
-              case "limit":
-                noteOptions["limit"] = true;
-                break;
-              case "ng":
-                noteOptions["ng"] = true;
-                break;
-            }
-
-            formValidations.updateAll((key, value) => true);
-          });
-          break;
-        default:
-          Fluttertoast.showToast(
-              msg: "Data item checking tidak ditemukan",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.greenAccent,
-              textColor: Colors.white,
-              fontSize: 16);
-          break;
+            break;
+          default:
+            Fluttertoast.showToast(
+                msg: "Data item checking tidak ditemukan",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.greenAccent,
+                textColor: Colors.white,
+                fontSize: 16);
+            break;
+        }
       }
     } catch (e) {
       print("exception user occured -> $e");
@@ -349,6 +352,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   void saveStepInputChecking() async {
     // String tokenUser = prefs.getString("tokenKey") ?? "";
     String idMachineRes = SharedPrefsUtil.getIdMesinRes();
+    String ecmIdForStep4Item = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     // print(ecmId);
 
@@ -357,7 +361,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     try {
       var result = await fillNewEmpatInsert(
           // tokenUser,
-          ecmId,
+          ecmIdForStep4Item,
           idMachineRes,
           tecName.text,
           formValue["standard"] ?? "-",
@@ -369,6 +373,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
           formValue["name"] ?? "-");
 
       print(result);
+      print(ecmId);
 
       switch (result['response']['status']) {
         case 200:
@@ -1202,7 +1207,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                     onPressed: formValidations.containsValue(false)
                         ? null
                         : () async {
-                            if (ecmIdEdit.isNotEmpty || ecmIdEdit != "") {
+                            if (widget.ecmItemId.isNotEmpty &&
+                                widget.ecmItemId == "0") {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -1214,7 +1220,8 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                     );
                                   });
                               await _loadingAction();
-                              updateStepInputChecking();
+
+                              saveStepInputChecking();
                             } else {
                               showDialog(
                                   context: context,
@@ -1227,7 +1234,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                     );
                                   });
                               await _loadingAction();
-                              saveStepInputChecking();
+                              updateStepInputChecking();
                             }
 
                             // Navigator.pop(context, true);
