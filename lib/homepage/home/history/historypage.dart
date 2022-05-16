@@ -741,8 +741,8 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.7,
                 width: MediaQuery.of(context).size.width,
-                child: const Center(
-                  child: Text("Data not found"),
+                child: Center(
+                  child: Text(empty),
                 ),
               ),
             ),
