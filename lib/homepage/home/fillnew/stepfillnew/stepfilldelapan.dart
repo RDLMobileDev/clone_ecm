@@ -179,6 +179,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                         // isStepDelapanFill = false;
 
                         Get.off(const Dashboard());
+
                         // Navigator.pushAndRemoveUntil(
                         //     context,
                         //     MaterialPageRoute(
@@ -320,6 +321,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   //     ModalRoute.withName("/"));
 
                   SharedPrefsUtil.clearEcmId();
+                  SharedPrefsUtil.clearEcmIdEdit();
 
                   Get.off(const Dashboard());
                 },
@@ -442,6 +444,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                   // prefs.remove("idEcm");
 
                   SharedPrefsUtil.clearEcmId();
+                  SharedPrefsUtil.clearEcmIdEdit();
                   Get.off(Dashboard());
 
                   // isStepSatuFill = true;
