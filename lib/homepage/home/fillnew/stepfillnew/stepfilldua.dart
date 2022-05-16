@@ -14,9 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../fillnew.dart';
 
 class StepFillDua extends StatefulWidget {
   final StepFillDuaState stepFillDuaState = StepFillDuaState();
@@ -247,7 +246,7 @@ class StepFillDuaState extends State<StepFillDua> {
     // final prefs = await _prefs;
     if (imageFileList!.length < 4) {
       try {
-        final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+        final selectedImages = await imagePicker.pickMultiImage();
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
           setState(() {
             imageFileList!.addAll(selectedImages);
@@ -361,6 +360,7 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void saveStepFillDua() async {
+    late BuildContext progressContext;
     String idEcmSendtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     if (timePickState.isNotEmpty &&
@@ -370,6 +370,18 @@ class StepFillDuaState extends State<StepFillDua> {
       if (Uri.parse(imageProblemPath.first).isAbsolute) {
         goToStepFillTiga('Anda harus mengganti foto & upload ulang');
       } else {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              progressContext = context;
+              return Container(
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            });
+
         var result = await fillNewDua(
           token: token,
           shiftA: shiftA,
@@ -389,6 +401,8 @@ class StepFillDuaState extends State<StepFillDua> {
           ecmId: idEcmSendtoApi,
           imagesPath: imageProblemPath,
         );
+
+        Navigator.pop(progressContext);
 
         print("data step 2 edit");
         print(result);
@@ -462,8 +476,10 @@ class StepFillDuaState extends State<StepFillDua> {
               }
 
               // set value for date
-              timePickController =
-                  TextEditingController(text: dataStepDua['t_ecm_time']);
+              final parseTime =
+                  DateFormat("HH:mm").parse(dataStepDua['t_ecm_time']);
+              timePickController = TextEditingController(
+                  text: DateFormat("HH:mm").format(parseTime));
               timePickState = dataStepDua['t_ecm_time'];
 
               // set value for field input problem
@@ -1772,22 +1788,24 @@ class StepFillDuaState extends State<StepFillDua> {
                           ),
                           InkWell(
                             onTap: () {
-                              imageFileList!.length != 4
-                                  ? showBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return optionPickImage(context);
-                                      })
-                                  : () {
-                                      Fluttertoast.showToast(
-                                          msg: "Foto sudah ada 4",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Color(0xFF00AEDB),
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    };
+                              if (imageFileList!.length >= 4) {
+                                Fluttertoast.showToast(
+                                    msg: "Foto sudah ada 4",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Color(0xFF00AEDB),
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                return;
+                              }
+
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (bottomContext) {
+                                  return optionPickImage(bottomContext);
+                                },
+                              );
                               print("panjang = " +
                                   imageFileList!.length.toString());
                               print("gambar = " +
@@ -1993,5 +2011,18 @@ class StepFillDuaState extends State<StepFillDua> {
         ],
       ),
     );
+  }
+
+  void showProgressDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        });
   }
 }
