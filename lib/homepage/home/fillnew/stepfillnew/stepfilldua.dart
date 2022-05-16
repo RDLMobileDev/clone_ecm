@@ -367,61 +367,51 @@ class StepFillDuaState extends State<StepFillDua> {
         problemTypeState.isNotEmpty &&
         imageProblemPath.isNotEmpty) {
       //  check if image path contain Uri or not
-      if (Uri.parse(imageProblemPath.first).isAbsolute) {
-        goToStepFillTiga('Anda harus mengganti foto & upload ulang');
+
+      // if (Uri.parse(imageProblemPath.first).isAbsolute) {
+      //   print(imageProblemPath);
+      //   goToStepFillTiga('Anda harus mengganti foto & upload ulang');
+      // } else {
+
+      // }
+
+      // if (result['response']['status'] == 200) {
+      //   ecmId.isNotEmpty || ecmId != ""
+      // ? goToStepFillTiga('Data Step 2 disimpan')
+      //       : goToStepFillTiga('Data Step 2 diperbarui');
+
+      // } else {
+      //   goToStepFillTiga('Data Step 2 gagal diperbarui');
+      // }
+
+      var result = await fillNewDua(
+        token: token,
+        shiftA: shiftA,
+        shiftB: shiftB,
+        shiftNs: shiftC,
+        time: timePickState,
+        problem: problemTypeState,
+        safety: safetyOpt,
+        quality: qualityOpt,
+        delivery: deliveryOpt,
+        cost: costOpt,
+        molding: moldingOpt,
+        utility: utilityOpt,
+        production: productionOpt,
+        engineering: engineerOpt,
+        other: otherOpt,
+        ecmId: idEcmSendtoApi,
+        imagesPath: imageProblemPath,
+      );
+
+      print("data tahap 2 edit");
+      print(result);
+
+      if (result['response']['status'] == 200) {
+        goToStepFillTiga('Data tahap 2 berhasil diubah');
+        Get.to(StepFillTiga());
       } else {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              progressContext = context;
-              return Container(
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            });
-
-        var result = await fillNewDua(
-          token: token,
-          shiftA: shiftA,
-          shiftB: shiftB,
-          shiftNs: shiftC,
-          time: timePickState,
-          problem: problemTypeState,
-          safety: safetyOpt,
-          quality: qualityOpt,
-          delivery: deliveryOpt,
-          cost: costOpt,
-          molding: moldingOpt,
-          utility: utilityOpt,
-          production: productionOpt,
-          engineering: engineerOpt,
-          other: otherOpt,
-          ecmId: idEcmSendtoApi,
-          imagesPath: imageProblemPath,
-        );
-
-        Navigator.pop(progressContext);
-
-        print("data tahap 2 edit");
-        print(result);
-
-        if (result['response']['status'] == 200) {
-          goToStepFillTiga('data tahap 2 berhasil diubah');
-          Get.to(StepFillTiga());
-        } else {
-          goToStepFillTiga('data tahap 2 gagal diubah');
-        }
-
-        // if (result['response']['status'] == 200) {
-        //   ecmId.isNotEmpty || ecmId != ""
-        // ? goToStepFillTiga('data tahap 2 disimpan')
-        //       : goToStepFillTiga('data tahap 2 diperbarui');
-
-        // } else {
-        //   goToStepFillTiga('data tahap 2 gagal diperbarui');
-        // }
+        goToStepFillTiga('Data tahap 2 gagal diubah');
       }
     } else {
       goToStepFillTiga('Data gagal disimpan, cek semua input field');
@@ -1788,24 +1778,21 @@ class StepFillDuaState extends State<StepFillDua> {
                           ),
                           InkWell(
                             onTap: () {
-                              if (imageFileList!.length >= 4) {
-                                Fluttertoast.showToast(
-                                    msg: "Foto sudah ada 4",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Color(0xFF00AEDB),
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                                return;
-                              }
-
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (bottomContext) {
-                                  return optionPickImage(bottomContext);
-                                },
-                              );
+                              imageFileList!.length != 4
+                                  ? showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) =>
+                                          optionPickImage(context))
+                                  : () {
+                                      Fluttertoast.showToast(
+                                          msg: "Foto sudah ada 4",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Color(0xFF00AEDB),
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                    };
                               print("panjang = " +
                                   imageFileList!.length.toString());
                               print("gambar = " +
