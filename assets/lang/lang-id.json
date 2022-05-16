@@ -48,7 +48,9 @@
       "account": "Akun",
       "approved": "E-CM Diterima",
       "declined": "E-CM Ditolak",
-      "pending": "E-CM Tertunda"
+      "pending": "E-CM Tertunda",
+      "show_declined": "E-CM ditolak karena",
+      "show_ecm":"Lihat E-CM"
     },
     "riwayat": {
       "no_riwayat": "Riwayat Kosong",
@@ -64,7 +66,7 @@
       "one_month": "1 Bulan lalu",
       "show": "Data bulanan",
       "his_empty": "Tidak ada data",
-      "empty": "Tidak ada data",
+      "empty": "Data tidak ditemukan",
       "search_history":"Cari riwayat ecm",
       "connection_lost":"Gagal memuat riwayat, sialahkan cek koneksi anda"
     },

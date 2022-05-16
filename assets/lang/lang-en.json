@@ -48,7 +48,9 @@
       "account": "Account",
       "approved": "E-CM Approved",
       "declined": "E-CM Declined",
-      "pending": "E-CM Pending"
+      "pending": "E-CM Pending",
+      "show_declined": "E-CM declined because",
+      "show_ecm":"Show E-CM"
     },
     "riwayat": {
       "no_riwayat": "History is empty",
@@ -64,7 +66,7 @@
       "one_month": "1 Month ago",
       "show": "Data monthly",
       "his_empty": "No data",
-      "empty": "No data",
+      "empty": "Data not found",
       "search_history":"Search history E-CM",
       "connection_lost": "Failed to load history, please check your connection"
     },

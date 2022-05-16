@@ -14,9 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../fillnew.dart';
 
 class StepFillDua extends StatefulWidget {
   final StepFillDuaState stepFillDuaState = StepFillDuaState();
@@ -247,7 +246,7 @@ class StepFillDuaState extends State<StepFillDua> {
     // final prefs = await _prefs;
     if (imageFileList!.length < 4) {
       try {
-        final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+        final selectedImages = await imagePicker.pickMultiImage();
         if (selectedImages!.isNotEmpty && selectedImages.length <= 4) {
           setState(() {
             imageFileList!.addAll(selectedImages);
@@ -361,6 +360,7 @@ class StepFillDuaState extends State<StepFillDua> {
   }
 
   void saveStepFillDua() async {
+    late BuildContext progressContext;
     String idEcmSendtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     if (timePickState.isNotEmpty &&
@@ -466,8 +466,10 @@ class StepFillDuaState extends State<StepFillDua> {
               }
 
               // set value for date
-              timePickController =
-                  TextEditingController(text: dataStepDua['t_ecm_time']);
+              final parseTime =
+                  DateFormat("HH:mm").parse(dataStepDua['t_ecm_time']);
+              timePickController = TextEditingController(
+                  text: DateFormat("HH:mm").format(parseTime));
               timePickState = dataStepDua['t_ecm_time'];
 
               // set value for field input problem
@@ -1996,5 +1998,18 @@ class StepFillDuaState extends State<StepFillDua> {
         ],
       ),
     );
+  }
+
+  void showProgressDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        });
   }
 }

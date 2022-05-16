@@ -67,6 +67,7 @@ class _HomeState extends State<Home> {
   String ecm_approved = '';
   String ecm_declined = '';
   String ecm_pending = '';
+  String show_declined = '', show_ecm = '';
 
   // bool hidePopupReject = false;
 
@@ -133,6 +134,8 @@ class _HomeState extends State<Home> {
         ecm_approved = dataLang['beranda']['approved'];
         ecm_declined = dataLang['beranda']['declined'];
         ecm_pending = dataLang['beranda']['pending'];
+        show_declined = dataLang['beranda']['show_declined'];
+        show_ecm = dataLang['beranda']['show_ecm'];
       });
     }
   }
@@ -160,6 +163,8 @@ class _HomeState extends State<Home> {
         ecm_approved = dataLang['beranda']['approved'];
         ecm_declined = dataLang['beranda']['declined'];
         ecm_pending = dataLang['beranda']['pending'];
+        show_declined = dataLang['beranda']['show_declined'];
+        show_ecm = dataLang['beranda']['show_ecm'];
       });
     }
   }
@@ -213,7 +218,7 @@ class _HomeState extends State<Home> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "E-CM Anda ditolak karena $alasan",
+                    show_declined + " $alasan",
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 14,
@@ -242,7 +247,7 @@ class _HomeState extends State<Home> {
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Center(
                       child: Text(
-                        "Lihat E-CM",
+                        show_ecm,
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Rubik',
