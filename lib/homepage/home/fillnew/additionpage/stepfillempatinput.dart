@@ -432,7 +432,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
 
   void updateStepInputChecking() async {
     String ecmIdNewOrEdit = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
-    String idEcmItemEdit = widget.ecmItemId ?? "0";
+    String idEcmItemEdit = widget.ecmItemId;
     try {
       String resultMessage = "Data diperbarui";
       var result = await fillNewEmpatUpdate(
@@ -588,7 +588,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     setBahasa();
     setLang();
 
-    if ((widget.ecmItemId ?? "").isNotEmpty) {
+    if (widget.ecmItemId.isNotEmpty && widget.ecmItemId != "0") {
       getStepEmpatData();
     }
   }
