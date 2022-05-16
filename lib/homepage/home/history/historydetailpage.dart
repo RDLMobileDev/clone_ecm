@@ -47,60 +47,73 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String tokenUser = SharedPrefsUtil.getTokenUser();
-    var response = await getDetailHistoryEcm(notifUser, tokenUser);
-    if (response['response']['status'] == 200) {
-      setStateIfMounted(() {
-        var data = response['data']['item_check'] as List;
-        _listItemCheck = data.map((e) => ItemCheckModel.fromJson(e)).toList();
-        print("===== list item check =====");
-        for (int i = 0; i < _listItemCheck.length; i++) {
-          print(_listItemCheck[i].namaPart.toString() + ",");
-        }
-        print("===== || =====");
-      });
-    } else {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Periksa jaringan internet anda',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
+
+    try {
+      var response = await getDetailHistoryEcm(notifUser, tokenUser);
+      if (response['response']['status'] == 200) {
+        setStateIfMounted(() {
+          var data = response['data']['item_check'] as List;
+          _listItemCheck = data.map((e) => ItemCheckModel.fromJson(e)).toList();
+          print("===== list item check =====");
+          for (int i = 0; i < _listItemCheck.length; i++) {
+            print(_listItemCheck[i].namaPart.toString() + ",");
+          }
+          print("===== || =====");
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Periksa jaringan internet anda',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+      return _listItemCheck;
+    } catch (e) {
+      print(e);
+      return [];
     }
-    return _listItemCheck;
   }
 
   Future<List<ItemRepairModel>> getItemRepair() async {
     final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String tokenUser = SharedPrefsUtil.getTokenUser();
-    var response = await getDetailHistoryEcm(notifUser, tokenUser);
-    if (response['response']['status'] == 200) {
-      setStateIfMounted(() {
-        var data = response['data']['item_repair'] as List;
-        _listItemRepair = data.map((e) => ItemRepairModel.fromJson(e)).toList();
-        print("===== list item check =====");
-        for (int i = 0; i < _listItemRepair.length; i++) {
-          print(_listItemRepair[i].namaPart.toString() + ",");
-        }
-        print("===== || =====");
-      });
-    } else {
-      setState(() {
-        Fluttertoast.showToast(
-            msg: 'Periksa jaringan internet anda',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
-      });
+
+    try {
+      var response = await getDetailHistoryEcm(notifUser, tokenUser);
+      if (response['response']['status'] == 200) {
+        setStateIfMounted(() {
+          var data = response['data']['item_repair'] as List;
+          _listItemRepair =
+              data.map((e) => ItemRepairModel.fromJson(e)).toList();
+          print("===== list item check =====");
+          for (int i = 0; i < _listItemRepair.length; i++) {
+            print(_listItemRepair[i].namaPart.toString() + ",");
+          }
+          print("===== || =====");
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: 'Periksa jaringan internet anda',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.greenAccent,
+              textColor: Colors.white,
+              fontSize: 16);
+        });
+      }
+      return _listItemRepair;
+    } catch (e) {
+      print(e);
+      return [];
     }
-    return _listItemRepair;
   }
 
   Future<List<SparepartModel>> getSparepart() async {
@@ -167,8 +180,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     // final SharedPreferences prefs = await _prefs;
     String notifUser = widget.notifId;
     String tokenUser = SharedPrefsUtil.getTokenUser();
-    var response = await getDetailHistoryEcm(notifUser, tokenUser);
+
     try {
+      var response = await getDetailHistoryEcm(notifUser, tokenUser);
       setStateIfMounted(() {
         print("data detail");
         print(response['data']);

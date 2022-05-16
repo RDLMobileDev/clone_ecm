@@ -262,6 +262,8 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
         //     (int.parse(qtyUsed) >= qtyStock)) {
 
         // }
+
+        Navigator.of(context).pop();
       }
     } on SocketException catch (e) {
       Fluttertoast.showToast(
