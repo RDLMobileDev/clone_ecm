@@ -56,7 +56,7 @@ class _LogInState extends State<LogIn> {
       'format_password': 'Password cannot be empty'
     },
     'id_ID': {
-      'login_sukses': 'Login sukses',
+      'login_sukses': 'Login berhasil',
       'login_gagal': 'Username/password salah',
       'device_lain': 'Anda login menggunakan device lain',
       'update': 'Silahkan update versi terbaru',

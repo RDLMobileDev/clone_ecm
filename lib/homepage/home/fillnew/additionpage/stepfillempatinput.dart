@@ -1,6 +1,7 @@
-// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_constructors
+// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
@@ -14,6 +15,7 @@ import 'package:e_cm/homepage/home/services/apifillnewempatupdate.dart';
 import 'package:e_cm/homepage/home/services/getsemuauser.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,6 +59,22 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   String _initialUser = "Type Name";
 
   bool isTappedNameItem = false, tapMemberName = false;
+
+  String bahasa = "Bahasa Indonesia";
+  bool bahasaSelected = false;
+
+  String item_name = "",
+      type_item_name = "",
+      standard = "",
+      type_standard = "",
+      actual = "",
+      type_actual = "",
+      start_time = "",
+      end_time = "",
+      hm = "",
+      name = "",
+      save = "",
+      edit = "";
 
   Map<String, bool> noteOptions = {"ok": false, "limit": false, "ng": false};
 
@@ -483,11 +501,92 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   static String _displayUserOption(AllUserModel option) =>
       option.userFullName ?? "-";
 
+  void setBahasa() async {
+    final prefs = await _prefs;
+    String bahasaBool = prefs.getString("bahasa") ?? "";
+
+    if (bahasaBool.isNotEmpty && bahasaBool == "Bahasa Indonesia") {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = bahasaBool;
+      });
+    } else if (bahasaBool.isNotEmpty && bahasaBool == "English") {
+      setState(() {
+        bahasaSelected = true;
+        bahasa = bahasaBool;
+      });
+    } else {
+      setState(() {
+        bahasaSelected = false;
+        bahasa = "Bahasa Indonesia";
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        item_name = dataLang['step_4']['item_name'];
+        type_item_name = dataLang['step_4']['type_name'];
+        standard = dataLang['step_4']['standard'];
+        type_standard = dataLang['step_4']['type_standard'];
+        actual = dataLang['step_4']['actual'];
+        type_actual = dataLang['step_4']['type_actual'];
+        start_time = dataLang['step_4']['starttime'];
+        end_time = dataLang['step_4']['end_time'];
+        hm = dataLang['step_4']['hm'];
+        name = dataLang['step_4']['name'];
+        save = dataLang['step_4']['save'];
+        edit = dataLang['step_4']['edit'];
+      });
+    }
+  }
+
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {});
+      item_name = dataLang['step_4']['item_name'];
+      type_item_name = dataLang['step_4']['type_name'];
+      standard = dataLang['step_4']['standard'];
+      type_standard = dataLang['step_4']['type_standard'];
+      actual = dataLang['step_4']['actual'];
+      type_actual = dataLang['step_4']['type_actual'];
+      start_time = dataLang['step_4']['starttime'];
+      end_time = dataLang['step_4']['end_time'];
+      hm = dataLang['step_4']['hm'];
+      name = dataLang['step_4']['name'];
+      save = dataLang['step_4']['save'];
+      edit = dataLang['step_4']['edit'];
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchLocationPartData();
     fetchAllUser();
+
+    setBahasa();
+    setLang();
 
     if ((widget.ecmItemId ?? "").isNotEmpty) {
       getStepEmpatData();
@@ -525,7 +624,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 // ignore: prefer_const_constructors
                 child: RichText(
                   text: TextSpan(
-                    text: 'Item Name ',
+                    text: item_name,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
@@ -557,7 +656,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       filled: true,
-                      hintText: 'Type item name'),
+                      hintText: type_item_name),
                   maxLines: 1,
                   onChanged: (value) {
                     formValidations["item"] = value.isNotEmpty;
@@ -614,7 +713,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 margin: const EdgeInsets.only(top: 10),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Standard ',
+                    text: standard,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
@@ -646,7 +745,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       filled: true,
-                      hintText: 'Type Standard'),
+                      hintText: type_standard),
                   maxLines: 1,
                   onChanged: (value) {
                     setState(() {
@@ -662,7 +761,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 margin: const EdgeInsets.only(top: 10),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Actual ',
+                    text: actual,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
@@ -688,13 +787,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                   maxLength: 50,
                   controller: tecActual,
                   keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 18),
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       filled: true,
-                      hintText: 'Type Actual'),
+                      hintText: type_actual),
                   maxLines: 1,
                   onChanged: (value) {
                     setState(() {
@@ -709,7 +808,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 margin: EdgeInsets.only(top: 10),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Start Time ',
+                    text: start_time,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
@@ -748,13 +847,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         onTap: () => getStartTime(),
                         readOnly: true,
                         controller: startTimePickController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(0),
                             fillColor: Colors.white,
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
                             filled: true,
-                            hintText: 'HH:MM'),
+                            hintText: hm),
                       ),
                     ),
                     SizedBox(
@@ -770,7 +869,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 margin: EdgeInsets.only(top: 10),
                 child: RichText(
                   text: TextSpan(
-                    text: 'End Time ',
+                    text: end_time,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
@@ -809,13 +908,13 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                         onTap: () => getEndTime(),
                         readOnly: true,
                         controller: endTimePickController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(0),
                             fillColor: Colors.white,
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
                             filled: true,
-                            hintText: 'HH:MM'),
+                            hintText: hm),
                       ),
                     ),
                     SizedBox(
@@ -1015,7 +1114,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                 margin: EdgeInsets.only(top: 10),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Name ',
+                    text: name,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
@@ -1142,7 +1241,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                             // Navigator.of(context).pop();
                           },
                     child: Text(
-                      'Save Checking',
+                      ecmIdEdit.isEmpty || ecmIdEdit == "" ? save : edit,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Rubik',

@@ -55,6 +55,15 @@ class _FillNewState extends State<FillNew> {
 
   String next = '';
   String back = '';
+  String ecmText = "",
+      information = "",
+      symbol = "",
+      mandatory = "",
+      rule = "",
+      rule1 = "",
+      rule2 = "",
+      rule3 = "",
+      rule4 = "";
 
   void setBahasa() async {
     final prefs = await _prefs;
@@ -85,6 +94,16 @@ class _FillNewState extends State<FillNew> {
       setState(() {
         next = dataLang['step_1']['next_two'];
         back = dataLang['step_4']['back'];
+
+        ecmText = dataLang['step_1']['ecm_card'];
+        information = dataLang['step_1']['information'];
+        symbol = dataLang['step_1']['symbol'];
+        mandatory = dataLang['step_1']['mandatory'];
+        rule = dataLang['step_1']['rule'];
+        rule1 = dataLang['step_1']['rule1'];
+        rule2 = dataLang['step_1']['rule2'];
+        rule3 = dataLang['step_1']['rule3'];
+        rule4 = dataLang['step_1']['rule4'];
       });
     }
   }
@@ -97,6 +116,16 @@ class _FillNewState extends State<FillNew> {
       setState(() {
         next = dataLang['step_1']['next_two'];
         back = dataLang['step_4']['back'];
+
+        ecmText = dataLang['step_1']['ecm_card'];
+        information = dataLang['step_1']['information'];
+        symbol = dataLang['step_1']['symbol'];
+        mandatory = dataLang['step_1']['mandatory'];
+        rule = dataLang['step_1']['rule'];
+        rule1 = dataLang['step_1']['rule1'];
+        rule2 = dataLang['step_1']['rule2'];
+        rule3 = dataLang['step_1']['rule3'];
+        rule4 = dataLang['step_1']['rule4'];
       });
     }
   }
@@ -622,7 +651,7 @@ class _FillNewState extends State<FillNew> {
           backgroundColor: const Color(0xFF00AEDB),
           elevation: 1,
           title: Text(
-            "E-CM Card",
+            ecmText,
             style: TextStyle(
                 fontFamily: 'Rubik',
                 color: Colors.white,
@@ -760,7 +789,7 @@ class _FillNewState extends State<FillNew> {
                   child: Column(
                     children: [
                       Text(
-                        "Informasi",
+                        information,
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             fontWeight: FontWeight.bold,
@@ -772,7 +801,7 @@ class _FillNewState extends State<FillNew> {
                       Row(
                         children: [
                           Text(
-                            "Simbol",
+                            symbol,
                             style: TextStyle(fontFamily: 'Rubik', fontSize: 12),
                           ),
                           Text(
@@ -783,7 +812,7 @@ class _FillNewState extends State<FillNew> {
                                 color: Colors.redAccent),
                           ),
                           Text(
-                            "(wajib diisi)",
+                            mandatory,
                             style: TextStyle(fontFamily: 'Rubik', fontSize: 12),
                           )
                         ],
@@ -798,7 +827,7 @@ class _FillNewState extends State<FillNew> {
                         width: MediaQuery.of(context).size.width,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Rule line stop",
+                          rule,
                           style: TextStyle(fontFamily: 'Rubik', fontSize: 12),
                         ),
                       ),
@@ -812,26 +841,25 @@ class _FillNewState extends State<FillNew> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("1. > 10 menit = G/L wajib tanda tangan",
+                              Text(rule1,
                                   style: TextStyle(
                                       fontFamily: 'Rubik', fontSize: 12)),
                               SizedBox(
                                 height: 4,
                               ),
-                              Text("2.  > 15 menit = C/L wajib tanda tangan",
+                              Text(rule2,
                                   style: TextStyle(
                                       fontFamily: 'Rubik', fontSize: 12)),
                               SizedBox(
                                 height: 4,
                               ),
-                              Text(
-                                  "3. > 20 menit = MGR wajib tanda tangan + cost > Juta",
+                              Text(rule3,
                                   style: TextStyle(
                                       fontFamily: 'Rubik', fontSize: 12)),
                               SizedBox(
                                 height: 4,
                               ),
-                              Text("4.  > 40 menit = GM wajib tanda tangan",
+                              Text(rule4,
                                   style: TextStyle(
                                       fontFamily: 'Rubik', fontSize: 12)),
                             ],
