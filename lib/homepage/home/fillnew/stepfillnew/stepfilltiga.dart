@@ -51,6 +51,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
   String why = '';
   String how = '';
   String type_message = '';
+  String optional = '';
 
   String bahasa = "Bahasa Indonesia";
 
@@ -89,6 +90,8 @@ class _StepFillTigaState extends State<StepFillTiga> {
         why = dataLang['step_3']['why'];
         how = dataLang['step_3']['how'];
         type_message = dataLang['step_3']['type_message'];
+
+        optional = dataLang['step_3']['optional'];
       });
     }
   }
@@ -103,6 +106,8 @@ class _StepFillTigaState extends State<StepFillTiga> {
       why = dataLang['step_3']['why'];
       how = dataLang['step_3']['how'];
       type_message = dataLang['step_3']['type_message'];
+
+      optional = dataLang['step_3']['optional'];
     }
   }
 
@@ -438,7 +443,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                     margin: EdgeInsets.only(bottom: 10, top: 10),
                     child: RichText(
                       text: TextSpan(
-                        text: 'Why 3 (Optional)',
+                        text: 'Why 3 ($optional)',
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Colors.black,
@@ -472,7 +477,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                   Container(
                     margin: EdgeInsets.only(bottom: 10, top: 10),
                     child: Text(
-                      'Why 4 (Optional)',
+                      'Why 4 ($optional)',
                       style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Rubik',
@@ -501,7 +506,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
                 width: MediaQuery.of(context).size.width,
                 child: RichText(
                   text: TextSpan(
-                    text: "Why 5 (Optional)",
+                    text: "Why 5 ($optional)",
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Colors.black,

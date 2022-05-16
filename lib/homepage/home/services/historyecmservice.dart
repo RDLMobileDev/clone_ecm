@@ -44,7 +44,7 @@ class HistoryEcmService {
     } on SocketException catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'Gagal memuat history, koneksi Anda terputus',
+          msg: 'Gagal memuat riwayat, koneksi Anda terputus',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -53,7 +53,7 @@ class HistoryEcmService {
     } on TimeoutException catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'Gagal memuat history, waktu koneksi Anda habis',
+          msg: 'Gagal memuat riwayat, waktu koneksi Anda habis',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -62,7 +62,7 @@ class HistoryEcmService {
     } on Exception catch (e) {
       print(e);
       Fluttertoast.showToast(
-          msg: 'Gagal memuat history, terjadi kesalahan pada jaringan',
+          msg: ' history, terjadi kesalahan pada jaringan',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,

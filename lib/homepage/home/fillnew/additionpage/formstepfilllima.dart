@@ -79,7 +79,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   String confirm = '';
   String delete = '';
   String validation_delete = '';
-  String cancel = '';
+  String cancel = '', save = '', edit = '';
 
   bool bahasaSelected = false;
 
@@ -240,6 +240,9 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
         validation_delete = dataLang['step_5']['validation_delete'];
         cancel = dataLang['step_5']['cancel'];
         delete = dataLang['step_5']['delete'];
+
+        save = dataLang['step_5']['save'];
+        edit = dataLang['step_5']['edit'];
       });
     }
   }
@@ -250,7 +253,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
 
     if (mounted) {
       setState(() {});
-      item_name = dataLang['step_5']['item_name'] ?? "Item Name";
+      item_name = dataLang['step_5']['item_name'];
       item_repair = dataLang['step_5']['item_repair'];
       validation_repair = dataLang['step_5']['validation_repair'];
       add_item = dataLang['step_5']['add_item'];
@@ -278,6 +281,9 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       validation_delete = dataLang['step_5']['validation_delete'];
       cancel = dataLang['step_5']['cancel'];
       delete = dataLang['step_5']['delete'];
+
+      save = dataLang['step_5']['save'];
+      edit = dataLang['step_5']['edit'];
     }
   }
 
@@ -674,13 +680,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                             onTap: () => getStartTime(),
                             readOnly: true,
                             controller: startTimePickerController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(0),
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide.none),
                                 filled: true,
-                                hintText: 'HH:MM'),
+                                hintText: hm),
                           ),
                         ),
                         SizedBox(
@@ -738,13 +744,13 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                             onTap: () => getEndTime(),
                             readOnly: true,
                             controller: endTimePickerController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(0),
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide.none),
                                 filled: true,
-                                hintText: 'HH:MM'),
+                                hintText: hm),
                           ),
                         ),
                         SizedBox(
@@ -1078,9 +1084,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                           } else {}
                         },
                         child: Text(
-                          widget.isUpdate == true
-                              ? 'Edit Repairing'
-                              : 'Save Repairing',
+                          widget.isUpdate == true ? edit : save,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Rubik',

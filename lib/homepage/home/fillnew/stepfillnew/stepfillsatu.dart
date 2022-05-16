@@ -71,7 +71,7 @@ class StepFillSatuState extends State<StepFillSatu> {
       isTappedFactory = false,
       isTappedFactoryGroup = false;
 
-  String dateSelected = 'DD/MM/YYYY';
+  String dateSelected = '';
   String locationSelected = "";
   String locationIdSelected = '';
   String locationIdGroupSelected = '';
@@ -144,7 +144,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         p_m = dataLang['step_1']['p_m'];
         i_m = dataLang['step_1']['i_m'];
         tanggal = dataLang['step_1']['tanggal'];
-        hbt = dataLang['step_1']['hbt'];
+        dateSelected = dataLang['step_1']['hbt'];
         t_m = dataLang['step_1']['t_m'];
         selectmember = dataLang['step_1']['selectmember'];
         factory = dataLang['step_1']['factory'];
@@ -174,7 +174,7 @@ class StepFillSatuState extends State<StepFillSatu> {
         p_m = dataLang['step_1']['p_m'];
         i_m = dataLang['step_1']['i_m'];
         tanggal = dataLang['step_1']['tanggal'];
-        hbt = dataLang['step_1']['hbt'];
+        dateSelected = dataLang['step_1']['hbt'];
         t_m = dataLang['step_1']['t_m'];
         selectmember = dataLang['step_1']['selectmember'];
         factory = dataLang['step_1']['factory'];
@@ -235,7 +235,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
       if (result['response']['status'] == 200) {
         Fluttertoast.showToast(
-            msg: 'Data step 1 diperbarui',
+            msg: 'Data tahap 1 diperbarui',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
@@ -297,7 +297,7 @@ class StepFillSatuState extends State<StepFillSatu> {
 
         if (result['response']['status'] == 200) {
           Fluttertoast.showToast(
-              msg: 'Data step 1 disimpan',
+              msg: 'Data tahap 1 disimpan',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -431,7 +431,7 @@ class StepFillSatuState extends State<StepFillSatu> {
       try {
         final result = await MyUrl().getData("ecm_step1_get?ecm_id=$ecmIdEdit");
 
-        print("response from data step 1 edit");
+        print("response from data tahap 1 edit");
         print("==========================================================");
         print(result);
 

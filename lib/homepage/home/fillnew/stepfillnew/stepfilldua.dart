@@ -404,21 +404,21 @@ class StepFillDuaState extends State<StepFillDua> {
         imagesPath: imageProblemPath,
       );
 
-      print("data step 2 edit");
+      print("data tahap 2 edit");
       print(result);
 
       if (result['response']['status'] == 200) {
-        goToStepFillTiga('Data step 2 berhasil diubah');
+        goToStepFillTiga('Data tahap 2 berhasil diubah');
         Get.to(StepFillTiga());
       } else {
-        goToStepFillTiga('Data step 2 gagal diubah');
+        goToStepFillTiga('Data tahap 2 gagal diubah');
       }
     } else {
       goToStepFillTiga('Data gagal disimpan, cek semua input field');
     }
     try {} catch (e) {
       print(e);
-      goToStepFillTiga('Data Step 2 gagal diperbarui');
+      goToStepFillTiga('data tahap 2 gagal diperbarui');
     }
   }
 

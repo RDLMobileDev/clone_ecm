@@ -402,7 +402,7 @@ class _StepFillLimaState extends State<StepFillLima> {
       ),
       body: Container(
         padding: EdgeInsets.all(8),
-        height: MediaQuery.of(context).size.height * 0.58,
+        height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

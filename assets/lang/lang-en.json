@@ -22,7 +22,9 @@
       "confirm": "Confirm",
       "confirm_logout": "Do you sure to logout?",
       "cancel": "Cancel",
-      "leave": "Leave the app"
+      "leave": "Leave the app",
+      "app_version": "App Version"
+
     },
     "login": {
       "welcome_back": "Welcome back",
@@ -224,7 +226,9 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "next_six": "Next 6/8",
-      "item_name": "Item Name"
+      "item_name": "Item Name",
+      "save":"Save Repairing",
+      "edit":"Edit Repairing"
     },
     "step_4": {
       "item_checking": "Item Checking",
@@ -232,6 +236,7 @@
       "validation_repair": "Haven’t repaired the item yet",
       "add_item": "Add Checking Item",
       "item_check": "Item Check",
+      "item_name" : "Item Name",
       "type_name": "Type Item Name",
       "standard": "Standard",
       "type_standard": "Type Standard",
@@ -254,7 +259,9 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "add_item_": "Add Item",
-      "next_five": "Next 5/8"
+      "next_five": "Next 5/8",
+      "save":"Save Checking",
+      "edit":"Edit Checking"
     },
     "step_3": {
       "why_analysis": "Why Analysis",
@@ -262,7 +269,8 @@
       "how": "How",
       "type_message": "Type message...",
       "back": "Back",
-      "next_four": "Next 4/8"
+      "next_four": "Next 4/8",
+      "optional": "Optional"
     },
     "step_2": {
       "incident": "Incident",
@@ -293,6 +301,7 @@
       "next_three": "Next 3/8"
     },
     "step_1": {
+      "ecm_card" : "E-CM Card",
       "classification": "Classification",
       "b_m": "Breakdown Maintenance",
       "p_m": "Preventive Maintenance",
@@ -311,7 +320,15 @@
       "machine_number": "Machine Number",
       "type_machine_number": "Type Machine Number",
       "cancel": "Cancel",
-      "next_two": "Next"
+      "next_two": "Next",
+      "information":"Information",
+      "symbol":"Symbol",
+      "mandatory":"(must be filled)",
+      "rule" : "Rules line stop",
+      "rule_1":"1. > 10 minutes = must be signatured by G/L",
+      "rule_2":"2. > 15 minutes = must be signatured by C/L", 
+      "rule_3":"3. > 20 minutes = must be signatured by MGR + cost > 1 Milion",
+      "rule_4":"4. > 40 minutes = must be signatured by GM"
     }
   }
 }
