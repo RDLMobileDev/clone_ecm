@@ -190,6 +190,8 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
   Future<List> getDataItemChecking() async {
     String idEcmtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
+    print(idEcmtoApi);
+
     try {
       var data = await getFillNewEmpat(idEcmtoApi, userId, token);
 
@@ -472,7 +474,7 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                 height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     StepperNumber(
                       numberStep: "1",
                       isFilled: false,

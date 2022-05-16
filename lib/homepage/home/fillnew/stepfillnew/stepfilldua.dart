@@ -367,47 +367,51 @@ class StepFillDuaState extends State<StepFillDua> {
         problemTypeState.isNotEmpty &&
         imageProblemPath.isNotEmpty) {
       //  check if image path contain Uri or not
-      if (Uri.parse(imageProblemPath.first).isAbsolute) {
-        goToStepFillTiga('Anda harus mengganti foto & upload ulang');
+
+      // if (Uri.parse(imageProblemPath.first).isAbsolute) {
+      //   print(imageProblemPath);
+      //   goToStepFillTiga('Anda harus mengganti foto & upload ulang');
+      // } else {
+
+      // }
+
+      // if (result['response']['status'] == 200) {
+      //   ecmId.isNotEmpty || ecmId != ""
+      // ? goToStepFillTiga('Data Step 2 disimpan')
+      //       : goToStepFillTiga('Data Step 2 diperbarui');
+
+      // } else {
+      //   goToStepFillTiga('Data Step 2 gagal diperbarui');
+      // }
+
+      var result = await fillNewDua(
+        token: token,
+        shiftA: shiftA,
+        shiftB: shiftB,
+        shiftNs: shiftC,
+        time: timePickState,
+        problem: problemTypeState,
+        safety: safetyOpt,
+        quality: qualityOpt,
+        delivery: deliveryOpt,
+        cost: costOpt,
+        molding: moldingOpt,
+        utility: utilityOpt,
+        production: productionOpt,
+        engineering: engineerOpt,
+        other: otherOpt,
+        ecmId: idEcmSendtoApi,
+        imagesPath: imageProblemPath,
+      );
+
+      print("data step 2 edit");
+      print(result);
+
+      if (result['response']['status'] == 200) {
+        goToStepFillTiga('Data step 2 berhasil diubah');
+        Get.to(StepFillTiga());
       } else {
-        var result = await fillNewDua(
-          token: token,
-          shiftA: shiftA,
-          shiftB: shiftB,
-          shiftNs: shiftC,
-          time: timePickState,
-          problem: problemTypeState,
-          safety: safetyOpt,
-          quality: qualityOpt,
-          delivery: deliveryOpt,
-          cost: costOpt,
-          molding: moldingOpt,
-          utility: utilityOpt,
-          production: productionOpt,
-          engineering: engineerOpt,
-          other: otherOpt,
-          ecmId: idEcmSendtoApi,
-          imagesPath: imageProblemPath,
-        );
-
-        print("data step 2 edit");
-        print(result);
-
-        if (result['response']['status'] == 200) {
-          goToStepFillTiga('Data step 2 berhasil diubah');
-          Get.to(StepFillTiga());
-        } else {
-          goToStepFillTiga('Data step 2 gagal diubah');
-        }
-
-        // if (result['response']['status'] == 200) {
-        //   ecmId.isNotEmpty || ecmId != ""
-        // ? goToStepFillTiga('Data Step 2 disimpan')
-        //       : goToStepFillTiga('Data Step 2 diperbarui');
-
-        // } else {
-        //   goToStepFillTiga('Data Step 2 gagal diperbarui');
-        // }
+        goToStepFillTiga('Data step 2 gagal diubah');
       }
     } else {
       goToStepFillTiga('Data gagal disimpan, cek semua input field');
@@ -1773,11 +1777,10 @@ class StepFillDuaState extends State<StepFillDua> {
                           InkWell(
                             onTap: () {
                               imageFileList!.length != 4
-                                  ? showBottomSheet(
+                                  ? showModalBottomSheet(
                                       context: context,
-                                      builder: (context) {
-                                        return optionPickImage(context);
-                                      })
+                                      builder: (context) =>
+                                          optionPickImage(context))
                                   : () {
                                       Fluttertoast.showToast(
                                           msg: "Foto sudah ada 4",

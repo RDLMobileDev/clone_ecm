@@ -278,8 +278,9 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
   }
 
   void fetchLocationPartData() async {
-    parts = await ApiLocationPartService.getPartLocations(ecmId, tokenUser);
-    print("data ecm id -> $ecmId");
+    String ecmIdData = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
+    parts = await ApiLocationPartService.getPartLocations(ecmIdData, tokenUser);
+    print("data ecm id -> $ecmIdData");
     print("data parts -> $parts");
   }
 
@@ -1115,7 +1116,6 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
                                   });
                               await _loadingAction();
                               updateStepInputChecking();
-                              return;
                             } else {
                               showDialog(
                                   context: context,

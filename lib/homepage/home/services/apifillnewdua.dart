@@ -47,8 +47,12 @@ Future fillNewDua({
   int indexImage = 1;
   for (int i = 0; i < imagesPath.length; i++) {
     print(imagesPath[i]);
-    request.files.add(
-        await http.MultipartFile.fromPath('foto$indexImage', imagesPath[i]));
+
+    if (!Uri.parse(imagesPath[i]).isAbsolute) {
+      request.files.add(
+          await http.MultipartFile.fromPath('foto$indexImage', imagesPath[i]));
+    }
+
     indexImage++;
   }
 
