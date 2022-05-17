@@ -178,6 +178,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                         // isStepTujuhFill = false;
                         // isStepDelapanFill = false;
 
+                        SharedPrefsUtil.clearEcmId();
+                        SharedPrefsUtil.clearEcmIdEdit();
                         Get.off(const Dashboard());
 
                         // Navigator.pushAndRemoveUntil(
@@ -278,12 +280,13 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     // String idEcm = prefs.getString("idEcm").toString();
 
     String idUser = SharedPrefsUtil.getIdUser();
-    String tokenUser = SharedPrefsUtil.getTokenUser();
-    String idEcm = SharedPrefsUtil.getEcmId();
+    String idEcmSendtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
+
+    print("id ecm edit atau baru: $idEcmSendtoApi");
 
     try {
       _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
-          tokenUser, idEcm, idUser);
+          tokenUser, idEcmSendtoApi, idUser);
 
       print(_listSummaryApproval[0].lineStopJam);
       // removeStepCacheFillEcm();
