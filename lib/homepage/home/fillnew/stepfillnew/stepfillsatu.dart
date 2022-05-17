@@ -1230,7 +1230,7 @@ class StepFillSatuState extends State<StepFillSatu> {
                 margin: const EdgeInsets.only(top: 16),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Nomor Mesin ',
+                    text: machine_number,
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: Color(0xFF404446),
