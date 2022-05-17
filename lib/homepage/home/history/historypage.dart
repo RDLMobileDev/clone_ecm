@@ -49,7 +49,7 @@ class _HistoryPageState extends State<HistoryPage> {
   String his_empty = 'Riwayat ';
   String empty = ' kosong';
   String search_history = '';
-  String connectionString = "";
+  String connectionString = "", making_ecm = "", show_toast = "";
 
   TextEditingController searchController = TextEditingController();
 
@@ -96,6 +96,7 @@ class _HistoryPageState extends State<HistoryPage> {
         empty = dataLang['riwayat']['empty'];
         search_history = dataLang['riwayat']['search_history'];
         connectionString = dataLang['riwayat']['connection_lost'];
+        show_toast = dataLang['riwayat']['show_toast'];
       });
     }
   }
@@ -122,6 +123,7 @@ class _HistoryPageState extends State<HistoryPage> {
         empty = dataLang['riwayat']['empty'];
         search_history = dataLang['riwayat']['search_history'];
         connectionString = dataLang['riwayat']['connection_lost'];
+        show_toast = dataLang['riwayat']['show_toast'];
       });
     }
   }
@@ -315,7 +317,7 @@ class _HistoryPageState extends State<HistoryPage> {
         });
         setState(() {
           Fluttertoast.showToast(
-              msg: 'Showing all of history E-CM Card',
+              msg: show_toast,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -848,8 +850,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                                 Color(0xFF00AEDB),
                                                                             fontWeight: FontWeight.w700)),
                                                                   ),
-                                                                  const Text(
-                                                                      'Making E-CM Card',
+                                                                  Text(
+                                                                      making_ecm,
                                                                       style: TextStyle(
                                                                           color:
                                                                               Color(0xFF6C7072))),
@@ -1045,8 +1047,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                               color: Color(0xFF00AEDB),
                                                                               fontWeight: FontWeight.w700)),
                                                                     ),
-                                                                    const Text(
-                                                                        'Making E-CM Card',
+                                                                    Text(
+                                                                        making_ecm,
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Color(0xFF6C7072))),
@@ -1241,8 +1243,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                               color: Color(0xFF00AEDB),
                                                                               fontWeight: FontWeight.w700)),
                                                                     ),
-                                                                    const Text(
-                                                                        'Making E-CM Card',
+                                                                    Text(
+                                                                        making_ecm,
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Color(0xFF6C7072))),
@@ -1505,8 +1507,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                                 Color(0xFF00AEDB),
                                                                             fontWeight: FontWeight.w700)),
                                                                   ),
-                                                                  const Text(
-                                                                      'Making E-CM Card',
+                                                                  Text(
+                                                                      making_ecm,
                                                                       style: TextStyle(
                                                                           color:
                                                                               Color(0xFF6C7072))),

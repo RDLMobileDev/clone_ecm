@@ -60,7 +60,7 @@
       "all": "Semua",
       "today": "Hari ini",
       "monthly": "Bulanan",
-      "making_ecm": "Membuat E-CM Card",
+      "making_ecm": "Membuat Kartu E-CM",
       "a_hour_ago": "Sejam lalu",
       "one_week": "1 Minggu lalu",
       "two_week": "2 Minggu lalu",
@@ -69,7 +69,11 @@
       "his_empty": "Tidak ada data",
       "empty": "Data tidak ditemukan",
       "search_history":"Cari riwayat ecm",
-      "connection_lost":"Gagal memuat riwayat, sialahkan cek koneksi anda"
+      "connection_lost":"Gagal memuat riwayat, sialahkan cek koneksi anda",
+      "show_toast":"Menampilkan riwayat kartu ECM",
+      "edit_ecm":"Ubah E-CM",
+      "why_analysis":"Why Analisis"
+      
     },
     "detail": {
       "preventive": "Preventive Maintenance",
@@ -298,7 +302,8 @@
       "crop": "Potong",
       "add_more": "Tambah lagi",
       "picture_analysis": "Gambar dan Analisa",
-      "next_three": "Lanjut 3/8"
+      "next_three": "Lanjut 3/8",
+      "info_img":"Jika sedang edit data E-CM, harap hapus & upload ulang foto"
     },
     "step_1": {
       "ecm_card" : "Kartu E-CM",

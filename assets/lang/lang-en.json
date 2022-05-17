@@ -70,7 +70,10 @@
       "his_empty": "No data",
       "empty": "Data not found",
       "search_history":"Search history E-CM",
-      "connection_lost": "Failed to load history, please check your connection"
+      "connection_lost": "Failed to load history, please check your connection",
+      "show_toast":"Showing of history E-CM Card",
+      "edit_ecm":"Edit E-CM",
+      "why_analysis":"Why Analysis"
     },
     "detail": {
       "preventive": "Preventive Maintenance",
@@ -298,7 +301,8 @@
       "crop": "Crop",
       "add_more": "Add more",
       "picture_analysis": "Picture and Analysis",
-      "next_three": "Next 3/8"
+      "next_three": "Next 3/8",
+      "info_img":"If you want to edit please remove and take picture again"
     },
     "step_1": {
       "ecm_card" : "E-CM Card",

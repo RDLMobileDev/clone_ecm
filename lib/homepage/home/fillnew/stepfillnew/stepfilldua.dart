@@ -71,7 +71,7 @@ class StepFillDuaState extends State<StepFillDua> {
   String camera = '';
   String crop = '';
   String addmore = '';
-  String picture_analis = '';
+  String picture_analis = '', info_img = '';
 
   String checkKlasifikasiType = "";
 
@@ -127,6 +127,7 @@ class StepFillDuaState extends State<StepFillDua> {
         crop = dataLang['step_2']['crop'];
         addmore = dataLang['step_2']['add_more'];
         // picture = dataLang['step_2']['picture'];
+        info_img = dataLang['step_2']['info_img'];
       });
     }
   }
@@ -162,6 +163,7 @@ class StepFillDuaState extends State<StepFillDua> {
       crop = dataLang['step_2']['crop'];
       addmore = dataLang['step_2']['add_more'];
       // picture = dataLang['step_2']['picture'];
+      info_img = dataLang['step_2']['info_img'];
     }
   }
 
@@ -1873,7 +1875,7 @@ class StepFillDuaState extends State<StepFillDua> {
                   ? Container(
                       margin: EdgeInsets.only(top: 5),
                       child: Text(
-                        "Jika sedang edit data E-CM, harap hapus & upload ulang foto",
+                        info_img,
                         style: TextStyle(
                             fontFamily: 'Rubik',
                             color: Color(0xFF404446),

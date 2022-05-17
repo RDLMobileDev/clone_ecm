@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:e_cm/homepage/home/fillnew/fillnew.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/model/detailecmmodel.dart';
@@ -14,6 +16,7 @@ import 'package:e_cm/homepage/home/services/api_detail_history_home.dart';
 import 'package:e_cm/homepage/home/services/apiupdatestatusecm.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +45,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   RegExp regex = RegExp(r"([.]*00)(?!.*\d)");
   String incidentEffect = "-";
   String incidentMistake = "-";
+  String edit_ecm = "", why_analysis = "";
 
   Future<List<ItemCheckModel>> getItemCheck() async {
     final SharedPreferences prefs = await _prefs;
@@ -259,6 +263,43 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     if (!await launch(url)) throw 'Could not open $url';
   }
 
+  void getLanguageId() async {
+    var response = await rootBundle.loadString("assets/lang/lang-id.json");
+    var dataLang = json.decode(response)['data'];
+
+    if (mounted) {
+      setState(() {
+        edit_ecm = dataLang['riwayat']['edit_ecm'];
+        why_analysis = dataLang['riwayat']['why_analysis'];
+      });
+    }
+  }
+
+  void getLanguageEn() async {
+    var response = await rootBundle.loadString("assets/lang/lang-en.json");
+    var dataLang = json.decode(response)['data'];
+    if (mounted) {
+      setState(() {
+        edit_ecm = dataLang['riwayat']['edit_ecm'];
+        why_analysis = dataLang['riwayat']['why_analysis'];
+      });
+    }
+  }
+
+  void setLang() async {
+    final prefs = await _prefs;
+    var langSetting = prefs.getString("bahasa") ?? "";
+    print(langSetting);
+
+    if (langSetting.isNotEmpty && langSetting == "Bahasa Indonesia") {
+      getLanguageId();
+    } else if (langSetting.isNotEmpty && langSetting == "English") {
+      getLanguageEn();
+    } else {
+      getLanguageId();
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -268,6 +309,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     getItemRepair();
     getSparepart();
     getEsign();
+    setLang();
     print("id ecm history widget = " + widget.notifId);
   }
 
@@ -377,7 +419,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                   BoxDecoration(color: Color(0xff00AEDB)),
                               child: Center(
                                   child: Text(
-                                "Edit E-CM",
+                                edit_ecm,
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.white),
                               )),
@@ -550,7 +592,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: const Text("Why Analisis",
+          child: Text(why_analysis,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

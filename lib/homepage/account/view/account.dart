@@ -529,7 +529,7 @@ class _AccountMemberState extends State<AccountMember> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 child: Text(
-                  "$app_version 1.0.11",
+                  "$app_version 1.0.12",
                   style: TextStyle(
                       fontFamily: 'Rubik',
                       color: Colors.black54,
