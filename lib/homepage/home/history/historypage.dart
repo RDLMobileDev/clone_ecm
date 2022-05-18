@@ -38,7 +38,7 @@ class _HistoryPageState extends State<HistoryPage> {
   String all = 'Semua';
   String today = 'Hari ini';
   String monthly = 'Bulanan';
-  String? making;
+  String making = '';
   String a_hour = '';
   String one_week = '';
   String two_week = '';
@@ -850,8 +850,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                                 Color(0xFF00AEDB),
                                                                             fontWeight: FontWeight.w700)),
                                                                   ),
-                                                                  Text(
-                                                                      making_ecm,
+                                                                  Text(making,
                                                                       style: TextStyle(
                                                                           color:
                                                                               Color(0xFF6C7072))),
@@ -1047,8 +1046,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                               color: Color(0xFF00AEDB),
                                                                               fontWeight: FontWeight.w700)),
                                                                     ),
-                                                                    Text(
-                                                                        making_ecm,
+                                                                    Text(making,
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Color(0xFF6C7072))),
@@ -1243,8 +1241,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                               color: Color(0xFF00AEDB),
                                                                               fontWeight: FontWeight.w700)),
                                                                     ),
-                                                                    Text(
-                                                                        making_ecm,
+                                                                    Text(making,
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Color(0xFF6C7072))),
@@ -1507,8 +1504,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                                                 Color(0xFF00AEDB),
                                                                             fontWeight: FontWeight.w700)),
                                                                   ),
-                                                                  Text(
-                                                                      making_ecm,
+                                                                  Text(making,
                                                                       style: TextStyle(
                                                                           color:
                                                                               Color(0xFF6C7072))),
