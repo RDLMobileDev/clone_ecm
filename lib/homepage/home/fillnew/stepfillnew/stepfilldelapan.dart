@@ -40,6 +40,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<SummaryApproveModel> _listSummaryApproval = [];
 
+  int isClicked = 0;
+
   String tokenUser = SharedPrefsUtil.getTokenUser();
   String ecmId = SharedPrefsUtil.getEcmId();
   String ecmIdEdit = SharedPrefsUtil.getEcmIdEdit();
@@ -490,6 +492,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
   Future postStepDelapan() async {
     String ecmIdNewOrEdit = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
+    setState(() {
+      isClicked = 1;
+    });
+
     try {
       var res = await fillNewDelapan(
               ecmIdNewOrEdit, engineerTo, productTo, othersTo, tokenUser)
@@ -600,8 +606,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: const Text('Timeout'),
-          content: const Text(
-              'Jaringan anda bermasalah, apakah ingin mencoba ulang?'),
+          content:
+              const Text('Jaringan anda bermasalah, silahkan coba kembali'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context)
@@ -609,17 +615,17 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                 ..pop(true),
               child: const Text('Kembali'),
             ),
-            TextButton(
-              onPressed: () => postStepDelapan(),
-              child: const Text('Kirim Ulang'),
-            ),
+            // TextButton(
+            //   onPressed: () => postStepDelapan(),
+            //   child: const Text('Kirim Ulang'),
+            // ),
           ],
         ),
       );
       // A timeout occurred.
     } on SocketException catch (_) {
-      removeStepCacheFillEcm();
-      removeCacheFillEcm();
+      // removeStepCacheFillEcm();
+      // removeCacheFillEcm();
       setStateIfMounted(() {
         Fluttertoast.showToast(
           msg: 'Terjadi kesalahan, silahkan dicoba lagi nanti',
@@ -1103,7 +1109,9 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                     ),
                     InkWell(
                       onTap: () async {
-                        await postStepDelapan();
+                        if (isClicked == 0) {
+                          await postStepDelapan();
+                        }
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.4,

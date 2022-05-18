@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
 import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
 import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
@@ -389,6 +390,8 @@ class StepFillDuaState extends State<StepFillDua> {
         // print("cost " + costOpt);
 
         try {
+          dialogProgressSendData(context);
+
           var result = await fillNewDua(
             token: token,
             shiftA: shiftA,
@@ -411,8 +414,17 @@ class StepFillDuaState extends State<StepFillDua> {
 
           print("data step 2 edit");
           print(result);
-          goToStepFillTiga('Data step 2 berhasil disimpan');
-          Get.to(StepFillTiga());
+
+          if (result['response']['status'] == 200) {
+            Navigator.pop(context);
+
+            goToStepFillTiga('Data step 2 berhasil disimpan');
+            Get.to(StepFillTiga());
+          } else {
+            Navigator.pop(context);
+
+            goToStepFillTiga('Data step 2 gagal disimpan');
+          }
         } catch (e) {
           print(e);
           goToStepFillTiga('Data Step 2 gagal diperbarui');

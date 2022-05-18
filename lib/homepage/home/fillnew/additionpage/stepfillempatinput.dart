@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/item_checking_detail.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
@@ -359,6 +360,7 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
     String resultMessage = "Data disimpan";
 
     try {
+      // dialogProgressSendData(context);
       var result = await fillNewEmpatInsert(
           // tokenUser,
           ecmIdForStep4Item,

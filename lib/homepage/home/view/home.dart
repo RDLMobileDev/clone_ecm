@@ -602,6 +602,10 @@ class _HomeState extends State<Home> {
                       child: InkWell(
                         onTap: () {
                           // Navigator.of(context).push(routeToFillNew());
+
+                          SharedPrefsUtil.clearEcmIdEdit();
+                          SharedPrefsUtil.clearEcmId();
+
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => StepFillSatu()));
                         },
