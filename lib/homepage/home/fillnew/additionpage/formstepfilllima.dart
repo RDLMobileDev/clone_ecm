@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
@@ -390,6 +391,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
     String idEcmNewOld = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
     try {
+      dialogProgressSendData(context);
       String resultMessage = "Data disimpan";
 
       print(machineId);
@@ -411,9 +413,12 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       switch (result['response']['status']) {
         case 200:
           // prefs.setString("itemRepairBool", "1");
-          Navigator.of(context).pop(true);
+          Navigator.of(context)
+            ..pop()
+            ..pop(true);
           break;
         default:
+          Navigator.of(context).pop(true);
           resultMessage = "Data gagal disimpan";
           break;
       }

@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
 import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
 import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
@@ -2432,9 +2433,11 @@ class _StepFillEnamState extends State<StepFillEnam> {
                     InkWell(
                       onTap: () {
                         if (checkKlasifikasiType != "Breakdown Maintenance") {
+                          dialogProgressSendData(context);
                           postFillEnam();
                         } else {
                           if (breakTimeFill == true) {
+                            dialogProgressSendData(context);
                             postFillEnam();
                           } else {
                             // postFillEnam();

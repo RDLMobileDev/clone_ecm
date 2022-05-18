@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/model/partitemmachinemodel.dart';
 import 'package:e_cm/homepage/home/services/PartItemMachineSaveService.dart';
 import 'package:e_cm/homepage/home/services/api_get_item_steptujuh.dart';
@@ -219,6 +220,7 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
         idEcmKey.isEmpty || idEcmKey == "" ? idEcmEdit : idEcmKey;
 
     try {
+      dialogProgressSendData(context);
       if (partNameController.text == "") {
         Fluttertoast.showToast(
             msg: 'Nama part harus diisi',
@@ -263,7 +265,9 @@ class _AddItemFillTujuhState extends State<AddItemFillTujuh> {
 
         // }
 
-        Navigator.of(context).pop();
+        Navigator.of(context)
+          ..pop()
+          ..pop();
       }
     } on SocketException catch (e) {
       Fluttertoast.showToast(

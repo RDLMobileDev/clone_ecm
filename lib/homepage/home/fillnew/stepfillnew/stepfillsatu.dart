@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_cm/baseurl/baseurl.dart';
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
 import 'package:e_cm/homepage/home/fillnew/model/step_fill_satu_model.dart';
 import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfilldua.dart';
@@ -270,6 +271,8 @@ class StepFillSatuState extends State<StepFillSatu> {
   // test call method from outside class (fillnew)
   void saveFillNewSatu() async {
     try {
+      dialogProgressSendData(context);
+
       if (token.isNotEmpty &&
           classificationIdSelected.isNotEmpty &&
           dateSelected.isNotEmpty &&
@@ -296,6 +299,8 @@ class StepFillSatuState extends State<StepFillSatu> {
         print("ecm id from step 1: ..... " + SharedPrefsUtil.getEcmId());
 
         if (result['response']['status'] == 200) {
+          Navigator.pop(context);
+
           Fluttertoast.showToast(
               msg: 'Data tahap 1 disimpan',
               toastLength: Toast.LENGTH_SHORT,
@@ -305,8 +310,10 @@ class StepFillSatuState extends State<StepFillSatu> {
               textColor: Colors.white,
               fontSize: 16);
           print(result);
+
           Get.to(StepFillDua());
         } else {
+          Navigator.pop(context);
           Fluttertoast.showToast(
               msg: 'Kesalahan jaringan. Data gagal disimpan.',
               toastLength: Toast.LENGTH_SHORT,
@@ -318,6 +325,7 @@ class StepFillSatuState extends State<StepFillSatu> {
           print(result);
         }
       } else {
+        Navigator.pop(context);
         Fluttertoast.showToast(
             msg: 'Data tidak disimpan, cek semua input field',
             toastLength: Toast.LENGTH_LONG,

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/component/function_header_stepper.dart';
 import 'package:e_cm/homepage/home/component/widget_fill_new.dart';
 import 'package:e_cm/homepage/home/component/widget_line_stepper.dart';
@@ -131,6 +132,8 @@ class _StepFillTigaState extends State<StepFillTiga> {
 
     try {
       if (why1Controller.text.isNotEmpty && why2Controller.text.isNotEmpty) {
+        dialogProgressSendData(context);
+
         var result = await fillNewTiga(
             why1Controller.text,
             why2Controller.text,
@@ -143,6 +146,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
         print(result);
 
         if (result['response']['status'] == 200) {
+          Navigator.pop(context);
           Fluttertoast.showToast(
               msg: 'Data step 3 Disimpan',
               toastLength: Toast.LENGTH_SHORT,
@@ -156,6 +160,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
           // isStepEmpatFill = true;
           Get.to(StepFillEmpat());
         } else {
+          Navigator.pop(context);
           Fluttertoast.showToast(
               msg: 'Terjadi kesalahan, Data gagal disimpan',
               toastLength: Toast.LENGTH_SHORT,
@@ -166,6 +171,7 @@ class _StepFillTigaState extends State<StepFillTiga> {
               fontSize: 16);
         }
       } else {
+        Navigator.pop(context);
         Fluttertoast.showToast(
             msg: 'Kolom Why 1 dan Why 2 wajib diisi',
             toastLength: Toast.LENGTH_SHORT,
