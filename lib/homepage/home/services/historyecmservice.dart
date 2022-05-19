@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,8 @@ class HistoryEcmService {
 
       var dataHistory = json.decode(response.body);
 
+      log("data history -> $dataHistory");
+
       if (dataHistory['data'] != null) {
         for (int i = 0; i < dataHistory['data'].length; i++) {
           var dataModel = HistoryEcmModel(
@@ -36,6 +39,15 @@ class HistoryEcmService {
           );
           _listHistoryEcmData.add(dataModel);
         }
+
+        // sorting list result
+        _listHistoryEcmData.sort(
+          (a, b) {
+            var previous = a.ecmId;
+            var next = b.ecmId;
+            return next.compareTo(previous);
+          },
+        );
 
         return _listHistoryEcmData;
       } else {
