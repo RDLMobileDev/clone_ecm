@@ -10,7 +10,6 @@ import 'package:e_cm/homepage/home/model/item_checking.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
 import 'package:e_cm/homepage/home/services/api_fill_new_lima_insert.dart';
 import 'package:e_cm/homepage/home/services/api_location_part_service.dart';
-import 'package:e_cm/homepage/home/services/apifillnewempatget.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +37,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
   TextEditingController tecName = TextEditingController();
   TextEditingController usernameStepLima = TextEditingController();
 
-  List<ItemChecking> _listData = [];
+  final List<ItemChecking> _listData = [];
   List<PartModel> partsItem = <PartModel>[];
 
   String ecmId = SharedPrefsUtil.getEcmId();
@@ -164,14 +163,18 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
       }
 
       if (dataItemStepLima['t_ecmitem_start'] != null) {
-        startTimePickerController =
-            TextEditingController(text: dataItemStepLima['t_ecmitem_start']);
+        final parseStartTime = DateFormat("HH:mm")
+            .parse(dataItemStepLima['t_ecmitem_start'] ?? "00:00");
+        startTimePickerController = TextEditingController(
+            text: DateFormat("HH:mm").format(parseStartTime));
         formValue["start"] = dataItemStepLima['t_ecmitem_start'];
       }
 
       if (dataItemStepLima['t_ecmitem_end'] != null) {
-        endTimePickerController =
-            TextEditingController(text: dataItemStepLima['t_ecmitem_end']);
+        final parseEndTime = DateFormat("HH:mm")
+            .parse(dataItemStepLima['t_ecmitem_end'] ?? "00:00");
+        endTimePickerController = TextEditingController(
+            text: DateFormat("HH:mm").format(parseEndTime));
         formValue["end"] = dataItemStepLima['t_ecmitem_end'];
       }
 
@@ -601,7 +604,7 @@ class _FormStepFilllimaState extends State<FormStepFilllima> {
                               margin: EdgeInsets.only(top: 5),
                               child: Center(
                                 child: Column(
-                                  children: [
+                                  children: const [
                                     CircularProgressIndicator(),
                                     SizedBox(
                                       height: 4,
