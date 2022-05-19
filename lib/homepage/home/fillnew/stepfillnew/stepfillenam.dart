@@ -2434,6 +2434,7 @@ class _StepFillEnamState extends State<StepFillEnam> {
                       onTap: () {
                         if (checkKlasifikasiType != "Breakdown Maintenance") {
                           dialogProgressSendData(context);
+                          Navigator.pop(context);
                           postFillEnam();
                         } else {
                           if (breakTimeFill == true) {

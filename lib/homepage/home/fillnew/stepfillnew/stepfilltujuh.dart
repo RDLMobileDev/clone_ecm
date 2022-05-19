@@ -533,11 +533,10 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                                                 )),
                                           ),
                                           Container(
-                                            width: 60,
+                                            width: 30,
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 // InkWell(
                                                 //   onTap: () {
