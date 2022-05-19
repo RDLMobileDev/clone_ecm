@@ -1111,6 +1111,9 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                       onTap: () async {
                         if (isClicked == 0) {
                           await postStepDelapan();
+                          print("kirim");
+                        } else {
+                          print("stop wooyyy");
                         }
                       },
                       child: Container(
