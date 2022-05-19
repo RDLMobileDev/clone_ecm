@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:e_cm/homepage/home/component/dialog_progress.dart';
 import 'package:e_cm/homepage/home/model/allusermodel.dart';
 import 'package:e_cm/homepage/home/model/item_checking_detail.dart';
 import 'package:e_cm/homepage/home/model/part_model.dart';
@@ -244,10 +243,15 @@ class _StepFillEmpatInputState extends State<StepFillEmpatInput> {
               tecItem = TextEditingController(text: formValue["item"]);
               tecStandard = TextEditingController(text: formValue["standard"]);
               tecActual = TextEditingController(text: formValue["actual"]);
-              startTimePickController =
-                  TextEditingController(text: formValue["start"]);
-              endTimePickController =
-                  TextEditingController(text: formValue["end"]);
+
+              final parseStartTime =
+                  DateFormat("HH:mm").parse(formValue["start"] ?? "00:00");
+              final parseEndTime =
+                  DateFormat("HH:mm").parse(formValue["end"] ?? "00:00");
+              startTimePickController = TextEditingController(
+                  text: DateFormat("HH:mm").format(parseStartTime));
+              endTimePickController = TextEditingController(
+                  text: DateFormat("HH:mm").format(parseEndTime));
               tecMemberName = TextEditingController(text: _users[0].userName);
 
               switch (formValue["note"]) {
