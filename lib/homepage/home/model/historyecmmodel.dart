@@ -19,4 +19,10 @@ class HistoryEcmModel {
       this.namaMesin,
       this.noMesin,
       this.problem);
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return ecmId;
+  }
 }
