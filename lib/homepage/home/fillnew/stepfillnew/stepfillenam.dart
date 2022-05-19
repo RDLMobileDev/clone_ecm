@@ -823,8 +823,8 @@ class _StepFillEnamState extends State<StepFillEnam> {
       setState(() {
         userNameController = TextEditingController(text: namaImprovement);
         ideaController = TextEditingController(text: idea);
-        breakHoursController = TextEditingController(text: breakHours);
-        breakMinutesController = TextEditingController(text: breakMinutes);
+        // breakHoursController = TextEditingController(text: breakHours);
+        // breakMinutesController = TextEditingController(text: breakMinutes);
         prefLineStopH = lineStopH;
         prefLineStopM = lineStopM;
         prefNewLineStop = newLineStopH;

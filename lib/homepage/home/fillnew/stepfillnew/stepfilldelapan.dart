@@ -284,13 +284,15 @@ class StepFillDelapanState extends State<StepFillDelapan> {
     String idUser = SharedPrefsUtil.getIdUser();
     String idEcmSendtoApi = ecmId.isEmpty || ecmId == "" ? ecmIdEdit : ecmId;
 
+    print("di step 8");
+    print("id user: $idUser");
     print("id ecm edit atau baru: $idEcmSendtoApi");
 
     try {
       _listSummaryApproval = await summaryApproveService.getSummaryApproveName(
           tokenUser, idEcmSendtoApi, idUser);
 
-      print(_listSummaryApproval[0].lineStopJam);
+      print(_listSummaryApproval);
       // removeStepCacheFillEcm();
       // removeCacheFillEcm();
 
@@ -601,7 +603,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
       //         ModalRoute.withName("/"));
       //   }
       // }
-    } on TimeoutException catch (_) {
+    } on TimeoutException catch (e) {
+      print("error time out step 8: $e");
       showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -610,9 +613,7 @@ class StepFillDelapanState extends State<StepFillDelapan> {
               const Text('Jaringan anda bermasalah, silahkan coba kembali'),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context)
-                ..pop()
-                ..pop(true),
+              onPressed: () => Navigator.of(context).pop(),
               child: const Text('Kembali'),
             ),
             // TextButton(
@@ -622,6 +623,10 @@ class StepFillDelapanState extends State<StepFillDelapan> {
           ],
         ),
       );
+
+      setState(() {
+        isClicked = 0;
+      });
       // A timeout occurred.
     } on SocketException catch (_) {
       // removeStepCacheFillEcm();
@@ -633,6 +638,8 @@ class StepFillDelapanState extends State<StepFillDelapan> {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.greenAccent,
         );
+
+        isClicked = 0;
       });
     }
 
@@ -1113,7 +1120,12 @@ class StepFillDelapanState extends State<StepFillDelapan> {
                           await postStepDelapan();
                           print("kirim");
                         } else {
-                          print("stop wooyyy");
+                          Fluttertoast.showToast(
+                            msg: 'Data ECM sedang dikirim',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.greenAccent,
+                          );
                         }
                       },
                       child: Container(
