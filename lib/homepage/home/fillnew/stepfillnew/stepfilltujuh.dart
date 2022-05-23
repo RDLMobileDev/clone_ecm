@@ -663,7 +663,9 @@ class _StepFillTujuhState extends State<StepFillTujuh> {
                       onTap: () {
                         // isStepTujuhFill = false;
                         // isStepDelapanFill = true;
-                        Get.to(StepFillDelapan());
+                        Get.to(StepFillDelapan(),
+                            transition: Transition.rightToLeft,
+                            duration: Duration(milliseconds: 500));
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.4,

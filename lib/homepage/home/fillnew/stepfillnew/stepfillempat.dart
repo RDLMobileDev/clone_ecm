@@ -774,7 +774,11 @@ class _StepFillEmpatState extends State<StepFillEmpat> {
                         if (_listItemChecking.isNotEmpty) {
                           // isStepEmpatFill = false;
                           // isStepLimaFill = true;
-                          Get.to(StepFillLima());
+                          // Get.to(StepFillLima());
+
+                          Get.to(() => StepFillLima(),
+                              transition: Transition.rightToLeft,
+                              duration: Duration(milliseconds: 500));
                         } else {
                           Fluttertoast.showToast(
                               msg: 'Anda belum menambahkan item',

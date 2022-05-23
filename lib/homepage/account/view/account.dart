@@ -259,7 +259,9 @@ class _AccountMemberState extends State<AccountMember> {
 
         SharedPrefsUtil.clearStorage();
 
-        Get.off(LogIn());
+        // Get.off(LogIn());
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => LogIn()));
       }
     } catch (e) {
       Fluttertoast.showToast(

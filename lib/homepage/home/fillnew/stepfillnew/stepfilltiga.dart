@@ -158,7 +158,11 @@ class _StepFillTigaState extends State<StepFillTiga> {
 
           // isStepTigaFill = false;
           // isStepEmpatFill = true;
-          Get.to(StepFillEmpat());
+          // Get.to(StepFillEmpat());
+
+          Get.to(() => StepFillEmpat(),
+              transition: Transition.rightToLeft,
+              duration: Duration(milliseconds: 500));
         } else {
           Navigator.pop(context);
           Fluttertoast.showToast(

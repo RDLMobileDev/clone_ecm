@@ -7,6 +7,7 @@ import 'package:e_cm/homepage/home/fillnew/stepfillnew/stepfillsatu.dart';
 import 'package:e_cm/homepage/home/services/api_cek_ecm_rejected.dart';
 import 'package:e_cm/homepage/home/services/remove_ecm_cancel_service.dart';
 import 'package:e_cm/util/shared_prefs_util.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_cm/homepage/home/approved/approved.dart';
 import 'package:e_cm/homepage/home/component/sliderhistory.dart';
@@ -544,16 +545,26 @@ class _HomeState extends State<Home> {
                                     print(_listHistoryEcmUser[i]
                                         .ecmId
                                         .toString());
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                HistoryDetailPage(
-                                                  notifId:
-                                                      _listHistoryEcmUser[i]
-                                                          .ecmId
-                                                          .toString(),
-                                                  isShowButton: false,
-                                                )));
+
+                                    Get.to(
+                                        () => HistoryDetailPage(
+                                              notifId: _listHistoryEcmUser[i]
+                                                  .ecmId
+                                                  .toString(),
+                                              isShowButton: false,
+                                            ),
+                                        transition: Transition.downToUp,
+                                        duration: Duration(milliseconds: 500));
+                                    // Navigator.of(context).push(
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             HistoryDetailPage(
+                                    //               notifId:
+                                    //                   _listHistoryEcmUser[i]
+                                    //                       .ecmId
+                                    //                       .toString(),
+                                    //               isShowButton: false,
+                                    //             )));
                                   },
                                   child: SliderHistory(
                                     classificationName:
@@ -606,8 +617,12 @@ class _HomeState extends State<Home> {
                           SharedPrefsUtil.clearEcmIdEdit();
                           SharedPrefsUtil.clearEcmId();
 
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => StepFillSatu()));
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => StepFillSatu()));
+
+                          Get.to(() => StepFillSatu(),
+                              transition: Transition.rightToLeft,
+                              duration: Duration(milliseconds: 500));
                         },
                         child: Container(
                           margin: const EdgeInsets.only(
