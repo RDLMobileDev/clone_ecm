@@ -419,7 +419,9 @@ class StepFillDuaState extends State<StepFillDua> {
             Navigator.pop(context);
 
             goToStepFillTiga('Data step 2 berhasil disimpan');
-            Get.to(StepFillTiga());
+            Get.to(StepFillTiga(),
+                transition: Transition.rightToLeft,
+                duration: Duration(milliseconds: 500));
           } else {
             Navigator.pop(context);
 

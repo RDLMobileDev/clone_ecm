@@ -247,7 +247,11 @@ class StepFillSatuState extends State<StepFillSatu> {
         print(result);
 
         SharedPrefsUtil.setIdMesinRes(result['data']['id_machine'].toString());
-        Get.to(StepFillDua());
+        // Get.to(StepFillDua());
+
+        Get.to(() => StepFillDua(),
+            transition: Transition.rightToLeft,
+            duration: Duration(milliseconds: 500));
       } else {
         Fluttertoast.showToast(
             msg: 'Kesalahan jaringan. Data gagal diperbarui.',
@@ -311,7 +315,9 @@ class StepFillSatuState extends State<StepFillSatu> {
               fontSize: 16);
           print(result);
 
-          Get.to(StepFillDua());
+          Get.to(() => StepFillDua(),
+              transition: Transition.rightToLeft,
+              duration: Duration(milliseconds: 500));
         } else {
           Navigator.pop(context);
           Fluttertoast.showToast(

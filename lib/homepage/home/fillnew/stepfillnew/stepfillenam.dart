@@ -781,7 +781,9 @@ class _StepFillEnamState extends State<StepFillEnam> {
 
         // isStepEnamFill = false;
         // isStepTujuhFill = true;
-        Get.to(StepFillTujuh());
+        Get.to(StepFillTujuh(),
+            transition: Transition.rightToLeft,
+            duration: Duration(milliseconds: 500));
       } else {
         print(result);
         Fluttertoast.showToast(

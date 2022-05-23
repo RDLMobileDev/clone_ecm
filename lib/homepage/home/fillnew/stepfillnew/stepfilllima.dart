@@ -718,7 +718,9 @@ class _StepFillLimaState extends State<StepFillLima> {
                         if (_listItemChecking.isNotEmpty) {
                           // isStepLimaFill = false;
                           // isStepEnamFill = true;
-                          Get.to(StepFillEnam());
+                          Get.to(StepFillEnam(),
+                              transition: Transition.rightToLeft,
+                              duration: Duration(milliseconds: 500));
                         } else {
                           Fluttertoast.showToast(
                               msg: 'Anda belum menambahkan item',
