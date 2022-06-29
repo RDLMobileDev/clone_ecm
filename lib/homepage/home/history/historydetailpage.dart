@@ -259,7 +259,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
 
   void _launchURL() async {
     String url =
-        "https://app.ragdalion.com/ecm/webviewreportpdfecm?id=${widget.notifId}";
+        "https://app.ragdalion.com/ecm_client/webviewreportpdfecm?id=${widget.notifId}";
     if (!await launch(url)) throw 'Could not open $url';
   }
 

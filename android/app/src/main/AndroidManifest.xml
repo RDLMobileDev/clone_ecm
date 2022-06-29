@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ragdalion.e_cm">
+    package="com.ragdalion.maintenance_pro">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="E-CM Card"
+        android:label="Maintenance Pro"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
         <activity

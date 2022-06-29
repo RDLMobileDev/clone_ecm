@@ -341,9 +341,8 @@ class _HomeState extends State<Home> {
     // final SharedPreferences prefs = await _prefs;
     String idUser = SharedPrefsUtil.getIdUser();
     String tokenUser = SharedPrefsUtil.getTokenUser();
-    ;
     var url =
-        "http://app.ragdalion.com/ecm/public/api/home_cekecm?id_user=$idUser";
+        "http://https://app.ragdalion.com/ecm_client/public/api/home_cekecm?id_user=$idUser";
     try {
       final response = await http.get(Uri.parse(url), headers: {
         'Accept': 'application/json',

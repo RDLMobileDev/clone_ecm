@@ -16,8 +16,6 @@ class _HistoryReportState extends State<HistoryReport> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(
-        "https://app.ragdalion.com/ecm/webviewreportpdfecm?id=${widget.notifId}");
   }
 
   @override
@@ -25,7 +23,7 @@ class _HistoryReportState extends State<HistoryReport> {
     return SafeArea(
       child: WebView(
         initialUrl:
-            "https://app.ragdalion.com/ecm/webviewreportpdfecm?id=${widget.notifId}",
+            "https://app.ragdalion.com/ecm_client/webviewreportpdfecm?id=${widget.notifId}",
       ),
     );
   }
