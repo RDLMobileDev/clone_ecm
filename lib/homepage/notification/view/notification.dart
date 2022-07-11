@@ -156,14 +156,14 @@ class _NotificationMemberState extends State<NotificationMember> {
           print("===== || =====");
         });
       } else {
-        Fluttertoast.showToast(
-            msg: 'Periksa jaringan internet anda',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.white,
-            fontSize: 16);
+        // Fluttertoast.showToast(
+        //     msg: 'Periksa jaringan internet anda',
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIosWeb: 2,
+        //     backgroundColor: Colors.greenAccent,
+        //     textColor: Colors.white,
+        //     fontSize: 16);
       }
     } catch (e) {
       print("approved exception $e");
